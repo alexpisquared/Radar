@@ -15,7 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
-namespace RadarLib
+namespace Radar
 {
   public partial class RadarUsrCtrl : UserControl
   {
@@ -348,12 +348,18 @@ namespace RadarLib
       LTitle.Text = "Going for it....";
       MainCanvas.Background = Brushes.DarkKhaki;
 
-      for (var i = 0; i < _radarPicCollector.StationCount - 1; i++) { new IntArgDelegate(fetchFromWebBlockingCall_FetchRad).BeginInvoke(i, null, null); }
+      for (var stationIndex = 0; stationIndex < _radarPicCollector.StationCount - 1; stationIndex++)
+      {
+        //new IntArgDelegate(fetchFromWebBlockingCall_FetchRad).BeginInvoke(i, null, null);
+        _radarPicCollector.DownloadRadarPicsNextBatch(stationIndex);
+        updateUIAsync("Not sure ...");
+      }
 
       keyFocusBtn.Focus();
     }
 
-    void fetchFromWebBlockingCall_FetchRad(int stationIndex) => MainCanvas.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new OneArgDelegate(updateUI_), _radarPicCollector.DownloadRadarPicsNextBatch(stationIndex));
+    void fetchFromWebBlockingCall_FetchRad(int stationIndex) => 
+      MainCanvas.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new OneArgDelegate(updateUI_), _radarPicCollector.DownloadRadarPicsNextBatch(stationIndex));
 
     async void updateUI_(string title) => await updateUIAsync(title);
     async Task updateUIAsync(string title)

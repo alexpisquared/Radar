@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-namespace RadarLib
+namespace Radar
 {
   public class MyImage
 	{

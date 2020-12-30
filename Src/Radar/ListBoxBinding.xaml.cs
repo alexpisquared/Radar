@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Windows.Data;
 using Microsoft.Win32;
 using AsLink;
-using RadarLib;
+using Radar;
 
 
 namespace Radar

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Radar": {
+      "commandName": "Project",
+      "commandLineArgs": "ShowIfOnOrComingSoon"
+    }
+  }
+}

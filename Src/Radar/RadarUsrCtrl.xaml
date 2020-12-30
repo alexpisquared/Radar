@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="RadarLib.RadarUsrCtrl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+﻿<UserControl x:Class="Radar.RadarUsrCtrl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" d:DesignWidth="1160" d:DesignHeight="960"  
              KeyDown="onKeyDown" >
   <UserControl.Resources>
@@ -145,8 +145,6 @@
         </Path.RenderTransform>
       </Path>
     </Canvas>
-
-    <TextBlock HorizontalAlignment="Left" Margin="11,32,0,10" VerticalAlignment="Bottom" Width="57" Height="29" Text="{Binding Path=Value, Converter={StaticResource ZoomPercentageConverter}, ElementName=slider1, Mode=Default}" TextWrapping="Wrap"/>
 
     <Grid Width="1160" Height="960" Canvas.Left="1" >
 

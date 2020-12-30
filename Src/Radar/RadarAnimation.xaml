@@ -1,10 +1,10 @@
 ﻿<lnk:WindowBase xmlns:lnk="clr-namespace:AAV.WPF.Base;assembly=AAV.WPF" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-				xmlns:local="clr-namespace:RadarLib" 
+				xmlns:local="clr-namespace:Radar" 
 				xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" 
 				x:Name="rdr1"
-				x:Class="RadarLib.RadarAnimation" Title="RadarLib   F5 to [re]load" 
+				x:Class="Radar.RadarAnimation" Title="Radar   F5 to [re]load" 
 				AllowsTransparency="True"	WindowStyle="None"  ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen" 
-				Icon="/RadarLib;component/RadarCircles.ico" Width="1160" Height="960" Background="#1000" Topmost="True" >
+				Icon="/RadarCircles.ico" Width="1160" Height="960" Background="#1000" Topmost="True" >
   <Viewbox>
     <Grid Width="1160" Height="960" >
       <Grid.ColumnDefinitions>

@@ -2,7 +2,7 @@
 using AAV.Sys.Helpers;
 using AAV.WPF.Helpers;
 using Radar.Properties;
-using RadarLib;
+using Radar;
 using RadarPicCollect;
 using System;
 using System.Diagnostics;
