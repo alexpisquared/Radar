@@ -1,4 +1,5 @@
-﻿using AAV.Sys.Helpers;
+﻿using SpeechSynthLib.Adapter;
+using AAV.Sys.Helpers;
 using AAV.WPF.Helpers;
 using Radar.Properties;
 using RadarLib;
@@ -15,6 +16,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using AsLink;
 
 namespace Radar
 {
@@ -28,6 +30,7 @@ namespace Radar
       sayUpTimeNoUI = "sayUpTimeNoUI",
       sayUpTimeShow = "sayUpTimeShow",
       showIfRainCmn = "ShowIfOnOrComingSoon";
+    static SpeechSynthesizer _synth = null; public static SpeechSynthesizer Synth { get { if (_synth == null) { _synth = new SpeechSynthesizer(); _synth.SpeakAsyncCancelAll(); _synth.Rate = 6; _synth.Volume = 25; /*_synth.SelectVoiceByHints(gender: VoiceGender.Female); */ } return _synth; } }
 
     protected override async void OnStartup(StartupEventArgs e)
     {
@@ -48,7 +51,7 @@ namespace Radar
         {
           default:
           case help:
-          case justUiNotElse: new RadarAnimation(true, Settings.Default.AlarmThreshold).ShowDialog(); break;
+          case justUiNotElse: new RadarAnimation(true, Settings.AlarmThreshold).ShowDialog(); break;
           case showIfRainCmn: if (sayRainOnOrComing(e.Args, uptime))                    /**/ goto default; break;
           case sayUpTimeShow: sayRainOnOrComing(e.Args, uptime);                        /**/ goto default;
           case sayUpTimeNoUI: if (uptime.TotalMinutes > 20) Synth.Speak(upTimeMsg(uptime, "No UI.")); break;
@@ -77,7 +80,7 @@ namespace Radar
       try
       {
         var maxPicsToGet = 2; // 1 hr + 10 min.
-        var minRainPace = Settings.Default.AlarmThreshold; // .01 - .05
+        var minRainPace = Settings.AlarmThreshold; // .01 - .05
         var rpc = new RadarPicCollector();
         rpc.DownloadRadarPics_MostRecent_RAIN_only(maxPicsToGet);
         if (rpc.Pics.Count < maxPicsToGet)
@@ -122,9 +125,9 @@ namespace Radar
         Debug.WriteLine //                Synth.Speak //           
           ($"Hidden as has been standing only for {uptime.TotalMinutes:N0} minutes.");
       }
-      //else if (DateTime.Now < Settings.Default.PopUp_LastTime.AddMinutes(Settings.Default.PopUp_IntervalToSkipMin))
+      //else if (DateTime.Now < Settings.PopUp_LastTime.AddMinutes(Settings.PopUp_IntervalToSkipMin))
       //{
-      //  Synth.Speak($"Hidden, as already checked only {(DateTime.Now - Settings.Default.PopUp_LastTime).TotalMinutes:N0} minutes ago.");
+      //  Synth.Speak($"Hidden, as already checked only {(DateTime.Now - Settings.PopUp_LastTime).TotalMinutes:N0} minutes ago.");
       //}
       else
       {
@@ -137,8 +140,8 @@ namespace Radar
     void showLongStretchAlertPopup(TimeSpan uptime, string rainAndUptimeMsg)
     {
       //too annoying: Synth.SpeakAsync($"Showing");
-      Settings.Default.PopUp_LastTime = DateTime.Now;
-      Settings.Default.Save();
+      Settings.PopUp_LastTime = DateTime.Now;
+      Settings.Save();
       new View.LongStretchAlertPopup(uptime, rainAndUptimeMsg, Synth).ShowDialog();
     }
 
@@ -176,7 +179,6 @@ namespace Radar
       await Task.Delay(k * units);
       //Bpr.BeepFinish();
       App.Current.Shutdown();
-    }
-    SpeechSynthesizer _ss; public SpeechSynthesizer Synth { get { if (_ss == null) { _ss = new SpeechSynthesizer(); _ss.SpeakAsyncCancelAll(); _ss.Rate = 6; _ss.Volume = Environment.UserDomainName.Equals("CORP", StringComparison.OrdinalIgnoreCase) ? 70 : 90/*0-100*/; _ss.SelectVoiceByHints(gender: VoiceGender.Female); } return _ss; } }
+    }    
   }
 }

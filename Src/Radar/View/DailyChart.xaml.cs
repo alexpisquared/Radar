@@ -2,7 +2,7 @@
 using AsLink;
 using Db.EventLog;
 using Db.EventLog.DbModel;
-using Microsoft.Expression.Shapes;
+//using Microsoft.Expression.Shapes;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -220,17 +220,17 @@ namespace UpTimeChart
     {
       var k = 720 / _aw;
 
-      var arc = new Arc
-      {
-        StartAngle = left * k,
-        EndAngle = (left + width) * k,
-        //StrokeThickness = hgt,
-        //Stretch = Stretch.None,
-        //Stroke = brush,
-        //RenderTransformOrigin = new Point(0.5, 0.5)
-      };
-
-      addUiElnt(hgt, left, arc);
+      //todo: Arc - Dec 2020
+      //var arc = new Arc
+      //{
+      //  StartAngle = left * k,
+      //  EndAngle = (left + width) * k,
+      //  //StrokeThickness = hgt,
+      //  //Stretch = Stretch.None,
+      //  //Stroke = brush,
+      //  //RenderTransformOrigin = new Point(0.5, 0.5)
+      //};
+      //addUiElnt(hgt, left, arc);
     }
 
     void addUiElnt(double top, double left, UIElement el)

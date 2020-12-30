@@ -7,6 +7,7 @@
       <Setter Property="Width"            Value="10"    />
       <Setter Property="Height"           Value="10"    />
     </Style>
+    <!-- Dec 2020: Arc is needed?
     <Style TargetType="{x:Type ed:Arc}">
       <Setter Property="ArcThicknessUnit" Value="Percent" />
       <Setter Property="ArcThickness" Value="1" />
@@ -21,7 +22,7 @@
       <Setter Property="HorizontalAlignment" Value="Left" />
       <Setter Property="VerticalAlignment" Value="Top" />
       <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
-    </Style>
+    </Style>-->
   </UserControl.Resources>
   <Grid Margin="0.5" Name="gridvroot">
     <Canvas     x:Name="canvasBar"  ToolTip="canvasBar" />

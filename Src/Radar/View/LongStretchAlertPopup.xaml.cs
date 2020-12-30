@@ -1,11 +1,12 @@
 ﻿using AsLink;
 using System;
-using System.Speech.Synthesis;
+
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using SpeechSynthLib.Adapter;
 
 namespace Radar.View
 {
@@ -40,7 +41,7 @@ namespace Radar.View
 
       dailyChart1.ClearDrawAllSegmentsForSinglePC(Environment.MachineName, "Red");
 
-      _synth.SpeakAsync(_rainAndUptimeMsg);
+      await _synth.Speak(_rainAndUptimeMsg);
     }
 
     public static readonly DependencyProperty StandingTimeProperty = DependencyProperty.Register("StandingTime", typeof(TimeSpan), typeof(LongStretchAlertPopup), new PropertyMetadata()); public TimeSpan StandingTime { get => (TimeSpan)GetValue(StandingTimeProperty); set => SetValue(StandingTimeProperty, value); }

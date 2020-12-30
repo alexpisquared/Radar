@@ -1,4 +1,6 @@
-﻿namespace Radar.Properties {
+﻿using System;
+
+namespace Radar.Properties {
     
     
     // This class allows you to handle specific events on the settings class:
@@ -16,13 +18,19 @@
             // this.SettingsSaving += this.SettingsSavingEventHandler;
             //
         }
-        
-        private void SettingChangingEventHandler(object sender, System.Configuration.SettingChangingEventArgs e) {
+
+    public static object Default { get; internal set; }
+    public static double AlarmThreshold { get; internal set; }
+    public static DateTime PopUp_LastTime { get; internal set; }
+
+    private void SettingChangingEventHandler(object sender, System.Configuration.SettingChangingEventArgs e) {
             // Add code to handle the SettingChangingEvent event here.
         }
         
         private void SettingsSavingEventHandler(object sender, System.ComponentModel.CancelEventArgs e) {
             // Add code to handle the SettingsSaving event here.
         }
-    }
+
+    internal static void Save() => throw new NotImplementedException();
+  }
 }
