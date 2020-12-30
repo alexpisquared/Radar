@@ -1,0 +1,12 @@
+﻿<Window x:Class="Radar.BitmapForWpfHelperWayWindow" 
+				xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+				xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+				Title="BitmapForWpfHelperWayWindow" SizeToContent="WidthAndHeight"
+				KeyUp="Window_KeyUp"
+				KeyDown="Window_KeyDown"
+>
+	<Grid >
+			
+        
+    </Grid>
+</Window>

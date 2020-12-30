@@ -1,0 +1,114 @@
+﻿<lnk:WindowBase xmlns:lnk="clr-namespace:AAV.WPF.Base;assembly=AAV.WPF" x:Name="wnd" 
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                xmlns:local="clr-namespace:Radar.View"
+                xmlns:UpTimeChart="clr-namespace:UpTimeChart;assembly=ScreenTimeUsrCtrlLib" x:Class="Radar.View.LongStretchAlertPopup" mc:Ignorable="d"
+                Title="Long Stretch Alert Popup" Background="#0a000000" 
+                Height="600" Width="1200" ShowInTaskbar="False" Topmost="False" WindowState="Minimized"                
+                
+                WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResize" >
+  <!-- //todo:  Style="{StaticResource WindowStyle_Aav0}"   causes runtime error -->
+
+  <lnk:WindowBase.Resources>
+    <ResourceDictionary >
+      <ResourceDictionary.MergedDictionaries>
+        <!--<ResourceDictionary Source="/AAV.AsLink.WPF;component/AsLink/Theme.Color.Lite.VaporWave.xaml" />
+        <ResourceDictionary Source="/AAV.WPF;component/ColorScheme/Theme.Color.Lite.Gray.xaml" />
+        -->
+        <ResourceDictionary Source="/AAV.WPF;component/Base/DataGrid.Base.xaml" />
+        <ResourceDictionary Source="/AAV.WPF;component/Base/BasicDefaultsLayout.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+
+      <Style TargetType="FrameworkElement" >
+        <Setter Property="Control.Margin" Value="8 4" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+      </Style>
+
+
+      <Style TargetType="{x:Type TextBlock}">
+        <Setter Property="Foreground" Value="#d40" />
+      </Style>
+
+      <Style TargetType="{x:Type AccessText}">
+        <Setter Property="Foreground" Value="#888" />
+      </Style>
+
+      <Style TargetType="{x:Type Button}">
+        <Setter Property="Margin"     Value="5" />
+        <Setter Property="Width"      Value="120" />
+        <Setter Property="FontSize"   Value="20" />
+        <Setter Property="Foreground" Value="#eee" />
+      </Style>
+
+    </ResourceDictionary>
+  </lnk:WindowBase.Resources>
+  <WindowChrome.WindowChrome>
+    <WindowChrome CaptionHeight="0" ResizeBorderThickness="10" />
+  </WindowChrome.WindowChrome>
+
+  <Border Padding="0" Background="#2222" CornerRadius="10" BorderThickness="2" BorderBrush="#8d40" x:Name="MainBorder">
+
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"  />
+        <RowDefinition Height="Auto"  />
+        <RowDefinition Height="*"/>
+        <RowDefinition Height="Auto"  />
+      </Grid.RowDefinitions>
+
+      <Border Grid.Row="0" Background="#3333" BorderThickness="0" CornerRadius="9 9 0 0" Padding="0" Margin="0" />
+      <Border Grid.Row="3" Background="#3333" BorderThickness="0" CornerRadius="0 0 9 9" Padding="0" Margin="0" />
+
+      <Grid>
+        <TextBlock FontSize="36" Text="{Binding HeaderTitle, FallbackValue='Up-Time Watch'}" Margin="15" HorizontalAlignment="Center" x:Name="headerTitle"/>
+
+        <StackPanel HorizontalAlignment="Right" Margin="3 0" x:Name="PnlVerInfo">
+          <AccessText Text="{Binding BuildVersion, FallbackValue=Radar: 3.3, StringFormat=Ver: \{0\}}"     />
+          <AccessText Text="{Binding MbxTime, FallbackValue=7-8 5:55, StringFormat=Now: \{0:MMM-d H:mm\}}" />
+        </StackPanel>
+      </Grid>
+
+      <UpTimeChart:DailyChart Grid.Row="1" HorizontalAlignment="Stretch" Height="36" Margin="5" VerticalAlignment="Stretch" x:Name="dailyChart1" Opacity=".75"/>
+
+      <Viewbox    Grid.Row="2">
+        <Button Background="#2000" BorderThickness="0" Margin="2" ToolTip="Close the popup dialog."   IsCancel="True"   >
+          <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding StandingTime, FallbackValue=2:12, StringFormat=\{0:h\\:mm\}}" FontSize="36" />
+            <TextBlock Text="{Binding StandingTime, FallbackValue=:12,  StringFormat=\{0:\\:ss\}}"  FontSize="16" VerticalAlignment="Top" Margin="1 0 0 2"/>
+          </StackPanel>
+        </Button>
+      </Viewbox>
+
+      <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+        <Button Background="#b70" Content="+ _10"   ToolTip="Extend by ... min" Click="onExtendXXMin" />
+        <Button Background="#b0d" Content="+ _20"   ToolTip="Extend by ... min" Click="onExtendXXMin" />
+        <Button Background="#07d" Content="+ _40"   ToolTip="Extend by ... min" Click="onExtendXXMin" />
+      </StackPanel>
+
+      <Button Grid.Row="3" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10" >
+        <Button.Style>
+          <!--To get rid of the graying out on mouseover (also: loses the accelerator underscoring). Mar2019-->
+          <Style TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="#444"/>
+            <Setter Property="Template">
+              <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                  <Border Background="{TemplateBinding Background}">
+                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                  </Border>
+                </ControlTemplate>
+              </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#ff0"/>
+              </Trigger>
+            </Style.Triggers>
+          </Style>
+        </Button.Style>
+        <TextBlock Margin="5" Background="#777" Text="Demo" Padding="5" ToolTip="MouseOver Color Demo"/>
+      </Button>
+
+    </Grid>
+
+  </Border>
+</lnk:WindowBase>

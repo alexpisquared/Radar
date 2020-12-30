@@ -1,0 +1,91 @@
+﻿<!-- To show this window, do this: Window w=new BitmapForWpfHelperWayWindow; w.Show(); -->
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+				xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+				x:Class="Radar.ListBoxBinding" 
+				 xmlns:local="clr-namespace:Radar"
+				Title="ImageViewer" Loaded="WindowLoaded" 
+				ResizeMode="CanMinimize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen">
+	<Window.Resources>
+			<!--<local:UriToBitmapConverter x:Key="UriToBitmapConverter" />--> 
+	</Window.Resources>
+
+	<DockPanel Background="White" LastChildFill="True">
+		<Border DockPanel.Dock="top" Margin="0" Background="DarkGray">
+			<StackPanel HorizontalAlignment="Center">
+				<StackPanel.Resources>
+
+					<Style TargetType="ListBox">
+						<Setter Property="ItemsPanel">
+							<Setter.Value>
+								<ItemsPanelTemplate>
+									<StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" />
+								</ItemsPanelTemplate>
+							</Setter.Value>
+						</Setter>
+					</Style>
+					<!--
+					<Style x:Key="ScrollingListBox" TargetType="{x:Type ListBox}">
+						<Setter Property="Control.Template">
+							<Setter.Value>
+								<ControlTemplate>
+									<Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+										<ScrollViewer Height="{TemplateBinding Height}" Width="{TemplateBinding Width}">
+											<StackPanel Name="ListBoxStackPanel" IsItemsHost="true" Margin="0" />
+										</ScrollViewer>
+									</Border>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+					</Style>-->
+
+					<Style x:Key="ThumbnailStyle" TargetType="{x:Type Border}">
+						<Setter Property="Width" Value="20" />
+						<Setter Property="Height" Value="200" />
+						<Setter Property="Margin" Value="1" />
+						<Setter Property="BorderThickness" Value="1" />
+					</Style>
+					<Style x:Key="ImageListStyle">
+						<Setter Property="Control.Template">
+							<Setter.Value>
+								<ControlTemplate>
+									<DockPanel Width="40px" Margin="1">
+										<Image Source="{Binding Path=FullName}" />
+										<TextBlock Text="{Binding Path=FullName}" />
+                  </DockPanel>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+					</Style>
+				</StackPanel.Resources>
+
+				<ListView ItemsSource="{Binding}"
+								 MinHeight="60" MinWidth="444" Width="1160" >
+					<ListView.ItemTemplate>
+						<DataTemplate>
+							<Image Source="{Binding Path='C:\Temp\web.cache\---www.theweathernetwork.com-common-images-wicons-hourlyfx-e.gif'}" />
+							<!--<Image Source="{Binding Path=FullPath, Converter={StaticResource UriToBitmapConverter}" />-->
+						</DataTemplate>
+					</ListView.ItemTemplate>
+				</ListView>
+
+				<ListBox Name="imageListBox" 
+								 ItemContainerStyle="{StaticResource ImageListStyle}" 
+								 ItemsSource="{Binding}" 
+								 SelectionChanged="showListboxSelectedImage"
+								 MinHeight="60" MinWidth="444" Width="1160" >
+				</ListBox>
+				<ListBox Name="imageListBox2" 
+								 ItemContainerStyle="{StaticResource ImageListStyle}" 
+								 ItemsSource="{Binding AllImages}" 
+								 SelectionChanged="showListboxSelectedImage"
+								 MinHeight="60" MinWidth="444" Width="1160" >
+				</ListBox>
+			</StackPanel>
+		</Border>
+		<Canvas Width="1160" Height="960" >
+			<Image Opacity="1.0" Stretch="Fill" Width="1160" Height="960" Name="currentImage" />
+			<Image Opacity="1.0" Stretch="Fill" Width="960" Height="960" Source="/Radar;component/WKR_roads.gif"></Image>
+		</Canvas>
+	</DockPanel>
+
+</Window>
