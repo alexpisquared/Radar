@@ -36,7 +36,7 @@ namespace Radar
     {
       base.OnStartup(e);      //Bpr.BeepBgn2();
 
-      Application.Current.DispatcherUnhandledException += UnhandledExceptionHndlr.OnCurrentDispatcherUnhandledException;     //new SpeechSynthesizer().Speak("Testing");			new SpeechSynthesizer().SpeakAsync("Testing");
+      Current.DispatcherUnhandledException += UnhandledExceptionHndlr.OnCurrentDispatcherUnhandledException;     //new SpeechSynthesizer().Speak("Testing");			new SpeechSynthesizer().SpeakAsync("Testing");
 
       Tracer.SetupTracingOptions("Radar", new TraceSwitch("Verbose-ish", "See ScrSvr for the model.") { Level = TraceLevel.Verbose }, false);
 
@@ -54,7 +54,7 @@ namespace Radar
           case justUiNotElse: new RadarAnimation(true, Settings.AlarmThreshold).ShowDialog(); break;
           case showIfRainCmn: if (sayRainOnOrComing(e.Args, uptime))                    /**/ goto default; break;
           case sayUpTimeShow: sayRainOnOrComing(e.Args, uptime);                        /**/ goto default;
-          case sayUpTimeNoUI: if (uptime.TotalMinutes > 20) Synth.Speak(upTimeMsg(uptime, "No UI.")); break;
+          case sayUpTimeNoUI: if (uptime.TotalMinutes > 20) Synth.SpeakFaF(upTimeMsg(uptime, "No UI.")); break;
         }
 
         var eois = await EvLogHelper.UpdateEvLogToDb(0, $"Radar.exe {e.Args.FirstOrDefault()}");
@@ -64,12 +64,12 @@ namespace Radar
       }
       catch (Exception ex)
       {
-        AAV.Sys.Helpers.Bpr.BeepBigError();
-        Synth.Speak(ex.Message);
+        Bpr.BeepBigError();
+        Synth.SpeakFaF(ex.Message);
       }
       finally
       {
-        await Task.Delay(5000); // what are we waiting for?
+        await Task.Delay(2500); // what are we waiting for?
         App.Current.Shutdown();
       }
     }
@@ -107,7 +107,7 @@ namespace Radar
         if ((args.Length > 1 && args[1].Equals("ShowLsaPopup")) || isDue(uptime))
           showLongStretchAlertPopup(uptime, rainAndUptimeMsg);
         else if (rainAndUptimeMsg.Length > 0)
-          Synth.Speak(rainAndUptimeMsg);
+          Synth.SpeakFaF(rainAndUptimeMsg);
       }
 
       return true; // show anyway in case of issues.
