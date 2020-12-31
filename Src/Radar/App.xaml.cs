@@ -1,22 +1,14 @@
-﻿using SpeechSynthLib.Adapter;
-using AAV.Sys.Helpers;
+﻿using AAV.Sys.Helpers;
 using AAV.WPF.Helpers;
+using AsLink;
 using Radar.Properties;
-using Radar;
 using RadarPicCollect;
+using SpeechSynthLib.Adapter;
 using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using AsLink;
 
 namespace Radar
 {

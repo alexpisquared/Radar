@@ -63,8 +63,9 @@
         <TextBlock FontSize="36" Text="{Binding HeaderTitle, FallbackValue='Up-Time Watch'}" Margin="15" HorizontalAlignment="Center" x:Name="headerTitle"/>
 
         <StackPanel HorizontalAlignment="Right" Margin="3 0" x:Name="PnlVerInfo">
-          <AccessText Text="{Binding BuildVersion, FallbackValue=Radar: 3.3, StringFormat=Ver: \{0\}}"     />
-          <AccessText Text="{Binding MbxTime, FallbackValue=7-8 5:55, StringFormat=Now: \{0:MMM-d H:mm\}}" />
+          <AccessText Text="{Binding BuildVersion, FallbackValue=Radar: 3.3, StringFormat=Ver: \{0\}}"     HorizontalAlignment="Right" />
+          <AccessText Text="{Binding MbxTime, FallbackValue=7-8 5:55, StringFormat=Now: \{0:MMM-d H:mm\}}" HorizontalAlignment="Right" />
+          <Button Background="Transparent" Content="_Radar"   ToolTip="Show Radar" Click="onShowRadar" />
         </StackPanel>
       </Grid>
 
