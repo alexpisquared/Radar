@@ -36,17 +36,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="BitmapForWpfHelperWayWindow.xaml.cs">
+    <Compile Update="View\BitmapForWpfHelperWayWindow.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>BitmapForWpfHelperWayWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Update="ListBoxBinding.xaml.cs">
+    <Compile Update="View\ListBoxBinding.xaml.cs">
       <DependentUpon>ListBoxBinding.xaml</DependentUpon>
     </Compile>
-    <Compile Update="RadarAnimation.xaml.cs">
+    <Compile Update="View\RadarAnimation.xaml.cs">
       <DependentUpon>RadarAnimation.xaml</DependentUpon>
     </Compile>
-    <Compile Update="RadarUsrCtrl.xaml.cs">
+    <Compile Update="View\RadarUsrCtrl.xaml.cs">
       <DependentUpon>RadarUsrCtrl.xaml</DependentUpon>
     </Compile>
     <Compile Update="View\DailyChart.xaml.cs">
@@ -61,16 +61,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="BitmapForWpfHelperWayWindow.xaml">
+    <Page Update="View\BitmapForWpfHelperWayWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="ListBoxBinding.xaml">
+    <Page Update="View\ListBoxBinding.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="RadarAnimation.xaml">
+    <Page Update="View\RadarAnimation.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="RadarUsrCtrl.xaml">
+    <Page Update="View\RadarUsrCtrl.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\DailyChart.xaml">
