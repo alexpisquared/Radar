@@ -101,7 +101,7 @@ namespace UpTimeChart
       if (TrgDateC >= DateTime.Today) addRectangle(0, _ah, _aw * DateTime.Now.TimeOfDay.TotalDays, 1, Brushes.White); // now line
     }
 
-    void addRectangle(double top, double hgt, double left, double width, Brush brush, string tooltip = null) => addUiElnt(top, left, new Rectangle { Width = width, Height = hgt, Fill = brush, ToolTip = tooltip != null ? tooltip : $"thlw: {top:N0}-{hgt:N0}-{left:N0}-{width:N0}." }); //addArcDtl(hgt, left, width);
+    void addRectangle(double top, double hgt, double left, double width, Brush brush, string? tooltip = null) => addUiElnt(top, left, new Rectangle { Width = width, Height = hgt, Fill = brush, ToolTip = tooltip != null ? tooltip : $"thlw: {top:N0}-{hgt:N0}-{left:N0}-{width:N0}." }); //addArcDtl(hgt, left, width);
 
     void drawUpDnLine(DateTime trgDate, string pc, string rgb)
     {

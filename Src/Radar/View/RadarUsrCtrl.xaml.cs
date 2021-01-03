@@ -1,5 +1,4 @@
 ﻿using Microsoft.Win32;
-using Radar;
 using RadarPicCollect;
 using System;
 using System.Collections.Generic;
@@ -29,9 +28,9 @@ namespace Radar
       _picIndex__Timer.Interval = TimeSpan.FromMilliseconds(20);
       _animation_Timer.Interval = TimeSpan.FromMilliseconds(fwdPace);
       _getFromWebTimer.Interval = TimeSpan.FromMilliseconds(30); //get rigth away, then reget every 5 min.
-      _picIndex__Timer.Tick += new EventHandler(picIndex__Timer_TickAsync);
-      _animation_Timer.Tick += new EventHandler(dTimerAnimation_Tick);
-      _getFromWebTimer.Tick += new EventHandler(fetchFromWeb____Tick);
+      _picIndex__Timer.Tick += async (s, e) => await picIndex__Timer_TickAsync(s, e); // new EventHandler(picIndex__Timer_TickAsync);
+      _animation_Timer.Tick += async (s, e) => await dTimerAnimation_Tick(s, e); // new EventHandler(dTimerAnimation_Tick);
+      _getFromWebTimer.Tick += async (s, e) => await fetchFromWeb____Tick(s, e); // new EventHandler(fetchFromWeb____Tick);
       _getFromWebTimer.Start();
       _animation_Timer.Start();
 
@@ -73,7 +72,7 @@ namespace Radar
       if (idx < 0)
       {
         updateClock(_curImageTime);
-        fetchFromWebBegin();
+        await fetchFromWebBegin();
       }
       else
         await showPicX(idx);
@@ -173,7 +172,7 @@ namespace Radar
         case Key.Add: fwdPace /= 2; if (fwdPace == 0) fwdPace = 1; _animation_Timer.Interval = TimeSpan.FromMilliseconds(fwdPace); break;
         case Key.Subtract: fwdPace *= 2; _animation_Timer.Interval = TimeSpan.FromMilliseconds(fwdPace); break;
 
-        case Key.F5: fetchFromWebBegin(); break;
+        case Key.F5: await fetchFromWebBegin(); break;
         case Key.F6: setNewImageSource(@"/Radar;component/WKR_roads.gif"); break;// C:\0\0\web\Radar\WKR_roads.gif"); break; //King (default)
         case Key.F7: setNewImageSource(@"C:\0\0\web\Radar\WSO_roads.gif"); break; //London
         case Key.F8: _imageRoads.Visibility = _imageRoads.Visibility == Visibility.Hidden ? Visibility.Visible : Visibility.Hidden; break;
@@ -190,7 +189,7 @@ namespace Radar
         case Key.OemComma: await showPrevAsync(false); break;
 
         case Key.Tab: return;
-        case Key.Escape: if (_isStandalole) WpfUtils.FindParentWindow(this).Close(); else WpfUtils.FindParentWindow(this).Hide(); break;
+        case Key.Escape: if (_isStandalole) WpfUtils.FindParentWindow(this)?.Close(); else WpfUtils.FindParentWindow(this)?.Hide(); break;
         case Key.Delete: DeleteOldImages(); break;
       }
     }
@@ -203,7 +202,7 @@ namespace Radar
           if (DateTime.Now - new FileInfo(imageFile).LastWriteTime > TimeSpan.FromDays(7))
             File.Delete(imageFile);
       }
-      catch (Exception ex) { System.Diagnostics.Trace.WriteLine(ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name); if (System.Diagnostics.Debugger.IsAttached) System.Diagnostics.Debugger.Break(); throw; }
+      catch (Exception ex) { System.Diagnostics.Trace.WriteLine(ex.Message, System.Reflection.MethodInfo.GetCurrentMethod()?.Name); if (System.Diagnostics.Debugger.IsAttached) System.Diagnostics.Debugger.Break(); throw; }
     }
     public static string DeleteOldImages()
     {
@@ -222,7 +221,7 @@ namespace Radar
             }
         }
       }
-      catch (Exception ex) { System.Diagnostics.Trace.WriteLine(ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name); if (System.Diagnostics.Debugger.IsAttached) System.Diagnostics.Debugger.Break(); throw; }
+      catch (Exception ex) { System.Diagnostics.Trace.WriteLine(ex.Message, System.Reflection.MethodInfo.GetCurrentMethod()?.Name); if (System.Diagnostics.Debugger.IsAttached) System.Diagnostics.Debugger.Break(); throw; }
 
       return string.Format("{0} out of {1} files are deleted", deleted, ttl);
     }
@@ -283,7 +282,7 @@ namespace Radar
         {
           result.Add(new MyImage(new BitmapImage(new Uri(filename)), System.IO.Path.GetFileNameWithoutExtension(filename)));
         }
-        catch (Exception ex) { System.Diagnostics.Trace.WriteLine(ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name); if (System.Diagnostics.Debugger.IsAttached) System.Diagnostics.Debugger.Break(); throw; }
+        catch (Exception ex) { System.Diagnostics.Trace.WriteLine(ex.Message, System.Reflection.MethodInfo.GetCurrentMethod()?.Name); if (System.Diagnostics.Debugger.IsAttached) System.Diagnostics.Debugger.Break(); throw; }
       }
       return result;
     }
@@ -296,7 +295,7 @@ namespace Radar
 
     void speedMeasure() { _isSpeedMeasuring = !_isSpeedMeasuring; _picIndex__Timer.IsEnabled = _isSpeedMeasuring; }
 
-    async void dTimerAnimation_Tick(object s, EventArgs e)
+    async Task dTimerAnimation_Tick(object? s, EventArgs e)
     {
       if (forward)
       {
@@ -325,7 +324,7 @@ namespace Radar
       await showPicX(_curPicIdx);
     }
 
-    async void picIndex__Timer_TickAsync(object s, EventArgs e)
+    async Task picIndex__Timer_TickAsync(object? s, EventArgs e)
     {
       if (_curPicIdx == _radarPicCollector.Pics.Count - 1)
         _curPicIdx = _radarPicCollector.Pics.Count - _animationLength;
@@ -335,14 +334,14 @@ namespace Radar
       await showPicX(_curPicIdx);
     }
 
-    void fetchFromWeb____Tick(object s, EventArgs e)
+    async Task fetchFromWeb____Tick(object? s, EventArgs e)
     {
       _getFromWebTimer.Stop();
       _getFromWebTimer.Interval = TimeSpan.FromMinutes(5); //reget every 5 min
-      fetchFromWebBegin();
+      await fetchFromWebBegin();
     }
 
-    void fetchFromWebBegin()
+    async Task fetchFromWebBegin()
     {
       btnSnow.IsEnabled = !(btnRain.IsEnabled = (RadarPicCollector.RainOrSnow != "RAIN"));
       LTitle.Text = "Going for it....";
@@ -352,13 +351,13 @@ namespace Radar
       {
         //new IntArgDelegate(fetchFromWebBlockingCall_FetchRad).BeginInvoke(i, null, null);
         _radarPicCollector.DownloadRadarPicsNextBatch(stationIndex);
-        updateUIAsync("Not sure ...");
+        await updateUIAsync("Not sure ...");
       }
 
       keyFocusBtn.Focus();
     }
 
-    void fetchFromWebBlockingCall_FetchRad(int stationIndex) => 
+    void fetchFromWebBlockingCall_FetchRad(int stationIndex) =>
       MainCanvas.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new OneArgDelegate(updateUI_), _radarPicCollector.DownloadRadarPicsNextBatch(stationIndex));
 
     async void updateUI_(string title) => await updateUIAsync(title);
@@ -377,11 +376,9 @@ namespace Radar
 
     void onPopupTpl(object s, RoutedEventArgs e) { }//new RadarTpl.MainWindow().Show(); }
 
-    void onRain(object s, RoutedEventArgs e) { RadarPicCollector.RainOrSnow = "RAIN"; fetchFromWebBegin(); }
-    void onSnow(object s, RoutedEventArgs e) { RadarPicCollector.RainOrSnow = "SNOW"; fetchFromWebBegin(); }
-
-
-    void onF5(object s, RoutedEventArgs e) => fetchFromWebBegin();
+    async void onRain(object s, RoutedEventArgs e) { RadarPicCollector.RainOrSnow = "RAIN"; await fetchFromWebBegin(); }
+    async void onSnow(object s, RoutedEventArgs e) { RadarPicCollector.RainOrSnow = "SNOW"; await fetchFromWebBegin(); }
+    async void onF5(object s, RoutedEventArgs e) => await fetchFromWebBegin();
 
     async void onKeyDown(object s, KeyEventArgs e) => await OnKeyDown__Async(e.Key);
     async void keyFocusBtn_ClickAsync(object s, System.Windows.RoutedEventArgs e) => await OnKeyDown__Async(Key.Space);
@@ -398,7 +395,7 @@ namespace Radar
       bi.BeginInit();
       bi.DecodePixelWidth = 100;
       bi.CacheOption = BitmapCacheOption.OnLoad;
-      bi.UriSource = new Uri(value.ToString());
+      bi.UriSource = new Uri(value?.ToString() ?? "");
       bi.EndInit();
       return bi;
     }
@@ -410,7 +407,7 @@ namespace Radar
     {
       get
       {
-        var rv = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\SkyDrive", "UserFolder", System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "OneDrive")).ToString();
+        var rv = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\SkyDrive", "UserFolder", System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "OneDrive"))?.ToString();
         return rv ?? System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "OneDrive");
       }
     }
@@ -418,9 +415,9 @@ namespace Radar
 
   public static class WpfUtils
   {
-    public static Window FindParentWindow(FrameworkElement element)
+    public static Window? FindParentWindow(FrameworkElement? element)
     {
-      if (element.Parent == null) return null;
+      if (element?.Parent == null) return null;
 
       if (element.Parent as Window != null) return element.Parent as Window;
 

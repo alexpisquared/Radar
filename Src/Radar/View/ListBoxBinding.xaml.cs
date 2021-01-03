@@ -1,21 +1,16 @@
 using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.IO;
 using System.Collections;
 using System.Collections.Generic;
-
+using System.IO;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
-using Microsoft.Win32;
-using AsLink;
-using Radar;
+using System.Windows.Media.Imaging;
 
 
 namespace Radar
 {
-	public partial class ListBoxBinding : Window
+  public partial class ListBoxBinding : Window
 	{
 		public ListBoxBinding()
 		{
@@ -34,20 +29,20 @@ namespace Radar
 
 		private void showListboxSelectedImage(object s, SelectionChangedEventArgs args)
 		{
-			ListBox list = ((ListBox)s);
+			var list = ((ListBox)s);
 			if (list != null)
 			{
-				int index = list.SelectedIndex;	//Save the selected index 
+				var index = list.SelectedIndex;	//Save the selected index 
 				if (index >= 0)
 				{
-					string selection = list.SelectedItem.ToString();
+					var selection = list.SelectedItem?.ToString();
 
 					if ((selection != null) && (selection.Length != 0))
 					{
 						//Set currentImage to selected Image
-						Uri selLoc = new Uri(selection);
-						BitmapImage id = new BitmapImage(selLoc);
-						FileInfo currFileInfo = new FileInfo(selection);
+						var selLoc = new Uri(selection);
+						var id = new BitmapImage(selLoc);
+						var currFileInfo = new FileInfo(selection);
 						currentImage.Source = id;
 
 						Title = string.Format("{0}x{1} {2}", id.PixelWidth, id.PixelHeight, id.Format);
@@ -60,11 +55,11 @@ namespace Radar
 
 		private ArrayList loadImageListFromFS()
 		{
-			ArrayList imageFiles = new ArrayList();
+			var imageFiles = new ArrayList();
 
 			//string[] files = Directory.GetFiles(Directory.GetCurrentDirectory() + "\\..\\..\\myData", "*.jpg");
 			//  _d____________________________ataroot = Path.Combine((Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\SkyDrive", "UserFolder", System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "OneDrive")) ?? System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "OneDrive")).ToString(), "web.cache", "iWindsurf.jpg"); //tu: XP-proofed!!!
-			foreach (string image in Directory.GetFiles(GetOneDriveFile("---www.weatheroffice.gc.ca-data-radar-temp_image*.Gif"))) //tu: XP-proofed!!!
+			foreach (var image in Directory.GetFiles(GetOneDriveFile("---www.weatheroffice.gc.ca-data-radar-temp_image*.Gif"))) //tu: XP-proofed!!!
 				imageFiles.Add(new FileInfo(image));
 
 
@@ -81,8 +76,8 @@ namespace Radar
 		{
 			get
 			{
-				List<MyImage> result = new List<MyImage>();
-				foreach (string filename in Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)))
+				var result = new List<MyImage>();
+				foreach (var filename in Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)))
 				{
 					try
 					{
@@ -92,7 +87,7 @@ namespace Radar
 						 new Uri(filename)),
 						 System.IO.Path.GetFileNameWithoutExtension(filename)));
 					}
-					catch (Exception ex) { System.Diagnostics.Trace.WriteLine(ex.Message, System.Reflection.MethodInfo.GetCurrentMethod().Name); if (System.Diagnostics.Debugger.IsAttached) System.Diagnostics.Debugger.Break(); throw; }
+					catch (Exception ex) { System.Diagnostics.Trace.WriteLine(ex.Message, System.Reflection.MethodInfo.GetCurrentMethod()?.Name); if (System.Diagnostics.Debugger.IsAttached) System.Diagnostics.Debugger.Break(); throw; }
 				}
 				return result;
 			}
@@ -105,19 +100,16 @@ namespace Radar
 	{
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			BitmapImage bi = new BitmapImage();
+			var bi = new BitmapImage();
 			bi.BeginInit();
 			bi.DecodePixelWidth = 100;
 			bi.CacheOption = BitmapCacheOption.OnLoad;
-			bi.UriSource = new Uri(value.ToString());
+			bi.UriSource = new Uri(value.ToString() ?? "");
 			bi.EndInit();
 			return bi;
 		}
-		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-		{
-			throw new Exception("The method or operation is not implemented.");
-		}
-	}
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => throw new Exception("The method or operation is not implemented.");
+  }
 
 
 

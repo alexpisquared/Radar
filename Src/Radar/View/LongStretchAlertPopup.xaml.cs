@@ -48,7 +48,7 @@ namespace Radar.View
 
     async void onExtendXXMin(object s, RoutedEventArgs e)
     {
-      var c = ((Button)s).Content.ToString().Replace("_", "").Replace(" ", "");
+      var c = ((Button)s)?.Content?.ToString()?.Replace("_", "").Replace(" ", "");
       if (int.TryParse(c, out var min))
       {
         Visibility = Visibility.Collapsed;
@@ -58,9 +58,6 @@ namespace Radar.View
       }
     }
 
-    void onShowRadar(object sender, RoutedEventArgs e)
-    {
-      new RadarAnimation(true, Settings.AlarmThreshold).Show(); 
-    }
+    void onShowRadar(object sender, RoutedEventArgs e) => new RadarAnimation(true, Settings.AlarmThreshold).Show();
   }
 }

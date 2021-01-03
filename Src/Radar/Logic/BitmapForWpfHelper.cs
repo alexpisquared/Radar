@@ -13,7 +13,7 @@ namespace Radar
 {
     public class BitmapForWpfHelper
     {
-        public static async Task<BitmapSource> BitmapToBitmapSource(Bitmap bmp)
+        public static async Task<BitmapSource?> BitmapToBitmapSource(Bitmap bmp)
         {
             //testCheckForRainyPixels(bmp);
 

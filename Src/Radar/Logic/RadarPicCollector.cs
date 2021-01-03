@@ -51,7 +51,7 @@ namespace RadarPicCollect
       return string.Format("   <{0} out of {1} Pics Loaded @{2}>", _picDtlList.Count, _backLenCur, DateTime.Now.ToString("d HH:mm"));
     }
 
-    void getPic(int times10minBack, DateTime gmt10Now, string rainOrSnow = null)
+    void getPic(int times10minBack, DateTime gmt10Now, string? rainOrSnow = null)
     {
       if (!string.IsNullOrEmpty(rainOrSnow))
         RainOrSnow = rainOrSnow;
@@ -77,7 +77,7 @@ namespace RadarPicCollect
             if (pic != null)
             {
               _urlPicList.Add(urlLate, pic);
-              _picDtlList.Add(new PicDetail(pic, dt.AddHours(-4), _station[_stationIndex], _stationOffset[_stationIndex], WebScrap.WebScraper.GetCachedFileNameFromUrl_(urlLate.Split('|')[0], false)));
+              _picDtlList.Add(new PicDetail(pic, dt.AddHours(-RadarPicCollector.GmtOffset), _station[_stationIndex], _stationOffset[_stationIndex], WebScraper.GetCachedFileNameFromUrl_(urlLate.Split('|')[0], false)));
             }
 
             report(times10minBack, urlLate, pic, "   WEB");
@@ -88,7 +88,7 @@ namespace RadarPicCollect
             if (pic != null)
             {
               _urlPicList.Add(urlLate, pic);
-              _picDtlList.Add(new PicDetail(pic, dt.AddHours(-4), _station[_stationIndex], _stationOffset[_stationIndex], WebScrap.WebScraper.GetCachedFileNameFromUrl_(urlLate.Split('|')[0], false)));
+              _picDtlList.Add(new PicDetail(pic, dt.AddHours(-RadarPicCollector.GmtOffset), _station[_stationIndex], _stationOffset[_stationIndex], WebScraper.GetCachedFileNameFromUrl_(urlLate.Split('|')[0], false)));
             }
             else
             {
@@ -96,7 +96,7 @@ namespace RadarPicCollect
               if (pic != null)
               {
                 _urlPicList.Add(urlLate, pic);
-                _picDtlList.Add(new PicDetail(pic, dt.AddHours(-4), _station[_stationIndex], _stationOffset[_stationIndex], WebScrap.WebScraper.GetCachedFileNameFromUrl_(urlHist.Split('|')[0], false)));
+                _picDtlList.Add(new PicDetail(pic, dt.AddHours(-RadarPicCollector.GmtOffset), _station[_stationIndex], _stationOffset[_stationIndex], WebScraper.GetCachedFileNameFromUrl_(urlHist.Split('|')[0], false)));
               }
               else
               {
@@ -111,7 +111,7 @@ namespace RadarPicCollect
       catch (Exception ex) { ex.Log(); }
     }
 
-    static void report(int back, string url_time_, Bitmap pic, string src)
+    static void report(int back, string url_time_, Bitmap? pic, string src)
     {
       // Debug.WriteLine(string.Format("{0,3}/{1} {2}: from   {3}: {4}", back, _backLenLive, url_time_.Substring(78), src, pic == null ? "-Unable to get this pic" : "+SUCCESS"));
     }
@@ -140,7 +140,7 @@ namespace RadarPicCollect
       }
     }
 
-    static string _rainOrSnow = null;//(DateTime.Now.DayOfYear < 72 || DateTime.Now.Month == 12) ? "SNOW" : "RAIN";
+    static string? _rainOrSnow = null;//(DateTime.Now.DayOfYear < 72 || DateTime.Now.Month == 12) ? "SNOW" : "RAIN";
 
     public string DownloadRadarPicsNextBatch(int stationIndex = 0) { _stationIndex = stationIndex; return DownloadRadarPics(); }
 
@@ -158,7 +158,7 @@ namespace RadarPicCollect
       }
       return -1;
     }
-    public PicDetail Time(DateTime time)
+    public PicDetail? Time(DateTime time)
     {
       foreach (var pd in _picDtlList)
       {
@@ -178,12 +178,12 @@ namespace RadarPicCollect
       return dt;
     }
 
-    public static Bitmap GetBmpLclTime(DateTime lcltime)
+    public static Bitmap? GetBmpLclTime(DateTime lcltime)
     {
       var gmt = RoundBy10min(lcltime.AddHours(GmtOffset));
       return GetBmp(gmt);
     }
-    public static Bitmap GetLatestBmp()
+    public static Bitmap? GetLatestBmp()
     {
       var gmtNow = RoundBy10min(DateTime.UtcNow);
       Debug.Assert((int)((DateTime.UtcNow - DateTime.Now.AddHours(RadarPicCollector.GmtOffset)).TotalHours) == 0);
@@ -203,12 +203,12 @@ namespace RadarPicCollect
 
       return null;
     }
-    public static Bitmap GetBmp(DateTime gmtTime, string station = "WSO")
+    public static Bitmap? GetBmp(DateTime gmtTime, string station = "WSO")
     {
       if (_cache.ContainsKey(gmtTime)) return _cache[gmtTime];
 
       //string rainOrSnow = (DateTime.Now.DayOfYear < 70 || DateTime.Now.Month == 12) ? "SNOW" : "RAIN";//todo: maybe temperature based.
-      Bitmap bmp = null;
+      Bitmap? bmp = null;
 
       try
       {
@@ -226,11 +226,12 @@ namespace RadarPicCollect
       return bmp;
     }
 
-    static Bitmap getFromCacheOrWeb(string url)
+    static Bitmap? getFromCacheOrWeb(string url)
     {
-      Bitmap bmp = null;
-      bmp = WebScraperBitmap.LoadImageFromFile(url, useOneDrive: false); if (bmp != null) return bmp;
-      bmp = WebScraperBitmap.DownloadImageCached(url, useOneDrive: false); if (bmp != null) return bmp;
+      var bmp = WebScraperBitmap.LoadImageFromFile(url, useOneDrive: false); 
+      if (bmp != null) return bmp;
+      
+      bmp = WebScraperBitmap.DownloadImageCached(url, useOneDrive: false); 
       return bmp;
     }
 
