@@ -27,28 +27,28 @@ namespace RadarPicCollect
             var pc = bmp.GetPixel(x0 + x, y0 + y);
             switch (pc.ToArgb())
             {
-              default: addIf(cases, $"case {pc.ToArgb(),9}: addIfN(mmcnt, -1); ttlMPH += -1; break; // {pc.Name,10}   RGB: {pc.R,3} {pc.G,3} {pc.B,3}   <Rectangle Fill=\"#{pc.Name}\" />"); break; //dev: addIfN(mmcnt, -003); 
+              default: addOrIncrementCount(cases, $"case {pc.ToArgb(),9}: addOrIncrementCount(mmcnt, -1); ttlMPH += -1; break; // {pc.Name,10}   RGB: {pc.R,3} {pc.G,3} {pc.B,3}   <Rectangle Fill=\"#{pc.Name}\" />"); break; //dev: addIfN(mmcnt, -003); 
 
               // lite
-              case -00039220: addIfN(mmcnt, -1); ttlMPH += -1; break; //   ffff66cc   RGB: 255 102 204   <Rectangle Fill="#ffff66cc" />       1
-              case -13369549: addIfN(mmcnt, -1); ttlMPH += -1; break; //   ff33ff33   RGB:  51 255  51   <Rectangle Fill="#ff33ff33" />       2
-              case -06684775: addIfN(mmcnt, 01); ttlMPH += 01; break; //   ff99ff99   RGB: 153 255 153   <Rectangle Fill="#ff99ff99" />    0.1 - 1 mm/hr => 1
+              case -00039220: addOrIncrementCount(mmcnt, -1); ttlMPH += -1; break; //   ffff66cc   RGB: 255 102 204   <Rectangle Fill="#ffff66cc" />       1
+              case -13369549: addOrIncrementCount(mmcnt, -1); ttlMPH += -1; break; //   ff33ff33   RGB:  51 255  51   <Rectangle Fill="#ff33ff33" />       2
+              case -06684775: addOrIncrementCount(mmcnt, 01); ttlMPH += 01; break; //   ff99ff99   RGB: 153 255 153   <Rectangle Fill="#ff99ff99" />    0.1 - 1 mm/hr => 1
 
               // dark
-              case -10092391: addIfN(mmcnt, 2000); ttlMPH += 2000; break;   // ff660099, 660099   RGB: 102  153  => .
-              case -06736948: addIfN(mmcnt, 1500); ttlMPH += 1500; break;   // ff9933cc, 9933cc   RGB: 153 51 204  => .
-              case -00064871: addIfN(mmcnt, 1000); ttlMPH += 1000; break;   // ffff0299, ff0299   RGB: 255 2 153  => .
-              case -00065536: addIfN(mmcnt, 0750); ttlMPH += 0750; break;   // ffff0000, ff0000   RGB: 255    => .
-              case -00039424: addIfN(mmcnt, 0500); ttlMPH += 0500; break;   // FFFF6600,    ???   RGB: 51 51 102  => .
-              case -00026368: addIfN(mmcnt, 0360); ttlMPH += 0360; break;   // ffff9900, ff9900   RGB: 255 153   => .
-              case -00013312: addIfN(mmcnt, 0240); ttlMPH += 0240; break;   // ffffcc00, ffcc00   RGB: 255 204   0  => .
-              case -00000205: addIfN(mmcnt, 0180); ttlMPH += 0180; break;   // ffffff33, ffff33   RGB: 255 255  51  => .
-              case -16751104: addIfN(mmcnt, 0120); ttlMPH += 0120; break;   // ff006600, 006600   RGB:   0 102   0  => .
-              case -16738048: addIfN(mmcnt, 0080); ttlMPH += 0080; break;   // ff009900, 009900   RGB:   0 153   0  => .
-              case -16724992: addIfN(mmcnt, 0040); ttlMPH += 0040; break;   // ff00cc00, 00cc00   RGB:   0 204   0  => .
-              case -16711834: addIfN(mmcnt, 0020); ttlMPH += 0020; break;   // ff00ff66, 00ff66   RGB:   0 255 102  => .
-              case -16737793: addIfN(mmcnt, 0010); ttlMPH += 0010; break;   // ff0099ff, 0099ff   RGB:   0 153 255  => .
-              case -06697729: addIfN(mmcnt, 0001); ttlMPH += 0001; break;   // ff99ccff, 99ccff   RGB: 153 204 255  => .
+              case -10092391: addOrIncrementCount(mmcnt, 2000); ttlMPH += 2000; break;   // ff660099, 660099   RGB: 102  153  => .
+              case -06736948: addOrIncrementCount(mmcnt, 1500); ttlMPH += 1500; break;   // ff9933cc, 9933cc   RGB: 153 51 204  => .
+              case -00064871: addOrIncrementCount(mmcnt, 1000); ttlMPH += 1000; break;   // ffff0299, ff0299   RGB: 255 2 153  => .
+              case -00065536: addOrIncrementCount(mmcnt, 0750); ttlMPH += 0750; break;   // ffff0000, ff0000   RGB: 255    => .
+              case -00039424: addOrIncrementCount(mmcnt, 0500); ttlMPH += 0500; break;   // FFFF6600,    ???   RGB: 51 51 102  => .
+              case -00026368: addOrIncrementCount(mmcnt, 0360); ttlMPH += 0360; break;   // ffff9900, ff9900   RGB: 255 153   => .
+              case -00013312: addOrIncrementCount(mmcnt, 0240); ttlMPH += 0240; break;   // ffffcc00, ffcc00   RGB: 255 204   0  => .
+              case -00000205: addOrIncrementCount(mmcnt, 0180); ttlMPH += 0180; break;   // ffffff33, ffff33   RGB: 255 255  51  => .
+              case -16751104: addOrIncrementCount(mmcnt, 0120); ttlMPH += 0120; break;   // ff006600, 006600   RGB:   0 102   0  => .
+              case -16738048: addOrIncrementCount(mmcnt, 0080); ttlMPH += 0080; break;   // ff009900, 009900   RGB:   0 153   0  => .
+              case -16724992: addOrIncrementCount(mmcnt, 0040); ttlMPH += 0040; break;   // ff00cc00, 00cc00   RGB:   0 204   0  => .
+              case -16711834: addOrIncrementCount(mmcnt, 0020); ttlMPH += 0020; break;   // ff00ff66, 00ff66   RGB:   0 255 102  => .
+              case -16737793: addOrIncrementCount(mmcnt, 0010); ttlMPH += 0010; break;   // ff0099ff, 0099ff   RGB:   0 153 255  => .
+              case -06697729: addOrIncrementCount(mmcnt, 0001); ttlMPH += 0001; break;   // ff99ccff, 99ccff   RGB: 153 204 255  => .
 
               // lite
               case -00723724:                                         //   fff4f4f4   RGB: 244 244 244   <Rectangle Fill="#fff4f4f4" />    3154
@@ -58,7 +58,7 @@ namespace RadarPicCollect
               // dark
               case -13421722:                                                  // ff333366, RGB:  51  51 102  => Lake
               case -00000001:                                                  // ffffffff, RGB: 255 255 255  => Cross
-              case -06710938: addIfN(mmcnt, 0000); break;                   // ff999966, RGB: 153 153 102  => Land
+              case -06710938: addOrIncrementCount(mmcnt, 0000); break;                   // ff999966, RGB: 153 153 102  => Land
             }
           }
         }
@@ -97,7 +97,7 @@ namespace RadarPicCollect
       catch (Exception ex) { ex.Log(); return -2; }
     }
 
-    static void addIfN(Dictionary<int, int> mmcnt, int k) { if (mmcnt.ContainsKey(k)) mmcnt[k]++; else mmcnt.Add(k, 1); }
-    static void addIf(SortedDictionary<string, int> cases, string s) { if (cases.ContainsKey(s)) cases[s]++; else cases.Add(s, 1); }
+    static void addOrIncrementCount(Dictionary<int, int> mmcnt, int k) { if (mmcnt.ContainsKey(k)) mmcnt[k]++; else mmcnt.Add(k, 1); }
+    static void addOrIncrementCount(SortedDictionary<string, int> cases, string s) { if (cases.ContainsKey(s)) cases[s]++; else cases.Add(s, 1); }
   }
 }
