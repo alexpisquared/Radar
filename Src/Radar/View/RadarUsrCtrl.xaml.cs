@@ -195,7 +195,7 @@ namespace Radar
       }
     }
 
-    string deleteOldSmallImages(int deleteLessThanBytes = 21000, string path = @"C:\temp\web.cache\sweather.gc.ca")
+    string deleteOldSmallImages(int deleteLessThanBytes = 21000, string path = @"C:\temp\web.cache\weather.gc.ca")
     {
       try
       {
