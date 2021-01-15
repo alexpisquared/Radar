@@ -58,6 +58,6 @@ namespace Radar.View
       }
     }
 
-    void onShowRadar(object sender, RoutedEventArgs e) => new RadarAnimation(true, Settings.AlarmThreshold).Show();
+    void onShowRadar(object sender, RoutedEventArgs e) => new RadarAnimation(Settings.AlarmThreshold).Show();
   }
 }

@@ -4,7 +4,7 @@
 				x:Name="rdr1"
 				x:Class="Radar.RadarAnimation" Title="Radar   F5 to [re]load" 
 				AllowsTransparency="True"	WindowStyle="None"  ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen" 
-				Icon="/RadarCircles.ico" Width="1160" Height="960" Background="#1000" Topmost="True" >
+				Icon="/RadarCircles.ico" Width="1160" Height="960" Background="#1000" Topmost="False" >
   <Viewbox>
     <Grid Width="1160" Height="960" >
       <Grid.ColumnDefinitions>

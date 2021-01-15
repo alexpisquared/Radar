@@ -43,7 +43,7 @@ namespace Radar
         {
           default:
           case help:
-          case justUiNotElse: new RadarAnimation(true, Settings.AlarmThreshold).ShowDialog(); break;
+          case justUiNotElse: new RadarAnimation(Settings.AlarmThreshold).ShowDialog(); break;
           case showIfRainCmn: if (sayRainOnOrComing(e.Args, uptime))                    /**/ goto default; break;
           case sayUpTimeShow: sayRainOnOrComing(e.Args, uptime);                        /**/ goto default;
           case sayUpTimeNoUI: if (uptime.TotalMinutes > 20) Synth.SpeakFaF(upTimeMsg(uptime, "No UI.")); break;

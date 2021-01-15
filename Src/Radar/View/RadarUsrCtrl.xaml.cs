@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
@@ -190,40 +191,20 @@ namespace Radar
 
         case Key.Tab: return;
         case Key.Escape: if (_isStandalole) WpfUtils.FindParentWindow(this)?.Close(); else WpfUtils.FindParentWindow(this)?.Hide(); break;
-        case Key.Delete: DeleteOldImages(); break;
+        case Key.Delete: LTitl2.Text = deleteOldSmallImages(); break;
       }
     }
 
-    void deleteOldImages()
+    string deleteOldSmallImages(int deleteLessThanBytes = 21000, string path = @"C:\temp\web.cache\sweather.gc.ca")
     {
       try
       {
-        foreach (var imageFile in Directory.GetFiles(@"C:\temp\web.cache\www.weatheroffice.gc.ca", "data-radar-temp_image*.GIF"))
-          if (DateTime.Now - new FileInfo(imageFile).LastWriteTime > TimeSpan.FromDays(7))
-            File.Delete(imageFile);
+        var rr = new DirectoryInfo(path).GetFiles("*.GIF").Where(fi => fi.Length < deleteLessThanBytes && DateTime.Now - fi.LastWriteTime > TimeSpan.FromDays(2)).ToList();
+        var rv = $" {rr.Count} files are deleted from {path} smaller {deleteLessThanBytes:N0} bytes";
+        rr.ForEach(fi => File.Delete(fi.FullName));
+        return rv;
       }
       catch (Exception ex) { System.Diagnostics.Trace.WriteLine(ex.Message, System.Reflection.MethodInfo.GetCurrentMethod()?.Name); if (System.Diagnostics.Debugger.IsAttached) System.Diagnostics.Debugger.Break(); throw; }
-    }
-    public static string DeleteOldImages()
-    {
-      int deleted = 0, ttl = 0;
-      try
-      {
-        foreach (var imageFile in Directory.GetFiles(@"C:\temp\web.cache\www.weatheroffice.gc.ca", "data-radar-temp_image*.GIF"))
-        {
-          ttl++;
-          var fi = new System.IO.FileInfo(imageFile);
-          if (DateTime.Now - fi.LastWriteTime > TimeSpan.FromDays(2))
-            if (fi.Length < 42000)
-            {
-              deleted++;
-              System.IO.File.Delete(imageFile);
-            }
-        }
-      }
-      catch (Exception ex) { System.Diagnostics.Trace.WriteLine(ex.Message, System.Reflection.MethodInfo.GetCurrentMethod()?.Name); if (System.Diagnostics.Debugger.IsAttached) System.Diagnostics.Debugger.Break(); throw; }
-
-      return string.Format("{0} out of {1} files are deleted", deleted, ttl);
     }
 
     void setNewImageSource(string s)
@@ -243,8 +224,7 @@ namespace Radar
       }
     }
 
-    //!!!This way is less memory used and faster released.
-    void showListboxSelectedImage(object s, SelectionChangedEventArgs args)
+    void showListboxSelectedImage(object s, SelectionChangedEventArgs args) //tu: !!!This way is less memory used and faster released.
     {
       var list = ((ListBox)s);
       if (list == null)
@@ -376,14 +356,35 @@ namespace Radar
 
     void onPopupTpl(object s, RoutedEventArgs e) { }//new RadarTpl.MainWindow().Show(); }
 
+    async void UserControl_Loaded(object sender, RoutedEventArgs e)
+    {
+      LTitl2.Text = "° ° °";
+      await Task.Delay(15000);
+      LTitl2.Text = deleteOldSmallImages();
+    }
+
     async void onRain(object s, RoutedEventArgs e) { RadarPicCollector.RainOrSnow = "RAIN"; await fetchFromWebBegin(); }
     async void onSnow(object s, RoutedEventArgs e) { RadarPicCollector.RainOrSnow = "SNOW"; await fetchFromWebBegin(); }
     async void onF5(object s, RoutedEventArgs e) => await fetchFromWebBegin();
 
-    async void onKeyDown(object s, KeyEventArgs e) => await OnKeyDown__Async(e.Key);
+    async void onKeyDown__(object s, KeyEventArgs e) => await OnKeyDown__Async(e.Key);
     async void keyFocusBtn_ClickAsync(object s, System.Windows.RoutedEventArgs e) => await OnKeyDown__Async(Key.Space);
 
-    void Hyperlink_RequestNavigate(object s, System.Windows.Navigation.RequestNavigateEventArgs e) { Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri)); e.Handled = true; }
+    void Hyperlink_RequestNavigate(object s, System.Windows.Navigation.RequestNavigateEventArgs e)
+    {
+      e.Handled = true;
+      Debug.WriteLine(e.Uri.AbsoluteUri);
+      try
+      {
+        Process.Start(
+          new ProcessStartInfo(e.Uri.AbsoluteUri)
+          {
+            UseShellExecute = true,
+            Verb = "open"
+          });
+      }
+      catch (Exception ex) { LTitle.Text = ex.Message; }
+    }
   }
 
 
