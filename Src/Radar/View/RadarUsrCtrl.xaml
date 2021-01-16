@@ -153,7 +153,7 @@
       </Menu>
 
       <TextBlock Name="LTitle" Foreground="#f0f" Text="Date teim eee++++++++ RAIN" FontSize="22"	VerticalAlignment="Top"			HorizontalAlignment="Center" Margin="6"	      />
-      <TextBlock Name="LTitl2" Foreground="#f0f" Text="Date teim eee++++++++ RAIN" FontSize="18"	VerticalAlignment="Top"			HorizontalAlignment="Center" Margin="0,63,0,0" />
+      <TextBlock Name="LTitl2" Foreground="#f0f" Text="Date teim eee++++++++ RAIN" FontSize="18"	VerticalAlignment="Top"			HorizontalAlignment="Center" Margin="0,40,0,0" />
       <TextBlock Name="RMeasr" Foreground="#f0f" Text="0.000"                      FontSize="40"	VerticalAlignment="Top"			HorizontalAlignment="Right"  Margin="6"	      />
 
       <StackPanel Margin="2"	Orientation="Horizontal"																												VerticalAlignment="Bottom"	HorizontalAlignment="Stretch"   Background="#4000" >

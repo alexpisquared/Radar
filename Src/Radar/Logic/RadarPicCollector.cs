@@ -1,10 +1,4 @@
-﻿using AAV.Sys.Ext;
-using AsLink;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using WebScrap;
+﻿using AsLink;
 
 namespace RadarPicCollect
 {
@@ -20,10 +14,10 @@ namespace RadarPicCollect
     List<PicDetail> _picDtlList = new List<PicDetail>();
     readonly SortedList<string, Bitmap> _urlPicList = new SortedList<string, Bitmap>(StringComparer.CurrentCultureIgnoreCase);
 
-    static readonly string[] _station = { "WKR",								  // king city - RAIN/SNOW
-																          "WSO" };                // london    - RAIN/SNOW											
-    readonly Point[] _stationOffset = { new Point(0,0),					  // king city - RAIN/SNOW
-															          new Point(-292,131) };    // london    - RAIN/SNOW
+    static readonly string[] _station = { "WKR",								     // king city - RAIN/SNOW
+																          "WSO" };                   // london    - RAIN/SNOW											
+    readonly Point[] _stationOffset = { new Point(0,0),				 // king city - RAIN/SNOW
+															          new Point(-292,131) };  // london    - RAIN/SNOW
 
     public int StationCount => _station.Length;
 
@@ -228,10 +222,10 @@ namespace RadarPicCollect
 
     static Bitmap? getFromCacheOrWeb(string url)
     {
-      var bmp = WebScraperBitmap.LoadImageFromFile(url, useOneDrive: false); 
+      var bmp = WebScraperBitmap.LoadImageFromFile(url, useOneDrive: false);
       if (bmp != null) return bmp;
-      
-      bmp = WebScraperBitmap.DownloadImageCached(url, useOneDrive: false); 
+
+      bmp = WebScraperBitmap.DownloadImageCached(url, useOneDrive: false);
       return bmp;
     }
 
@@ -281,10 +275,7 @@ namespace RadarPicCollect
         else
           report += string.Format("End at {0:HH:mm} or in {1:N1} hours.", tmNow.AddHours(-mhNow / kh), (-mhNow / kh));
       }
-      catch (Exception ex)
-      {
-        report = ex.Message;
-      }
+      catch (Exception ex) { report = ex.Message; }
 
       return report;
     }
