@@ -18,21 +18,26 @@
           <TranslateTransform/>
         </TransformGroup>
       </Grid.RenderTransform>
-      <Ellipse Width='512' Height='512' Margin="-286,-408,-474,-352" RenderTransformOrigin="0.5,0.5" >
+      <Ellipse Width='512' Height='512' RenderTransformOrigin="0.5,0.5" Margin="0">
         <Ellipse.RenderTransform>
           <TransformGroup>
             <ScaleTransform/>
             <SkewTransform/>
             <RotateTransform Angle="0"/>
-            <TranslateTransform X="-94" Y="28"/>
+            <TranslateTransform X="0" Y="0"/>
           </TransformGroup>
         </Ellipse.RenderTransform>
         <Ellipse.Fill>
-          <ImageBrush ImageSource='{Binding ElementName=ths, Path=ImageURL, FallbackValue=https://weather.gc.ca/data/satellite/goes_ecan_vvi_100.jpg}' Stretch='None' />
+          <ImageBrush ImageSource='{Binding ElementName=ths, Path=ImageURL, FallbackValue=https://weather.gc.ca/data/satellite/goes_ecan_vvi_100.jpg}' 
+                      Stretch='None' Viewport="-256,-255,1024,1024" ViewportUnits="Absolute" >
+            <ImageBrush.Transform>
+              <TranslateTransform X="94" Y="-30"/>
+            </ImageBrush.Transform>
+          </ImageBrush>
         </Ellipse.Fill>
       </Ellipse>
       <!--<Image Source="{Binding ElementName=ths, Path=ImageURL, FallbackValue=https://weather.gc.ca/data/satellite/goes_ecan_vvi_100.jpg}" Margin="-286,-408,-474,-352" />-->
-      <Ellipse Width="16" Height="16" StrokeThickness="1" Stroke="#f80" />
+      <Ellipse Width="32" Height="32" StrokeThickness="2.5" Stroke="#ff0" />
     </Grid>
   </Viewbox>
 </UserControl>

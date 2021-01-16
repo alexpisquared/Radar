@@ -13,35 +13,44 @@
       <Setter Property="Margin" Value="0" />
     </Style>
   </Window.Resources>
-  <StackPanel Orientation="Horizontal">
-    <WrapPanel Margin="10" Orientation="Vertical">
-      <Rectangle Fill="#ffff66cc" />
-      <Rectangle Fill="#ff33ff33" />
-      <Rectangle Fill="#ff99ff99" />
-      <Rectangle Fill="Transparent" />
-      <Rectangle Fill="#fff4f4f4" />
-      <Rectangle Fill="#ff999999" />
-      <Rectangle Fill="#ff97a0b6" />
-    </WrapPanel>
-    <WrapPanel Margin="10" Orientation="Vertical">
-      <Rectangle Fill="#ff660099" />
-      <Rectangle Fill="#ff9933cc" />
-      <Rectangle Fill="#ffff0299" />
-      <Rectangle Fill="#ffff0000" />
-      <Rectangle Fill="#FFFF6600" />
-      <Rectangle Fill="#ffff9900" />
-      <Rectangle Fill="#ffffcc00" />
-      <Rectangle Fill="#ffffff33" />
-      <Rectangle Fill="#ff006600" />
-      <Rectangle Fill="#ff009900" />
-      <Rectangle Fill="#ff00cc00" />
-      <Rectangle Fill="#ff00ff66" />
-      <Rectangle Fill="Transparent" />
-      <Rectangle Fill="#ff0099ff" />
-      <Rectangle Fill="#ff99ccff" />
-      <Rectangle Fill="#ff333366" />
-      <Rectangle Fill="#ffffffff" />
-      <Rectangle Fill="#ff999966" />
-    </WrapPanel>
-  </StackPanel>
+  <Grid>
+    <Grid.Background>
+      <ImageBrush ImageSource="C:\temp\web.cache\weather.gc.ca\data-radar-detailed-temp_image--WKR-WKR_PRECIP_RAIN_2019_10_30_18_20.GIF" 
+                  Stretch='None' Viewport="-480,-12,580,300" 
+                  ViewportUnits="Absolute" 
+                  />
+    </Grid.Background>
+    <StackPanel Orientation="Horizontal" Margin="120 0 0 0">
+      <WrapPanel Margin="10" Orientation="Vertical">
+        <Rectangle Fill="#ffff66cc" />
+        <Rectangle Fill="#ff33ff33" />
+        <Rectangle Fill="#ff99ff99" />
+        <Rectangle Fill="Transparent" />
+        <Rectangle Fill="#fff4f4f4" />
+        <Rectangle Fill="#ff999999" />
+        <Rectangle Fill="#ff97a0b6" />
+      </WrapPanel>
+      <WrapPanel Margin="10" Orientation="Vertical">
+        <Rectangle Fill="#ff660099" />
+        <Rectangle Fill="#ff9933cc" />
+        <Rectangle Fill="#ffff0299" />
+        <Rectangle Fill="#ffff0000" />
+        <Rectangle Fill="#FFFF6600" />
+        <Rectangle Fill="#ffff9900" />
+        <Rectangle Fill="#ffffcc00" />
+        <Rectangle Fill="#ffffff33" />
+        <Rectangle Fill="#ff006600" />
+        <Rectangle Fill="#ff009900" />
+        <Rectangle Fill="#ff00cc00" />
+        <Rectangle Fill="#ff00ff66" />
+        <Rectangle Fill="Transparent" />
+        <Rectangle Fill="#ff0099ff" />
+        <Rectangle Fill="#ff99ccff" />
+        <Rectangle Fill="#ff333366" />
+        <Rectangle Fill="#ffffffff" />
+        <Rectangle Fill="#ff999966" />
+      </WrapPanel>
+    </StackPanel>
+    
+  </Grid>
 </Window>
