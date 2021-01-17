@@ -1,4 +1,10 @@
-﻿using AsLink;
+﻿using AAV.Sys.Ext;
+using AsLink;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using WebScrap;
 
 namespace RadarPicCollect
 {

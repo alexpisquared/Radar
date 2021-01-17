@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using AAV.Sys.Helpers;
+using Microsoft.Win32;
 using RadarPicCollect;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ namespace Radar
       //KeyUp += (s, e) => OnKeyDown__(e.Key);
       MouseWheel += async (s, e) => { if (e.Delta > 0) await showNextAsync(true); else await showPrevAsync(true); };
 
-      tbBuildTime.Header = string.Format("{0:y.M.d} ", new FileInfo(Assembly.GetExecutingAssembly().Location).LastWriteTime);
+      tbBuildTime.Header = VerHelper.CurVerStr(".Net 4.8");
 
       keyFocusBtn.Focus();
     }
@@ -369,7 +370,6 @@ namespace Radar
 
     async void onKeyDown__(object s, KeyEventArgs e) => await OnKeyDown__Async(e.Key);
     async void keyFocusBtn_ClickAsync(object s, System.Windows.RoutedEventArgs e) => await OnKeyDown__Async(Key.Space);
-
     void Hyperlink_RequestNavigate(object s, System.Windows.Navigation.RequestNavigateEventArgs e)
     {
       e.Handled = true;

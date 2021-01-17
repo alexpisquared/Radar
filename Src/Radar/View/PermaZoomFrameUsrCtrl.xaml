@@ -10,17 +10,27 @@
              Name="ths">
   <Viewbox>
     <Grid Width="512" Height="512" >
-      <Ellipse Width="512" Height="512"  Margin="0">
-        <Ellipse.Fill>
-          <ImageBrush ImageSource="{Binding ImageURL, FallbackValue=https://weather.gc.ca/data/satellite/goes_ecan_vvi_100.jpg}" 
-                      Stretch="None" Viewport="-256,-255,1024,1024" ViewportUnits="Absolute" >
-            <ImageBrush.Transform>
-              <TranslateTransform X="94" Y="-30"/>
-            </ImageBrush.Transform>
-          </ImageBrush>
-        </Ellipse.Fill>
-      </Ellipse>
-      <Ellipse Width="32" Height="32" StrokeThickness="2.5" Stroke="#ff0" />
+      <!--
+      <TextBlock FontSize="16" Background="#7fff"> <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://weather.gc.ca/satellite/satellite_anim_e.html?sat=goes&amp;area=ecan&amp;type=1070"    > ─ · IR · ─  </Hyperlink></TextBlock>
+      <TextBlock FontSize="16" Background="#7fff"> <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://weather.gc.ca/satellite/satellite_anim_e.html?sat=goes&amp;area=ecan&amp;type=visible" > ─ · Vis · ─ </Hyperlink></TextBlock>
+      <TextBlock FontSize="16" Background="#7fff"> <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://weather.gc.ca/satellite/satellite_anim_e.html?sat=goes&amp;area=ecan&amp;type=vvi"     > ─ · I+V · ─ </Hyperlink></TextBlock>
+      -->
+
+      <TextBlock>
+        <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="{Binding AnimeURL, FallbackValue='https://weather.gc.ca/satellite/satellite_anim_e.html?sat=goes&amp;area=ecan&amp;type=1070'}"    >
+          <Ellipse Width="512" Height="512"  Margin="0">
+            <Ellipse.Fill>
+              <ImageBrush ImageSource="{Binding ImageURL, FallbackValue='https://weather.gc.ca/data/satellite/goes_ecan_vvi_100.jpg'}" Stretch="None" Viewport="-256,-255,1024,1024" ViewportUnits="Absolute" >
+                <ImageBrush.Transform>
+                  <TranslateTransform X="97" Y="-30"/>
+                </ImageBrush.Transform>
+              </ImageBrush>
+            </Ellipse.Fill>
+          </Ellipse>
+        </Hyperlink>
+      </TextBlock>
+      <Ellipse   Width="032" Height="032" StrokeThickness="2.5" Stroke="#ff0" />
+      <Rectangle Width="140" Height="140" StrokeThickness="2.5" Stroke="#ff0" Margin="180,178,192,194" />
     </Grid>
   </Viewbox>
 </UserControl>

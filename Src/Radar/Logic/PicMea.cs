@@ -1,4 +1,10 @@
-﻿namespace RadarPicCollect
+﻿using AAV.Sys.Ext;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+
+namespace RadarPicCollect
 {
   public static class PicMea
   {
