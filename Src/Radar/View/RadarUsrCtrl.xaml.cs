@@ -1,4 +1,5 @@
-﻿using AAV.Sys.Helpers;
+﻿using AAV.Sys.Ext;
+using AAV.Sys.Helpers;
 using Microsoft.Win32;
 using RadarPicCollect;
 using System;
@@ -196,16 +197,21 @@ namespace Radar
       }
     }
 
-    string deleteOldSmallImages(int deleteLessThanBytes = 21000, string path = @"C:\temp\web.cache\weather.gc.ca")
+    string deleteOldSmallImages(int deleteLessThanBytes = 22000, string path = @"C:\temp\web.cache\weather.gc.ca")
     {
       try
       {
-        var rr = new DirectoryInfo(path).GetFiles("*.GIF").Where(fi => fi.Length < deleteLessThanBytes && DateTime.Now - fi.LastWriteTime > TimeSpan.FromDays(2)).ToList();
-        var rv = $" {rr.Count} files are deleted from {path} smaller {deleteLessThanBytes:N0} bytes";
-        rr.ForEach(fi => File.Delete(fi.FullName));
+        var di = new DirectoryInfo(path);
+        var rr = di.GetFiles("*.GIF").Where(fi => fi.Length < deleteLessThanBytes && DateTime.Now - fi.LastWriteTime > TimeSpan.FromDays(2)).ToList();
+        var rv = $"Deleting {rr.Count} / {di.GetFiles("*.GIF").Length:N0}  from  {path}  smaller  {deleteLessThanBytes:N0} bytes... \n";
+        try
+        {
+          rr.ForEach(fi => File.Delete(fi.FullName));
+        }
+        catch (Exception ex) { rv += ex.Log(); }
         return rv;
       }
-      catch (Exception ex) { System.Diagnostics.Trace.WriteLine(ex.Message, System.Reflection.MethodInfo.GetCurrentMethod()?.Name); if (System.Diagnostics.Debugger.IsAttached) System.Diagnostics.Debugger.Break(); throw; }
+      catch (Exception ex) { return ex.Log(); }
     }
 
     void setNewImageSource(string s)
