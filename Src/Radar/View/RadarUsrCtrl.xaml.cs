@@ -1,13 +1,12 @@
 ﻿using AAV.Sys.Ext;
 using AAV.Sys.Helpers;
-using Microsoft.Win32;
+using AsLink;
 using RadarPicCollect;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,7 +20,18 @@ namespace Radar
 {
   public partial class RadarUsrCtrl : UserControl
   {
-    public double AlarmThreshold { set => tbt.Text = string.Format("AlarmThreshold: {0:N2}", value); }
+    delegate void NoArgDelegate();
+    delegate void IntArgDelegate(int stationIndex);
+    delegate void OneArgDelegate(string title);
+    readonly RadarPicCollector _radarPicCollector = new RadarPicCollector();
+    DateTime _curImageTime;
+    bool _isAnimated = true, forward = true, _isSpeedMeasuring = false;
+    int _curPicIdx = 0, fwdPace = 32, _animationLength = 151;
+    readonly bool _isStandalole = true;
+    readonly DispatcherTimer _animation_Timer = new DispatcherTimer(), _picIndex__Timer = new DispatcherTimer(), _getFromWebTimer = new DispatcherTimer();
+    readonly int bakPace = 5;
+    const int pause500ms = 500;
+
     public RadarUsrCtrl()
     {
       InitializeComponent();
@@ -40,26 +50,12 @@ namespace Radar
       //KeyUp += (s, e) => OnKeyDown__(e.Key);
       MouseWheel += async (s, e) => { if (e.Delta > 0) await showNextAsync(true); else await showPrevAsync(true); };
 
-      tbBuildTime.Header = VerHelper.CurVerStr(".Net 4.8");
+      tbBuildTime.Header = VerHelper.CurVerStr(".Net5");
 
       keyFocusBtn.Focus();
     }
-
+    public double AlarmThreshold { set => tbt.Text = string.Format("AlarmThreshold: {0:N2}", value); }
     async void onKeyDownAsync(object s, System.Windows.Input.KeyEventArgs e) => await OnKeyDown__Async(e.Key);
-
-    delegate void NoArgDelegate();
-    delegate void IntArgDelegate(int stationIndex);
-    delegate void OneArgDelegate(string title);
-
-    readonly RadarPicCollector _radarPicCollector = new RadarPicCollector();
-    DateTime _curImageTime;
-    bool _isAnimated = true, forward = true, _isSpeedMeasuring = false;
-    int _curPicIdx = 0, fwdPace = 32, _animationLength = 151;
-    readonly bool _isStandalole = true;
-    readonly DispatcherTimer _animation_Timer = new DispatcherTimer(), _picIndex__Timer = new DispatcherTimer(), _getFromWebTimer = new DispatcherTimer();
-    readonly int bakPace = 5;
-    const int pause500ms = 500;
-
     async Task moveTimeAsync(int timeMin)
     {
       _animation_Timer.Stop();
@@ -82,7 +78,6 @@ namespace Radar
     }
     async Task showPrevAsync(bool stopAtTheEnd) { _animation_Timer.Stop(); await showPicX(--_curPicIdx); }
     async Task showNextAsync(bool stopAtTheEnd) { _animation_Timer.Stop(); await showPicX(++_curPicIdx); }
-
     async Task showPicX(int idx)
     {
       try
@@ -106,13 +101,7 @@ namespace Radar
           _image.SetValue(Canvas.TopProperty, (double)_radarPicCollector.Pics[_curPicIdx].PicOffset.Y);
         }
 
-        LTitle.Text = string.Format("{0}  {1,2}/{2}  ({3}-{4}={5:N1})   {6}",
-          _radarPicCollector.Pics[_curPicIdx].ImageTime.ToString("ddd HH:mm"),
-          _curPicIdx + 1, _radarPicCollector.Pics.Count,
-          _radarPicCollector.Pics[_curPicIdx].ImageTime.ToString("ddd HH:mm"),
-          _radarPicCollector.Pics[_radarPicCollector.Pics.Count - 1].ImageTime.ToString("HH:mm"),
-          new TimeSpan(_radarPicCollector.Pics[_radarPicCollector.Pics.Count - 1].ImageTime.Ticks - _radarPicCollector.Pics[_curPicIdx].ImageTime.Ticks).TotalHours,
-          RadarPicCollector.RainOrSnow);
+        LTitle.Text = $"{_radarPicCollector.Pics[_curPicIdx].ImageTime:HH:mm}    {_curPicIdx + 1,2} / {_radarPicCollector.Pics.Count}     {RadarPicCollector.RainOrSnow}";
 
         RMeasr.Text = _radarPicCollector.Pics[_curPicIdx].Measure.ToString("N3");
 
@@ -120,7 +109,6 @@ namespace Radar
       }
       catch (Exception ex) { LTitle.Text = ex.Message; }
     }
-
     DateTime updateClock(DateTime t)
     {
       hourHandTransform.Angle = (t.Hour * 30) + (t.Minute / 2) - 180;
@@ -193,27 +181,21 @@ namespace Radar
 
         case Key.Tab: return;
         case Key.Escape: if (_isStandalole) WpfUtils.FindParentWindow(this)?.Close(); else WpfUtils.FindParentWindow(this)?.Hide(); break;
-        case Key.Delete: LTitl2.Text = deleteOldSmallImages(); break;
+        case Key.Delete: LTitl2.Text = deleteOldSmallImages(OneDrive.WebCacheFolder); break;
       }
     }
-
-    string deleteOldSmallImages(int deleteLessThanBytes = 22000, string path = @"C:\temp\web.cache\weather.gc.ca")
+    string deleteOldSmallImages(string path, int deleteLessThanBytes = 25000)
     {
       try
       {
-        var di = new DirectoryInfo(path);
-        var rr = di.GetFiles("*.GIF").Where(fi => fi.Length < deleteLessThanBytes && DateTime.Now - fi.LastWriteTime > TimeSpan.FromDays(2)).ToList();
-        var rv = $"Deleting {rr.Count} / {di.GetFiles("*.GIF").Length:N0}  from  {path}  smaller  {deleteLessThanBytes:N0} bytes... \n";
-        try
-        {
-          rr.ForEach(fi => File.Delete(fi.FullName));
-        }
-        catch (Exception ex) { rv += ex.Log(); }
-        return rv;
+        var di = new DirectoryInfo(Path.Combine(path, "weather.gc.ca"));
+        var oldSmallPics = di.GetFiles("*.GIF").Where(fi => fi.Length < deleteLessThanBytes && DateTime.Now - fi.LastWriteTime > TimeSpan.FromDays(2)).ToList();
+        var report = $"Deleting {oldSmallPics.Count} / {di.GetFiles("*.GIF").Length:N0}  smaller  {deleteLessThanBytes:N0} bytes... \n";
+        try { oldSmallPics.ForEach(fi => File.Delete(fi.FullName)); } catch (Exception ex) { report += ex.Log(); }
+        return report;
       }
       catch (Exception ex) { return ex.Log(); }
     }
-
     void setNewImageSource(string s)
     {
       try
@@ -230,7 +212,6 @@ namespace Radar
         LTitle.Text = ex.Message;
       }
     }
-
     void showListboxSelectedImage(object s, SelectionChangedEventArgs args) //tu: !!!This way is less memory used and faster released.
     {
       var list = ((ListBox)s);
@@ -248,18 +229,7 @@ namespace Radar
       _image.Source = bi;
       LTitle.Text = string.Format("{0}x{1} {2}", bi.PixelWidth, bi.PixelHeight, bi.Format);
     }
-
-    List<FileInfo> loadImageListFromFS(string dir /* = OneDrive.Folder_Alex("web.cache")*/)
-    {
-      var imageFiles = new List<FileInfo>();
-
-      foreach (var filename in Directory.GetFiles(System.IO.Path.Combine(dir, "---www.weatheroffice.gc.ca-data-radar-temp_image*.Gif")))
-        imageFiles.Add(new FileInfo(filename));
-
-      return imageFiles;
-    }
-
-    List<MyImage> AllImages(string dir/* = OneDrive.Folder_Alex("web.cache")*/) //Now let's write a property that will scan the "My Pictures" folder and load all the images it finds.
+    List<MyImage> AllImages(string dir)
     {
       var result = new List<MyImage>();
       //reach (string filename in Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)))//TU: Environment.SpecialFolder...
@@ -273,15 +243,12 @@ namespace Radar
       }
       return result;
     }
-
     void animate()
     {
       _isAnimated = !_isAnimated;
       _animation_Timer.IsEnabled = _isAnimated;
     }
-
     void speedMeasure() { _isSpeedMeasuring = !_isSpeedMeasuring; _picIndex__Timer.IsEnabled = _isSpeedMeasuring; }
-
     async Task dTimerAnimation_Tick(object? s, EventArgs e)
     {
       if (forward)
@@ -310,7 +277,6 @@ namespace Radar
       }
       await showPicX(_curPicIdx);
     }
-
     async Task picIndex__Timer_TickAsync(object? s, EventArgs e)
     {
       if (_curPicIdx == _radarPicCollector.Pics.Count - 1)
@@ -320,14 +286,12 @@ namespace Radar
 
       await showPicX(_curPicIdx);
     }
-
     async Task fetchFromWeb____Tick(object? s, EventArgs e)
     {
       _getFromWebTimer.Stop();
       _getFromWebTimer.Interval = TimeSpan.FromMinutes(5); //reget every 5 min
       await fetchFromWebBegin();
     }
-
     async Task fetchFromWebBegin()
     {
       btnSnow.IsEnabled = !(btnRain.IsEnabled = (RadarPicCollector.RainOrSnow != "RAIN"));
@@ -343,10 +307,8 @@ namespace Radar
 
       keyFocusBtn.Focus();
     }
-
     void fetchFromWebBlockingCall_FetchRad(int stationIndex) =>
       MainCanvas.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new OneArgDelegate(updateUI_), _radarPicCollector.DownloadRadarPicsNextBatch(stationIndex));
-
     async void updateUI_(string title) => await updateUIAsync(title);
     async Task updateUIAsync(string title)
     {
@@ -359,21 +321,18 @@ namespace Radar
 
       //Bpr.Beep2of2();
     }
-
-
     void onPopupTpl(object s, RoutedEventArgs e) { }//new RadarTpl.MainWindow().Show(); }
-
     async void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
       LTitl2.Text = "° ° °";
-      await Task.Delay(15000);
-      LTitl2.Text = deleteOldSmallImages();
+      await Task.Delay(5000);
+      LTitl2.Text = deleteOldSmallImages(OneDrive.WebCacheFolder);
+      LTitle.Foreground =
+      LTitl2.Foreground = EnvCanRadarUrlHelper.IsDark ? Brushes.White : Brushes.DarkBlue;
     }
-
     async void onRain(object s, RoutedEventArgs e) { RadarPicCollector.RainOrSnow = "RAIN"; await fetchFromWebBegin(); }
     async void onSnow(object s, RoutedEventArgs e) { RadarPicCollector.RainOrSnow = "SNOW"; await fetchFromWebBegin(); }
     async void onF5(object s, RoutedEventArgs e) => await fetchFromWebBegin();
-
     async void onKeyDown__(object s, KeyEventArgs e) => await OnKeyDown__Async(e.Key);
     async void keyFocusBtn_ClickAsync(object s, System.Windows.RoutedEventArgs e) => await OnKeyDown__Async(Key.Space);
     void Hyperlink_RequestNavigate(object s, System.Windows.Navigation.RequestNavigateEventArgs e)
@@ -407,17 +366,6 @@ namespace Radar
       return bi;
     }
     public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => throw new Exception("The method or operation is not implemented.");
-  }
-  public static class DevOp_
-  {
-    public static string OneDriveRoot
-    {
-      get
-      {
-        var rv = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\SkyDrive", "UserFolder", System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "OneDrive"))?.ToString();
-        return rv ?? System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "OneDrive");
-      }
-    }
   }
 
   public static class WpfUtils

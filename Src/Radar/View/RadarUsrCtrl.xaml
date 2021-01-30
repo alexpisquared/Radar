@@ -149,12 +149,12 @@
     <Grid Width="1160" Height="960" Canvas.Left="1" >
 
       <Menu VerticalAlignment="Top" HorizontalAlignment="Right" Background="#000" Margin="3" >
-        <MenuItem x:Name="tbBuildTime" Foreground="#08f" FontStyle="Italic" FontWeight="SemiBold" Padding="10 -3 4 7" FontSize="16" Header="Ver str" Width="196"/>
+        <MenuItem x:Name="tbBuildTime" Foreground="#08f" FontStyle="Italic" FontWeight="SemiBold" Padding="0 -3 0 7" FontSize="16" Header="Ver str" Width="196" HorizontalAlignment="Center" HorizontalContentAlignment="Center" />
       </Menu>
 
-      <TextBlock Name="LTitle" Foreground="#f0f" Text="Date teim eee++++++++ RAIN" FontSize="22"	VerticalAlignment="Top"			HorizontalAlignment="Center" Margin="6"	      />
-      <TextBlock Name="LTitl2" Foreground="#f0f" Text="Date teim eee++++++++ RAIN" FontSize="18"	VerticalAlignment="Top"			HorizontalAlignment="Center" Margin="0,40,0,0" />
-      <TextBlock Name="RMeasr" Foreground="#f0f" Text="0.000"                      FontSize="40"	VerticalAlignment="Top"			HorizontalAlignment="Right"  Margin="12"	      />
+      <TextBlock Name="LTitle" Foreground="#00a" Text="Date teim eee++++++++ RAIN" FontSize="22"	VerticalAlignment="Top"			HorizontalAlignment="Center" Margin="6"	      />
+      <TextBlock Name="LTitl2" Foreground="#00a" Text="Date teim eee++++++++ RAIN" FontSize="18"	VerticalAlignment="Top"			HorizontalAlignment="Center" Margin="0,40,0,0" />
+      <TextBlock Name="RMeasr" Foreground="#00f" Text="0.000"                      FontSize="40"	VerticalAlignment="Top"			HorizontalAlignment="Right"  Margin="12"	      />
 
       <StackPanel Margin="2"	Orientation="Horizontal"																												VerticalAlignment="Bottom"	HorizontalAlignment="Stretch"   Background="#4000" >
         <Button Content=" Rai_n " Click="onRain"	x:Name="btnRain"		 />

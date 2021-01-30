@@ -1,10 +1,4 @@
-﻿<Window x:Class="Radar.View.xColorViewer"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Radar.View"
-        mc:Ignorable="d"
+﻿<Window x:Class="Radar.View.xColorViewer" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
         Title="xColorViewer" Height="360" Width="330" Background="#000">
   <Window.Resources>
     <Style TargetType="Rectangle">
@@ -16,22 +10,15 @@
   <Grid>
     <Grid>
       <Grid.Background>
-        <ImageBrush ImageSource="C:\temp\web.cache\weather.gc.ca\data-radar-detailed-temp_image--WKR-WKR_PRECIP_RAIN_2019_10_30_18_20.GIF" 
-                  Stretch='None' Viewport="-480,20,568,250" 
-                  ViewportUnits="Absolute" 
-                  />
+        <ImageBrush ImageSource="C:\users\alexp\onedrive\public\appdata\web.cachE\weather.gc.ca\data-radar-detailed-temp_image--WKR-WKR_PRECIP_RAIN_2019_09_26_11_50.GIF" Stretch='None' Viewport="-480,20,568,250" ViewportUnits="Absolute" />
       </Grid.Background>
     </Grid>
 
     <Grid HorizontalAlignment="Right" Width="100">
       <Grid.Background>
-        <ImageBrush ImageSource="C:\temp\web.cache\weather.gc.ca\data-radar-temp_image-WKR-WKR_PRECIP_RAIN_2019_03_15_01_00.GIF" 
-                  Stretch='None' Viewport="-480,20,568,250" 
-                  ViewportUnits="Absolute" 
-                  />
+        <ImageBrush ImageSource="C:\users\alexp\onedrive\public\appdata\web.cachE\weather.gc.ca\data-radar-temp_image-WKR-WKR_PRECIP_RAIN_2019_03_15_01_00.GIF" Stretch='None' Viewport="-480,20,568,250" ViewportUnits="Absolute" />
       </Grid.Background>
     </Grid>
-    
 
     <StackPanel Orientation="Horizontal" Margin="120 40 0 0">
       <WrapPanel Margin="10" Orientation="Vertical">

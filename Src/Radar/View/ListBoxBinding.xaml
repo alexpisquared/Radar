@@ -58,11 +58,10 @@
 					</Style>
 				</StackPanel.Resources>
 
-				<ListView ItemsSource="{Binding}"
-								 MinHeight="60" MinWidth="444" Width="1160" >
+				<ListView ItemsSource="{Binding}" MinHeight="60" MinWidth="444" Width="1160" >
 					<ListView.ItemTemplate>
 						<DataTemplate>
-							<Image Source="{Binding Path='C:\Temp\web.cache\---www.theweathernetwork.com-common-images-wicons-hourlyfx-e.gif'}" />
+							<Image Source="{Binding Path='www.theweathernetwork.com-common-images-wicons-hourlyfx-e.gif'}" />
 							<!--<Image Source="{Binding Path=FullPath, Converter={StaticResource UriToBitmapConverter}" />-->
 						</DataTemplate>
 					</ListView.ItemTemplate>

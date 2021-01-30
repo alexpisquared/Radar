@@ -10,7 +10,7 @@ namespace RadarPicCollect
 {
   public class RadarPicCollector
   {
-    public static int GmtOffset => (DateTime.UtcNow - DateTime.Now).Hours;  //4 in summer, 5 in winter
+    static readonly int GmtOffset = (int)((DateTime.UtcNow - DateTime.Now).TotalHours +.1);  //4 in summer, 5 in winter
     public static string UrlForModTime(string rsRainOrSnow, DateTime d, string station, bool latest, bool isFallback = false) => EnvCanRadarUrlHelper.GetRadarUrl(d, rsRainOrSnow, station, isFallback);
 
     static int _stationIndex = 0;
@@ -73,34 +73,34 @@ namespace RadarPicCollect
           Bitmap pic;
           if (times10minBack < _backLenLive)//
           {
-            pic = WebScraperBitmap.DownloadImageCached(urlLate.Split('|')[0], false);
+            pic = WebScraperBitmap.DownloadImageCached(urlLate.Split('|')[0]);
             if (pic != null)
             {
               _urlPicList.Add(urlLate, pic);
-              _picDtlList.Add(new PicDetail(pic, dt.AddHours(-RadarPicCollector.GmtOffset), _station[_stationIndex], _stationOffset[_stationIndex], WebScraper.GetCachedFileNameFromUrl_(urlLate.Split('|')[0], false)));
+              _picDtlList.Add(new PicDetail(pic, dt.AddHours(-GmtOffset), _station[_stationIndex], _stationOffset[_stationIndex], WebScraper.GetCachedFileNameFromUrl_(urlLate.Split('|')[0], false)));
             }
 
             report(times10minBack, urlLate, pic, "   WEB");
           }
           else
           {
-            pic = WebScraperBitmap.LoadImageFromFile(urlLate.Split('|')[0], false);
+            pic = WebScraperBitmap.LoadImageFromFile(urlLate.Split('|')[0]);
             if (pic != null)
             {
               _urlPicList.Add(urlLate, pic);
-              _picDtlList.Add(new PicDetail(pic, dt.AddHours(-RadarPicCollector.GmtOffset), _station[_stationIndex], _stationOffset[_stationIndex], WebScraper.GetCachedFileNameFromUrl_(urlLate.Split('|')[0], false)));
+              _picDtlList.Add(new PicDetail(pic, dt.AddHours(-GmtOffset), _station[_stationIndex], _stationOffset[_stationIndex], WebScraper.GetCachedFileNameFromUrl_(urlLate.Split('|')[0], false)));
             }
             else
             {
-              pic = WebScraperBitmap.LoadImageFromFile(urlHist.Split('|')[0], false);
+              pic = WebScraperBitmap.LoadImageFromFile(urlHist.Split('|')[0]);
               if (pic != null)
               {
                 _urlPicList.Add(urlLate, pic);
-                _picDtlList.Add(new PicDetail(pic, dt.AddHours(-RadarPicCollector.GmtOffset), _station[_stationIndex], _stationOffset[_stationIndex], WebScraper.GetCachedFileNameFromUrl_(urlHist.Split('|')[0], false)));
+                _picDtlList.Add(new PicDetail(pic, dt.AddHours(-GmtOffset), _station[_stationIndex], _stationOffset[_stationIndex], WebScraper.GetCachedFileNameFromUrl_(urlHist.Split('|')[0], false)));
               }
               else
               {
-                pic = WebScraperBitmap.DownloadImageCached(urlHist.Split('|')[0], false);//GetWebImageFromCache(urlHist.Split('|')[0]);
+                pic = WebScraperBitmap.DownloadImageCached(urlHist.Split('|')[0]);//GetWebImageFromCache(urlHist.Split('|')[0]);
               }
             }
 
@@ -111,10 +111,7 @@ namespace RadarPicCollect
       catch (Exception ex) { ex.Log(); }
     }
 
-    static void report(int back, string url_time_, Bitmap? pic, string src)
-    {
-      // Debug.WriteLine(string.Format("{0,3}/{1} {2}: from   {3}: {4}", back, _backLenLive, url_time_.Substring(78), src, pic == null ? "-Unable to get this pic" : "+SUCCESS"));
-    }
+    static void report(int back, string url_time_, Bitmap? pic, string src) => Debug.WriteLine($"{back,3}/{_backLenLive} {url_time_.Substring(78)}: from   {src}: {(pic == null ? " - Unable to get this pic" : " + SUCCESS")}");
 
     public static string RainOrSnow
     {
@@ -123,11 +120,9 @@ namespace RadarPicCollect
         if (_rainOrSnow == null)
         {
           var url = string.Format("https://weather.gc.ca/radar/index_e.html?id={0}", _station[_stationIndex]);
-          var htm = WebScrap.WebScraper.GetHtmlFromCacheOrWeb(url, TimeSpan.FromHours(6));
-          var idxRain = htm.IndexOf("RAIN");
-          var idxSnow = htm.IndexOf("SNOW");
-          //Debug.WriteLine("html.len:{0}, index: rain:{1}, snow:{2}. \r\n ##/##         UTC Time|LocalTime: from   ", htm.Length, idxRain, idxSnow);
-          _rainOrSnow = idxSnow > 0 ? "SNOW" : "RAIN";
+          var htm = WebScraper.GetHtmlFromCacheOrWeb(url, TimeSpan.FromHours(1));
+
+          _rainOrSnow = htm.IndexOf("SNOW") > 0 ? "SNOW" : "RAIN";
         }
         return _rainOrSnow;
       }
@@ -228,10 +223,10 @@ namespace RadarPicCollect
 
     static Bitmap? getFromCacheOrWeb(string url)
     {
-      var bmp = WebScraperBitmap.LoadImageFromFile(url, useOneDrive: false);
+      var bmp = WebScraperBitmap.LoadImageFromFile(url);
       if (bmp != null) return bmp;
 
-      bmp = WebScraperBitmap.DownloadImageCached(url, useOneDrive: false);
+      bmp = WebScraperBitmap.DownloadImageCached(url);
       return bmp;
     }
 

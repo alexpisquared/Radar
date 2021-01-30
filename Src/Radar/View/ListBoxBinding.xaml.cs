@@ -57,19 +57,13 @@ namespace Radar
 		{
 			var imageFiles = new ArrayList();
 
-			//string[] files = Directory.GetFiles(Directory.GetCurrentDirectory() + "\\..\\..\\myData", "*.jpg");
-			//  _d____________________________ataroot = Path.Combine((Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\SkyDrive", "UserFolder", System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "OneDrive")) ?? System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "OneDrive")).ToString(), "web.cache", "iWindsurf.jpg"); //tu: XP-proofed!!!
-			foreach (var image in Directory.GetFiles(GetOneDriveFile("---www.weatheroffice.gc.ca-data-radar-temp_image*.Gif"))) //tu: XP-proofed!!!
-				imageFiles.Add(new FileInfo(image));
+			//foreach (var image in Directory.GetFiles(GetOneDriveFile("---www.weatheroffice.gc.ca-data-radar-temp_image*.Gif"))) //tu: XP-proofed!!!
+			//	imageFiles.Add(new FileInfo(image));
 
-
-			//imageFiles.Sort();
+			////imageFiles.Sort();
 
 			return imageFiles;
 		}
-
-        static string GetOneDriveFile(string fff) => "";//is it used at all? Dec 2017: Path.Combine((OneDrive.Folder_Alex("web.cache")), fff);
-
 
 		//Now let's write a property that will scan the "My Pictures" folder and load all the images it finds.
 		public List<MyImage> AllImages
