@@ -26,7 +26,8 @@ namespace Radar
 
     protected override async void OnStartup(StartupEventArgs e)
     {
-      base.OnStartup(e);      //Bpr.BeepBgn2();
+      base.OnStartup(e);      //
+      Bpr.BeepBgn2();
 
       Current.DispatcherUnhandledException += UnhandledExceptionHndlr.OnCurrentDispatcherUnhandledException;     //new SpeechSynthesizer().Speak("Testing");			new SpeechSynthesizer().SpeakAsync("Testing");
 
@@ -95,7 +96,6 @@ namespace Radar
       catch (Exception ex) { System.Diagnostics.Trace.WriteLine(ex.Message, System.Reflection.MethodInfo.GetCurrentMethod()?.Name); if (System.Diagnostics.Debugger.IsAttached) System.Diagnostics.Debugger.Break(); throw; }
       finally
       {
-
         if ((args.Length > 1 && args[1].Equals("ShowLsaPopup")) || isDue(uptime))
           showLongStretchAlertPopup(uptime, rainAndUptimeMsg);
         else if (rainAndUptimeMsg.Length > 0)
