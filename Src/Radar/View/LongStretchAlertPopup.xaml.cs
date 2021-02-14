@@ -41,8 +41,7 @@ namespace Radar.View
 
       dailyChart1.ClearDrawAllSegmentsForSinglePC(Environment.MachineName, "Red");
 
-      await _synth.Speak(_rainAndUptimeMsg);
-      await ChimerAlt.BeepFD(6000, .2);
+      await _synth.Speak(_rainAndUptimeMsg); //redundant: await ChimerAlt.BeepFD(6000, .2);
     }
 
     public static readonly DependencyProperty StandingTimeProperty = DependencyProperty.Register("StandingTime", typeof(TimeSpan), typeof(LongStretchAlertPopup), new PropertyMetadata()); public TimeSpan StandingTime { get => (TimeSpan)GetValue(StandingTimeProperty); set => SetValue(StandingTimeProperty, value); }
