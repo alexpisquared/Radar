@@ -2,7 +2,7 @@
   "profiles": {
     "Radar": {
       "commandName": "Project",
-      "commandLineArgs": "ShowIfOnOrComingSoon ShowLsaPopup __sayUpTimeShow justUiNotElse _ShowIfOnOrComingSoon"
+      "commandLineArgs": "_ShowIfOnOrComingSoon _ShowLsaPopup __sayUpTimeShow justUiNotElse _ShowIfOnOrComingSoon"
     }
   }
 }

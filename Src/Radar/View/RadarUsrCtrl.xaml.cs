@@ -25,12 +25,11 @@ namespace Radar
     delegate void OneArgDelegate(string title);
     readonly RadarPicCollector _radarPicCollector = new RadarPicCollector();
     DateTime _curImageTime;
-    bool _isAnimated = true, forward = true, _isSpeedMeasuring = false;
-    int _curPicIdx = 0, fwdPace = 32, _animationLength = 151;
+    bool _isAnimated = true, _forward = true, _isSpeedMeasuring = false;
+    int _fwdPace = 128, _curPicIdx = 0, _animationLength = 151;
     readonly bool _isStandalole = true;
+    const int  _bakPace = 5, _pause500ms = 500;
     readonly DispatcherTimer _animation_Timer = new DispatcherTimer(), _picIndex__Timer = new DispatcherTimer(), _getFromWebTimer = new DispatcherTimer();
-    readonly int bakPace = 5;
-    const int pause500ms = 500;
 
     public RadarUsrCtrl()
     {
@@ -39,9 +38,9 @@ namespace Radar
       DataContext = this;
 
       _picIndex__Timer.Interval = TimeSpan.FromMilliseconds(20);
-      _animation_Timer.Interval = TimeSpan.FromMilliseconds(fwdPace);
+      _animation_Timer.Interval = TimeSpan.FromMilliseconds(_fwdPace);
       _getFromWebTimer.Interval = TimeSpan.FromMilliseconds(30); //get rigth away, then reget every 5 min.
-      _picIndex__Timer.Tick += async (s, e) => await picIndex__Timer_TickAsync(s, e); // new EventHandler(picIndex__Timer_TickAsync);
+      _picIndex__Timer.Tick += async (s, e) => await picIndex__Timer_Tick(s, e); // new EventHandler(picIndex__Timer_TickAsync);
       _animation_Timer.Tick += async (s, e) => await dTimerAnimation_Tick(s, e); // new EventHandler(dTimerAnimation_Tick);
       _getFromWebTimer.Tick += async (s, e) => await fetchFromWeb____Tick(s, e); // new EventHandler(fetchFromWeb____Tick);
       _getFromWebTimer.Start();
@@ -160,8 +159,8 @@ namespace Radar
         case Key.R: RadarPicCollector.RainOrSnow = "RAIN"; _radarPicCollector.DownloadRadarPics(); /*Bpr.BeepClk()*/; break;
         case Key.S: RadarPicCollector.RainOrSnow = "SNOW"; _radarPicCollector.DownloadRadarPics(); /*Bpr.BeepClk()*/; break;
 
-        case Key.Add: fwdPace /= 2; if (fwdPace == 0) fwdPace = 1; _animation_Timer.Interval = TimeSpan.FromMilliseconds(fwdPace); break;
-        case Key.Subtract: fwdPace *= 2; _animation_Timer.Interval = TimeSpan.FromMilliseconds(fwdPace); break;
+        case Key.Add: _fwdPace /= 2; if (_fwdPace == 0) _fwdPace = 1; _animation_Timer.Interval = TimeSpan.FromMilliseconds(_fwdPace); break;
+        case Key.Subtract: _fwdPace *= 2; _animation_Timer.Interval = TimeSpan.FromMilliseconds(_fwdPace); break;
 
         case Key.F5: await fetchFromWebBegin(); break;
         case Key.F6: setNewImageSource(@"/Radar;component/WKR_roads.gif"); break;// C:\0\0\web\Radar\WKR_roads.gif"); break; //King (default)
@@ -251,33 +250,33 @@ namespace Radar
     void speedMeasure() { _isSpeedMeasuring = !_isSpeedMeasuring; _picIndex__Timer.IsEnabled = _isSpeedMeasuring; }
     async Task dTimerAnimation_Tick(object? s, EventArgs e)
     {
-      if (forward)
+      if (_forward)
       {
-        if (_animation_Timer.Interval == TimeSpan.FromMilliseconds(pause500ms))
-          _animation_Timer.Interval = TimeSpan.FromMilliseconds(fwdPace);
+        if (_animation_Timer.Interval == TimeSpan.FromMilliseconds(_pause500ms))
+          _animation_Timer.Interval = TimeSpan.FromMilliseconds(_fwdPace);
 
         if (++_curPicIdx >= _radarPicCollector.Pics.Count - 1)
         {
-          forward = false;
-          _animation_Timer.Interval = TimeSpan.FromMilliseconds(pause500ms);
+          _forward = false;
+          _animation_Timer.Interval = TimeSpan.FromMilliseconds(_pause500ms);
         }
       }
       else
       {
-        if (_animation_Timer.Interval == TimeSpan.FromMilliseconds(pause500ms))
-          _animation_Timer.Interval = TimeSpan.FromMilliseconds(bakPace);
+        if (_animation_Timer.Interval == TimeSpan.FromMilliseconds(_pause500ms))
+          _animation_Timer.Interval = TimeSpan.FromMilliseconds(_bakPace);
 
         _curPicIdx -= 2;// -= 32 / fwdPace;
         if (_curPicIdx < _radarPicCollector.Pics.Count + 1 - _animationLength)
         {
-          forward = true;
-          _animation_Timer.Interval = TimeSpan.FromMilliseconds(pause500ms);
+          _forward = true;
+          _animation_Timer.Interval = TimeSpan.FromMilliseconds(_pause500ms);
           Process.GetCurrentProcess().MinWorkingSet = Process.GetCurrentProcess().MinWorkingSet; //tu: Finally we found a quite simple solution. When closing our window and minimize the application to tray we free memory with the following line:
         }
       }
       await showPicX(_curPicIdx);
     }
-    async Task picIndex__Timer_TickAsync(object? s, EventArgs e)
+    async Task picIndex__Timer_Tick(object? s, EventArgs e)
     {
       if (_curPicIdx == _radarPicCollector.Pics.Count - 1)
         _curPicIdx = _radarPicCollector.Pics.Count - _animationLength;
