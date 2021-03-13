@@ -10,8 +10,8 @@ namespace RadarPicCollect
 {
   public class RadarPicCollector
   {
-    static readonly int GmtOffset = (int)((DateTime.UtcNow - DateTime.Now).TotalHours +.1);  //4 in summer, 5 in winter
-    public static string UrlForModTime(string rsRainOrSnow, DateTime d, string station, bool latest, bool isFallback = false) => EnvCanRadarUrlHelper.GetRadarUrl(d, rsRainOrSnow, station, isFallback);
+    static readonly int GmtOffset = (int)((DateTime.UtcNow - DateTime.Now).TotalHours + .1);  //4 in summer, 5 in winter
+    public static string UrlForModTime(string rsRainOrSnow, DateTime d, string station, bool isFallback, bool? isDark /*= null*/, bool isFallbackCOMP /*= false*/) => EnvCanRadarUrlHelper.GetRadarUrl(d, rsRainOrSnow, station, isFallback, isDark, isFallbackCOMP);
 
     static int _stationIndex = 0;
     const int _backLenLive = 25;//usually there is 24 available; (4hr-10min) coverage.
@@ -58,57 +58,50 @@ namespace RadarPicCollect
 
 #if ___DEBUG //annoying during video watching
       Bpr.BeepFD(11000 + 50 * times10minBack, 40);
-#endif 
+#endif
+      Bitmap pic = null;
+      string url = "??";
 
       try
       {
         _stationIndex = 0;
         var dt = gmt10Now.AddMinutes(-10 * times10minBack);
-        var urlLate = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], true);
-        var urlHist = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], false);
 
-        if (_urlPicList.ContainsKey(urlLate)) { _urlPicList.Remove(urlLate); Debug.WriteLine(string.Format("+> {0} already there.", urlLate)); }
-        // else
         {
-          Bitmap pic;
-          if (times10minBack < _backLenLive)//
+          if (times10minBack < _backLenLive)
           {
-            pic = WebScraperBitmap.DownloadImageCached(urlLate.Split('|')[0]);
-            if (pic != null)
-            {
-              _urlPicList.Add(urlLate, pic);
-              _picDtlList.Add(new PicDetail(pic, dt.AddHours(-GmtOffset), _station[_stationIndex], _stationOffset[_stationIndex], WebScraper.GetCachedFileNameFromUrl_(urlLate.Split('|')[0], false)));
-            }
 
-            report(times10minBack, urlLate, pic, "   WEB");
+            if ((pic = WebScraperBitmap.DownloadImageCached(url = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], true, null, true).Split('|')[0])) == null)
+              if ((pic = WebScraperBitmap.DownloadImageCached(url = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], true, null, false).Split('|')[0])) == null)
+                if ((pic = WebScraperBitmap.DownloadImageCached(url = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], false, null, true).Split('|')[0])) == null)
+                  if ((pic = WebScraperBitmap.DownloadImageCached(url = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], false, null, false).Split('|')[0])) == null)
+                    return;
+
+            if (_urlPicList.ContainsKey(url)) { _urlPicList.Remove(url); Debug.WriteLine(string.Format("+> {0} already there.", url)); }
+            _urlPicList.Add(url, pic);
+            _picDtlList.Add(new PicDetail(pic, dt.AddHours(-GmtOffset), _station[_stationIndex], _stationOffset[_stationIndex], WebScraper.GetCachedFileNameFromUrl_(url.Split('|')[0], false)));
           }
           else
           {
-            pic = WebScraperBitmap.LoadImageFromFile(urlLate.Split('|')[0]);
-            if (pic != null)
-            {
-              _urlPicList.Add(urlLate, pic);
-              _picDtlList.Add(new PicDetail(pic, dt.AddHours(-GmtOffset), _station[_stationIndex], _stationOffset[_stationIndex], WebScraper.GetCachedFileNameFromUrl_(urlLate.Split('|')[0], false)));
-            }
-            else
-            {
-              pic = WebScraperBitmap.LoadImageFromFile(urlHist.Split('|')[0]);
-              if (pic != null)
-              {
-                _urlPicList.Add(urlLate, pic);
-                _picDtlList.Add(new PicDetail(pic, dt.AddHours(-GmtOffset), _station[_stationIndex], _stationOffset[_stationIndex], WebScraper.GetCachedFileNameFromUrl_(urlHist.Split('|')[0], false)));
-              }
-              else
-              {
-                pic = WebScraperBitmap.DownloadImageCached(urlHist.Split('|')[0]);//GetWebImageFromCache(urlHist.Split('|')[0]);
-              }
-            }
+            if ((pic = WebScraperBitmap.LoadImageFromFile(url = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], true, null, true).Split('|')[0])) == null)
+              if ((pic = WebScraperBitmap.LoadImageFromFile(url = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], true, null, false).Split('|')[0])) == null)
+                if ((pic = WebScraperBitmap.LoadImageFromFile(url = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], false, null, true).Split('|')[0])) == null)
+                  if ((pic = WebScraperBitmap.LoadImageFromFile(url = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], false, null, false).Split('|')[0])) == null)
+                    return;
 
-            report(times10minBack, urlHist, pic, " cache");
+            if (_urlPicList.ContainsKey(url)) { _urlPicList.Remove(url); Debug.WriteLine(string.Format("+> {0} already there.", url)); }
+            _urlPicList.Add(url, pic);
+            _picDtlList.Add(new PicDetail(pic, dt.AddHours(-GmtOffset), _station[_stationIndex], _stationOffset[_stationIndex], WebScraper.GetCachedFileNameFromUrl_(url.Split('|')[0], false)));
+
+            //pic = WebScraperBitmap.DownloadImageCached(urlHist.Split('|')[0]);//GetWebImageFromCache(urlHist.Split('|')[0]);
           }
         }
       }
       catch (Exception ex) { ex.Log(); }
+      finally
+      {
+        report(times10minBack, url, pic, " cache");
+      }
     }
 
     static void report(int back, string url_time_, Bitmap? pic, string src) => Debug.WriteLine($"{back,3}/{_backLenLive} {url_time_.Substring(78)}: from   {src}: {(pic == null ? " - Unable to get this pic" : " + SUCCESS")}");
@@ -207,10 +200,10 @@ namespace RadarPicCollect
 
       try
       {
-        if (bmp == null) bmp = getFromCacheOrWeb(UrlForModTime(RainOrSnow, gmtTime, "WKR", true, false).Split('|')[0]);
-        if (bmp == null) bmp = getFromCacheOrWeb(UrlForModTime(RainOrSnow, gmtTime, "WKR", true, true).Split('|')[0]);
-        if (bmp == null) bmp = getFromCacheOrWeb(UrlForModTime(RainOrSnow, gmtTime, "WSO", true, false).Split('|')[0]);
-        if (bmp == null) bmp = getFromCacheOrWeb(UrlForModTime(RainOrSnow, gmtTime, "WSO", true, true).Split('|')[0]);
+        if (bmp == null) bmp = getFromCacheOrWeb(UrlForModTime(RainOrSnow, gmtTime, "WKR", false, null, false).Split('|')[0]);
+        if (bmp == null) bmp = getFromCacheOrWeb(UrlForModTime(RainOrSnow, gmtTime, "WKR", true, null, true).Split('|')[0]);
+        if (bmp == null) bmp = getFromCacheOrWeb(UrlForModTime(RainOrSnow, gmtTime, "WSO", false, null, false).Split('|')[0]);
+        if (bmp == null) bmp = getFromCacheOrWeb(UrlForModTime(RainOrSnow, gmtTime, "WSO", true, null, true).Split('|')[0]);
       }
       catch (Exception ex) { ex.Log(); }
       finally
