@@ -11,7 +11,8 @@ namespace RadarPicCollect
   public class RadarPicCollector
   {
     static readonly int GmtOffset = (int)((DateTime.UtcNow - DateTime.Now).TotalHours + .1);  //4 in summer, 5 in winter
-    public static string UrlForModTime(string rsRainOrSnow, DateTime d, string station, bool isFallback, bool? isDark /*= null*/, bool isFallbackCOMP /*= false*/) => EnvCanRadarUrlHelper.GetRadarUrl(d, rsRainOrSnow, station, isFallback, isDark, isFallbackCOMP);
+    public static string UrlForModTime(string rsRainOrSnow, DateTime d, string station, bool isFallback, bool? isDark, bool isFallbackCOMP) =>
+          EnvCanRadarUrlHelper.GetRadarUrl(d, rsRainOrSnow, station, isFallback, isDark, isFallbackCOMP);
 
     static int _stationIndex = 0;
     const int _backLenLive = 25;//usually there is 24 available; (4hr-10min) coverage.
