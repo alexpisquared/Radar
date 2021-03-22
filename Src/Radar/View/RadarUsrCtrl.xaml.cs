@@ -23,13 +23,13 @@ namespace Radar
     delegate void NoArgDelegate();
     delegate void IntArgDelegate(int stationIndex);
     delegate void OneArgDelegate(string title);
-    readonly RadarPicCollector _radarPicCollector = new RadarPicCollector();
+    readonly bool _isStandalole = true;
+    readonly RadarPicCollector _radarPicCollector = new();
+    readonly DispatcherTimer _animation_Timer = new(), _picIndex__Timer = new(), _getFromWebTimer = new();
     DateTime _curImageTime;
     bool _isAnimated = true, _forward = true, _isSpeedMeasuring = false;
     int _fwdPace = 128, _curPicIdx = 0, _animationLength = 151;
-    readonly bool _isStandalole = true;
-    const int  _bakPace = 5, _pause500ms = 500;
-    readonly DispatcherTimer _animation_Timer = new DispatcherTimer(), _picIndex__Timer = new DispatcherTimer(), _getFromWebTimer = new DispatcherTimer();
+    const int _bakPace = 5, _pause500ms = 500;
 
     public RadarUsrCtrl()
     {
