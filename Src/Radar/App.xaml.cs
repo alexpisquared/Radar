@@ -27,7 +27,7 @@ namespace Radar
     protected override async void OnStartup(StartupEventArgs e)
     {
       base.OnStartup(e);      //
-      Bpr.BeepBgn2();
+      //Bpr.BeepBgn2();
 
       Current.DispatcherUnhandledException += UnhandledExceptionHndlr.OnCurrentDispatcherUnhandledException;     //new SpeechSynthesizer().Speak("Testing");			new SpeechSynthesizer().SpeakAsync("Testing");
 
@@ -40,6 +40,9 @@ namespace Radar
         await Task.Delay(25);
         var uptime = EvLogHelper.CurrentSessionDuration();
 
+#if true
+        if (uptime.TotalMinutes > 20) Synth.SpeakFaF(upTimeMsg(uptime, "No UI."));
+#else // when radar source found/implemented:
         switch (e.Args.Length > 0 ? e.Args[0] : "")
         {
           default:
@@ -49,6 +52,7 @@ namespace Radar
           case sayUpTimeShow: sayRainOnOrComing(e.Args, uptime);                        /**/ goto default;
           case sayUpTimeNoUI: if (uptime.TotalMinutes > 20) Synth.SpeakFaF(upTimeMsg(uptime, "No UI.")); break;
         }
+#endif
 
         var eois = await EvLogHelper.UpdateEvLogToDb(0, $"Radar.exe {e.Args.FirstOrDefault()}");
         Trace.WriteLine($"{eois} events found/saved to db."); // System.Threading.Thread.Sleep(3999);            Synth.Speak($"{eois} events found");
