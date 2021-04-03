@@ -40,9 +40,13 @@ namespace Radar
         await Task.Delay(25);
         var uptime = EvLogHelper.CurrentSessionDuration();
 
-#if true
-        if (uptime.TotalMinutes > 20) Synth.SpeakFaF(upTimeMsg(uptime, "No UI."));
-#else // when radar source found/implemented:
+        if (//(e.Args.Length > 1 && e.Args[1].Equals("ShowLsaPopup")) ||
+            isDue(uptime))
+          showLongStretchAlertPopup(uptime, "");
+        else
+          await Synth.Speak("Too early."); //redundant: await ChimerAlt.BeepFD(6000, .2);
+
+#if !true // when radar source found/implemented:
         switch (e.Args.Length > 0 ? e.Args[0] : "")
         {
           default:
