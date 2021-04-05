@@ -165,7 +165,7 @@ namespace Radar
         case Key.F5: await fetchFromWebBegin(); break;
         case Key.F6: setNewImageSource(@"/Radar;component/WKR_roads.gif"); break;// C:\0\0\web\Radar\WKR_roads.gif"); break; //King (default)
         case Key.F7: setNewImageSource(@"C:\0\0\web\Radar\WSO_roads.gif"); break; //London
-        case Key.F8: _imageRoads.Visibility = _imageRoads.Visibility == Visibility.Hidden ? Visibility.Visible : Visibility.Hidden; break;
+        //case Key.F8: _imageRoads.Visibility = _imageRoads.Visibility == Visibility.Hidden ? Visibility.Visible : Visibility.Hidden; break;
 
         case Key.Home: await showPicX(0); break;
         case Key.End: await showPicX(_radarPicCollector.Pics.Count - 1); break;
@@ -203,7 +203,7 @@ namespace Radar
         bi3.BeginInit();
         bi3.UriSource = new Uri(s);
         bi3.EndInit();
-        _imageRoads.Source = bi3;
+        //_imageRoads.Source = bi3;
 
       }
       catch (Exception ex)

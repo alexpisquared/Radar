@@ -70,10 +70,10 @@ namespace RadarPicCollect
 
         if (times10minBack < _backLenLive)
         {
-          if ((pic = WebScraperBitmap.DownloadImageCached(url = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], false, true).Split('|')[0])) == null &&
+          if ((pic = WebScraperBitmap.DownloadImageCached(url = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], false, true).Split('|')[0])) == null /*&&
               (pic = WebScraperBitmap.DownloadImageCached(url = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], false, false).Split('|')[0])) == null &&
               (pic = WebScraperBitmap.DownloadImageCached(url = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], true, true).Split('|')[0])) == null &&
-              (pic = WebScraperBitmap.DownloadImageCached(url = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], true, false).Split('|')[0])) == null)
+              (pic = WebScraperBitmap.DownloadImageCached(url = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], true, false).Split('|')[0])) == null*/)
             return;
 
           if (_urlPicList.ContainsKey(url)) { _urlPicList.Remove(url); Debug.WriteLine(string.Format("+> {0} already there.", url)); }
@@ -82,10 +82,10 @@ namespace RadarPicCollect
         }
         else
         {
-          if ((pic = WebScraperBitmap.LoadImageFromFile(url = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], true, true).Split('|')[0])) == null &&
+          if ((pic = WebScraperBitmap.LoadImageFromFile(url = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], true, true).Split('|')[0])) == null /*&&
               (pic = WebScraperBitmap.LoadImageFromFile(url = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], true, false).Split('|')[0])) == null &&
               (pic = WebScraperBitmap.LoadImageFromFile(url = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], false, true).Split('|')[0])) == null &&
-              (pic = WebScraperBitmap.LoadImageFromFile(url = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], false, false).Split('|')[0])) == null)
+              (pic = WebScraperBitmap.LoadImageFromFile(url = UrlForModTime(RainOrSnow, dt, _station[_stationIndex], false, false).Split('|')[0])) == null*/)
             return;
 
           if (_urlPicList.ContainsKey(url)) { _urlPicList.Remove(url); Debug.WriteLine(string.Format("+> {0} already there.", url)); }
