@@ -14,7 +14,7 @@ namespace RadarPicCollect
     public static string UrlForModTime(string rsRainOrSnow, DateTime d, string station, bool isFallbackCAPPI, bool isFallbackCOMP) => EnvCanRadarUrlHelper.GetRadarUrl(d); // , rsRainOrSnow, station, isFallbackCAPPI, isFallbackCOMP);
 
     static int _stationIndex = 0;
-    const int _backLenLive = 148; // usually there was 24 available; (4hr-10min) coverage for radar; more for sattelite.
+    const int _backLenLive = 48; // usually there was 24 available; (4hr-10min) coverage for radar; more for sattelite.
     int _backLenCur = 0; // 300 does not work anymore: there seems to be no access to the historical data - only to immediate last 24 pics/4 hours;//300==48 hours; 240;//40hrs 
 
     List<PicDetail> _picDtlList = new List<PicDetail>();
@@ -102,7 +102,7 @@ namespace RadarPicCollect
       }
     }
 
-    static void report(int back, string url_time_, Bitmap? pic, string src) => Debug.WriteLine($"{back,3}/{_backLenLive} {url_time_.Substring(78)}: from   {src}: {(pic == null ? " - Unable to get this pic" : " + SUCCESS")}");
+    static void report(int back, string url_time_, Bitmap? pic, string src) => Debug.WriteLine($"{back,3}/{_backLenLive} {url_time_}: from   {src}: {(pic == null ? " - Unable to get this pic" : " + SUCCESS")}");
 
     public static string RainOrSnow
     {

@@ -47,7 +47,7 @@ namespace Radar
       _animation_Timer.Start();
 
       //KeyUp += (s, e) => OnKeyDown__(e.Key);
-      MouseWheel += async (s, e) => { if (e.Delta > 0) await showNextAsync(true); else await showPrevAsync(true); };
+      MouseWheel += async (s, e) => { if (e.Delta > 0) await showNextAsync(); else await showPrevAsync(); };
 
       tbBuildTime.Header = VerHelper.CurVerStr(".Net5");
 
@@ -75,8 +75,8 @@ namespace Radar
       else
         await showPicX(idx);
     }
-    async Task showPrevAsync(bool stopAtTheEnd) { _animation_Timer.Stop(); await showPicX(--_curPicIdx); }
-    async Task showNextAsync(bool stopAtTheEnd) { _animation_Timer.Stop(); await showPicX(++_curPicIdx); }
+    async Task showPrevAsync() { _animation_Timer.Stop(); await showPicX(--_curPicIdx); }
+    async Task showNextAsync() { _animation_Timer.Stop(); await showPicX(++_curPicIdx); }
     async Task showPicX(int idx)
     {
       try
@@ -90,7 +90,7 @@ namespace Radar
         _image.Source = await BitmapForWpfHelper.BitmapToBitmapSource(_radarPicCollector.Pics[_curPicIdx].Bitmap);
         if (_image.Source == null)
         {
-          await Task.Delay(9999);
+          await Task.Delay(9);
           return;
         }
 
@@ -102,7 +102,7 @@ namespace Radar
 
         LTitle.Text = $"{_radarPicCollector.Pics[_curPicIdx].ImageTime:HH:mm}    {_curPicIdx + 1,2} / {_radarPicCollector.Pics.Count}     {RadarPicCollector.RainOrSnow}";
 
-        RMeasr.Text = _radarPicCollector.Pics[_curPicIdx].Measure.ToString("N3");
+        //RMeasr.Text = _radarPicCollector.Pics[_curPicIdx].Measure.ToString("N3");
 
         var t = updateClock(_radarPicCollector.Pics[_curPicIdx].ImageTime);
       }
@@ -174,9 +174,9 @@ namespace Radar
         case Key.Up: await moveTimeAsync(-10); break;
 
         case Key.Right:
-        case Key.OemPeriod: await showNextAsync(false); break;
+        case Key.OemPeriod: await showNextAsync(); break;
         case Key.Left:
-        case Key.OemComma: await showPrevAsync(false); break;
+        case Key.OemComma: await showPrevAsync(); break;
 
         case Key.Tab: return;
         case Key.Escape: if (_isStandalole) WpfUtils.FindParentWindow(this)?.Close(); else WpfUtils.FindParentWindow(this)?.Hide(); break;
