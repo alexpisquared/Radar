@@ -29,7 +29,7 @@ namespace Radar
     DateTime _curImageTime;
     bool _isAnimated = true, _forward = true, _isSpeedMeasuring = false;
     int _fwdPace = 128, _curPicIdx = 0, _animationLength = 151;
-    const int _bakPace = 5, _pause500ms = 500;
+    const int _bakPace = 1, _pause500ms = 500;
 
     public RadarUsrCtrl()
     {
@@ -154,7 +154,7 @@ namespace Radar
         case Key.D8: _animationLength = 49; break;
         case Key.NumPad9:
         case Key.D9: _animationLength = 55; break;
-        case Key.Space: animate(); break;
+        case Key.Space: toggleAnimation(); break;
         case Key.M: speedMeasure(); break;
         case Key.R: RadarPicCollector.RainOrSnow = "RAIN"; _radarPicCollector.DownloadRadarPics(); /*Bpr.BeepClk()*/; break;
         case Key.S: RadarPicCollector.RainOrSnow = "SNOW"; _radarPicCollector.DownloadRadarPics(); /*Bpr.BeepClk()*/; break;
@@ -242,7 +242,7 @@ namespace Radar
       }
       return result;
     }
-    void animate()
+    void toggleAnimation()
     {
       _isAnimated = !_isAnimated;
       _animation_Timer.IsEnabled = _isAnimated;

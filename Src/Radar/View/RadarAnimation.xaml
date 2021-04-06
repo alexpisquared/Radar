@@ -12,9 +12,9 @@
 
       <Button Content=" X " Foreground="#6c00" FontSize="160" IsCancel="True" Background="Transparent" BorderThickness="0" VerticalAlignment="Top" HorizontalAlignment="Right" />
 
-      <View:PermaZoomFrameUsrCtrl Margin="10 40" Width="256" Height="256" ImageURL="https://weather.gc.ca/data/satellite/goes_ecan_1070_100.jpg"    AnimeURL="https://weather.gc.ca/satellite/satellite_anim_e.html?sat=goes&amp;area=ecan&amp;type=1070"    VerticalAlignment="Top"    HorizontalAlignment="Left"  />
-      <View:PermaZoomFrameUsrCtrl Margin="10 40" Width="256" Height="256" ImageURL="https://weather.gc.ca/data/satellite/goes_ecan_visible_100.jpg" AnimeURL="https://weather.gc.ca/satellite/satellite_anim_e.html?sat=goes&amp;area=ecan&amp;type=visible" VerticalAlignment="Bottom" HorizontalAlignment="Left"  />
-      <View:PermaZoomFrameUsrCtrl Margin="10 40" Width="256" Height="256" ImageURL="https://weather.gc.ca/data/satellite/goes_ecan_vvi_100.jpg"     AnimeURL="https://weather.gc.ca/satellite/satellite_anim_e.html?sat=goes&amp;area=ecan&amp;type=vvi"     VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+      <View:PermaZoomFrameUsrCtrl Margin="10 40" Width="56" Height="56" ImageURL="https://weather.gc.ca/data/satellite/goes_ecan_1070_100.jpg"    AnimeURL="https://weather.gc.ca/satellite/satellite_anim_e.html?sat=goes&amp;area=ecan&amp;type=1070"    VerticalAlignment="Top"    HorizontalAlignment="Left"  />
+      <View:PermaZoomFrameUsrCtrl Margin="10 40" Width="56" Height="56" ImageURL="https://weather.gc.ca/data/satellite/goes_ecan_visible_100.jpg" AnimeURL="https://weather.gc.ca/satellite/satellite_anim_e.html?sat=goes&amp;area=ecan&amp;type=visible" VerticalAlignment="Bottom" HorizontalAlignment="Left"  />
+      <View:PermaZoomFrameUsrCtrl Margin="10 40" Width="56" Height="56" ImageURL="https://weather.gc.ca/data/satellite/goes_ecan_vvi_100.jpg"     AnimeURL="https://weather.gc.ca/satellite/satellite_anim_e.html?sat=goes&amp;area=ecan&amp;type=vvi"     VerticalAlignment="Bottom" HorizontalAlignment="Right" />
     </Grid>
   </Viewbox>
 </lnk:WindowBase>
