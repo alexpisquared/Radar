@@ -13,8 +13,8 @@ namespace Radar.View
       InitializeComponent();
       DataContext = this;
     }
-    public static readonly DependencyProperty ImageURLProperty = DependencyProperty.Register("ImageURL", typeof(string), typeof(PermaZoomFrameUsrCtrl), new PropertyMetadata("https://weather.gc.ca/data/satellite/goes_ecan_vvi_100.jpg")); public string ImageURL { get => (string)GetValue(ImageURLProperty); set => SetValue(ImageURLProperty, value); }
-    public static readonly DependencyProperty AnimeURLProperty = DependencyProperty.Register("AnimeURL", typeof(string), typeof(PermaZoomFrameUsrCtrl), new PropertyMetadata("https://weather.gc.ca/data/satellite/goes_ecan_vvi_100.jpg")); public string AnimeURL { get => (string)GetValue(AnimeURLProperty); set => SetValue(AnimeURLProperty, value); }
+    public static readonly DependencyProperty ImageURLProperty = DependencyProperty.Register("ImageURL", typeof(string), typeof(PermaZoomFrameUsrCtrl), new PropertyMetadata("https://weather.gc.ca/data/satellite/goes_ecan_1070_100.jpg")); public string ImageURL { get => (string)GetValue(ImageURLProperty); set => SetValue(ImageURLProperty, value); }
+    public static readonly DependencyProperty AnimeURLProperty = DependencyProperty.Register("AnimeURL", typeof(string), typeof(PermaZoomFrameUsrCtrl), new PropertyMetadata("https://weather.gc.ca/data/satellite/goes_ecan_1070_100.jpg")); public string AnimeURL { get => (string)GetValue(AnimeURLProperty); set => SetValue(AnimeURLProperty, value); }
 
     void Hyperlink_RequestNavigate(object s, System.Windows.Navigation.RequestNavigateEventArgs e)
     {

@@ -15,7 +15,6 @@
       <TextBlock FontSize="16" Background="#7fff"> <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://weather.gc.ca/satellite/satellite_anim_e.html?sat=goes&amp;area=ecan&amp;type=visible" > ─ · Vis · ─ </Hyperlink></TextBlock>
       <TextBlock FontSize="16" Background="#7fff"> <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://weather.gc.ca/satellite/satellite_anim_e.html?sat=goes&amp;area=ecan&amp;type=vvi"     > ─ · I+V · ─ </Hyperlink></TextBlock>
       -->
-
       <TextBlock>
         <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="{Binding AnimeURL, FallbackValue='https://weather.gc.ca/satellite/satellite_anim_e.html?sat=goes&amp;area=ecan&amp;type=1070'}"    >
           <Ellipse Width="512" Height="512"  Margin="0">
