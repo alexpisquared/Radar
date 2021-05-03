@@ -70,7 +70,6 @@
       <Ellipse Width="160" Height="160" StrokeThickness="4" Stroke="#ff0" />
       <Ellipse Width="100" Height="100" StrokeThickness="3" Stroke="#ff0" />
       <Ellipse Width="10"  Height="10"  StrokeThickness="2" Stroke="#f00" Fill="#ff0" />
-
     </Grid>
 
     <!-- Display a clock that synchronizes with the timestamp of the displayed image -->
