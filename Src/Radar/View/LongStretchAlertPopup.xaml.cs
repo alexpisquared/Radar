@@ -41,7 +41,7 @@ namespace Radar.View
 
       dailyChart1.ClearDrawAllSegmentsForSinglePC(Environment.MachineName, "Red");
 
-      await _synth.Speak(_rainAndUptimeMsg); //redundant: await ChimerAlt.BeepFD(6000, .2);
+      await _synth.SpeakAsync(_rainAndUptimeMsg); //redundant: await ChimerAlt.BeepFD(6000, .2);
     }
 
     public static readonly DependencyProperty StandingTimeProperty = DependencyProperty.Register("StandingTime", typeof(TimeSpan), typeof(LongStretchAlertPopup), new PropertyMetadata()); public TimeSpan StandingTime { get => (TimeSpan)GetValue(StandingTimeProperty); set => SetValue(StandingTimeProperty, value); }
@@ -55,7 +55,7 @@ namespace Radar.View
         Visibility = Visibility.Collapsed;
         await Task.Delay(min * 60 * 1000);
         Visibility = Visibility.Visible;
-        await _synth.Speak($"Hm. {min} minute extension has passed.");
+        await _synth.SpeakAsync($"Hm. {min} minute extension has passed.");
       }
     }
 
