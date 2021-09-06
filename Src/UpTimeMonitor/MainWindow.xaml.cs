@@ -1,18 +1,7 @@
 ﻿using EventLogLib;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace UpTimeMonitor
@@ -43,9 +32,11 @@ namespace UpTimeMonitor
     {
       var uptime = EventLogHelper.CurrentSessionDuration();
 
-      Title = $"{uptime.TotalMinutes,6:N0}m";
+      Title = $"{uptime.TotalMinutes:N0}";
+      tb1.Text = $"{uptime.TotalHours:N2} h";
 
-      tb3.Text = $"{(DateTimeOffset.Now - _start).TotalHours:N1} h";
+      tb2.Text = $"{(DateTimeOffset.Now - _start).TotalHours:N2} h";
+      tb3.Text = $"{(DateTimeOffset.Now - _start).TotalHours:N2} h";
     }
   }
 }

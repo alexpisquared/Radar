@@ -31,14 +31,14 @@
         <ColumnDefinition Width="Auto"/>
         <ColumnDefinition Width="Auto"/>
       </Grid.ColumnDefinitions>
-      <Label Grid.Row="0" Content="Ssn time" />
+      <Label Grid.Row="0" Content="Ssn time (m)" />
       <Label Grid.Row="1" Content="Ttl Dirty" />
       <Label Grid.Row="2" Content="Ttl Clean" />
       <Label Grid.Row="3" Content="Me App" />
-      <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Text="{Binding Title, ElementName=ths}" d:Text="48.8" />
-      <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Text="{Binding Title, ElementName=ths}" d:Text="248.8" />
-      <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Text="{Binding Title, ElementName=ths}" d:Text="148.8" />
-      <TextBlock Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" Text="{Binding Title, ElementName=ths}" d:Text="148.8" Name="tb3"/>
+      <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Text="{Binding Title, ElementName=ths}" d:Text="48.8"  Name="tb0" />
+      <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Text="{Binding Title, ElementName=ths}" d:Text="248.8" Name="tb1" />
+      <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Text="{Binding Title, ElementName=ths}" d:Text="148.8" Name="tb2" />
+      <TextBlock Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" Text="{Binding Title, ElementName=ths}" d:Text="148.8" Name="tb3" />
     </Grid>
   </Border>
 </Window>
