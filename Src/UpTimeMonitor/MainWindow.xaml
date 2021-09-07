@@ -39,13 +39,18 @@
           <ColumnDefinition Width="Auto"/>
           <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Label Grid.Row="0" Content="Ssn time" />
-        <TextBlock Grid.Row="0" Grid.Column="1"     HorizontalAlignment="Right"   Text="{Binding Title, ElementName=ths}" d:Text="48.8"  Name="tb0" />
-        
+        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Center" >
+          <Label Content="Ssn time" />
+          <TextBlock Text="{Binding Title, ElementName=ths}" d:Text="48.8"  Name="tb0" />
+        </StackPanel>
+
         <TextBlock Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center"  Text="{Binding Title, ElementName=ths}" d:Text="248.8" Name="tb1" />
 
-        <Label     Grid.Row="2" Content="Took" />
-        <TextBlock Grid.Row="2" Grid.Column="1"     HorizontalAlignment="Right"   Text="{Binding Title, ElementName=ths}" d:Text="148.8" Name="tb2" />
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Center" >
+          <Label    Content="Took" />
+        <TextBlock Text="{Binding Title, ElementName=ths}" d:Text="148.8" Name="tb2" />
+          <Label    Content="ms" />
+        </StackPanel>
         <!--
         <Label Grid.Row="3" Content="Ttl Work" />
         <TextBlock Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" Text="{Binding Title, ElementName=ths}" d:Text="148.8" Name="tb3" />-->

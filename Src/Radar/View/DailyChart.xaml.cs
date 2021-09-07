@@ -120,13 +120,13 @@ namespace UpTimeChart
         SortedList<DateTime, int> eois; 
         if (isHere)
         {
-          var localEvLog = EvLogHelper.GetAllUpDnEvents(timeA, timeB);
-          var dbaseEvLog = DbLogHelper.GetAllUpDnEvents(timeA, timeB, pc);
+          var localEvLog = EvLogHelper.GetAllEventsOfInterest(timeA, timeB);
+          var dbaseEvLog = DbLogHelper.GetAllEventsOfInterest(timeA, timeB, pc);
           eois = localEvLog.Count > dbaseEvLog.Count ? localEvLog : dbaseEvLog; // Jan 2020: whoever has more events wins!
         }
         else
         {
-          eois = DbLogHelper.GetAllUpDnEvents(timeA, timeB, pc);
+          eois = DbLogHelper.GetAllEventsOfInterest(timeA, timeB, pc);
         }
 
         if (trgDate == DateTime.Today && isHere)

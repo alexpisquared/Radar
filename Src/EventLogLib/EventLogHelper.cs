@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
+using System.IO;
 using System.Reflection;
 using System.Runtime.Versioning;
 
@@ -9,6 +10,27 @@ namespace EventLogLib;
 [SupportedOSPlatform("windows")]
 public static class EventLogHelper // 2022-09 excrept from C:\g\TimeTracking\N50\TimeTracking50\TimeTracker\AsLink\EvLogMngr.cs
 {
+  public static SortedList<DateTime, EvOfIntFlag> GetAllEventsOfInterest(DateTime a, DateTime b)
+  {
+    var lst = new SortedList<DateTime, EvOfIntFlag>();
+
+    try
+    {
+      Collect(lst, QryBootAndWakeUps(a, b), EvOfIntFlag.BootAndWakeUps);
+      Collect(lst, QryShutAndSleepDn(a, b), EvOfIntFlag.ShutAndSleepDn);
+      Collect(lst, QryScrSvr(_ssrDn, a, b), EvOfIntFlag.ScreenSaverrDn);
+      Collect(lst, QryScrSvr(_ssrUp, a, b), EvOfIntFlag.ScreenSaverrUp);
+
+      foreach (var path in _paths)
+      {
+        Add1stLast(a, b, lst, path);
+      }
+    }
+    catch (Exception ex) { Trace.WriteLine(ex.Message, MethodInfo.GetCurrentMethod()?.ToString()); throw;  }
+
+    return lst;
+  }
+
   public static TimeSpan CurrentSessionDuration() // lengthy operation: > 100 ms.
   {
     var lastUp = DateTime.FromOADate(Math.Max(
@@ -18,7 +40,7 @@ public static class EventLogHelper // 2022-09 excrept from C:\g\TimeTracking\N50
 
     return GetDaysLastSsUpTime(DateTime.Today) > lastUp ? TimeSpan.Zero : DateTime.Now - lastUp;
   }
-  public static TimeSpan GetIdleGapsTotal(DateTime hr00ofTheDate)
+  public static TimeSpan GetTotalIdleByScrSvr(DateTime hr00ofTheDate)
   {
     var sw = Stopwatch.StartNew();
     DateTime now = DateTime.Now, t1 = DateTime.MinValue, t2 = DateTime.MinValue;
@@ -33,14 +55,14 @@ public static class EventLogHelper // 2022-09 excrept from C:\g\TimeTracking\N50
     {
       for (var er = (EventLogRecord?)reader.ReadEventSafe(); null != er && er.TimeCreated.HasValue; er = (EventLogRecord?)reader.ReadEventSafe())
       {
-        if (er.TimeCreated.Value > hr24ofTheDate)
+        if (er.TimeCreated.Value > hr24ofTheDate) // if going over midnight
         {
-          if (t1 > t2) // if last event was up - add this range to uptime
-            ttlSsUpTime += (hr24ofTheDate - t1);
+          if (t1 > t2)
+            ttlSsUpTime += (hr24ofTheDate - t1); // if last event was ssup - add this range to ssuptime
           else
             ttlSsDnTime += (hr24ofTheDate - t2);
 
-          break;
+          break; // exit the loop.
         }
 
         if (er.Id == _ssrUp)
@@ -60,7 +82,7 @@ public static class EventLogHelper // 2022-09 excrept from C:\g\TimeTracking\N50
         }
 
         Debug.Write($"   {ttlSsUpTime,8:h\\:mm\\:ss}  +  {ttlSsDnTime,8:h\\:mm\\:ss}  =  {(ttlSsUpTime + ttlSsDnTime),8:h\\:mm\\:ss}");
-    Debug.Write($"  ==> {ttlSsUpTime,8:h\\:mm\\:ss}  +  {ttlSsto,8:h\\:mm\\:ss}  =  {ttlSsUpTime + ttlSsto,8:h\\:mm\\:ss}     (ss dn: {ttlSsDnTime:h\\:mm\\:ss})\t  {sw.ElapsedMilliseconds,5}ms ");
+        Debug.Write($"  ==> {ttlSsUpTime,8:h\\:mm\\:ss}  +  {ttlSsto,8:h\\:mm\\:ss}  =  {ttlSsUpTime + ttlSsto,8:h\\:mm\\:ss}     (ss dn: {ttlSsDnTime:h\\:mm\\:ss})\t  {sw.ElapsedMilliseconds,5}ms ");
       }
     }
 
@@ -215,6 +237,85 @@ public static class EventLogHelper // 2022-09 excrept from C:\g\TimeTracking\N50
     return rv;
   }
 
+  static void Collect(SortedList<DateTime, EvOfIntFlag> lst, string qry, EvOfIntFlag evOfIntFlag)
+  {
+    using var reader = GetEventLogReader(qry);
+    for (var ev = reader.ReadEventSafe(); ev != null; ev = reader.ReadEventSafe())
+    {
+      //32 Debug.Write($" *** ev time: {ev.TimeCreated.Value:y-MM-dd HH:mm:ss.fff} - {evOfIntFlag}={(EvOfIntFlag)evOfIntFlag,}:"); Debug.Assert(!lst.ContainsKey(ev.TimeCreated.Value), $" -- already added {ev.TimeCreated.Value} - {evOfIntFlag}");
+
+      if (lst.Any(r => r.Value == evOfIntFlag) && ev.TimeCreated.HasValue && (ev.TimeCreated.Value - lst.Where(r => r.Value == evOfIntFlag).Max(r => r.Key)).TotalSeconds < 60) // if same last one is < 60 sec ago.
+      {
+        //32 Debug.WriteLine($" -- IGNORING  to allow power-offs (which are out of order in ev.log!!!) to flag the actual state.");
+      }
+      else if (ev.TimeCreated.HasValue)
+      {
+        //32 Debug.WriteLine($" -- LOGGING.");
+        lst.Add(ev.TimeCreated.Value, evOfIntFlag);
+      }
+    }
+  }
+  static EventLogReader GetEventLogReader(string qry, string path = "System") => new(new EventLogQuery(path, PathType.LogName, qry));
+
+  static string QryBootAndWakeUps(DateTime a, DateTime b) =>
+//Both wake and boot up:           Kernel-General 12 - up   	OR      Power-TroubleShooter 1 
+$@"<QueryList><Query Id='0' Path='System'><Select Path='System'>*[System[ (
+(Provider[@Name='Microsoft-Windows-Kernel-General'] and (EventID={_bootUp_12} or EventID={_syTime_01})) or 
+(Provider[@Name='Microsoft-Windows-Power-Troubleshooter'] and EventID={_syTime_01}) )  
+and TimeCreated[@SystemTime&gt;='{a.ToUniversalTime():o}'] and TimeCreated[@SystemTime&lt;='{b.ToUniversalTime():o}'] ]] </Select></Query></QueryList>";//   <QueryList><Query Id='0' Path='System'><Select Path='System'>*[System[ Provider[@Name='Microsoft-Windows-Kernel-General'] and (Level=4 or Level=0) and (EventID={_bootUp}) and TimeCreated[@SystemTime&gt;='{a.ToUniversalTime():o}'] and TimeCreated[@SystemTime&lt;='{b.ToUniversalTime():o}'] ]]</Select></Query></QueryList>";
+
+  static string QryShutAndSleepDn(DateTime a, DateTime b) =>
+//Both sleep and shut down:
+$@"<QueryList><Query Id='0' Path='System'><Select Path='System'>*[System[ (
+(Provider[@Name='User32'] and EventID=1074) or
+(Provider[@Name='Microsoft-Windows-Kernel-Power'] and EventID=42 ) )
+and TimeCreated[@SystemTime&gt;='{a.ToUniversalTime():o}'] and TimeCreated[@SystemTime&lt;='{b.ToUniversalTime():o}'] ]] </Select></Query></QueryList>";//   <QueryList><Query Id='0' Path='System'><Select Path='System'>*[System[Provider[@Name='Microsoft-Windows-Kernel-General'] and (Level=4 or Level=0) and (EventID={_bootUp}) and TimeCreated[@SystemTime&gt;='{a.ToUniversalTime():o}'] and TimeCreated[@SystemTime&lt;='{b.ToUniversalTime():o}']]]</Select></Query></QueryList>
+
+  static string QryScrSvr(int upOrDn, DateTime a, DateTime b) => $@"<QueryList><Query Id='0' Path='{_aavLogName}'><Select Path='{_aavLogName}'>*[System[Provider[@Name='{_aavSource}'] and (Level=4 or Level=0) and ( EventID={upOrDn} and TimeCreated[@SystemTime&gt;='{a.ToUniversalTime():o}'] and TimeCreated[@SystemTime&lt;='{b.ToUniversalTime():o}'] )]]</Select></Query></QueryList>";
+
+  static void Add1stLast(DateTime a, DateTime b, SortedList<DateTime, EvOfIntFlag> lst, string path)
+  {
+    //????????return; // no events found
+
+    (var min, var max) = Get1rstLastEvents(qryAll(path, a, b));
+    if (min == DateTime.MaxValue)
+      return; // no events found
+
+    if (lst.Count < 1)
+      lst.Add(min, EvOfIntFlag.Day1stAmbiguos);
+    else
+    {
+      if ((lst.Min(r => r.Key) - min).TotalSeconds > +30) // only if > 30 sec
+        lst.Add(min, EvOfIntFlag.Day1stAmbiguos);
+      else
+        Debug.WriteLine("+???");
+    }
+
+    if (lst.Count < 1)
+      lst.Add(max, EvOfIntFlag.ShutAndSleepDn);
+    else
+    {
+      if ((lst.Max(r => r.Key) - max).TotalSeconds < -30)
+        lst.Add(max, EvOfIntFlag.ShutAndSleepDn); // any idea what is that for? It adds a ShuDn event ~5 min ago from now ... but why? (Mar2019)
+      else
+        Debug.WriteLine("-???");
+    }
+  }
+  static (DateTime min, DateTime max) Get1rstLastEvents(string qry)
+  {
+    var lst = new List<DateTime>();
+    using (var reader = GetEventLogReader(qry))
+    {
+      for (var ev = reader.ReadEventSafe(); ev != null && ev.TimeCreated != null; ev = reader.ReadEventSafe())
+        lst.Add(ev.TimeCreated.Value);
+    }
+
+    return lst.Count < 1 ? (DateTime.MaxValue, DateTime.MinValue) : (lst.Min(), lst.Max());
+  }
+
+  static string qryAll(string path, DateTime a, DateTime b) => $@"<QueryList><Query Id='0' Path='{path}'><Select Path='{path}'>*[System[TimeCreated[@SystemTime&gt;='{a.ToUniversalTime():o}' and @SystemTime&lt;='{b.ToUniversalTime():o}']]]</Select></Query></QueryList>";
+
+
 
   static int _ssto = -1; public static int Ssto // ScreenSaveTimeOut - !!!: don't forget to add a grace period of 1 min when calculating the idle time
   {
@@ -257,6 +358,21 @@ $@"<QueryList><Query Id='0' Path='System'><Select Path='System'>*[System[ (
 (Provider[@Name='Microsoft-Windows-Power-Troubleshooter'] and EventID={_syTime_01}) )  
 and TimeCreated[@SystemTime&gt;='{a.ToUniversalTime():o}'] and TimeCreated[@SystemTime&lt;='{b.ToUniversalTime():o}'] ]] </Select></Query></QueryList>";//   <QueryList><Query Id='0' Path='System'><Select Path='System'>*[System[ Provider[@Name='Microsoft-Windows-Kernel-General'] and (Level=4 or Level=0) and (EventID={_bootUp}) and TimeCreated[@SystemTime&gt;='{a.ToUniversalTime():o}'] and TimeCreated[@SystemTime&lt;='{b.ToUniversalTime():o}'] ]]</Select></Query></QueryList>";
 
+  static readonly string[] _paths = new[] { _app, _sys };
+
   const int _ssrUp = 7101, _ssrDn = 7102, _bootUp_12 = 12, _bootDn_13 = 13, _syTime_01 = 1, _graceEvLogAndLockPeriodSec = 60; // when waking from hibernation: 12 is nowhere to be seen, 1 is there.
   const string _app = "Application", _sec = "Security", _sys = "System", _aavSource = "AavSource", _aavLogName = "AavNewLog";
+}
+
+[Flags]
+public enum EvOfIntFlag
+{
+  ShutAndSleepDn = 1,     // Off pc
+  ScreenSaverrUp = 2,     // Off ss
+  ScreenSaverrDn = 4,     // On  ss
+  BootAndWakeUps = 8,     // On  pc
+  Day1stAmbiguos = 16,    // PC was on whole night ... but nobody's was there
+  Was_Off_Ignore = 32,     // Off ignore
+  Was_On__Ignore = 64,     // On  ignore
+  Who_Knows_What = 1024,
 }
