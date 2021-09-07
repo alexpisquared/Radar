@@ -64,7 +64,7 @@ namespace UpTimeMonitor
       var prev = nsl.First();
       foreach (var e in lst)
       {
-        Trace.Write($"{e.Key:HH:mm:ss} \t {e.Value}  ==>  ");
+        Trace.Write($"  {e.Key:HH:mm:ss}  {e.Value}  ==>  ");
 
         if (prev.Value == EvOfIntFlag.Who_Knows_What) // first entry for the day
         {
@@ -78,7 +78,7 @@ namespace UpTimeMonitor
             case EvOfIntFlag.Was_Off_Ignore:
             case EvOfIntFlag.Was_On__Ignore:
             case EvOfIntFlag.Who_Knows_What:
-            default: Trace.WriteLine($"{e.Key:HH:mm:ss} \t {e.Value}   -----  //todo:"); break;
+            default: Trace.WriteLine($"{e.Key:HH:mm:ss} \t {e.Value}   -----  //todo: 000 "); break;
           }
         }
         else
@@ -97,7 +97,7 @@ namespace UpTimeMonitor
                 case EvOfIntFlag.Was_Off_Ignore:
                 case EvOfIntFlag.Was_On__Ignore:
                 case EvOfIntFlag.Who_Knows_What:
-                default: Trace.WriteLine($"{e.Key:HH:mm:ss} \t {prev.Value}  ==>  {e.Value}   -----  //todo:"); break;
+                default: Trace.Write($"\t {prev.Value}  ==>  {e.Value}   -----  //todo: 111 \t"); break;
               }
               break;
 
@@ -112,7 +112,7 @@ namespace UpTimeMonitor
                 case EvOfIntFlag.Was_Off_Ignore:
                 case EvOfIntFlag.Was_On__Ignore:
                 case EvOfIntFlag.Who_Knows_What:
-                default: Trace.WriteLine($"{e.Key:HH:mm:ss} \t {prev.Value}  ==>  {e.Value}   -----  //todo:"); break;
+                default: Trace.Write($"\t {prev.Value}  ==>  {e.Value}   -----  //todo: 222 \t"); break;
               }
               break;
 
@@ -128,7 +128,7 @@ namespace UpTimeMonitor
                 case EvOfIntFlag.Was_Off_Ignore:
                 case EvOfIntFlag.Was_On__Ignore:
                 case EvOfIntFlag.Who_Knows_What:
-                default: Trace.WriteLine($"{e.Key:HH:mm:ss} \t {prev.Value}  ==>  {e.Value}   -----  //todo:"); break;
+                default: Trace.Write($"\t {prev.Value}  ==>  {e.Value}   -----  //todo: 333 \t"); break;
               }
               break;
 
@@ -136,11 +136,11 @@ namespace UpTimeMonitor
             case EvOfIntFlag.Was_Off_Ignore:
             case EvOfIntFlag.Was_On__Ignore:
             case EvOfIntFlag.Who_Knows_What:
-            default: Trace.WriteLine($"{e.Key:HH:mm:ss} \t {e.Value}   -----  //todo:"); break;
+            default: Trace.Write($"\t {e.Value}   -----  //todo: 444 \t"); break;
           }
         }
 
-        Trace.WriteLine($"{ttlWrk + ttlIdl + ttlOff:h\\:mm\\:ss}  =  {ttlWrk:h\\:mm\\:ss} + {ttlIdl:h\\:mm\\:ss} + {ttlOff:h\\:mm\\:ss}  ");
+        Trace.WriteLine($"{ttlWrk + ttlIdl + ttlOff:hh\\:mm\\:ss}  =  {ttlWrk:h\\:mm\\:ss} + {ttlIdl:h\\:mm\\:ss} + {ttlOff:h\\:mm\\:ss}  ");
 
         prev = e;
       }

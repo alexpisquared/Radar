@@ -1,7 +1,6 @@
 ﻿using Microsoft.Win32;
 using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
-using System.IO;
 using System.Reflection;
 using System.Runtime.Versioning;
 
@@ -26,7 +25,7 @@ public static class EventLogHelper // 2022-09 excrept from C:\g\TimeTracking\N50
         Add1stLast(a, b, lst, path);
       }
     }
-    catch (Exception ex) { Trace.WriteLine(ex.Message, MethodInfo.GetCurrentMethod()?.ToString()); throw;  }
+    catch (Exception ex) { Trace.WriteLine(ex.Message, MethodInfo.GetCurrentMethod()?.ToString()); throw; }
 
     return lst;
   }
@@ -46,7 +45,7 @@ public static class EventLogHelper // 2022-09 excrept from C:\g\TimeTracking\N50
     DateTime now = DateTime.Now, t1 = DateTime.MinValue, t2 = DateTime.MinValue;
     TimeSpan ttlSsDnTime = TimeSpan.FromTicks(0), ttlSsUpTime = TimeSpan.FromTicks(0), ttlSsto = TimeSpan.FromTicks(0);
     var hr24ofTheDate = hr00ofTheDate.AddDays(1);
-    var ssto = TimeSpan.FromSeconds(Ssto + _graceEvLogAndLockPeriodSec);
+    var sstoAndGraceMin = TimeSpan.FromSeconds(Ssto + _graceEvLogAndLockPeriodSec);
     var apl1hr = $@"<QueryList><Query Id='0' Path='{_aavLogName}'><Select Path='{_aavLogName}'>*[System[Provider[@Name='{_aavSource}'] and (Level=4 or Level=0) and ( (EventID &gt;= {_ssrUp} and EventID &lt;= {_ssrDn}) ) and TimeCreated[@SystemTime&gt;='{hr00ofTheDate.ToUniversalTime():o}']]]</Select></Query></QueryList>";
 
     Debug.Write($"   ScrSvr Up  -  ScrSvr Dn         dt          Ttl Up  +    Ttl Dn  =     TTL    ==>  ttlSsUp  +   ttlSsDn  =    +++");
@@ -67,7 +66,7 @@ public static class EventLogHelper // 2022-09 excrept from C:\g\TimeTracking\N50
 
         if (er.Id == _ssrUp)
         {
-          ttlSsto += ssto;
+          ttlSsto += sstoAndGraceMin;
           t1 = er.TimeCreated.Value;
           var timeBetweenEvents = t2 == DateTime.MinValue ? t1 - hr00ofTheDate : t1 - t2;
           ttlSsDnTime += timeBetweenEvents;
@@ -251,7 +250,10 @@ public static class EventLogHelper // 2022-09 excrept from C:\g\TimeTracking\N50
       else if (ev.TimeCreated.HasValue)
       {
         //32 Debug.WriteLine($" -- LOGGING.");
-        lst.Add(ev.TimeCreated.Value, evOfIntFlag);
+        if (evOfIntFlag == EvOfIntFlag.ScreenSaverrUp)
+          lst.Add(ev.TimeCreated.Value.Subtract(TimeSpan.FromSeconds(Ssto + _graceEvLogAndLockPeriodSec)), evOfIntFlag);
+        else
+          lst.Add(ev.TimeCreated.Value, evOfIntFlag);
       }
     }
   }
