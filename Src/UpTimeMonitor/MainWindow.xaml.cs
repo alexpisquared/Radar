@@ -16,6 +16,7 @@ namespace UpTimeMonitor
 
       MouseLeftButtonDown += (s, e) => DragMove();
       KeyUp += (s, e) => { switch (e.Key) { default: break; case Key.Escape: base.OnKeyUp(e); Close(); break; } };
+      _start = DateTimeOffset.Now;
 
       OnTick(null, new EventArgs());
 
@@ -25,7 +26,6 @@ namespace UpTimeMonitor
       new DispatcherTimer(new TimeSpan(0, 0, 1, 0, 0), DispatcherPriority.Background, OnTick, Dispatcher.CurrentDispatcher).Start();
 #endif
 
-      _start = DateTimeOffset.Now;
     }
 
     void OnTick(object? s, EventArgs e)
@@ -33,10 +33,12 @@ namespace UpTimeMonitor
       var uptime = EventLogHelper.CurrentSessionDuration();
 
       Title = $"{uptime.TotalMinutes:N0}";
-      tb1.Text = $"{uptime.TotalHours:N2} h";
+      tb0.Text = $"{uptime:h\\:mm}";
 
-      tb2.Text = $"{(DateTimeOffset.Now - _start).TotalHours:N2} h";
-      tb3.Text = $"{(DateTimeOffset.Now - _start).TotalHours:N2} h";
+      tb1.Text = $"{EventLogHelper.GetTotalPowerUpTimeForTheDay(_start.Date):h\\:mm}";
+      tb2.Text = $"{EventLogHelper.GetTotalIdlePlusScrsvrUpTimeForTheDate(_start.Date):h\\:mm}";
+
+      tb3.Text = $"{(DateTimeOffset.Now - _start).TotalHours:N1}";
     }
   }
 }

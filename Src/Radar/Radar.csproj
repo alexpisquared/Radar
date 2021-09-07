@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <Compile Include="..\..\..\AAV.Shared\Src\AsLink\PlatformNeutral\EnvCanRadarUrlHelper.cs" Link="AsLink\EnvCanRadarUrlHelper.cs" />
+    <Compile Include="..\..\..\AAV.Shared\Src\AsLink\PlatformNeutral\EvLogHelperBase.cs" Link="AsLink\EvLogHelperBase.cs" />
     <Compile Include="..\..\..\TimeTracking\N50\TimeTracking50\TimeTracker\AsLink\EvLogMngr.cs" Link="AsLink\EvLogMngr.cs" />
     <Compile Include="..\..\..\TimeTracking\N50\TimeTracking50\TimeTracker\AsLink\EvLogMngrBase.cs" Link="AsLink\EvLogMngrBase.cs" />
   </ItemGroup>

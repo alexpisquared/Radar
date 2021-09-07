@@ -40,7 +40,6 @@ namespace Radar
         await Task.Delay(25);
         var uptime = EvLogHelper.CurrentSessionDuration();
 
-
 #if !true // when radar source found/implemented:
         if (//(e.Args.Length > 1 && e.Args[1].Equals("ShowLsaPopup")) ||
             isDue(uptime))
