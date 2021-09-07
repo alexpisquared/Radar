@@ -1,7 +1,7 @@
 ﻿<Window x:Class="UpTimeMonitor.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
         xmlns:local="clr-namespace:UpTimeMonitor"
         Title="48" Name="ths" 
-        Width="520" Height="440"
+        Width="520" Height="400"
         AllowsTransparency="True" WindowStyle="None" Background="Transparent">
   <Window.Resources>
     <Style TargetType="Label" >
@@ -28,7 +28,7 @@
       </LinearGradientBrush>
     </Border.Background>
     <Viewbox >
-      <Grid Margin="25" >
+      <Grid Margin="15" >
         <Grid.RowDefinitions>
           <RowDefinition Height="Auto"/>
           <RowDefinition Height="Auto"/>
@@ -39,14 +39,16 @@
           <ColumnDefinition Width="Auto"/>
           <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Label Grid.Row="0" Content="Ssn time (m)" />
-        <Label Grid.Row="1" Content="Ttl Ssns (h)" />
-        <Label Grid.Row="2" Content="Ttl Idle (h)" />
-        <Label Grid.Row="3" Content="Me App (h)" />
-        <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Text="{Binding Title, ElementName=ths}" d:Text="48.8"  Name="tb0" />
-        <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Text="{Binding Title, ElementName=ths}" d:Text="248.8" Name="tb1" />
-        <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Text="{Binding Title, ElementName=ths}" d:Text="148.8" Name="tb2" />
-        <TextBlock Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" Text="{Binding Title, ElementName=ths}" d:Text="148.8" Name="tb3" />
+        <Label Grid.Row="0" Content="Ssn time" />
+        <TextBlock Grid.Row="0" Grid.Column="1"     HorizontalAlignment="Right"   Text="{Binding Title, ElementName=ths}" d:Text="48.8"  Name="tb0" />
+        
+        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center"  Text="{Binding Title, ElementName=ths}" d:Text="248.8" Name="tb1" />
+
+        <Label     Grid.Row="2" Content="Took" />
+        <TextBlock Grid.Row="2" Grid.Column="1"     HorizontalAlignment="Right"   Text="{Binding Title, ElementName=ths}" d:Text="148.8" Name="tb2" />
+        <!--
+        <Label Grid.Row="3" Content="Ttl Work" />
+        <TextBlock Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" Text="{Binding Title, ElementName=ths}" d:Text="148.8" Name="tb3" />-->
       </Grid>
     </Viewbox>
   </Border>
