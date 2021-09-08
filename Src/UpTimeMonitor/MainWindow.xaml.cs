@@ -55,11 +55,22 @@ namespace UpTimeMonitor
 #endif
 
 
-      again:
+      //again:
+      TimeSpan ttlWrk, ttlIdl, ttlOff;
+      DateTime dayStartAt;
+      EvOfIntFlag dayStartEv;
+      GetSplit(lst, out now, out ttlWrk, out ttlIdl, out ttlOff, out dayStartAt, out dayStartEv);
 
-      var ttlWrk = TimeSpan.Zero;
-      var ttlIdl = TimeSpan.Zero; // scrsvr + timeout + grace minute
-      var ttlOff = TimeSpan.Zero;
+      Trace.WriteLine($"Day Start {dayStartAt}  {dayStartEv}    {ttlWrk + ttlIdl + ttlOff:hh\\:mm\\:ss}  =  {ttlWrk:h\\:mm\\:ss} + {ttlIdl:h\\:mm\\:ss} + {ttlOff:hh\\:mm\\:ss}    <== dt ");
+
+      tb2.Text = $"{sw.ElapsedMilliseconds:N0}";
+    }
+
+    private void GetSplit(SortedList<DateTime, EvOfIntFlag> lst, out DateTimeOffset now, out TimeSpan ttlWrk, out TimeSpan ttlIdl, out TimeSpan ttlOff, out DateTime dayStartAt, out EvOfIntFlag dayStartEv)
+    {
+      ttlWrk = TimeSpan.Zero;
+      ttlIdl = TimeSpan.Zero;
+      ttlOff = TimeSpan.Zero;
       var prev = new SortedList<DateTime, EvOfIntFlag> { { _start.Date, EvOfIntFlag.Who_Knows_What } }.First();
       foreach (var e in lst)
       {
@@ -71,10 +82,6 @@ namespace UpTimeMonitor
             case EvOfIntFlag.ShutAndSleepDn: ttlWrk = e.Key - _start.Date; break;
             case EvOfIntFlag.ScreenSaverrDn: ttlIdl = e.Key - _start.Date; break;
             case EvOfIntFlag.BootAndWakeUps: ttlOff = e.Key - _start.Date; break;
-            case EvOfIntFlag.Day1stAmbiguos:
-            case EvOfIntFlag.Was_Off_Ignore:
-            case EvOfIntFlag.Was_On__Ignore:
-            case EvOfIntFlag.Who_Knows_What:
             default: Trace.WriteLine($"{e.Key:HH:mm:ss} \t {e.Value}   -----  //todo: 000 "); break;
           }
         }
@@ -83,17 +90,13 @@ namespace UpTimeMonitor
           switch (e.Value)
           {
             case EvOfIntFlag.ScreenSaverrUp: ttlWrk += e.Key - prev.Key; break;
+
             case EvOfIntFlag.ShutAndSleepDn:
               switch (prev.Value)
               {
                 case EvOfIntFlag.ScreenSaverrUp: ttlIdl += e.Key - prev.Key; break;
                 case EvOfIntFlag.BootAndWakeUps:
                 case EvOfIntFlag.ScreenSaverrDn: ttlWrk += e.Key - prev.Key; break;
-                case EvOfIntFlag.ShutAndSleepDn:
-                case EvOfIntFlag.Day1stAmbiguos:
-                case EvOfIntFlag.Was_Off_Ignore:
-                case EvOfIntFlag.Was_On__Ignore:
-                case EvOfIntFlag.Who_Knows_What:
                 default: Trace.Write($"\t {prev.Value}  ==>  {e.Value}   -----  //todo: 111 \t"); break;
               }
               break;
@@ -103,12 +106,6 @@ namespace UpTimeMonitor
               {
                 case EvOfIntFlag.BootAndWakeUps:
                 case EvOfIntFlag.ScreenSaverrUp: ttlIdl += e.Key - prev.Key; break;
-                case EvOfIntFlag.ScreenSaverrDn:
-                case EvOfIntFlag.ShutAndSleepDn:
-                case EvOfIntFlag.Day1stAmbiguos:
-                case EvOfIntFlag.Was_Off_Ignore:
-                case EvOfIntFlag.Was_On__Ignore:
-                case EvOfIntFlag.Who_Knows_What:
                 default: Trace.Write($"\t {prev.Value}  ==>  {e.Value}   -----  //todo: 222 \t"); break;
               }
               break;
@@ -119,19 +116,10 @@ namespace UpTimeMonitor
                 case EvOfIntFlag.ShutAndSleepDn:
                 case EvOfIntFlag.ScreenSaverrUp:
                 case EvOfIntFlag.BootAndWakeUps: ttlOff += e.Key - prev.Key; break;
-                case EvOfIntFlag.ScreenSaverrDn:
-                case EvOfIntFlag.Day1stAmbiguos:
-                case EvOfIntFlag.Was_Off_Ignore:
-                case EvOfIntFlag.Was_On__Ignore:
-                case EvOfIntFlag.Who_Knows_What:
                 default: Trace.Write($"\t {prev.Value}  ==>  {e.Value}   -----  //todo: 333 \t"); break;
               }
               break;
 
-            case EvOfIntFlag.Day1stAmbiguos:
-            case EvOfIntFlag.Was_Off_Ignore:
-            case EvOfIntFlag.Was_On__Ignore:
-            case EvOfIntFlag.Who_Knows_What:
             default: Trace.Write($"\t {e.Value}   -----  //todo: 444 \t"); break;
           }
         }
@@ -146,18 +134,12 @@ namespace UpTimeMonitor
 
       ttlWrk += now - prev.Key;
 
-      Trace.Write($"  {prev.Value} --> {"n o w",14}   + {now - prev.Key:h\\:mm\\:ss}  ==>  {now:HH:mm:ss}  =?=  ");
-      Trace.WriteLine($"{ttlWrk + ttlIdl + ttlOff:hh\\:mm\\:ss}  =  {ttlWrk:h\\:mm\\:ss} + {ttlIdl:h\\:mm\\:ss} + {ttlOff:hh\\:mm\\:ss}    <== dt ");
+      Trace.Write($"  {prev.Value} --> {"n o w",14}   + {now - prev.Key:h\\:mm\\:ss}  ==>  {now:HH:mm:ss}  =?=  "); Trace.WriteLine($"{ttlWrk + ttlIdl + ttlOff:hh\\:mm\\:ss}  =  {ttlWrk:h\\:mm\\:ss} + {ttlIdl:h\\:mm\\:ss} + {ttlOff:hh\\:mm\\:ss}    <== dt ");
 
+      //if (Debugger.IsAttached)      {        Debugger.Break();        Trace.WriteLine($"");        goto again;      }
 
-      if (Debugger.IsAttached)
-      {
-        Debugger.Break();
-        Trace.WriteLine($"");
-        goto again;
-      }
-
-      tb2.Text = $"{sw.ElapsedMilliseconds:N0}";
+      dayStartAt = lst.First().Key;
+      dayStartEv = lst.First().Value;
     }
   }
 }
