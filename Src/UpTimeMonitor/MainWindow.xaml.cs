@@ -54,50 +54,61 @@ namespace UpTimeMonitor
       tb1.Text += $"{raw - idl:\\:ss}";
 #endif
 
-
-      //again:
+      again:
       TimeSpan ttlWrk, ttlIdl, ttlOff;
       DateTime dayStartAt;
       EvOfIntFlag dayStartEv;
-      GetSplit(lst, out now, out ttlWrk, out ttlIdl, out ttlOff, out dayStartAt, out dayStartEv);
+      
+      var report = GetSplit(lst, out now, out ttlWrk, out ttlIdl, out ttlOff, out dayStartAt, out dayStartEv);
 
-      Trace.WriteLine($"Day Start {dayStartAt}  {dayStartEv}    {ttlWrk + ttlIdl + ttlOff:hh\\:mm\\:ss}  =  {ttlWrk:h\\:mm\\:ss} + {ttlIdl:h\\:mm\\:ss} + {ttlOff:hh\\:mm\\:ss}    <== dt ");
+      Trace.WriteLine($"{report}\nDay Start {dayStartAt}    {dayStartEv}    {ttlWrk + ttlIdl + ttlOff:hh\\:mm\\:ss}  =  {ttlWrk:h\\:mm\\:ss} + {ttlIdl:h\\:mm\\:ss} + {ttlOff:hh\\:mm\\:ss}    ");
+      
+      tb3.Text = $"{dayStartAt:H:mm}    {ttlWrk:h\\:mm} ";
+
+      tb4.Text = report;
+
+      if (Debugger.IsAttached) { Debugger.Break(); Trace.WriteLine($""); goto again; }
 
       tb2.Text = $"{sw.ElapsedMilliseconds:N0}";
     }
 
-    private void GetSplit(SortedList<DateTime, EvOfIntFlag> lst, out DateTimeOffset now, out TimeSpan ttlWrk, out TimeSpan ttlIdl, out TimeSpan ttlOff, out DateTime dayStartAt, out EvOfIntFlag dayStartEv)
+   string GetSplit(SortedList<DateTime, EvOfIntFlag> lst, out DateTimeOffset now, out TimeSpan ttlWrk, out TimeSpan ttlIdl, out TimeSpan ttlOff, out DateTime dayStartAt, out EvOfIntFlag dayStartEv)
     {
+      var report = ($"  {"Name",-14}     {"dT",-8}       {"At",-8}       {"Total",-8}     {"ttlWrk",-7}   {"ttlIdl",-7}   {"ttlOff",-8}    \n");
+
       ttlWrk = TimeSpan.Zero;
       ttlIdl = TimeSpan.Zero;
       ttlOff = TimeSpan.Zero;
       var prev = new SortedList<DateTime, EvOfIntFlag> { { _start.Date, EvOfIntFlag.Who_Knows_What } }.First();
-      foreach (var e in lst)
+      foreach (var ev in lst)
       {
+        TimeSpan dt;
         if (prev.Value == EvOfIntFlag.Who_Knows_What) // first entry for the day
         {
-          switch (e.Value)
+          dt = ev.Key - _start.Date;
+          switch (ev.Value)
           {
             case EvOfIntFlag.ScreenSaverrUp:
-            case EvOfIntFlag.ShutAndSleepDn: ttlWrk = e.Key - _start.Date; break;
-            case EvOfIntFlag.ScreenSaverrDn: ttlIdl = e.Key - _start.Date; break;
-            case EvOfIntFlag.BootAndWakeUps: ttlOff = e.Key - _start.Date; break;
-            default: Trace.WriteLine($"{e.Key:HH:mm:ss} \t {e.Value}   -----  //todo: 000 "); break;
+            case EvOfIntFlag.ShutAndSleepDn: ttlWrk = dt; break;
+            case EvOfIntFlag.ScreenSaverrDn: ttlIdl = dt; break;
+            case EvOfIntFlag.BootAndWakeUps: ttlOff = dt; break;
+            default: Trace.WriteLine($"■ 1st day's entry at {ev.Key:HH:mm:ss} \t {ev.Value}   -----  //todo: 000 "); break;
           }
         }
         else
         {
-          switch (e.Value)
+          dt = ev.Key - prev.Key;
+          switch (ev.Value)
           {
-            case EvOfIntFlag.ScreenSaverrUp: ttlWrk += e.Key - prev.Key; break;
+            case EvOfIntFlag.ScreenSaverrUp: ttlWrk += dt; break;
 
             case EvOfIntFlag.ShutAndSleepDn:
               switch (prev.Value)
               {
-                case EvOfIntFlag.ScreenSaverrUp: ttlIdl += e.Key - prev.Key; break;
+                case EvOfIntFlag.ScreenSaverrUp: ttlIdl += dt; break;
                 case EvOfIntFlag.BootAndWakeUps:
-                case EvOfIntFlag.ScreenSaverrDn: ttlWrk += e.Key - prev.Key; break;
-                default: Trace.Write($"\t {prev.Value}  ==>  {e.Value}   -----  //todo: 111 \t"); break;
+                case EvOfIntFlag.ScreenSaverrDn: ttlWrk += dt; break;
+                default: report += ($"\t {prev.Value}  ==>  {ev.Value}   -----  //todo: 111 \t"); break;
               }
               break;
 
@@ -105,8 +116,8 @@ namespace UpTimeMonitor
               switch (prev.Value)
               {
                 case EvOfIntFlag.BootAndWakeUps:
-                case EvOfIntFlag.ScreenSaverrUp: ttlIdl += e.Key - prev.Key; break;
-                default: Trace.Write($"\t {prev.Value}  ==>  {e.Value}   -----  //todo: 222 \t"); break;
+                case EvOfIntFlag.ScreenSaverrUp: ttlIdl += dt; break;
+                default: report += ($"\t {prev.Value}  ==>  {ev.Value}   -----  //todo: 222 \t"); break;
               }
               break;
 
@@ -115,31 +126,30 @@ namespace UpTimeMonitor
               {
                 case EvOfIntFlag.ShutAndSleepDn:
                 case EvOfIntFlag.ScreenSaverrUp:
-                case EvOfIntFlag.BootAndWakeUps: ttlOff += e.Key - prev.Key; break;
-                default: Trace.Write($"\t {prev.Value}  ==>  {e.Value}   -----  //todo: 333 \t"); break;
+                case EvOfIntFlag.BootAndWakeUps: ttlOff += dt; break;
+                default: report += ($"\t {prev.Value}  ==>  {ev.Value}   -----  //todo: 333 \t"); break;
               }
               break;
 
-            default: Trace.Write($"\t {e.Value}   -----  //todo: 444 \t"); break;
+            default: report += ($"\t {ev.Value}   -----  //todo: 444 \t"); break;
           }
         }
 
-        Trace.Write($"  {prev.Value} --> {e.Value}   + {e.Key - prev.Key:h\\:mm\\:ss}  ==>  {e.Key:HH:mm:ss}  =?=  ");
-        Trace.WriteLine($"{ttlWrk + ttlIdl + ttlOff:hh\\:mm\\:ss}  =  {ttlWrk:h\\:mm\\:ss} + {ttlIdl:h\\:mm\\:ss} + {ttlOff:hh\\:mm\\:ss}    <== dt ");
+        report += ($"  {ev.Value}   + {dt:hh\\:mm\\:ss}  ==>  {ev.Key:HH:mm:ss}  =?=  {ttlWrk + ttlIdl + ttlOff:hh\\:mm\\:ss}  =  {ttlWrk:h\\:mm\\:ss} + {ttlIdl:h\\:mm\\:ss} + {ttlOff:hh\\:mm\\:ss}    \n");
 
-        prev = e;
+        prev = ev;
       }
 
       now = DateTimeOffset.Now;
 
       ttlWrk += now - prev.Key;
 
-      Trace.Write($"  {prev.Value} --> {"n o w",14}   + {now - prev.Key:h\\:mm\\:ss}  ==>  {now:HH:mm:ss}  =?=  "); Trace.WriteLine($"{ttlWrk + ttlIdl + ttlOff:hh\\:mm\\:ss}  =  {ttlWrk:h\\:mm\\:ss} + {ttlIdl:h\\:mm\\:ss} + {ttlOff:hh\\:mm\\:ss}    <== dt ");
-
-      //if (Debugger.IsAttached)      {        Debugger.Break();        Trace.WriteLine($"");        goto again;      }
+      report += ($"  {"n o w",-14}   + {now - prev.Key:hh\\:mm\\:ss}  ==>  {now:HH:mm:ss}  =?=  {ttlWrk + ttlIdl + ttlOff:hh\\:mm\\:ss}  =  {ttlWrk:h\\:mm\\:ss} + {ttlIdl:h\\:mm\\:ss} + {ttlOff:hh\\:mm\\:ss}    \n");
 
       dayStartAt = lst.First().Key;
       dayStartEv = lst.First().Value;
+
+      return report;
     }
   }
 }
