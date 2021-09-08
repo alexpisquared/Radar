@@ -58,13 +58,13 @@
         </StackPanel>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Center" >
-          <Label    Content="Took" />
-          <TextBlock d:Text="148.8" Name="tb2" />
-          <Label    Content="ms" />
+          <TextBlock d:Text="148.8" Name="tb4" FontSize="4" FontFamily="Consolas" />
         </StackPanel>
 
         <StackPanel Grid.Row="4" Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Center" >
-          <TextBlock d:Text="148.8" Name="tb4" FontSize="4" FontFamily="Consolas" />
+          <Label    Content="Took"  FontSize="7" />
+          <TextBlock d:Text="148.8" FontSize="8" Name="tb2" />
+          <Label    Content="ms"    FontSize="7" />
         </StackPanel>
 
       </Grid>
