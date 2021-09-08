@@ -54,18 +54,15 @@ namespace UpTimeMonitor
       tb1.Text += $"{raw - idl:\\:ss}";
 #endif
 
+
+      again:
+
       var ttlWrk = TimeSpan.Zero;
       var ttlIdl = TimeSpan.Zero; // scrsvr + timeout + grace minute
       var ttlOff = TimeSpan.Zero;
-      var nsl = new SortedList<DateTime, EvOfIntFlag>
-      {
-        { _start.Date, EvOfIntFlag.Who_Knows_What }
-      };
-      var prev = nsl.First();
+      var prev = new SortedList<DateTime, EvOfIntFlag> { { _start.Date, EvOfIntFlag.Who_Knows_What } }.First();
       foreach (var e in lst)
       {
-        Trace.Write($"  {e.Key:HH:mm:ss}  {e.Value}  ==>  ");
-
         if (prev.Value == EvOfIntFlag.Who_Knows_What) // first entry for the day
         {
           switch (e.Value)
@@ -85,13 +82,13 @@ namespace UpTimeMonitor
         {
           switch (e.Value)
           {
-            case EvOfIntFlag.ScreenSaverrUp: ttlWrk = e.Key - prev.Key; break;
+            case EvOfIntFlag.ScreenSaverrUp: ttlWrk += e.Key - prev.Key; break;
             case EvOfIntFlag.ShutAndSleepDn:
               switch (prev.Value)
               {
-                case EvOfIntFlag.ScreenSaverrUp: ttlIdl = e.Key - prev.Key; break;
+                case EvOfIntFlag.ScreenSaverrUp: ttlIdl += e.Key - prev.Key; break;
                 case EvOfIntFlag.BootAndWakeUps:
-                case EvOfIntFlag.ScreenSaverrDn: ttlWrk = e.Key - prev.Key; break;
+                case EvOfIntFlag.ScreenSaverrDn: ttlWrk += e.Key - prev.Key; break;
                 case EvOfIntFlag.ShutAndSleepDn:
                 case EvOfIntFlag.Day1stAmbiguos:
                 case EvOfIntFlag.Was_Off_Ignore:
@@ -104,8 +101,8 @@ namespace UpTimeMonitor
             case EvOfIntFlag.ScreenSaverrDn:
               switch (prev.Value)
               {
-                case EvOfIntFlag.ScreenSaverrUp: ttlIdl = e.Key - prev.Key; break;
                 case EvOfIntFlag.BootAndWakeUps:
+                case EvOfIntFlag.ScreenSaverrUp: ttlIdl += e.Key - prev.Key; break;
                 case EvOfIntFlag.ScreenSaverrDn:
                 case EvOfIntFlag.ShutAndSleepDn:
                 case EvOfIntFlag.Day1stAmbiguos:
@@ -117,13 +114,12 @@ namespace UpTimeMonitor
               break;
 
             case EvOfIntFlag.BootAndWakeUps:
-              ttlOff = e.Key - prev.Key;
               switch (prev.Value)
               {
-                case EvOfIntFlag.ScreenSaverrUp:
-                case EvOfIntFlag.BootAndWakeUps:
-                case EvOfIntFlag.ScreenSaverrDn:
                 case EvOfIntFlag.ShutAndSleepDn:
+                case EvOfIntFlag.ScreenSaverrUp:
+                case EvOfIntFlag.BootAndWakeUps: ttlOff += e.Key - prev.Key; break;
+                case EvOfIntFlag.ScreenSaverrDn:
                 case EvOfIntFlag.Day1stAmbiguos:
                 case EvOfIntFlag.Was_Off_Ignore:
                 case EvOfIntFlag.Was_On__Ignore:
@@ -140,9 +136,25 @@ namespace UpTimeMonitor
           }
         }
 
-        Trace.WriteLine($"{ttlWrk + ttlIdl + ttlOff:hh\\:mm\\:ss}  =  {ttlWrk:h\\:mm\\:ss} + {ttlIdl:h\\:mm\\:ss} + {ttlOff:h\\:mm\\:ss}  ");
+        Trace.Write($"  {prev.Value} --> {e.Value}   + {e.Key - prev.Key:h\\:mm\\:ss}  ==>  {e.Key:HH:mm:ss}  =?=  ");
+        Trace.WriteLine($"{ttlWrk + ttlIdl + ttlOff:hh\\:mm\\:ss}  =  {ttlWrk:h\\:mm\\:ss} + {ttlIdl:h\\:mm\\:ss} + {ttlOff:hh\\:mm\\:ss}    <== dt ");
 
         prev = e;
+      }
+
+      now = DateTimeOffset.Now;
+
+      ttlWrk += now - prev.Key;
+
+      Trace.Write($"  {prev.Value} --> {"n o w",14}   + {now - prev.Key:h\\:mm\\:ss}  ==>  {now:HH:mm:ss}  =?=  ");
+      Trace.WriteLine($"{ttlWrk + ttlIdl + ttlOff:hh\\:mm\\:ss}  =  {ttlWrk:h\\:mm\\:ss} + {ttlIdl:h\\:mm\\:ss} + {ttlOff:hh\\:mm\\:ss}    <== dt ");
+
+
+      if (Debugger.IsAttached)
+      {
+        Debugger.Break();
+        Trace.WriteLine($"");
+        goto again;
       }
 
       tb2.Text = $"{sw.ElapsedMilliseconds:N0}";
