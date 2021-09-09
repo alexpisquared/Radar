@@ -6,15 +6,15 @@
   <Window.Resources>
     <Style TargetType="Label" >
       <Setter Property="Foreground" Value="#ccc" />
-      <Setter Property="Margin"     Value="5" />
+      <Setter Property="Margin"     Value="0" />
       <Setter Property="FontSize"   Value="18" />
       <Setter Property="HorizontalAlignment"   Value="Right" />
       <Setter Property="VerticalAlignment"     Value="Top" />
     </Style>
     <Style TargetType="TextBlock" >
       <Setter Property="Foreground" Value="#fff" />
-      <Setter Property="Margin"     Value="5" />
-      <Setter Property="Padding"    Value="5" />
+      <Setter Property="Margin"     Value="0" />
+      <Setter Property="Padding"    Value="0 4" />
       <Setter Property="FontSize"   Value="18" />
       <Setter Property="FontWeight" Value="Medium" />
       <Setter Property="HorizontalAlignment"     Value="Center" />
@@ -42,23 +42,14 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Center" >
-          <Label Content="Ssn time" />
-          <TextBlock Text="{Binding Title, ElementName=ths}" d:Text="48.8"  Name="tb0" />
-        </StackPanel>
-
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Center" >
-          <Label    Content="Raw - Idle" />
-          <TextBlock  d:Text="248.8" Name="tb1" />
         </StackPanel>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Center" >
-          <Label    Content="Day Start - Ttl Activ" />
-          <TextBlock d:Text="148.8" Name="tb3" />
-          <Label    Content="" />
+          <TextBlock d:Text="1:48      2:33" Name="tb3" />
         </StackPanel>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Center" >
-          <TextBlock d:Text="148.8" Name="tb4" FontSize="4" FontFamily="Consolas" />
+          <TextBlock d:Text="148.8" Name="tb4" FontSize="6" FontFamily="Consolas" />
         </StackPanel>
 
         <StackPanel Grid.Row="4" Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Center" >
