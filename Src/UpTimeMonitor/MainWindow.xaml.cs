@@ -12,6 +12,7 @@ namespace UpTimeMonitor
   public partial class MainWindow : Window
   {
     readonly DateTimeOffset _start;
+    const string _w = "▓", _i = "■", _o = "·", _e = "~";
 
     public MainWindow()
     {
@@ -24,7 +25,7 @@ namespace UpTimeMonitor
       OnTick(null, new EventArgs());
 
 #if DEBUG
-      new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 999), DispatcherPriority.Background, OnTick, Dispatcher.CurrentDispatcher).Start();
+      new DispatcherTimer(new TimeSpan(0, 0, 0, 2, 500), DispatcherPriority.Background, OnTick, Dispatcher.CurrentDispatcher).Start();
       if (Environment.MachineName == "D21-MJ0AWBEV") /**/ { Top = 1608; Left = 1928; }
       if (Environment.MachineName == "RAZER1")       /**/ { Top = 1600; Left = 10; }
 #else
@@ -65,8 +66,9 @@ namespace UpTimeMonitor
 
     string GetSplit(SortedList<DateTime, EvOfIntFlag> lst, DateTimeOffset now, out TimeSpan ttlWrk, out TimeSpan ttlIdl, out TimeSpan ttlOff, out DateTime dayStartAt, out EvOfIntFlag dayStartEv)
     {
-      var report = $"  {"Name",-14}   +    {"dT",-8}   {"At",-8}{"Wrk",-7}+{"Idl",-7}+{"Off",-8}    \n";
+      var report = $"{"Event",-14} +   dT  ->     At     Wrk{_w}  + Idl{_i}  + Off{_o}   Hr 1   2   3   4  \n";
 
+      var it = "";
       ttlWrk = TimeSpan.Zero;
       ttlIdl = TimeSpan.Zero;
       ttlOff = TimeSpan.Zero;
@@ -81,10 +83,10 @@ namespace UpTimeMonitor
           switch (ev.Value)
           {
             case EvOfIntFlag.ScreenSaverrUp:
-            case EvOfIntFlag.ShutAndSleepDn: ttlWrk = dt; break;
-            case EvOfIntFlag.ScreenSaverrDn: ttlIdl = dt; break;
-            case EvOfIntFlag.BootAndWakeUps: ttlOff = dt; break;
-            default: er += $"■ 1st day's entry at {ev.Key,5:H:mm} \t {ev.Value}   -----  //todo: 000 "; break;
+            case EvOfIntFlag.ShutAndSleepDn: it = _w; ttlWrk = dt; break;
+            case EvOfIntFlag.ScreenSaverrDn: it = _i; ttlIdl = dt; break;
+            case EvOfIntFlag.BootAndWakeUps: it = _o; ttlOff = dt; break;
+            default: it = _e; er += $"■ 1st day's entry at {ev.Key,5:H:mm} \t {ev.Value}   -----  //todo: 000 "; break;
           }
         }
         else
@@ -92,15 +94,15 @@ namespace UpTimeMonitor
           dt = ev.Key - prev.Key;
           switch (ev.Value)
           {
-            case EvOfIntFlag.ScreenSaverrUp: ttlWrk += dt; break;
+            case EvOfIntFlag.ScreenSaverrUp: it = _w; ttlWrk += dt; break;
 
             case EvOfIntFlag.ShutAndSleepDn:
               switch (prev.Value)
               {
                 case EvOfIntFlag.BootAndWakeUps:
-                case EvOfIntFlag.ScreenSaverrDn: ttlWrk += dt; break;
-                case EvOfIntFlag.ScreenSaverrUp: ttlIdl += dt; break;
-                default: er += $"\t //todo: 111 \t"; break;
+                case EvOfIntFlag.ScreenSaverrDn: it = _w; ttlWrk += dt; break;
+                case EvOfIntFlag.ScreenSaverrUp: it = _i; ttlIdl += dt; break;
+                default: it = _e; er += $"\t //todo: 111 \t"; break;
               }
               break;
 
@@ -108,8 +110,8 @@ namespace UpTimeMonitor
               switch (prev.Value)
               {
                 case EvOfIntFlag.BootAndWakeUps:
-                case EvOfIntFlag.ScreenSaverrUp: ttlIdl += dt; break;
-                default: er += $"\t //todo: 222 \t"; break;
+                case EvOfIntFlag.ScreenSaverrUp: it = _i; ttlIdl += dt; break;
+                default: it = _e; er += $"\t //todo: 222 \t"; break;
               }
               break;
 
@@ -118,23 +120,23 @@ namespace UpTimeMonitor
               {
                 case EvOfIntFlag.ShutAndSleepDn:
                 case EvOfIntFlag.ScreenSaverrUp:
-                case EvOfIntFlag.BootAndWakeUps: ttlOff += dt; break;
-                default: er += $"\t //todo: 333 \t"; break;
+                case EvOfIntFlag.BootAndWakeUps: it = _o; ttlOff += dt; break;
+                default: it = _e; er += $"\t //todo: 333 \t"; break;
               }
               break;
 
-            default: er += $"\t {ev.Value}   -----  //todo: 444 \t"; break;
+            default: it = _e; er += $"\t {ev.Value}   -----  //todo: 444 \t"; break;
           }
         }
 
-        report += $"  {ev.Value}   + {dt,5:h\\:mm}  ->  {ev.Key,5:H:mm}    {ttlWrk,5:h\\:mm}   {ttlIdl,5:h\\:mm}   {ttlOff,5:h\\:mm}    {(Math.Abs((ttlWrk + ttlIdl + ttlOff - ev.Key.TimeOfDay).TotalSeconds) > 10 ? (ttlWrk + ttlIdl + ttlOff - ev.Key.TimeOfDay).TotalSeconds.ToString("{0:N0}") + "s" : "")}  {er}\n";
+        report += $"{ev.Value}  {dt,5:h\\:mm}      {ev.Key,5:H:mm}    {ttlWrk,5:h\\:mm}   {ttlIdl,5:h\\:mm}   {ttlOff,5:h\\:mm} {it} {new string('|', (int)(.5 + dt.TotalMinutes / 15.0))} {(Math.Abs((ttlWrk + ttlIdl + ttlOff - ev.Key.TimeOfDay).TotalSeconds) > 10 ? " Off by " + (ttlWrk + ttlIdl + ttlOff - ev.Key.TimeOfDay).TotalSeconds.ToString("{0:N0}") + "s " : " ")}{er}\n";
 
         prev = ev;
       }
 
       ttlWrk += now - prev.Key;
 
-      report += $"  {"n o w",-14}   + {now - prev.Key,5:h\\:mm}  =>  {now,5:H:mm}    {ttlWrk,5:h\\:mm} + {ttlIdl,5:h\\:mm} + {ttlOff,5:h\\:mm}    \n";
+      report += $"{"n o w",-14} +{now - prev.Key,5:h\\:mm}  =>  {now,5:H:mm}    {ttlWrk,5:h\\:mm}  +{ttlIdl,5:h\\:mm}  +{ttlOff,5:h\\:mm} {it}     \n";
 
       dayStartAt = lst.First().Key;
       dayStartEv = lst.First().Value;
