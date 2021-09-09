@@ -12,7 +12,7 @@ namespace UpTimeMonitor
   public partial class MainWindow : Window
   {
     readonly DateTimeOffset _start;
-    const string _w = "▓", _i = "■", _o = "·", _e = "~";
+    const char _w = '▓', _i = '■', _o = '·', _e = '~';
 
     public MainWindow()
     {
@@ -66,9 +66,9 @@ namespace UpTimeMonitor
 
     string GetSplit(SortedList<DateTime, EvOfIntFlag> lst, DateTimeOffset now, out TimeSpan ttlWrk, out TimeSpan ttlIdl, out TimeSpan ttlOff, out DateTime dayStartAt, out EvOfIntFlag dayStartEv)
     {
-      var report = $"{"Event",-14} +   dT  ->     At     Wrk{_w}  + Idl{_i}  + Off{_o}   Hr 1   2   3   4  \n";
+      var report = $"{"Event",-14} +   dT  ->     At     Wrk{_w}  + Idl{_i}  + Off{_o}   Hr 1   2   3   4   5   6   7   8\n";
 
-      var it = "";
+      var it = ' ';
       ttlWrk = TimeSpan.Zero;
       ttlIdl = TimeSpan.Zero;
       ttlOff = TimeSpan.Zero;
@@ -129,14 +129,14 @@ namespace UpTimeMonitor
           }
         }
 
-        report += $"{ev.Value}  {dt,5:h\\:mm}      {ev.Key,5:H:mm}    {ttlWrk,5:h\\:mm}   {ttlIdl,5:h\\:mm}   {ttlOff,5:h\\:mm} {it} {new string('|', (int)(.5 + dt.TotalMinutes / 15.0))} {(Math.Abs((ttlWrk + ttlIdl + ttlOff - ev.Key.TimeOfDay).TotalSeconds) > 10 ? " Off by " + (ttlWrk + ttlIdl + ttlOff - ev.Key.TimeOfDay).TotalSeconds.ToString("{0:N0}") + "s " : " ")}{er}\n";
+        report += $"{ev.Value}  {dt,5:h\\:mm}      {ev.Key,5:H:mm}    {ttlWrk,5:h\\:mm}   {ttlIdl,5:h\\:mm}   {ttlOff,5:h\\:mm}   {(prev.Value == EvOfIntFlag.Who_Knows_What ? "" : new string(it, (int)(.5 + (dt.TotalMinutes / 15.0))))} {(Math.Abs((ttlWrk + ttlIdl + ttlOff - ev.Key.TimeOfDay).TotalSeconds) > 10 ? " Off by " + (ttlWrk + ttlIdl + ttlOff - ev.Key.TimeOfDay).TotalSeconds.ToString("{0:N0}") + "s " : " ")}{er}\n";
 
         prev = ev;
       }
 
       ttlWrk += now - prev.Key;
 
-      report += $"{"n o w",-14} +{now - prev.Key,5:h\\:mm}  =>  {now,5:H:mm}    {ttlWrk,5:h\\:mm}  +{ttlIdl,5:h\\:mm}  +{ttlOff,5:h\\:mm} {it}     \n";
+      report += $"{"n o w",-14} +{now - prev.Key,5:h\\:mm}  =>  {now,5:H:mm}    {ttlWrk,5:h\\:mm}  +{ttlIdl,5:h\\:mm}  +{ttlOff,5:h\\:mm}   \n";
 
       dayStartAt = lst.First().Key;
       dayStartEv = lst.First().Value;
