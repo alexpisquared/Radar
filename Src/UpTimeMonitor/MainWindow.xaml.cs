@@ -59,7 +59,7 @@ namespace UpTimeMonitor
 
       tb4.Text = report;
 
-      if (Debugger.IsAttached) { Debugger.Break(); Trace.WriteLine($""); goto again; }
+      //if (Debugger.IsAttached) { Debugger.Break(); Trace.WriteLine($""); goto again; }
 
       tb2.Text = $"{sw.ElapsedMilliseconds:N0}";
     }
@@ -69,6 +69,7 @@ namespace UpTimeMonitor
       var report = $"{"Event",-14} +   dT  ->     At     Wrk{_w}  + Idl{_i}  + Off{_o}   Hr 1   2   3   4   5   6   7   8\n";
 
       var it = ' ';
+      var dt = TimeSpan.Zero;
       ttlWrk = TimeSpan.Zero;
       ttlIdl = TimeSpan.Zero;
       ttlOff = TimeSpan.Zero;
@@ -76,7 +77,6 @@ namespace UpTimeMonitor
       foreach (var ev in lst)
       {
         var er = "";
-        TimeSpan dt;
         if (prev.Value == EvOfIntFlag.Who_Knows_What) // first entry for the day
         {
           dt = ev.Key - _start.Date;
@@ -99,10 +99,11 @@ namespace UpTimeMonitor
             case EvOfIntFlag.ShutAndSleepDn:
               switch (prev.Value)
               {
+                case EvOfIntFlag.ShutAndSleepDn: // rare but happenned.
                 case EvOfIntFlag.BootAndWakeUps:
                 case EvOfIntFlag.ScreenSaverrDn: it = _w; ttlWrk += dt; break;
                 case EvOfIntFlag.ScreenSaverrUp: it = _i; ttlIdl += dt; break;
-                default: it = _e; er += $"\t //todo: 111 \t"; break;
+                default: it = _e; er += $" //todo: 111 \t"; break;
               }
               break;
 
@@ -111,7 +112,7 @@ namespace UpTimeMonitor
               {
                 case EvOfIntFlag.BootAndWakeUps:
                 case EvOfIntFlag.ScreenSaverrUp: it = _i; ttlIdl += dt; break;
-                default: it = _e; er += $"\t //todo: 222 \t"; break;
+                default: it = _e; er += $" //todo: 222 \t"; break;
               }
               break;
 
@@ -121,7 +122,7 @@ namespace UpTimeMonitor
                 case EvOfIntFlag.ShutAndSleepDn:
                 case EvOfIntFlag.ScreenSaverrUp:
                 case EvOfIntFlag.BootAndWakeUps: it = _o; ttlOff += dt; break;
-                default: it = _e; er += $"\t //todo: 333 \t"; break;
+                default: it = _e; er += $" //todo: 333 \t"; break;
               }
               break;
 
@@ -129,14 +130,15 @@ namespace UpTimeMonitor
           }
         }
 
-        report += $"{ev.Value}  {dt,5:h\\:mm}      {ev.Key,5:H:mm}    {ttlWrk,5:h\\:mm}   {ttlIdl,5:h\\:mm}   {ttlOff,5:h\\:mm}   {(prev.Value == EvOfIntFlag.Who_Knows_What ? "" : new string(it, (int)(.5 + (dt.TotalMinutes / 15.0))))} {(Math.Abs((ttlWrk + ttlIdl + ttlOff - ev.Key.TimeOfDay).TotalSeconds) > 10 ? " Off by " + (ttlWrk + ttlIdl + ttlOff - ev.Key.TimeOfDay).TotalSeconds.ToString("{0:N0}") + "s " : " ")}{er}\n";
+        report += $"{ev.Value}  {dt,5:h\\:mm}      {ev.Key,5:H:mm}    {ttlWrk,5:h\\:mm}   {ttlIdl,5:h\\:mm}   {ttlOff,5:h\\:mm}   {(prev.Value == EvOfIntFlag.Who_Knows_What ? "" : new string(it, (int)(.5 + (dt.TotalMinutes / 15.0))))} {(Math.Abs((ttlWrk + ttlIdl + ttlOff - ev.Key.TimeOfDay).TotalSeconds) > 10 ? " Off by " + (ttlWrk + ttlIdl + ttlOff - ev.Key.TimeOfDay).TotalSeconds.ToString("N0") + "s " : " ")}{er}\n";
 
         prev = ev;
       }
 
-      ttlWrk += now - prev.Key;
+      dt = now - prev.Key;
+      it = _w; ttlWrk += dt; // could be ScrSvr - how to tell.
 
-      report += $"{"n o w",-14} +{now - prev.Key,5:h\\:mm}  =>  {now,5:H:mm}    {ttlWrk,5:h\\:mm}  +{ttlIdl,5:h\\:mm}  +{ttlOff,5:h\\:mm}   \n";
+      report += $"{"n o w",-14} +{dt,5:h\\:mm}  =>  {now,5:H:mm}    {ttlWrk,5:h\\:mm}  +{ttlIdl,5:h\\:mm}  +{ttlOff,5:h\\:mm}   {(prev.Value == EvOfIntFlag.Who_Knows_What ? "" : new string(it, (int)(.5 + (dt.TotalMinutes / 15.0))))}\n";
 
       dayStartAt = lst.First().Key;
       dayStartEv = lst.First().Value;

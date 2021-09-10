@@ -20,10 +20,7 @@ public static class EventLogHelper // 2022-09 excrept from C:\g\TimeTracking\N50
       Collect(lst, QryScrSvr(_ssrDn, a, b), EvOfIntFlag.ScreenSaverrDn);
       Collect(lst, QryScrSvr(_ssrUp, a, b), EvOfIntFlag.ScreenSaverrUp);
 
-      foreach (var path in _paths)
-      {
-        Add1stLast(a, b, lst, path);
-      }
+      //seems redundant, plus, creates odd ShutDn entry : foreach (var path in _paths)        Add1stLast(a, b, lst, path);
     }
     catch (Exception ex) { Trace.WriteLine(ex.Message, MethodInfo.GetCurrentMethod()?.ToString()); throw; }
 
