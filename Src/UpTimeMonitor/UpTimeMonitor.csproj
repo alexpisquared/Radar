@@ -3,8 +3,9 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <UseWPF>true</UseWPF>
+	  <Nullable>enable</Nullable>
+	  <LangVersion>latest</LangVersion>
+	  <UseWPF>true</UseWPF>
     <ApplicationIcon>C:\g\Radar\Src\UpTimeMonitor\Clock4.ico</ApplicationIcon>
   </PropertyGroup>
 

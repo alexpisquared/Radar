@@ -1,6 +1,9 @@
 ﻿using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Versioning;
 
