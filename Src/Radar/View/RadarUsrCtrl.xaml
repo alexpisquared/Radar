@@ -66,7 +66,7 @@
     <Image Opacity="1.0" Stretch="Fill" Height="960" Width="1160" Name="_image" Source="https://weather.gc.ca/data/satellite/goes_ecan_1070_100.jpg"  />
     <!--<Image Opacity="1.0" Stretch="Fill" Height="960" Width="1160" Name="_imageRoads" Source="https://weather.gc.ca/data/satellite/goes_ecan_vvi_100.jpg"  />-->
 
-    <Grid Width="160" Height="160" Margin="390 429 0 0" VerticalAlignment="Top" HorizontalAlignment="Left">
+    <Grid Width="160" Height="160" Margin="416 433 0 0" VerticalAlignment="Top" HorizontalAlignment="Left">
       <Ellipse Width="160" Height="160" StrokeThickness="4" Stroke="#ff0" />
       <Ellipse Width="100" Height="100" StrokeThickness="3" Stroke="#ff0" />
       <Ellipse Width="10"  Height="10"  StrokeThickness="2" Stroke="#f00" Fill="#ff0" />
