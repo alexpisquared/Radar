@@ -27,7 +27,8 @@ namespace Radar
     protected override async void OnStartup(StartupEventArgs e)
     {
 #if DEBUG
-      var rv = await new OpenWeatherRevisit2022().Test();
+      var rv = await new Logic.OpenWeatherRevisit2022().Test();
+      Current.Shutdown();
 #endif
 
       base.OnStartup(e);      //

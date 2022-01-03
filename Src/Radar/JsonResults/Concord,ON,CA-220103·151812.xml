@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<current>
+  <city id="5926526" name="Concord">
+    <coord lon="-79.4829" lat="43.8001"></coord>
+    <country>CA</country>
+    <timezone>-18000</timezone>
+    <sun rise="2022-01-03T12:51:58" set="2022-01-03T21:52:35"></sun>
+  </city>
+  <temperature value="-6.63" min="-8.86" max="-4.75" unit="celsius"></temperature>
+  <feels_like value="-6.63" unit="celsius"></feels_like>
+  <humidity value="58" unit="%"></humidity>
+  <pressure value="1026" unit="hPa"></pressure>
+  <wind>
+    <speed value="0.89" unit="m/s" name="Calm"></speed>
+    <gusts value="2.68"></gusts>
+    <direction></direction>
+  </wind>
+  <clouds value="75" name="broken clouds"></clouds>
+  <visibility value="10000"></visibility>
+  <precipitation mode="no"></precipitation>
+  <weather number="803" value="broken clouds" icon="04d"></weather>
+  <lastupdate value="2022-01-03T20:18:12"></lastupdate>
+</current>

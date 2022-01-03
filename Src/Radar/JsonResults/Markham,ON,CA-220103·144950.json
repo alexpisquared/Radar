@@ -1,0 +1,46 @@
+{
+  "coord": {
+    "lon": -79.2663,
+    "lat": 43.8668
+  },
+  "weather": [
+    {
+      "id": 800,
+      "main": "Clear",
+      "description": "clear sky",
+      "icon": "01d"
+    }
+  ],
+  "base": "stations",
+  "main": {
+    "temp": 266.34,
+    "feels_like": 263.05,
+    "temp_min": 264.43,
+    "temp_max": 268.22,
+    "pressure": 1026,
+    "humidity": 55,
+    "sea_level": 1026,
+    "grnd_level": 1004
+  },
+  "visibility": 10000,
+  "wind": {
+    "speed": 1.82,
+    "deg": 231,
+    "gust": 2.8
+  },
+  "clouds": {
+    "all": 5
+  },
+  "dt": 1641239158,
+  "sys": {
+    "type": 2,
+    "id": 2006666,
+    "country": "CA",
+    "sunrise": 1641214280,
+    "sunset": 1641246690
+  },
+  "timezone": -18000,
+  "id": 6066513,
+  "name": "Markham",
+  "cod": 200
+}

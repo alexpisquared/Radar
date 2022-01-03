@@ -1,0 +1,44 @@
+{
+  "coord": {
+    "lon": -79.6583,
+    "lat": 43.5789
+  },
+  "weather": [
+    {
+      "id": 803,
+      "main": "Clouds",
+      "description": "broken clouds",
+      "icon": "04d"
+    }
+  ],
+  "base": "stations",
+  "main": {
+    "temp": 266.73,
+    "feels_like": 266.73,
+    "temp_min": 264.49,
+    "temp_max": 269.64,
+    "pressure": 1026,
+    "humidity": 54
+  },
+  "visibility": 10000,
+  "wind": {
+    "speed": 0.45,
+    "deg": 110,
+    "gust": 1.79
+  },
+  "clouds": {
+    "all": 75
+  },
+  "dt": 1641239021,
+  "sys": {
+    "type": 2,
+    "id": 2020569,
+    "country": "CA",
+    "sunrise": 1641214315,
+    "sunset": 1641246843
+  },
+  "timezone": -18000,
+  "id": 6075357,
+  "name": "Mississauga",
+  "cod": 200
+}
