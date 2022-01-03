@@ -32,6 +32,11 @@ namespace Radar
       Trace.WriteLine(config["WhereAmI"]);
       Trace.WriteLine(config["AppSecrets:MagicNumber"]);
 
+      /* //tu: not storing file in the GitHub:     (https://youtu.be/ASraHYMi808?t=832)
+      git update-index --assume-unchanged AppSettings.json
+      git update-index --no-assume-unchanged AppSettings.json      
+      */
+
       var rv = await new Logic.OpenWeatherRevisit2022().Test(config["AppSecrets:MagicNumber"]);
       Current.Shutdown();
 #endif
