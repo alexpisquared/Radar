@@ -26,6 +26,10 @@ namespace Radar
 
     protected override async void OnStartup(StartupEventArgs e)
     {
+#if DEBUG
+      var rv = await new OpenWeatherRevisit2022().Test();
+#endif
+
       base.OnStartup(e);      //
       //Bpr.BeepBgn2();
 

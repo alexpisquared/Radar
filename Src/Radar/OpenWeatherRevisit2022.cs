@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -12,14 +13,17 @@ namespace Radar
   {
     public async Task<WeatherResponse?> Test()
     {
-      const string city = "9ae59cac1cd2f6f64dd692d53cd118fc", ct = "ct";
-      var url1 = $"https://api.openweathermap.org/data/2.5/forecast?id=524901&appid={city}";
-      var url2 = $"https://api.openweathermap.org/data/2.5/weather?q={ct}&appid={city}";
+      const string code = "{07f9d460eb3cca612667ea5d3abbd81e}", city = "London";
+      var url1 = $"https://api.openweathermap.org/data/2.5/forecast?id=524901&appid={code}";
+      var url2 = $"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={code}";
 
       HttpClient _cf = new();
 
-      var response = await _cf.GetAsync(url2);
+      var response = await _cf.GetAsync(url1);
       if (response == null || response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
+
+      var weathex = await response.Content.ReadAsStringAsync();
+      Trace.WriteLine(weathex);
 
       var weather = await response.Content.ReadFromJsonAsync<WeatherResponse>();
 
