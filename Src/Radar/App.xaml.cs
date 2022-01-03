@@ -1,14 +1,15 @@
-﻿using AAV.Sys.Helpers;
-using AAV.WPF.Helpers;
-using AsLink;
-using Radar.Properties;
-using RadarPicCollect;
-using SpeechSynthLib.Adapter;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using AAV.Sys.Helpers;
+using AAV.WPF.Helpers;
+using AsLink;
+using Microsoft.Extensions.Configuration;
+using Radar.Properties;
+using RadarPicCollect;
+using SpeechSynthLib.Adapter;
 
 namespace Radar
 {
@@ -27,7 +28,11 @@ namespace Radar
     protected override async void OnStartup(StartupEventArgs e)
     {
 #if DEBUG
-      var rv = await new Logic.OpenWeatherRevisit2022().Test();
+      var config = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
+      Trace.WriteLine(config["WhereAmI"]);
+      Trace.WriteLine(config["AppSecrets:MagicNumber"]);
+
+      var rv = await new Logic.OpenWeatherRevisit2022().Test(config["AppSecrets:MagicNumber"]);
       Current.Shutdown();
 #endif
 
@@ -184,6 +189,6 @@ namespace Radar
       await Task.Delay(k * units);
       //Bpr.BeepFinish();
       App.Current.Shutdown();
-    }    
+    }
   }
 }

@@ -1,0 +1,44 @@
+{
+  "coord": {
+    "lon": -79.4829,
+    "lat": 43.8001
+  },
+  "weather": [
+    {
+      "id": 803,
+      "main": "Clouds",
+      "description": "broken clouds",
+      "icon": "04d"
+    }
+  ],
+  "base": "stations",
+  "main": {
+    "temp": -6.97,
+    "feels_like": -6.97,
+    "temp_min": -8.86,
+    "temp_max": -4.75,
+    "pressure": 1026,
+    "humidity": 60
+  },
+  "visibility": 10000,
+  "wind": {
+    "speed": 0.89,
+    "deg": 223,
+    "gust": 4.47
+  },
+  "clouds": {
+    "all": 75
+  },
+  "dt": 1641243392,
+  "sys": {
+    "type": 2,
+    "id": 2036018,
+    "country": "CA",
+    "sunrise": 1641214318,
+    "sunset": 1641246755
+  },
+  "timezone": -18000,
+  "id": 5926526,
+  "name": "Concord",
+  "cod": 200
+}

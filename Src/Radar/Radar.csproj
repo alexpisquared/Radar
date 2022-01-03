@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <ApplicationIcon>RadarCircles.ico</ApplicationIcon>
+    <UserSecretsId>3a4ac29a-a76b-46fd-97ab-381104015728</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -87,6 +88,10 @@
 
   <ItemGroup>
     <Folder Include="AsLink\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.0" />
   </ItemGroup>
 
 </Project>
