@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Radar.Logic.Forecast;
 
-namespace Radar.Logic.Forecast;
-
-internal class ResponseForecast
-{
-}
-
-
-public class Rootobject
+public class WeatherResponse
 {
   public Coord coord { get; set; }
   public Weather[] weather { get; set; }
