@@ -25,7 +25,7 @@ public class Coord
   public float lat { get; set; }
 }
 
-public class List
+public record List
 {
   public int dt { get; set; }
   public int sunrise { get; set; }
