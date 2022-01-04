@@ -1,8 +1,6 @@
-﻿namespace Radar.Logic;
+﻿namespace Radar.OpenWeatherResponse;
 
-
-
-public class Rootobject
+public class RootobjectCurrentWea
 {
   public Coord coord { get; set; }
   public Weather[] weather { get; set; }
@@ -17,12 +15,6 @@ public class Rootobject
   public int id { get; set; }
   public string name { get; set; }
   public int cod { get; set; }
-}
-
-public class Coord
-{
-  public float lon { get; set; }
-  public float lat { get; set; }
 }
 
 public class Main
@@ -54,12 +46,4 @@ public class Sys
   public string country { get; set; }
   public int sunrise { get; set; }
   public int sunset { get; set; }
-}
-
-public class Weather
-{
-  public int id { get; set; }
-  public string main { get; set; }
-  public string description { get; set; }
-  public string icon { get; set; }
 }
