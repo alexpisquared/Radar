@@ -39,7 +39,7 @@ internal class OpenWeatherRevisit2022
     //await File.WriteAllTextAsync($@"..\..\..\JsonResults\{city}-{xtra}-{DateTime.Now:yyMMdd·HHmmss}.{frmt}", json);
 #else
     object? weathe2 = await response.Content.ReadFromJsonAsync(typeof(object)) ;
-    var weather = await response.Content.ReadFromJsonAsync<Rootobject>();
+    var weather = await response.Content.ReadFromJsonAsync<Rootobject>(); //todo: https://docs.microsoft.com/en-us/aspnet/core/web-api/route-to-code?view=aspnetcore-6.0
     return weather; // return new Rootobject();
 #endif
   }
