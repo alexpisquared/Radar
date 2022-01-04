@@ -38,9 +38,8 @@ internal class OpenWeatherRevisit2022
   }
 }
 
-internal class WeatherResponse
-{
-}
+internal class WeatherResponse { }
+
 /*
  * api.openweathermap.org/data/2.5/forecast/daily?q={city name}&cnt={cnt}&appid={API key}
  * api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
@@ -48,3 +47,4 @@ internal class WeatherResponse
  * https://pro.openweathermap.org/data/2.5/forecast/climate?q=London&appid={API key}
  * https://pro.openweathermap.org/data/2.5/forecast/climate?lat=35&lon=139&appid={API key}
  */
+
