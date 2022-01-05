@@ -29,15 +29,13 @@ namespace Radar
     {
 #if DEBUG
       var config = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
-      Trace.WriteLine(config["WhereAmI"]);
-      Trace.WriteLine(config["AppSecrets:MagicNumber"]);
+      Trace.WriteLine($"---   WhereAmI: '{config["WhereAmI"]}'       {config["AppSecrets:MagicNumber"]}");
 
       /* //tu: not storing file in the GitHub:     (https://youtu.be/ASraHYMi808?t=832)
       git update-index --assume-unchanged AppSettings.json
-      git update-index --no-assume-unchanged AppSettings.json      
-      */
+      git update-index --no-assume-unchanged AppSettings.json            */
 
-      var rv = await new Logic.OpenWeatherRevisit2022().Test(config["AppSecrets:MagicNumber"]);
+      var rv = await new Logic.OpenWeatherRevisit2022().OpenWea(config["AppSecrets:MagicNumber"]);
       Current.Shutdown();
 #endif
 
