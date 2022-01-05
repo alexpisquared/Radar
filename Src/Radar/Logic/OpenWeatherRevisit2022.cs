@@ -14,18 +14,18 @@ internal class OpenWeatherRevisit2022
   {
     Trace.Write($"{DateTimeToUnixTimestamp(DateTime.Today)} *******\n");
 
-    //await Test_(code, what: OpenWeatherCd.Forecast16);
+    await Test_(code, what: OpenWeatherCd.Forecast16);
     //await Test_(code, what: OpenWeatherCd.CurrentWea);
-    await Test_(code, what: OpenWeatherCd.TimeMachin, time: DateTimeToUnixTimestamp(DateTime.Today.AddDays(-5)).ToString()); // 0 - -5
-    
+    //await Test_(code, what: OpenWeatherCd.TimeMachin, time: DateTimeToUnixTimestamp(DateTime.Today.AddDays(-0)).ToString()); // 0 - -5
+
     return true;
   }
   async Task<bool> Test_(
     string code,
     double lon = -79.4829,
-    double lat = 43.8001,
+    double lat = +43.8001,
+    string city = "Toronto,ON,CA",
     string xtra = "&cnt=16",        // 16 is MAX.
-    string city = "Concord,ON,CA",
     string time = "1586468027",
     string frmt = "json",           // XML gives readable time for sunrise!!!
     OpenWeatherCd what = OpenWeatherCd.CurrentWea)
@@ -34,11 +34,11 @@ internal class OpenWeatherRevisit2022
     {
       var url = what switch
       {
-        OpenWeatherCd.TimeMachin => $"https://api.openweathermap.org/data/2.5/onecall/timemachine?lat={lat}&units=metric&lon={lon}&dt={time}&appid={code}",       // openweathermap.org/api/one-call-api --5 days back only.
-        OpenWeatherCd.Forecast16 => $"https://api.openweathermap.org/data/2.5/forecast/daily?q={city}&units=metric&mode={frmt}{xtra}&appid={code}",  // openweathermap.org/forecast16          
-        OpenWeatherCd.CurrentWea => $"https://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&mode={frmt}&appid={code}",               /* openweathermap.org/current        
-        OpenWeatherCd.CurrentWea => $"http://maps.openweathermap.org/maps/2.0/weather/TA2/{z}/{x}/{y}?date=1527811200&opacity=0.9&fill_bound=true&appid={code}";    <== needs $ subs-n ti seemes.
-        OpenWeatherCd.CurrentWea => $"https://pro.openweathermap.org/data/2.5/forecast/climate?q=London&appid={code}"; // https://openweathermap.org/api/forecast30 <== needs $ subs-n ti seemes.      */
+        OpenWeatherCd.TimeMachin => $"{Forecast16__}lat={lat}&units=metric&lon={lon}&dt={time}&appid={code}", // openweathermap.org/api/one-call-api --5 days back only.
+        OpenWeatherCd.Forecast16 => $"{CurrentWea__}q={city}&units=metric&mode={frmt}{xtra}&appid={code}",    // openweathermap.org/forecast16          
+        OpenWeatherCd.CurrentWea => $"{TimeMachin__}q={city}&units=metric&mode={frmt}&appid={code}",          // openweathermap.org/current        
+        OpenWeatherCd.WeathrMaps => $"{WeathrMaps__}?date={time}&opacity=0.9&fill_bound=true&appid={code}",   //                                   <== needs $ subs-n it seemes.
+        OpenWeatherCd.Forecast30 => $"{Forecast30__}q=London&appid={code}",                                   // openweathermap.org/api/forecast30 <== needs $ subs-n it seemes.      
         _ => "",
       };
 
@@ -46,10 +46,10 @@ internal class OpenWeatherRevisit2022
       var response = await client.GetAsync(url);
       if (response == null || response.StatusCode == System.Net.HttpStatusCode.NotFound) return false;
 
-#if true
-    var json = await response.Content.ReadAsStringAsync();
-    Trace.WriteLine(json);
-    await System.IO.File.WriteAllTextAsync($@"..\..\..\JsonResults\{city}-{xtra}-{what}-{DateTime.Now:yyMMdd·HHmmss}.{frmt}", json);
+#if !true
+      var json = await response.Content.ReadAsStringAsync();
+      Trace.WriteLine(json);
+      await System.IO.File.WriteAllTextAsync($@"..\..\..\JsonResults\{city}-{xtra}-{what}-{DateTime.Now:yyMMdd·HHmmss}.{frmt}", json);
 #else
       switch (what) //todo: https://docs.microsoft.com/en-us/aspnet/core/web-api/route-to-code?view=aspnetcore-6.; break ;
       {
@@ -74,13 +74,22 @@ internal class OpenWeatherRevisit2022
   }
   public static double DateTimeToUnixTimestamp(DateTime dateTime)
   {
-    return (TimeZoneInfo.ConvertTimeToUtc(dateTime) -           new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc)).TotalSeconds;
+    return (TimeZoneInfo.ConvertTimeToUtc(dateTime) - new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc)).TotalSeconds;
   }
 
   public enum OpenWeatherCd
   {
     Forecast16,
     CurrentWea,
-    TimeMachin
+    TimeMachin,
+    WeathrMaps,
+    Forecast30
   }
+
+  const string
+    Forecast16__ = "https://api.openweathermap.org/data/2.5/onecall/timemachine?",
+    CurrentWea__ = "https://api.openweathermap.org/data/2.5/forecast/daily?",
+    TimeMachin__ = "https://api.openweathermap.org/data/2.5/weather?",
+    WeathrMaps__ = "http://maps.openweathermap.org/maps/2.0/weather/TA2/1/48/78?",
+    Forecast30__ = "https://pro.openweathermap.org/data/2.5/forecast/climate?";
 }

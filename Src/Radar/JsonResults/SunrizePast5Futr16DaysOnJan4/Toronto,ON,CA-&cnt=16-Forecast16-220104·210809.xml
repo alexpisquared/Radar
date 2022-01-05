@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weatherdata>
+  <location>
+    <name>Toronto</name>
+    <type></type>
+    <country>CA</country>
+    <timezone>-18000</timezone>
+    <location altitude="0" latitude="43.7001" longitude="-79.4163" geobase="geonames" geobaseid="6167865"></location>
+  </location>
+  <credit></credit>
+  <meta>
+    <lastupdate></lastupdate>
+    <calctime>0</calctime>
+    <nextupdate></nextupdate>
+  </meta>
+  <sun rise="2022-01-04T12:51:19" set="2022-01-04T21:53:36"></sun>
+  <forecast>
+    <time day="2022-01-04">
+      <sun rise="2022-01-04T12:51:19" set="2022-01-04T21:53:36"></sun>
+      <symbol number="802" name="scattered clouds" var="03d"></symbol>
+      <precipitation probability="0"></precipitation>
+      <windDirection deg="227" code="SW" name="Southwest"></windDirection>
+      <windSpeed mps="4.77" unit="m/s" name="Gentle Breeze"></windSpeed>
+      <windGust gust="12.66" unit="m/s"></windGust>
+      <temperature day="-1.68" min="-6.32" max="0.17" night="-0.42" eve="-0.5" morn="-5.05" unit="celsius"></temperature>
+      <feels_like day="-6.82" night="-4.25" eve="-4.81" morn="-10.3" unit="celsius"></feels_like>
+      <pressure unit="hPa" value="1023"></pressure>
+      <humidity value="67" unit="%"></humidity>
+      <clouds value="scattered clouds" all="28" unit="%"></clouds>
+    </time>
+    <time day="2022-01-05">
+      <sun rise="2022-01-05T12:51:13" set="2022-01-05T21:54:35"></sun>
+      <symbol number="616" name="rain and snow" var="13d"></symbol>
+      <precipitation probability="0.95" value="0.79" type="rain"></precipitation>
+      <windDirection deg="226" code="SW" name="Southwest"></windDirection>
+      <windSpeed mps="8.58" unit="m/s" name="Fresh Breeze"></windSpeed>
+      <windGust gust="16.3" unit="m/s"></windGust>
+      <temperature day="1.75" min="-4.45" max="2.43" night="-4.45" eve="-1.15" morn="2.42" unit="celsius"></temperature>
+      <feels_like day="-3.73" night="-11.45" eve="-7.67" morn="-2.79" unit="celsius"></feels_like>
+      <pressure unit="hPa" value="1000"></pressure>
+      <humidity value="97" unit="%"></humidity>
+      <clouds value="overcast clouds" all="100" unit="%"></clouds>
+    </time>
+    <time day="2022-01-06">
+      <sun rise="2022-01-06T12:51:06" set="2022-01-06T21:55:34"></sun>
+      <symbol number="600" name="light snow" var="13d"></symbol>
+      <precipitation probability="0.36" value="0.76" type="snow"></precipitation>
+      <windDirection deg="237" code="WSW" name="West-southwest"></windDirection>
+      <windSpeed mps="7.71" unit="m/s" name="Moderate breeze"></windSpeed>
+      <windGust gust="13.67" unit="m/s"></windGust>
+      <temperature day="-2.35" min="-5.13" max="-2.31" night="-4.73" eve="-3.73" morn="-4.83" unit="celsius"></temperature>
+      <feels_like day="-7.4" night="-9.32" eve="-9.62" morn="-11.04" unit="celsius"></feels_like>
+      <pressure unit="hPa" value="1010"></pressure>
+      <humidity value="76" unit="%"></humidity>
+      <clouds value="overcast clouds" all="94" unit="%"></clouds>
+    </time>
+    <time day="2022-01-07">
+      <sun rise="2022-01-07T12:50:55" set="2022-01-07T21:56:36"></sun>
+      <symbol number="600" name="light snow" var="13d"></symbol>
+      <precipitation probability="0.37" value="0.42" type="snow"></precipitation>
+      <windDirection deg="325" code="NW" name="Northwest"></windDirection>
+      <windSpeed mps="5.98" unit="m/s" name="Moderate breeze"></windSpeed>
+      <windGust gust="10.12" unit="m/s"></windGust>
+      <temperature day="-8.14" min="-9.53" max="-5.24" night="-9.53" eve="-8.53" morn="-8.42" unit="celsius"></temperature>
+      <feels_like day="-15.14" night="-14.8" eve="-15.02" morn="-15.19" unit="celsius"></feels_like>
+      <pressure unit="hPa" value="1019"></pressure>
+      <humidity value="60" unit="%"></humidity>
+      <clouds value="overcast clouds" all="89" unit="%"></clouds>
+    </time>
+    <time day="2022-01-08">
+      <sun rise="2022-01-08T12:50:43" set="2022-01-08T21:57:39"></sun>
+      <symbol number="500" name="light rain" var="10d"></symbol>
+      <precipitation probability="0.29" value="0.4" type="rain"></precipitation>
+      <windDirection deg="195" code="SSW" name="South-southwest"></windDirection>
+      <windSpeed mps="6.33" unit="m/s" name="Moderate breeze"></windSpeed>
+      <windGust gust="16.1" unit="m/s"></windGust>
+      <temperature day="-3.8" min="-9.84" max="1.13" night="1.13" eve="-0.71" morn="-8.3" unit="celsius"></temperature>
+      <feels_like day="-9.33" night="-4.17" eve="-5.82" morn="-10.99" unit="celsius"></feels_like>
+      <pressure unit="hPa" value="1030"></pressure>
+      <humidity value="66" unit="%"></humidity>
+      <clouds value="overcast clouds" all="97" unit="%"></clouds>
+    </time>
+    <time day="2022-01-09">
+      <sun rise="2022-01-09T12:50:28" set="2022-01-09T21:58:43"></sun>
+      <symbol number="500" name="light rain" var="10d"></symbol>
+      <precipitation probability="0.9" value="3.1" type="rain"></precipitation>
+      <windDirection deg="270" code="W" name="West"></windDirection>
+      <windSpeed mps="7.9" unit="m/s" name="Moderate breeze"></windSpeed>
+      <windGust gust="17.61" unit="m/s"></windGust>
+      <temperature day="2.9" min="-4.43" max="3.73" night="-4.43" eve="-2.92" morn="3.73" unit="celsius"></temperature>
+      <feels_like day="-2.19" night="-11.43" eve="-9.81" morn="-1.05" unit="celsius"></feels_like>
+      <pressure unit="hPa" value="1010"></pressure>
+      <humidity value="97" unit="%"></humidity>
+      <clouds value="overcast clouds" all="100" unit="%"></clouds>
+    </time>
+    <time day="2022-01-10">
+      <sun rise="2022-01-10T12:50:10" set="2022-01-10T21:59:49"></sun>
+      <symbol number="600" name="light snow" var="13d"></symbol>
+      <precipitation probability="0.38" value="0.93" type="snow"></precipitation>
+      <windDirection deg="280" code="W" name="West"></windDirection>
+      <windSpeed mps="6.89" unit="m/s" name="Moderate breeze"></windSpeed>
+      <windGust gust="12.46" unit="m/s"></windGust>
+      <temperature day="-6.84" min="-8.5" max="-5.39" night="-8.5" eve="-8" morn="-7.49" unit="celsius"></temperature>
+      <feels_like day="-13.84" night="-15.5" eve="-15" morn="-14.49" unit="celsius"></feels_like>
+      <pressure unit="hPa" value="1024"></pressure>
+      <humidity value="50" unit="%"></humidity>
+      <clouds value="broken clouds" all="80" unit="%"></clouds>
+    </time>
+    <time day="2022-01-11">
+      <sun rise="2022-01-11T12:49:50" set="2022-01-11T22:00:57"></sun>
+      <symbol number="600" name="light snow" var="13d"></symbol>
+      <precipitation probability="0.4" value="0.44" type="snow"></precipitation>
+      <windDirection deg="357" code="N" name="North"></windDirection>
+      <windSpeed mps="5.24" unit="m/s" name="Gentle Breeze"></windSpeed>
+      <windGust gust="8.54" unit="m/s"></windGust>
+      <temperature day="-14.12" min="-16.35" max="-9.85" night="-9.85" eve="-10.78" morn="-16.12" unit="celsius"></temperature>
+      <feels_like day="-19.78" night="-15.36" eve="-15.01" morn="-23.12" unit="celsius"></feels_like>
+      <pressure unit="hPa" value="1042"></pressure>
+      <humidity value="59" unit="%"></humidity>
+      <clouds value="broken clouds" all="81" unit="%"></clouds>
+    </time>
+    <time day="2022-01-12">
+      <sun rise="2022-01-12T12:49:28" set="2022-01-12T22:02:06"></sun>
+      <symbol number="803" name="broken clouds" var="04d"></symbol>
+      <precipitation probability="0"></precipitation>
+      <windDirection deg="229" code="SW" name="Southwest"></windDirection>
+      <windSpeed mps="7.78" unit="m/s" name="Moderate breeze"></windSpeed>
+      <windGust gust="17.6" unit="m/s"></windGust>
+      <temperature day="-0.72" min="-8.48" max="-0.48" night="-1.42" eve="-1.09" morn="-4.79" unit="celsius"></temperature>
+      <feels_like day="-6.95" night="-6.52" eve="-6.56" morn="-11.79" unit="celsius"></feels_like>
+      <pressure unit="hPa" value="1024"></pressure>
+      <humidity value="50" unit="%"></humidity>
+      <clouds value="broken clouds" all="61" unit="%"></clouds>
+    </time>
+    <time day="2022-01-13">
+      <sun rise="2022-01-13T12:49:03" set="2022-01-13T22:03:15"></sun>
+      <symbol number="601" name="snow" var="13d"></symbol>
+      <precipitation probability="0.95" value="6.35" type="snow"></precipitation>
+      <windDirection deg="250" code="WSW" name="West-southwest"></windDirection>
+      <windSpeed mps="4.37" unit="m/s" name="Gentle Breeze"></windSpeed>
+      <windGust gust="12.02" unit="m/s"></windGust>
+      <temperature day="-0.62" min="-3.12" max="0.54" night="0.54" eve="0.49" morn="-3.05" unit="celsius"></temperature>
+      <feels_like day="-4.92" night="-3.32" eve="-3.93" morn="-6.78" unit="celsius"></feels_like>
+      <pressure unit="hPa" value="1013"></pressure>
+      <humidity value="98" unit="%"></humidity>
+      <clouds value="overcast clouds" all="100" unit="%"></clouds>
+    </time>
+    <time day="2022-01-14">
+      <sun rise="2022-01-14T12:48:36" set="2022-01-14T22:04:27"></sun>
+      <symbol number="600" name="light snow" var="13d"></symbol>
+      <precipitation probability="0.63" value="0.47" type="snow"></precipitation>
+      <windDirection deg="337" code="NNW" name="North-northwest"></windDirection>
+      <windSpeed mps="5.2" unit="m/s" name="Gentle Breeze"></windSpeed>
+      <windGust gust="11.44" unit="m/s"></windGust>
+      <temperature day="-7.79" min="-8.8" max="-1.18" night="-8.66" eve="-8.53" morn="-7.49" unit="celsius"></temperature>
+      <feels_like day="-13.83" night="-12.87" eve="-13.05" morn="-13.99" unit="celsius"></feels_like>
+      <pressure unit="hPa" value="1022"></pressure>
+      <humidity value="74" unit="%"></humidity>
+      <clouds value="scattered clouds" all="47" unit="%"></clouds>
+    </time>
+    <time day="2022-01-15">
+      <sun rise="2022-01-15T12:48:07" set="2022-01-15T22:05:39"></sun>
+      <symbol number="600" name="light snow" var="13d"></symbol>
+      <precipitation probability="1" value="2.53" type="snow"></precipitation>
+      <windDirection deg="58" code="ENE" name="East-northeast"></windDirection>
+      <windSpeed mps="5.72" unit="m/s" name="Moderate breeze"></windSpeed>
+      <windGust gust="10.93" unit="m/s"></windGust>
+      <temperature day="-7.16" min="-9.49" max="-6.7" night="-8.53" eve="-7.9" morn="-9.49" unit="celsius"></temperature>
+      <feels_like day="-12.52" night="-15.53" eve="-14.9" morn="-14.9" unit="celsius"></feels_like>
+      <pressure unit="hPa" value="1020"></pressure>
+      <humidity value="82" unit="%"></humidity>
+      <clouds value="overcast clouds" all="92" unit="%"></clouds>
+    </time>
+    <time day="2022-01-16">
+      <sun rise="2022-01-16T12:47:36" set="2022-01-16T22:06:52"></sun>
+      <symbol number="600" name="light snow" var="13d"></symbol>
+      <precipitation probability="1" value="3.08" type="snow"></precipitation>
+      <windDirection deg="346" code="NNW" name="North-northwest"></windDirection>
+      <windSpeed mps="5.27" unit="m/s" name="Gentle Breeze"></windSpeed>
+      <windGust gust="9.99" unit="m/s"></windGust>
+      <temperature day="-6.27" min="-10.47" max="-5.59" night="-10.46" eve="-7.29" morn="-10.09" unit="celsius"></temperature>
+      <feels_like day="-9.2" night="-16.64" eve="-14.22" morn="-13.84" unit="celsius"></feels_like>
+      <pressure unit="hPa" value="1007"></pressure>
+      <humidity value="88" unit="%"></humidity>
+      <clouds value="overcast clouds" all="100" unit="%"></clouds>
+    </time>
+    <time day="2022-01-17">
+      <sun rise="2022-01-17T12:47:02" set="2022-01-17T22:08:07"></sun>
+      <symbol number="600" name="light snow" var="13d"></symbol>
+      <precipitation probability="0.71" value="1.05" type="snow"></precipitation>
+      <windDirection deg="344" code="NNW" name="North-northwest"></windDirection>
+      <windSpeed mps="7.54" unit="m/s" name="Moderate breeze"></windSpeed>
+      <windGust gust="13.26" unit="m/s"></windGust>
+      <temperature day="-6.32" min="-14.87" max="-5.41" night="-14.87" eve="-10.28" morn="-12.17" unit="celsius"></temperature>
+      <feels_like day="-12.91" night="-21.87" eve="-17.28" morn="-12.17" unit="celsius"></feels_like>
+      <pressure unit="hPa" value="1007"></pressure>
+      <humidity value="83" unit="%"></humidity>
+      <clouds value="overcast clouds" all="100" unit="%"></clouds>
+    </time>
+    <time day="2022-01-18">
+      <sun rise="2022-01-18T12:46:26" set="2022-01-18T22:09:22"></sun>
+      <symbol number="802" name="scattered clouds" var="03d"></symbol>
+      <precipitation probability="0.13"></precipitation>
+      <windDirection deg="244" code="WSW" name="West-southwest"></windDirection>
+      <windSpeed mps="6.18" unit="m/s" name="Moderate breeze"></windSpeed>
+      <windGust gust="13.31" unit="m/s"></windGust>
+      <temperature day="-11.84" min="-18.59" max="-9.87" night="-11.11" eve="-10.93" morn="-18.59" unit="celsius"></temperature>
+      <feels_like day="-17.79" night="-18.11" eve="-17.93" morn="-22.98" unit="celsius"></feels_like>
+      <pressure unit="hPa" value="1025"></pressure>
+      <humidity value="76" unit="%"></humidity>
+      <clouds value="broken clouds" all="50" unit="%"></clouds>
+    </time>
+    <time day="2022-01-19">
+      <sun rise="2022-01-19T12:45:48" set="2022-01-19T22:10:38"></sun>
+      <symbol number="600" name="light snow" var="13d"></symbol>
+      <precipitation probability="0.33" value="0.98" type="snow"></precipitation>
+      <windDirection deg="258" code="WSW" name="West-southwest"></windDirection>
+      <windSpeed mps="6.17" unit="m/s" name="Moderate breeze"></windSpeed>
+      <windGust gust="13.78" unit="m/s"></windGust>
+      <temperature day="-7.71" min="-12.83" max="-7.71" night="-11.94" eve="-10.79" morn="-12.83" unit="celsius"></temperature>
+      <feels_like day="-14.18" night="-17.58" eve="-14.51" morn="-19.83" unit="celsius"></feels_like>
+      <pressure unit="hPa" value="1023"></pressure>
+      <humidity value="78" unit="%"></humidity>
+      <clouds value="broken clouds" all="57" unit="%"></clouds>
+    </time>
+  </forecast>
+</weatherdata>
