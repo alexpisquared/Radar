@@ -1,7 +1,7 @@
 ﻿namespace Radar.OpenWeatherResponse;
 
 
-public class RootobjectTimeMachin
+public record RootobjectTimeMachin
 {
   public float lat { get; set; }
   public float lon { get; set; }
@@ -11,9 +11,11 @@ public class RootobjectTimeMachin
   public Hourly[] hourly { get; set; }
 }
 
-public class Current
+public record Current
 {
   public int dt { get; set; }
+  public int sunrise { get; set; }
+  public int sunset { get; set; }
   public float temp { get; set; }
   public float feels_like { get; set; }
   public int pressure { get; set; }
@@ -43,9 +45,15 @@ public record Hourly
   public int wind_deg { get; set; }
   public float wind_gust { get; set; }
   public Weather1[] weather { get; set; }
+  public Rain rain { get; set; }
 }
 
-public class Weather1
+public record Rain
+{
+  public float _1h { get; set; }
+}
+
+public record Weather1
 {
   public int id { get; set; }
   public string main { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace Radar.OpenWeatherResponse;
 
-public class RootobjectForecast16 // ++Works
+public record RootobjectForecast16 // ++Works
 {
   public City city { get; set; }
   public string cod { get; set; }
@@ -9,7 +9,7 @@ public class RootobjectForecast16 // ++Works
   public List[] list { get; set; }
 }
 
-public class City
+public record City
 {
   public int id { get; set; }
   public string name { get; set; }
@@ -19,7 +19,7 @@ public class City
   public int timezone { get; set; }
 }
 
-public class Coord
+public record Coord
 {
   public float lon { get; set; }
   public float lat { get; set; }
@@ -44,7 +44,7 @@ public record List
   public float snow { get; set; }
 }
 
-public class Temp
+public record Temp
 {
   public float day { get; set; }
   public float min { get; set; }
@@ -54,7 +54,7 @@ public class Temp
   public float morn { get; set; }
 }
 
-public class Feels_Like
+public record Feels_Like
 {
   public float day { get; set; }
   public float night { get; set; }
@@ -62,7 +62,7 @@ public class Feels_Like
   public float morn { get; set; }
 }
 
-public class Weather
+public record Weather
 {
   public int id { get; set; }
   public string main { get; set; }

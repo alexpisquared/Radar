@@ -14,9 +14,9 @@ internal class OpenWeatherRevisit2022
   {
     Trace.Write($"{DateTimeToUnixTimestamp(DateTime.Today)} *******\n");
 
-    await Test_(code, what: OpenWeatherCd.Forecast16);
+    await Test_(code, what: OpenWeatherCd.TimeMachin, time: DateTimeToUnixTimestamp(DateTime.Today.AddDays(-0)).ToString()); // 0 - -5
+    //await Test_(code, what: OpenWeatherCd.Forecast16);
     //await Test_(code, what: OpenWeatherCd.CurrentWea);
-    //await Test_(code, what: OpenWeatherCd.TimeMachin, time: DateTimeToUnixTimestamp(DateTime.Today.AddDays(-0)).ToString()); // 0 - -5
 
     return true;
   }
@@ -53,9 +53,9 @@ internal class OpenWeatherRevisit2022
 #else
       switch (what) //todo: https://docs.microsoft.com/en-us/aspnet/core/web-api/route-to-code?view=aspnetcore-6.; break ;
       {
-        case OpenWeatherCd.Forecast16: var f16 = await response.Content.ReadFromJsonAsync<RootobjectForecast16>(); f16?.list.ToList().ForEach(x => Trace.WriteLine($":> {x.sunrise}  {x}")); break;
+        case OpenWeatherCd.Forecast16: var f16 = await response.Content.ReadFromJsonAsync<RootobjectForecast16>(); f16?.list.ToList().ForEach(x => Trace.WriteLine($":> {UnixTimeStampToDateTime(x.sunrise)}  {UnixTimeStampToDateTime(x.sunset)}  {x}")); break;
         case OpenWeatherCd.CurrentWea: var pr5 = await response.Content.ReadFromJsonAsync<RootobjectCurrentWea>(); pr5?.weather.ToList().ForEach(x => Trace.WriteLine($":> {x}")); break;
-        case OpenWeatherCd.TimeMachin: var tmn = await response.Content.ReadFromJsonAsync<RootobjectTimeMachin>(); tmn?.hourly.ToList().ForEach(x => Trace.WriteLine($":> {x}")); break;
+        case OpenWeatherCd.TimeMachin: var tmn = await response.Content.ReadFromJsonAsync<RootobjectTimeMachin>(); Trace.WriteLine($":> {UnixTimeStampToDateTime(tmn.current.sunrise)}  {UnixTimeStampToDateTime(tmn.current.sunset)}  {tmn}");          /*tmn?.hourly.ToList().ForEach(x => Trace.WriteLine($":> {x}"));*/          break;
         default: throw new NotImplementedException();
       }
 #endif
@@ -65,17 +65,8 @@ internal class OpenWeatherRevisit2022
     catch (Exception ex) { Trace.WriteLine(ex); throw; }
   }
 
-  public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
-  {
-    // Unix timestamp is seconds past epoch
-    DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-    dateTime = dateTime.AddSeconds(unixTimeStamp).ToLocalTime();
-    return dateTime;
-  }
-  public static double DateTimeToUnixTimestamp(DateTime dateTime)
-  {
-    return (TimeZoneInfo.ConvertTimeToUtc(dateTime) - new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc)).TotalSeconds;
-  }
+  public static DateTime UnixTimeStampToDateTime(double unixTimeStamp) => new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(unixTimeStamp).ToLocalTime();  // Unix timestamp is seconds past epoch
+  public static double DateTimeToUnixTimestamp(DateTime dateTime) => (TimeZoneInfo.ConvertTimeToUtc(dateTime) - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
 
   public enum OpenWeatherCd
   {
