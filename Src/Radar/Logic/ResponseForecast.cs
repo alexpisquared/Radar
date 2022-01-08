@@ -1,4 +1,4 @@
-﻿namespace Radar.Logic.Forecast;
+﻿namespace Radar.Logic.Forecast___;
 
 public class WeatherResponse
 {

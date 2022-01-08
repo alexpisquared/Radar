@@ -1,35 +1,22 @@
 ﻿#define SaveToFile_
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
-using Radar.OpenWeatherResponse;
-
 namespace Radar.Logic;
 
 internal class OpenWeatherRevisit2022
 {
   public async Task<bool> OpenWea(string code)
   {
-    Trace.Write($"{DateTimeToUnixTimestamp(DateTime.Today)}\n{DateTimeToUnixTimestamp(DateTime.Now)}\n{DateTimeToUnixTimestamp(DateTime.UtcNow)} *******\n");
-
+    Write($"{DateTimeToUnixTimestamp(DateTime.Today)}\n{DateTimeToUnixTimestamp(DateTime.Now)}\n{DateTimeToUnixTimestamp(DateTime.UtcNow)} *******\n");
 
     var sr = new List<int>(_sunrizes);
     var min = sr.Min();
     var dt = 0;
-    foreach (int sunrize in sr.Distinct().OrderBy(r => r))
-    {
-      Trace.Write($"  {sunrize}, // {UnixTimeStampToDateTime(sunrize)}  {sunrize - dt - 86400} \n");
-      dt = sunrize;
-    }
+    //foreach (int sunrize in sr.Distinct().OrderBy(r => r)) { Write($"  {sunrize}, // {UnixTimeStampToDateTime(sunrize)}  {sunrize - dt - 86400} \n"); dt = sunrize; }
 
     //for (int i = -5; i <= 0; i++) {await Go(code, what: OpenWeatherCd.TimeMachin, time: DateTimeToUnixTimestamp(DateTime.Today.AddDays(i)).ToString()); await Task.Delay(1111);}
     ////await Test_(code, what: OpenWeatherCd.Forecast16);
     ////await Test_(code, what: OpenWeatherCd.CurrentWea);
+    await Go(code, what: OpenWeatherCd.OneCallApi);
 
     await Task.Yield();
     return true;
@@ -42,17 +29,19 @@ internal class OpenWeatherRevisit2022
     string xtra = "&cnt=16",        // 16 is MAX.
     string time = "1586468027",
     string frmt = "json",           // XML gives readable time for sunrise!!!
+    string excl = "", // &exclude=hourly,daily",
     OpenWeatherCd what = OpenWeatherCd.CurrentWea)
   {
     try
     {
       var url = what switch
       {
-        OpenWeatherCd.TimeMachin => $"{Forecast16__}lat={lat}&units=metric&lon={lon}&dt={time}&appid={code}", // openweathermap.org/api/one-call-api --5 days back only.
+        OpenWeatherCd.TimeMachin => $"{Forecast16__}lat={lat}&lon={lon}&units=metric&dt={time}&appid={code}", // openweathermap.org/api/one-call-api --5 days back only.
         OpenWeatherCd.Forecast16 => $"{CurrentWea__}q={city}&units=metric&mode={frmt}{xtra}&appid={code}",    // openweathermap.org/forecast16          
         OpenWeatherCd.CurrentWea => $"{TimeMachin__}q={city}&units=metric&mode={frmt}&appid={code}",          // openweathermap.org/current        
         OpenWeatherCd.WeathrMaps => $"{WeathrMaps__}?date={time}&opacity=0.9&fill_bound=true&appid={code}",   //                                   <== needs $ subs-n it seemes.
         OpenWeatherCd.Forecast30 => $"{Forecast30__}q=London&appid={code}",                                   // openweathermap.org/api/forecast30 <== needs $ subs-n it seemes.      
+        OpenWeatherCd.OneCallApi => $"{OneCallApi__}lat={lat}&lon={lon}&units=metric{excl}&appid={code}",     // openweathermap.org/api/one-call-api
         _ => "",
       };
 
@@ -60,23 +49,27 @@ internal class OpenWeatherRevisit2022
       var response = await client.GetAsync(url);
       if (response == null || response.StatusCode == System.Net.HttpStatusCode.NotFound) return false;
 
-#if SaveToFile
+#if NotSaveToFile
       var json = await response.Content.ReadAsStringAsync();
-      Trace.WriteLine(json);
+      WriteLine(json);
       await System.IO.File.WriteAllTextAsync($@"..\..\..\JsonResults\{city}-{xtra}-{what}-{DateTime.Now:yyMMdd·HHmmss}.{frmt}", json);
 #else
       switch (what) //todo: https://docs.microsoft.com/en-us/aspnet/core/web-api/route-to-code?view=aspnetcore-6.; break ;
       {
-        case OpenWeatherCd.Forecast16: var f16 = await response.Content.ReadFromJsonAsync<RootobjectForecast16>(); f16?.list.ToList().ForEach(x => Trace.WriteLine($":> {UnixTimeStampToDateTime(x.sunrise)}  {UnixTimeStampToDateTime(x.sunset)}  {x}")); break;
-        case OpenWeatherCd.CurrentWea: var pr5 = await response.Content.ReadFromJsonAsync<RootobjectCurrentWea>(); pr5?.weather.ToList().ForEach(x => Trace.WriteLine($":> {x}")); break;
-        case OpenWeatherCd.TimeMachin: var tmn = await response.Content.ReadFromJsonAsync<RootobjectTimeMachin>(); Trace.WriteLine($":> {UnixTimeStampToDateTime(tmn.current.sunrise)}  {UnixTimeStampToDateTime(tmn.current.sunset)}  {tmn}");          /*tmn?.hourly.ToList().ForEach(x => Trace.WriteLine($":> {x}"));*/          break;
+        case OpenWeatherCd.Forecast16: var f16 = await response.Content.ReadFromJsonAsync<RootobjectForecast16>(); f16?.list.ToList().ForEach(x => WriteLine($":> {UnixTimeStampToDateTime(x.sunrise)}  {UnixTimeStampToDateTime(x.sunset)}  {x}")); break;
+        case OpenWeatherCd.CurrentWea: var pr5 = await response.Content.ReadFromJsonAsync<RootobjectCurrentWea>(); pr5?.weather.ToList().ForEach(x => WriteLine($":> {x}")); break;
+        case OpenWeatherCd.TimeMachin: var tmn = await response.Content.ReadFromJsonAsync<RootobjectTimeMachin>(); WriteLine($":> {UnixTimeStampToDateTime(tmn.current.sunrise)}  {UnixTimeStampToDateTime(tmn.current.sunset)}  {tmn}");          /*tmn?.hourly.ToList().ForEach(x => WriteLine($":> {x}"));*/          break;
+        case OpenWeatherCd.OneCallApi: var och = await response.Content.ReadFromJsonAsync<RootobjectOneCallApi>(); 
+          och?.hourly.ToList().ForEach(x => WriteLine($":> {UnixTimeStampToDateTime(x.dt):ddd HH}  {x.temp,6:N1}  {x.feels_like,6:N1}  {x.wind_speed,5:N0}  {x}"));
+          och?.minutely.ToList().ForEach(x => WriteLine($":> {UnixTimeStampToDateTime(x.dt):ddd HH:mm}  {x.precipitation,5:N0}  {x}")); 
+          break;
         default: throw new NotImplementedException();
       }
 #endif
 
       return url != null;
     }
-    catch (Exception ex) { Trace.WriteLine(ex); throw; }
+    catch (Exception ex) { WriteLine(ex); throw; }
   }
 
   public static DateTime UnixTimeStampToDateTime(double unixTimeStamp) => new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(unixTimeStamp).ToLocalTime();  // Unix timestamp is seconds past epoch
@@ -88,7 +81,8 @@ internal class OpenWeatherRevisit2022
     CurrentWea,
     TimeMachin,
     WeathrMaps,
-    Forecast30
+    Forecast30,
+    OneCallApi
   }
 
   const string
@@ -96,7 +90,8 @@ internal class OpenWeatherRevisit2022
     CurrentWea__ = "https://api.openweathermap.org/data/2.5/forecast/daily?",
     TimeMachin__ = "https://api.openweathermap.org/data/2.5/weather?",
     WeathrMaps__ = "http://maps.openweathermap.org/maps/2.0/weather/TA2/1/48/78?",
-    Forecast30__ = "https://pro.openweathermap.org/data/2.5/forecast/climate?";
+    Forecast30__ = "https://pro.openweathermap.org/data/2.5/forecast/climate?",
+    OneCallApi__ = "https://api.openweathermap.org/data/2.5/onecall?";
 
   int[] _sunrizes = new int[] {
   1640868706, // 2021-12-30 07:51:46  1640782306 
