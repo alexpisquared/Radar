@@ -1,6 +1,6 @@
-﻿namespace Radar.Logic.Forecast___;
+﻿namespace OpenWeather2022.Response;
 
-public class WeatherResponse
+public record RootobjectCurrentWea
 {
   public Coord coord { get; set; }
   public Weather[] weather { get; set; }
@@ -17,13 +17,7 @@ public class WeatherResponse
   public int cod { get; set; }
 }
 
-public class Coord
-{
-  public float lon { get; set; }
-  public float lat { get; set; }
-}
-
-public class Main
+public record Main
 {
   public float temp { get; set; }
   public float feels_like { get; set; }
@@ -33,19 +27,19 @@ public class Main
   public int humidity { get; set; }
 }
 
-public class Wind
+public record Wind
 {
   public float speed { get; set; }
   public int deg { get; set; }
   public float gust { get; set; }
 }
 
-public class Clouds
+public record Clouds
 {
   public int all { get; set; }
 }
 
-public class Sys
+public record Sys
 {
   public int type { get; set; }
   public int id { get; set; }
@@ -53,12 +47,3 @@ public class Sys
   public int sunrise { get; set; }
   public int sunset { get; set; }
 }
-
-public class Weather
-{
-  public int id { get; set; }
-  public string main { get; set; }
-  public string description { get; set; }
-  public string icon { get; set; }
-}
-

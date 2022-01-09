@@ -1,4 +1,4 @@
-﻿namespace Radar.Logic;
+﻿namespace OpenWeather2022.Response;
 
 public record RootobjectOneCallApi
 {
@@ -22,7 +22,7 @@ public record Current
   public int pressure { get; set; }
   public int humidity { get; set; }
   public float dew_point { get; set; }
-  public int uvi { get; set; }
+  public float uvi { get; set; }
   public int clouds { get; set; }
   public int visibility { get; set; }
   public float wind_speed { get; set; }
@@ -51,7 +51,7 @@ public record Hourly
   public float wind_speed { get; set; }
   public int wind_deg { get; set; }
   public float wind_gust { get; set; }
-  public Weather1[] weather { get; set; }
+  public Weather[] weather { get; set; }
   public float pop { get; set; }
   public Snow snow { get; set; }
   public Rain rain { get; set; }
@@ -65,14 +65,6 @@ public record Snow
 public record Rain
 {
   public float _1h { get; set; }
-}
-
-public record Weather1
-{
-  public int id { get; set; }
-  public string main { get; set; }
-  public string description { get; set; }
-  public string icon { get; set; }
 }
 
 public record Daily
@@ -91,7 +83,7 @@ public record Daily
   public float wind_speed { get; set; }
   public int wind_deg { get; set; }
   public float wind_gust { get; set; }
-  public Weather2[] weather { get; set; }
+  public Weather[] weather { get; set; }
   public int clouds { get; set; }
   public float pop { get; set; }
   public float uvi { get; set; }
@@ -115,12 +107,4 @@ public record Feels_Like
   public float night { get; set; }
   public float eve { get; set; }
   public float morn { get; set; }
-}
-
-public record Weather2
-{
-  public int id { get; set; }
-  public string main { get; set; }
-  public string description { get; set; }
-  public string icon { get; set; }
 }

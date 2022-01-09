@@ -1,6 +1,6 @@
-﻿namespace Radar.OpenWeatherResponse;
+﻿/*namespace Radar.JsonResults.Json;
 
-public record RootobjectCurrentWea
+public class Rootobject
 {
   public Coord coord { get; set; }
   public Weather[] weather { get; set; }
@@ -17,7 +17,13 @@ public record RootobjectCurrentWea
   public int cod { get; set; }
 }
 
-public record Main
+public class Coord
+{
+  public float lon { get; set; }
+  public float lat { get; set; }
+}
+
+public class Main
 {
   public float temp { get; set; }
   public float feels_like { get; set; }
@@ -27,19 +33,19 @@ public record Main
   public int humidity { get; set; }
 }
 
-public record Wind
+public class Wind
 {
   public float speed { get; set; }
   public int deg { get; set; }
   public float gust { get; set; }
 }
 
-public record Clouds
+public class Clouds
 {
   public int all { get; set; }
 }
 
-public record Sys
+public class Sys
 {
   public int type { get; set; }
   public int id { get; set; }
@@ -47,3 +53,12 @@ public record Sys
   public int sunrise { get; set; }
   public int sunset { get; set; }
 }
+
+public class Weather
+{
+  public int id { get; set; }
+  public string main { get; set; }
+  public string description { get; set; }
+  public string icon { get; set; }
+}
+*/

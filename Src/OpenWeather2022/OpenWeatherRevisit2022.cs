@@ -1,8 +1,12 @@
 ﻿#define SaveToFile_
 
-namespace Radar.Logic;
+using OpenWeather2022.Response;
 
-internal class OpenWeatherRevisit2022
+namespace Radar.Logic;
+// Vaughan,ON ::: 43.8370636,-79.6359808
+// Concord,ON ::: 43.8075917,-79.5431195
+// Toronto,ON ::: 43.7181557,-79.5181414
+public class OpenWeatherRevisit2022
 {
   public async Task<bool> OpenWea(string code)
   {
@@ -30,8 +34,9 @@ internal class OpenWeatherRevisit2022
     string time = "1586468027",
     string frmt = "json",           // XML gives readable time for sunrise!!!
     string excl = "", // &exclude=hourly,daily",
-    OpenWeatherCd what = OpenWeatherCd.CurrentWea)
+    OpenWeatherCd what = OpenWeatherCd.TimeMachin)
   {
+    var sw = Stopwatch.StartNew();
     try
     {
       var url = what switch
@@ -58,15 +63,17 @@ internal class OpenWeatherRevisit2022
       {
         case OpenWeatherCd.Forecast16: var f16 = await response.Content.ReadFromJsonAsync<RootobjectForecast16>(); f16?.list.ToList().ForEach(x => WriteLine($":> {UnixTimeStampToDateTime(x.sunrise)}  {UnixTimeStampToDateTime(x.sunset)}  {x}")); break;
         case OpenWeatherCd.CurrentWea: var pr5 = await response.Content.ReadFromJsonAsync<RootobjectCurrentWea>(); pr5?.weather.ToList().ForEach(x => WriteLine($":> {x}")); break;
-        case OpenWeatherCd.TimeMachin: var tmn = await response.Content.ReadFromJsonAsync<RootobjectTimeMachin>(); WriteLine($":> {UnixTimeStampToDateTime(tmn.current.sunrise)}  {UnixTimeStampToDateTime(tmn.current.sunset)}  {tmn}");          /*tmn?.hourly.ToList().ForEach(x => WriteLine($":> {x}"));*/          break;
-        case OpenWeatherCd.OneCallApi: var och = await response.Content.ReadFromJsonAsync<RootobjectOneCallApi>(); 
+        case OpenWeatherCd.TimeMachin: var tmn = await response.Content.ReadFromJsonAsync<RootobjectOneCallApi>(); WriteLine($":> {UnixTimeStampToDateTime(tmn.current.sunrise)}  {UnixTimeStampToDateTime(tmn.current.sunset)}  {tmn}");          /*tmn?.hourly.ToList().ForEach(x => WriteLine($":> {x}"));*/          break;
+        case OpenWeatherCd.OneCallApi:
+          var och = await response.Content.ReadFromJsonAsync<RootobjectOneCallApi>();
           och?.hourly.ToList().ForEach(x => WriteLine($":> {UnixTimeStampToDateTime(x.dt):ddd HH}  {x.temp,6:N1}  {x.feels_like,6:N1}  {x.wind_speed,5:N0}  {x}"));
-          och?.minutely.ToList().ForEach(x => WriteLine($":> {UnixTimeStampToDateTime(x.dt):ddd HH:mm}  {x.precipitation,5:N0}  {x}")); 
+          och?.minutely.ToList().ForEach(x => WriteLine($":> {UnixTimeStampToDateTime(x.dt):ddd HH:mm}  {x.precipitation,5:N0}  {x}"));
           break;
         default: throw new NotImplementedException();
       }
 #endif
 
+      WriteLine($"*** {what} ==> {sw.ElapsedMilliseconds}ms");
       return url != null;
     }
     catch (Exception ex) { WriteLine(ex); throw; }

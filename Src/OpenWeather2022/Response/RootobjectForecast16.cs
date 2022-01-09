@@ -1,4 +1,4 @@
-﻿namespace Radar.OpenWeatherResponse;
+﻿namespace OpenWeather2022.Response;
 
 public record RootobjectForecast16 // ++Works
 {
@@ -42,24 +42,6 @@ public record List
   public float pop { get; set; }
   public float rain { get; set; }
   public float snow { get; set; }
-}
-
-public record Temp
-{
-  public float day { get; set; }
-  public float min { get; set; }
-  public float max { get; set; }
-  public float night { get; set; }
-  public float eve { get; set; }
-  public float morn { get; set; }
-}
-
-public record Feels_Like
-{
-  public float day { get; set; }
-  public float night { get; set; }
-  public float eve { get; set; }
-  public float morn { get; set; }
 }
 
 public record Weather

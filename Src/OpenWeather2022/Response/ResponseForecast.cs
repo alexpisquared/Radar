@@ -1,6 +1,6 @@
-﻿namespace Radar.JsonResults.Json;
+﻿/*namespace Radar.Logic.Forecast___;
 
-public class Rootobject
+public class WeatherResponse
 {
   public Coord coord { get; set; }
   public Weather[] weather { get; set; }
@@ -61,3 +61,5 @@ public class Weather
   public string description { get; set; }
   public string icon { get; set; }
 }
+
+*/
