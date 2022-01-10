@@ -21,7 +21,7 @@ public class MainViewModel
     PopulateB();
   }
 
-  async void Populate0()  {    await Task.Delay(3);  }
+  async void Populate0() { await Task.Delay(3); }
 
   async void PopulateB()
   {
@@ -31,16 +31,20 @@ public class MainViewModel
     var oo = new OpenWeatherRevisit2022();
     var oca = await oo.GetIt(config["AppSecrets:MagicNumber"]);
 
+    ArgumentNullException.ThrowIfNull(oca);
+
     oca?.hourly.ToList().ForEach(x =>
     {
       Points1.Add(new(x.dt, x.temp));
       //Points2.Add(new(x.dt, x.feels_like));
     });
 
-    oca?.daily.ToList().ForEach(x =>
-    {
-      Points1.Add(new(x.dt, x.temp.morn));
-      Points1.Add(new(x.dt, x.temp.night));
+    oca?.daily.Where(d => d.dt > oca.hourly.Max(d => d.dt)).ToList().ForEach(x =>
+      {
+        Points1.Add(new(x.dt + 06 * 3600, x.temp.morn));
+        Points1.Add(new(x.dt + 12 * 3600, x.temp.day));
+        Points1.Add(new(x.dt + 18 * 3600, x.temp.eve));
+        Points1.Add(new(x.dt + 23 * 3600, x.temp.night));
       //Points2.Add(new(x.dt, x.feels_like.morn));
       //Points2.Add(new(x.dt, x.feels_like.night));
     });
@@ -53,3 +57,6 @@ public class MainViewModel
 
   public PlotModel MyModel { get; private set; }
 }
+///todo: https://oxyplot.readthedocs.io/en/latest/models/series/ScatterSeries.html
+///https://docs.microsoft.com/en-us/answers/questions/22863/how-to-customize-charts-in-wpf-using-systemwindows.html
+///https://docs.microsoft.com/en-us/answers/questions/10086/draw-chart-with-systemwindowscontrolsdatavisualiza.html
