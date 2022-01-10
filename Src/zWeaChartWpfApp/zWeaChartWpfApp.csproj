@@ -6,15 +6,17 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <UserSecretsId>706a5572-d715-42f2-bd05-c9e56c30d9a8</UserSecretsId>
+    <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
   <ItemGroup>
     <!--
     //tu: do not use latest ver 2.1.0 
     -->
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.0" />
     <PackageReference Include="OxyPlot.Core" Version="2.0.0" />
     <PackageReference Include="OxyPlot.Wpf" Version="2.0.0" />
+    <PackageReference Include="System.Windows.Forms.DataVisualization" Version="1.0.0-prerelease.20110.1" />
   </ItemGroup>
 
   <ItemGroup>
