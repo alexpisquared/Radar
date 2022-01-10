@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using OpenWeather2022;
 using OpenWeather2022.Response;
 using OxyPlot;
+using OxyPlot.Axes;
 using OxyPlot.Series;
 
 namespace zWeaChartWpfApp;
@@ -11,8 +12,24 @@ public class MainViewModel
 {
   public MainViewModel()
   {
-    MyModel = new PlotModel { Title = "Example 1" };
-    MyModel.Series.Add(new FunctionSeries(Math.Cos, 0, 10, 0.1, "cos(x)"));
+    ScatModel = new PlotModel { Title = "ScatterSeries" };
+    var scatterSeries = new ScatterSeries { MarkerType = MarkerType.Circle };
+    var r = new Random(314);
+    for (int i = 0; i < 100; i++)
+    {
+      var x = r.NextDouble();
+      var y = r.NextDouble();
+      var size = r.Next(5, 15);
+      var colorValue = r.Next(100, 1000);
+      scatterSeries.Points.Add(new ScatterPoint(x, y, size, colorValue));
+    }
+
+    ScatModel.Series.Add(scatterSeries);
+    //ScatModel.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.Jet(200) });
+
+
+    FuncModel = new PlotModel { Title = "FunctionSeries Example" };
+    FuncModel.Series.Add(new FunctionSeries(Math.Cos, 0, 10, 0.1, "cos(x)"));
 
     Title = "Example 2";
 
@@ -31,6 +48,7 @@ public class MainViewModel
 
     DrawSeries(occ, PointsTC, PointsFC);
     DrawSeries(oct, PointsTT, PointsFT);
+    
   }
 
   void DrawSeries(RootobjectOneCallApi? ocv, ObservableCollection<DataPoint> pointsTemp, ObservableCollection<DataPoint> pointsFeel)
@@ -64,7 +82,8 @@ public class MainViewModel
   public ObservableCollection<DataPoint> PointsTT { get; private set; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> PointsFT { get; private set; } = new ObservableCollection<DataPoint>();
 
-  public PlotModel MyModel { get; private set; }
+  public PlotModel FuncModel { get; private set; }
+  public PlotModel ScatModel { get; private set; }
 }
 ///todo: https://oxyplot.readthedocs.io/en/latest/models/series/ScatterSeries.html
 ///https://docs.microsoft.com/en-us/answers/questions/22863/how-to-customize-charts-in-wpf-using-systemwindows.html
