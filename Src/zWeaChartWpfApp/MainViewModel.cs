@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using Microsoft.Extensions.Configuration;
 using OpenWeather2022;
+using OpenWeather2022.Response;
 using OxyPlot;
 using OxyPlot.Series;
 
@@ -14,46 +15,54 @@ public class MainViewModel
     MyModel.Series.Add(new FunctionSeries(Math.Cos, 0, 10, 0.1, "cos(x)"));
 
     Title = "Example 2";
-    Points1 = new ObservableCollection<DataPoint>();
-    Points2 = new ObservableCollection<DataPoint>();
 
-    Populate0();
-    PopulateB();
+
+    PopulateAsync();
   }
 
-  async void Populate0() { await Task.Delay(3); }
-
-  async void PopulateB()
+  async void PopulateAsync()
   {
     var config = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
     WriteLine($"---   WhereAmI: '{config["WhereAmI"]}'       {config["AppSecrets:MagicNumber"]}");
 
     var oo = new OpenWeatherRevisit2022();
-    var oca = await oo.GetIt(config["AppSecrets:MagicNumber"]);
+    var occ = await oo.GetIt(config["AppSecrets:MagicNumber"], 43.8374229, -79.4961442); // PHC107
+    var oct = await oo.GetIt(config["AppSecrets:MagicNumber"], 43.7181557, -79.5181414); // 400x401
 
-    ArgumentNullException.ThrowIfNull(oca);
+    DrawSeries(occ, PointsTC, PointsFC);
+    DrawSeries(oct, PointsTT, PointsFT);
+  }
 
-    oca?.hourly.ToList().ForEach(x =>
+  void DrawSeries(RootobjectOneCallApi? ocv, ObservableCollection<DataPoint> pointsTemp, ObservableCollection<DataPoint> pointsFeel)
+  {
+    ArgumentNullException.ThrowIfNull(ocv);
+
+    ocv?.hourly.ToList().ForEach(x =>
     {
-      Points1.Add(new(x.dt, x.temp));
-      //Points2.Add(new(x.dt, x.feels_like));
+      pointsTemp.Add(new(x.dt, x.temp));
+      pointsFeel.Add(new(x.dt, x.feels_like));
     });
 
-    oca?.daily.Where(d => d.dt > oca.hourly.Max(d => d.dt)).ToList().ForEach(x =>
-      {
-        Points1.Add(new(x.dt + 06 * 3600, x.temp.morn));
-        Points1.Add(new(x.dt + 12 * 3600, x.temp.day));
-        Points1.Add(new(x.dt + 18 * 3600, x.temp.eve));
-        Points1.Add(new(x.dt + 23 * 3600, x.temp.night));
-      //Points2.Add(new(x.dt, x.feels_like.morn));
-      //Points2.Add(new(x.dt, x.feels_like.night));
+    ocv?.daily.Where(d => d.dt > ocv.hourly.Max(d => d.dt)).ToList().ForEach(x =>
+    {
+      pointsTemp.Add(new(x.dt + 06 * 3600, x.temp.morn));
+      pointsTemp.Add(new(x.dt + 12 * 3600, x.temp.day));
+      pointsTemp.Add(new(x.dt + 18 * 3600, x.temp.eve));
+      pointsTemp.Add(new(x.dt + 23 * 3600, x.temp.night));
+      pointsFeel.Add(new(x.dt + 06 * 3600, x.feels_like.morn));
+      pointsFeel.Add(new(x.dt + 12 * 3600, x.feels_like.day));
+      pointsFeel.Add(new(x.dt + 18 * 3600, x.feels_like.eve));
+      pointsFeel.Add(new(x.dt + 23 * 3600, x.feels_like.night));
     });
   }
 
   public string Title { get; private set; }
-
-  public ObservableCollection<DataPoint> Points1 { get; private set; }
-  public ObservableCollection<DataPoint> Points2 { get; private set; }
+  public ObservableCollection<DataPoint> PointsTV { get; private set; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> PointsFV { get; private set; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> PointsTC { get; private set; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> PointsFC { get; private set; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> PointsTT { get; private set; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> PointsFT { get; private set; } = new ObservableCollection<DataPoint>();
 
   public PlotModel MyModel { get; private set; }
 }

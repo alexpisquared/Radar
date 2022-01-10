@@ -6,22 +6,26 @@
         xmlns:local="clr-namespace:zWeaChartWpfApp"
         xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="1200">
   <!--<Window.DataContext>
     <local:MainViewModel/>
   </Window.DataContext>-->
   <Grid>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="*"/>
-      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="1*"/>
+      <ColumnDefinition Width="2*"/>
     </Grid.ColumnDefinitions>
     
     <oxy:PlotView Model="{Binding MyModel}" />
 
     <oxy:Plot Title="{Binding Title}" Grid.Column="1">
       <oxy:Plot.Series>
-        <oxy:LineSeries ItemsSource="{Binding Points1}"/>
-        <oxy:LineSeries ItemsSource="{Binding Points2}"/>
+        <oxy:LineSeries ItemsSource="{Binding PointsTV}"/>
+        <oxy:LineSeries ItemsSource="{Binding PointsFV}"/>
+        <oxy:LineSeries ItemsSource="{Binding PointsTC}"/>
+        <oxy:LineSeries ItemsSource="{Binding PointsFC}"/>
+        <oxy:LineSeries ItemsSource="{Binding PointsTT}"/>
+        <oxy:LineSeries ItemsSource="{Binding PointsFT}"/>
       </oxy:Plot.Series>
     </oxy:Plot>
 
