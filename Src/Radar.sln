@@ -35,6 +35,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventLogLib", "EventLogLib\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenWeather2022", "OpenWeather2022\OpenWeather2022.csproj", "{DCFA53D5-ACB0-46F5-8709-DD5967560C10}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zWeaChartWpfApp", "zWeaChartWpfApp\zWeaChartWpfApp.csproj", "{C8959DD3-AEDE-4F77-BB4B-E16C31787EC6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -225,6 +227,18 @@ Global
 		{DCFA53D5-ACB0-46F5-8709-DD5967560C10}.Release|x64.Build.0 = Release|Any CPU
 		{DCFA53D5-ACB0-46F5-8709-DD5967560C10}.Release|x86.ActiveCfg = Release|Any CPU
 		{DCFA53D5-ACB0-46F5-8709-DD5967560C10}.Release|x86.Build.0 = Release|Any CPU
+		{C8959DD3-AEDE-4F77-BB4B-E16C31787EC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8959DD3-AEDE-4F77-BB4B-E16C31787EC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8959DD3-AEDE-4F77-BB4B-E16C31787EC6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C8959DD3-AEDE-4F77-BB4B-E16C31787EC6}.Debug|x64.Build.0 = Debug|Any CPU
+		{C8959DD3-AEDE-4F77-BB4B-E16C31787EC6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C8959DD3-AEDE-4F77-BB4B-E16C31787EC6}.Debug|x86.Build.0 = Debug|Any CPU
+		{C8959DD3-AEDE-4F77-BB4B-E16C31787EC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8959DD3-AEDE-4F77-BB4B-E16C31787EC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8959DD3-AEDE-4F77-BB4B-E16C31787EC6}.Release|x64.ActiveCfg = Release|Any CPU
+		{C8959DD3-AEDE-4F77-BB4B-E16C31787EC6}.Release|x64.Build.0 = Release|Any CPU
+		{C8959DD3-AEDE-4F77-BB4B-E16C31787EC6}.Release|x86.ActiveCfg = Release|Any CPU
+		{C8959DD3-AEDE-4F77-BB4B-E16C31787EC6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

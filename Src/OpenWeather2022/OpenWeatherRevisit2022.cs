@@ -2,7 +2,8 @@
 
 using OpenWeather2022.Response;
 
-namespace Radar.Logic;
+namespace OpenWeather2022;
+
 // Vaughan,ON ::: 43.8370636,-79.6359808
 // Concord,ON ::: 43.8075917,-79.5431195
 // Toronto,ON ::: 43.7181557,-79.5181414
@@ -20,12 +21,67 @@ public class OpenWeatherRevisit2022
     //for (int i = -5; i <= 0; i++) {await Go(code, what: OpenWeatherCd.TimeMachin, time: DateTimeToUnixTimestamp(DateTime.Today.AddDays(i)).ToString()); await Task.Delay(1111);}
     ////await Test_(code, what: OpenWeatherCd.Forecast16);
     ////await Test_(code, what: OpenWeatherCd.CurrentWea);
-    await Go(code, what: OpenWeatherCd.OneCallApi);
+    await TestPlay(code, what: OpenWeatherCd.OneCallApi);
 
     await Task.Yield();
     return true;
   }
-  async Task<bool> Go(
+  public async Task<RootobjectOneCallApi?> GetIt(
+    string code,
+    double lon = -79.4829,
+    double lat = +43.8001,
+    string city = "Toronto,ON,CA",
+    string xtra = "&cnt=16",        // 16 is MAX.
+    string time = "1586468027",
+    string frmt = "json",           // XML gives readable time for sunrise!!!
+    string excl = "", // &exclude=hourly,daily",
+    OpenWeatherCd what = OpenWeatherCd.OneCallApi)
+  {
+    RootobjectOneCallApi? oca = default!;
+    var sw = Stopwatch.StartNew();
+    try
+    {
+      var url = what switch
+      {
+        OpenWeatherCd.TimeMachin => $"{Forecast16__}lat={lat}&lon={lon}&units=metric&dt={time}&appid={code}", // openweathermap.org/api/one-call-api --5 days back only.
+        OpenWeatherCd.Forecast16 => $"{CurrentWea__}q={city}&units=metric&mode={frmt}{xtra}&appid={code}",    // openweathermap.org/forecast16          
+        OpenWeatherCd.CurrentWea => $"{TimeMachin__}q={city}&units=metric&mode={frmt}&appid={code}",          // openweathermap.org/current        
+        OpenWeatherCd.WeathrMaps => $"{WeathrMaps__}?date={time}&opacity=0.9&fill_bound=true&appid={code}",   //                                   <== needs $ subs-n it seemes.
+        OpenWeatherCd.Forecast30 => $"{Forecast30__}q=London&appid={code}",                                   // openweathermap.org/api/forecast30 <== needs $ subs-n it seemes.      
+        OpenWeatherCd.OneCallApi => $"{OneCallApi__}lat={lat}&lon={lon}&units=metric{excl}&appid={code}",     // openweathermap.org/api/one-call-api
+        _ => "",
+      };
+
+      using var client = new HttpClient();
+      var response = await client.GetAsync(url);
+      if (response == null || response.StatusCode == System.Net.HttpStatusCode.NotFound) return new RootobjectOneCallApi();
+
+#if NotSaveToFile
+      var json = await response.Content.ReadAsStringAsync();
+      WriteLine(json);
+      await System.IO.File.WriteAllTextAsync($@"..\..\..\JsonResults\{city}-{xtra}-{what}-{DateTime.Now:yyMMdd·HHmmss}.{frmt}", json);
+#else
+      switch (what) //todo: https://docs.microsoft.com/en-us/aspnet/core/web-api/route-to-code?view=aspnetcore-6.; break ;
+      {
+        case OpenWeatherCd.Forecast16: var f16 = await response.Content.ReadFromJsonAsync<RootobjectForecast16>(); f16?.list.ToList().ForEach(x => WriteLine($":> {UnixTimeStampToDateTime(x.sunrise)}  {UnixTimeStampToDateTime(x.sunset)}  {x}")); break;
+        case OpenWeatherCd.CurrentWea: var pr5 = await response.Content.ReadFromJsonAsync<RootobjectCurrentWea>(); pr5?.weather.ToList().ForEach(x => WriteLine($":> {x}")); break;
+        case OpenWeatherCd.TimeMachin: oca = await response.Content.ReadFromJsonAsync<RootobjectOneCallApi>(); WriteLine($":> {UnixTimeStampToDateTime(oca.current.sunrise)}  {UnixTimeStampToDateTime(oca.current.sunset)}  {oca}");          /*tmn?.hourly.ToList().ForEach(x => WriteLine($":> {x}"));*/          break;
+        case OpenWeatherCd.OneCallApi:
+          oca = await response.Content.ReadFromJsonAsync<RootobjectOneCallApi>();
+          oca?.hourly.ToList().ForEach(x => WriteLine($":> {UnixTimeStampToDateTime(x.dt):ddd HH}  {x.temp,6:N1}  {x.feels_like,6:N1}  {x.wind_speed,5:N0}  {x}"));
+          oca?.minutely.ToList().ForEach(x => WriteLine($":> {UnixTimeStampToDateTime(x.dt):ddd HH:mm}  {x.precipitation,5:N0}  {x}"));
+          break;
+        default: throw new NotImplementedException();
+      }
+#endif
+
+      WriteLine($"*** {what} ==> {sw.ElapsedMilliseconds}ms");
+
+      return oca;
+    }
+    catch (Exception ex) { WriteLine(ex); throw; }
+  }
+  async Task<bool> TestPlay(
     string code,
     double lon = -79.4829,
     double lat = +43.8001,

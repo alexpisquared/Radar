@@ -1,8 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using AAV.Sys.Helpers;
 using AAV.WPF.Helpers;
 using AsLink;
@@ -35,7 +31,7 @@ namespace Radar
       git update-index --assume-unchanged AppSettings.json
       git update-index --no-assume-unchanged AppSettings.json            */
 
-      var rv = await new Logic.OpenWeatherRevisit2022().OpenWea(config["AppSecrets:MagicNumber"]);
+      var rv = await new OpenWeather2022.OpenWeatherRevisit2022().OpenWea(config["AppSecrets:MagicNumber"]);
       Current.Shutdown();
 #endif
 
