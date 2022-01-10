@@ -1,7 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.ObjectModel;
+using Microsoft.Extensions.Configuration;
 using OpenWeather2022;
 using OxyPlot;
 using OxyPlot.Series;
@@ -16,39 +14,42 @@ public class MainViewModel
     MyModel.Series.Add(new FunctionSeries(Math.Cos, 0, 10, 0.1, "cos(x)"));
 
     Title = "Example 2";
-    Points1 = new List<DataPoint>                              {
-                                  new DataPoint(0, 4),
-                                  new DataPoint(10, 13),
-                                  new DataPoint(20, 15),
-                                  new DataPoint(30, 16),
-                                  new DataPoint(40, 12),
-                                  new DataPoint(50, 12)
-                              };
-    Points2 = new List<DataPoint>                              {
-                                  new DataPoint(0, 14),
-                                  new DataPoint(10, 23),
-                                  new DataPoint(20, 15),
-                                  new DataPoint(30, 36),
-                                  new DataPoint(40, 02),
-                                  new DataPoint(50, 12)
-                              };
+    Points1 = new ObservableCollection<DataPoint>();
+    Points2 = new ObservableCollection<DataPoint>();
 
+    Populate0();
+    PopulateB();
+  }
 
+  async void Populate0()  {    await Task.Delay(3);  }
+
+  async void PopulateB()
+  {
     var config = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
     WriteLine($"---   WhereAmI: '{config["WhereAmI"]}'       {config["AppSecrets:MagicNumber"]}");
 
     var oo = new OpenWeatherRevisit2022();
-    var oca = oo.GetIt(config["AppSecrets:MagicNumber"]).Result;
+    var oca = await oo.GetIt(config["AppSecrets:MagicNumber"]);
 
-    oca?.hourly.ToList().ForEach(x => WriteLine($":> {OpenWeatherRevisit2022.UnixTimeStampToDateTime(x.dt):ddd HH}  {x.temp,6:N1}  {x.feels_like,6:N1}  {x.wind_speed,5:N0}  {x}"));
-    oca?.minutely.ToList().ForEach(x => WriteLine($":> {OpenWeatherRevisit2022.UnixTimeStampToDateTime(x.dt):ddd HH:mm}  {x.precipitation,5:N0}  {x}"));
+    oca?.hourly.ToList().ForEach(x =>
+    {
+      Points1.Add(new(x.dt, x.temp));
+      //Points2.Add(new(x.dt, x.feels_like));
+    });
 
+    oca?.daily.ToList().ForEach(x =>
+    {
+      Points1.Add(new(x.dt, x.temp.morn));
+      Points1.Add(new(x.dt, x.temp.night));
+      //Points2.Add(new(x.dt, x.feels_like.morn));
+      //Points2.Add(new(x.dt, x.feels_like.night));
+    });
   }
 
   public string Title { get; private set; }
 
-  public IList<DataPoint> Points1 { get; private set; }
-  public IList<DataPoint> Points2 { get; private set; }
+  public ObservableCollection<DataPoint> Points1 { get; private set; }
+  public ObservableCollection<DataPoint> Points2 { get; private set; }
 
   public PlotModel MyModel { get; private set; }
 }
