@@ -35,8 +35,8 @@ public class MainViewModel
 
     var scatterSeries = new ScatterSeries { MarkerType = MarkerType.Circle };
 
-    var minValue = DateTimeAxis.ToDouble(OpenWeatherRevisit2022.UnixTimeStampToDateTime(ocv.hourly.Min(d => d.dt - 3600)));
-    var maxValue = DateTimeAxis.ToDouble(OpenWeatherRevisit2022.UnixTimeStampToDateTime(ocv.daily.Max(d => d.dt + 3600)));
+    var minValue = DateTimeAxis.ToDouble(OpenWeatherRevisit2022.UnixTimeStampToDateTime(ocv.daily.Min(d => d.dt - 07 * 3600)));
+    var maxValue = DateTimeAxis.ToDouble(OpenWeatherRevisit2022.UnixTimeStampToDateTime(ocv.daily.Max(d => d.dt + 12 * 3600)));
 
     ScatModel.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = minValue, Maximum = maxValue, StringFormat = "ddd HH" });
 
@@ -48,11 +48,11 @@ public class MainViewModel
 
     ocv.daily./*Where(d => d.dt > ocv.hourly.Max(d => d.dt)).*/ToList().ForEach(x =>
     {
-      scatterSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWeatherRevisit2022.UnixTimeStampToDateTime(x.dt - 08 * 3600)), x.temp.morn, 4, 0));
+      scatterSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWeatherRevisit2022.UnixTimeStampToDateTime(x.dt - 06 * 3600)), x.temp.morn, 4, 0));
       scatterSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWeatherRevisit2022.UnixTimeStampToDateTime(x.dt + 00 * 3600)), x.temp.day, 4, 750));
       scatterSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWeatherRevisit2022.UnixTimeStampToDateTime(x.dt + 06 * 3600)), x.temp.eve, 4, 1000));
       scatterSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWeatherRevisit2022.UnixTimeStampToDateTime(x.dt + 11 * 3600)), x.temp.night, 4, 333));
-      scatterSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWeatherRevisit2022.UnixTimeStampToDateTime(x.dt - 08 * 3600)), x.feels_like.morn, 2, 0));
+      scatterSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWeatherRevisit2022.UnixTimeStampToDateTime(x.dt - 06 * 3600)), x.feels_like.morn, 2, 0));
       scatterSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWeatherRevisit2022.UnixTimeStampToDateTime(x.dt + 00 * 3600)), x.feels_like.day, 2, 750));
       scatterSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWeatherRevisit2022.UnixTimeStampToDateTime(x.dt + 06 * 3600)), x.feels_like.eve, 2, 1000));
       scatterSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWeatherRevisit2022.UnixTimeStampToDateTime(x.dt + 11 * 3600)), x.feels_like.night, 2, 333));
