@@ -11,7 +11,7 @@ namespace zWeaChartWpfApp;
 public class MainViewModel
 {
   IConfigurationRoot _config;
-  private OpenWeatherRevisit2022 _opnwea;
+  OpenWeatherRevisit2022 _opnwea;
 
   public MainViewModel()
   {
@@ -22,17 +22,10 @@ public class MainViewModel
   public async Task<bool> PopulateAsync()
   {
     await Task.Yield();
-    await
-    PopulateScatModelAsync();
+    await PopulateScatModelAsync();
     await PopulateFuncModel();
     await PopulateOpenWeath();
     return true;
-  }
-
-  async Task PopulateFuncModel()
-  {
-    await Task.Yield();
-    FuncModel.Series.Add(new FunctionSeries(Math.Cos, 0, 10, 0.1, "cos(x)"));
   }
 
   async Task PopulateScatModelAsync()
@@ -68,7 +61,6 @@ public class MainViewModel
     ScatModel.Series.Add(scatterSeries);
     ScatModel.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.Rainbow(1000) });
   }
-
   async Task PopulateOpenWeath()
   {
     var occ = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], 43.8374229, -79.4961442); // PHC107
@@ -77,6 +69,7 @@ public class MainViewModel
     DrawSeries(occ, PointsTC, PointsFC);
     DrawSeries(oct, PointsTT, PointsFT);
   }
+  async Task PopulateFuncModel() { await Task.Yield(); FuncModel.Series.Add(new FunctionSeries(Math.Cos, 0, 10, 0.1, "cos(x)")); }
 
   void DrawSeries(RootobjectOneCallApi? ocv, ObservableCollection<DataPoint> pointsTemp, ObservableCollection<DataPoint> pointsFeel)
   {

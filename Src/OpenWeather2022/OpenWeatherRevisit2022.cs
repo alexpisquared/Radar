@@ -53,7 +53,7 @@ public class OpenWeatherRevisit2022
       };
 
       using var client = new HttpClient();
-      var response = await client.GetAsync(url);
+      var response = await client.GetAsync(url).ConfigureAwait(false); 
       if (response == null || response.StatusCode == System.Net.HttpStatusCode.NotFound) return new RootobjectOneCallApi();
 
 #if NotSaveToFile
