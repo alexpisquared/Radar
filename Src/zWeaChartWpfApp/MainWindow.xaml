@@ -4,16 +4,18 @@
         Title="MainWindow" Height="450" Width="1200" Loaded="OnLoadad">
   <!--<Window.DataContext>    <local:MainViewModel/>  </Window.DataContext>-->
   <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="99*"/>
+      <RowDefinition Height="116*"/>
+    </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="1*"/>
-      <ColumnDefinition Width="1*"/>
-      <ColumnDefinition Width="8*"/>
+      <ColumnDefinition Width="10*"/>
     </Grid.ColumnDefinitions>
 
-    <oxy:PlotView Model="{Binding FuncModel}" />
-    <oxy:PlotView Model="{Binding ScatModel}" Grid.Column="2"/>
+    <oxy:PlotView Model="{Binding FuncModel}" Grid.Row="0" />
 
-    <oxy:Plot Title="{Binding Title}" Grid.Column="1">
+    <oxy:Plot Title="{Binding Title}" Grid.Column="0" Grid.Row="1">
       <oxy:Plot.Series>
         <oxy:LineSeries ItemsSource="{Binding PointsTV}"/>
         <oxy:LineSeries ItemsSource="{Binding PointsFV}"/>
@@ -23,6 +25,8 @@
         <oxy:LineSeries ItemsSource="{Binding PointsFT}"/>
       </oxy:Plot.Series>
     </oxy:Plot>
+    
+    <oxy:PlotView Model="{Binding ScatModel}" Grid.Column="1" Grid.RowSpan="2"/>
 
     <Button IsDefault="True" Click="OnLoadad" VerticalAlignment="Top" HorizontalAlignment="Right" />
     <Button IsCancel="True"  Click="OnClose"  VerticalAlignment="Top" HorizontalAlignment="Right" />

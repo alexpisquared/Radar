@@ -84,7 +84,6 @@ public class OpenWeatherRevisit2022
     catch (Exception ex) { WriteLine(ex); throw; }
   }
 
-
 //  async Task<bool> GetIt(
 //    string code,
 //    double lat = +43.8001,
