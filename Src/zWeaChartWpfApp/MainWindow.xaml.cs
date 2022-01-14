@@ -13,10 +13,8 @@ public partial class MainWindow : Window
 
   async void OnLoadad(object sender, RoutedEventArgs e)
   {
-    //await Task.Delay(100);
-    var ataContext = new MainViewModel();
-    bool rv = await ataContext.PopulateAsync();
-    var rrv = rv;
+    MainViewModel ataContext = new();
+    _ = await ataContext.PopulateAsync();
     DataContext = ataContext;
   }
 }

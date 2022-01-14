@@ -221,7 +221,7 @@ namespace RadarPicCollect
       return bmp;
     }
 
-    static readonly SortedList<DateTime, Bitmap> _cache = new SortedList<DateTime, Bitmap>();
+    static readonly SortedList<DateTime, Bitmap> _cache = new();
 
     public static string GetRainForecastReport()
     {
