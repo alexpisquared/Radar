@@ -5,6 +5,7 @@ using OpenWeather2022.Response;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
+using static OpenWeather2022.OpenWea;
 
 namespace zWeaChartWpfApp;
 
@@ -30,76 +31,92 @@ public class MainViewModel
 
   async Task PopulateScatModelAsync()
   {
-    var owd = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], 43.8374229, -79.4961442); // PHC107
-    ArgumentNullException.ThrowIfNull(owd);
+    var oca = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.OneCallApi, 43.8374229, -79.4961442) as RootobjectOneCallApi; // PHC107
+    var d53 = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; // PHC107
+    
+    ArgumentNullException.ThrowIfNull(oca);
+    ArgumentNullException.ThrowIfNull(d53);
 
     var sctrSeries = new ScatterSeries { MarkerType = MarkerType.Circle };
     var lineSeries = new LineSeries { MarkerType = MarkerType.Triangle };
 
-    var timeMin = DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(owd.daily.Min(d => d.dt - 07 * 3600)));
-    var timeMax = DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(owd.daily.Max(d => d.dt + 12 * 3600)));
-    var valueMin = owd.daily.Min(r => r.temp.min);
-    var valueMax = owd.daily.Max(r => r.temp.max);
+    var timeMin = DateTimeAxis.ToDouble(OpenWea.UnixToDt(oca.daily.Min(d => d.dt - 07 * 3600)));
+    var timeMax = DateTimeAxis.ToDouble(OpenWea.UnixToDt(oca.daily.Max(d => d.dt + 12 * 3600)));
+    var valueMin = oca.daily.Min(r => r.temp.min);
+    var valueMax = oca.daily.Max(r => r.temp.max);
 
     ScatModel.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Minimum = timeMin, Maximum = timeMax, StringFormat = "ddd HH" });
 
-    owd.hourly.ToList().ForEach(x =>
+    oca.hourly.ToList().ForEach(x =>
     {
-      sctrSeries.Points.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt)), x.temp, 6, 630));
-      sctrSeries.Points.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt)), x.feels_like, 3, 530));
+      sctrSeries.Points.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.temp, 6, 630));
+      sctrSeries.Points.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.feels_like, 3, 530));
 
-      sctrSeries.Points.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt)), x.wind_speed, 3, 300));
-      sctrSeries.Points.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt)), x.wind_gust, 2, 300));
+      sctrSeries.Points.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_speed, 3, 300));
+      sctrSeries.Points.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_gust, 2, 300));
 
-      PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt)), x.temp));
-      PointsFeel.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt)), x.feels_like));
-      PointsWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt)), x.wind_speed));
-      PointsGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt)), x.wind_gust));
+      PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.temp));
+      PointsFeel.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.feels_like));
+      PointsWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_speed));
+      PointsGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_gust));
     });
 
     PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), valueMax - 5));
     PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), valueMin));
 
-    owd.daily.Where(d => d.dt > owd.hourly.Max(d => d.dt)).ToList().ForEach(x =>
+    oca.daily.Where(d => d.dt > oca.hourly.Max(d => d.dt)).ToList().ForEach(x =>
     {
-      PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt + _m)), x.temp.morn));
-      PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt + _d)), x.temp.day));
-      PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt + _e)), x.temp.eve));
-      PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt + _n)), x.temp.night));
-      PointsWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt)), x.wind_speed));
-      PointsGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt)), x.wind_gust));
+      PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), x.temp.morn));
+      PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _d)), x.temp.day));
+      PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _e)), x.temp.eve));
+      PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), x.temp.night));
+      PointsWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_speed));
+      PointsGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_gust));
     });
 
-    owd.daily.ToList().ForEach(x =>
+    d53.list.ToList().ForEach(x =>
     {
-      if (OpenWea.UnixTimeStampToDateTime(x.sunset) > DateTime.Now)
+      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), x.main.temp, 14, 600));
+      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), x.main.feels_like, 14, 600));
+
+      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), x.wind.speed, 14, 600));
+      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), x.wind.gust, 14, 600));
+      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), x.snow?._3h ??0 , x.snow?._3h ??0 , 700));
+      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), x.pop * 10, x.pop, 700));
+
+      lineSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), x.main. temp));
+    });
+
+    oca?.daily?.ToList().ForEach(x =>
+    {
+      if (OpenWea.UnixToDt(x.sunset) > DateTime.Now)
       {
-        PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.sunrise)), valueMin));
-        PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.sunrise)), valueMax));
-        PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.sunset)), valueMax));
-        PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.sunset)), valueMin));
+        PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.sunrise)), valueMin));
+        PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.sunrise)), valueMax));
+        PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.sunset)), valueMax));
+        PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.sunset)), valueMin));
       }
 
-      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt + _m)), x.temp.morn, 4, 0));
-      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt + _d)), x.temp.day, 4, 750));
-      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt + _e)), x.temp.eve, 4, 1000));
-      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt + _n)), x.temp.night, 4, 333));
+      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), x.temp.morn, 4, 0));
+      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _d)), x.temp.day, 4, 750));
+      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _e)), x.temp.eve, 4, 1000));
+      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), x.temp.night, 4, 333));
 
-      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt + _m)), x.feels_like.morn, 2, 0));
-      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt + _d)), x.feels_like.day, 2, 750));
-      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt + _e)), x.feels_like.eve, 2, 1000));
-      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt + _n)), x.feels_like.night, 2, 333));
+      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), x.feels_like.morn, 2, 0));
+      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _d)), x.feels_like.day, 2, 750));
+      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _e)), x.feels_like.eve, 2, 1000));
+      sctrSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), x.feels_like.night, 2, 333));
 
-      lineSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt + _m)), x.temp.morn));
-      lineSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt + _d)), x.temp.day));
-      lineSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt + _e)), x.temp.eve));
-      lineSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt + _n)), x.temp.night));
+      lineSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), x.temp.morn));
+      lineSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _d)), x.temp.day));
+      lineSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _e)), x.temp.eve));
+      lineSeries.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), x.temp.night));
 
-      sctrSeries.Points.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt)), x.wind_speed, 3, 300));
-      sctrSeries.Points.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt)), x.wind_gust, 2, 300));
-      sctrSeries.Points.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt)), x.pop * 10,x.pop, 700));
-      sctrSeries.Points.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt)), x.snow, x.snow, 990));
-      sctrSeries.Points.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixTimeStampToDateTime(x.dt)), x.rain, x.rain, 500));
+      sctrSeries.Points.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_speed, 3, 300));
+      sctrSeries.Points.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_gust, 2, 300));
+      sctrSeries.Points.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 10, x.pop, 700));
+      sctrSeries.Points.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.snow, x.snow, 990));
+      sctrSeries.Points.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.rain, x.rain, 500));
     });
 
     ScatModel.Series.Add(sctrSeries);
@@ -109,11 +126,11 @@ public class MainViewModel
   }
   async Task PopulateOpenWeathAsync()
   {
-    var occ = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], 43.8374229, -79.4961442); // PHC107
-    var oct = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], 43.7181557, -79.5181414); // 400x401
+    //var occ = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.OneCallApi, 43.8374229, -79.4961442) as RootobjectOneCallApi; // PHC107
+    //var oct = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.OneCallApi, 43.7181557, -79.5181414) as RootobjectOneCallApi; // 400x401
 
-    CopyOpenWeaToPointsLists(occ, PointsTempC, PointsFeelC);
-    CopyOpenWeaToPointsLists(oct, PointsTempT, PointsFeelT);
+    //CopyOpenWeaToPointsLists(occ, PointsTempC, PointsFeelC);
+    //CopyOpenWeaToPointsLists(oct, PointsTempT, PointsFeelT);
   }
   async Task PopulateFuncModelAsync() { await Task.Yield(); FuncModel.Series.Add(new FunctionSeries(Math.Cos, 0, 10, 0.1, "cos(x)")); }
 

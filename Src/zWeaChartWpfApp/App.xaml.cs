@@ -6,7 +6,7 @@ public partial class App : Application
 {
   protected override async void OnStartup(StartupEventArgs e)
   {
-#if DEBUG
+#if DEBUG_
     var config = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
     Trace.WriteLine($"---   WhereAmI: '{config["WhereAmI"]}'       {config["AppSecrets:MagicNumber"]}");
 
@@ -17,6 +17,8 @@ public partial class App : Application
     var rv = await new OpenWeather2022.OpenWea().ParseJsonToClasses(config["AppSecrets:MagicNumber"]);
     Current.Shutdown();
 #endif
+
+    new MainWindow().Show();  
 
     base.OnStartup(e);
   }
