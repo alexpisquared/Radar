@@ -2,33 +2,31 @@
 using OpenWeather2022.Response;
 namespace OpenWeather2022;
 
-// Vaughan,ON ::: 43.8370636,-79.6359808
-// Concord,ON ::: 43.8075917,-79.5431195
-// Toronto,ON ::: 43.7181557,-79.5181414
-public class OpenWeatherRevisit2022
+// PHC107         43.8374229, -79.4961442
+// Vaughan,ON ::: 43.8370636, -79.6359808
+// Concord,ON ::: 43.8075917, -79.5431195
+// Toronto,ON ::: 43.7181557, -79.5181414
+public class OpenWea
 {
-  public async Task<bool> OpenWea(string code)
+  public async Task<bool> ParseJsonToClasses(string code)
   {
-    Write($"{DateTimeToUnixTimestamp(DateTime.Today)}\n{DateTimeToUnixTimestamp(DateTime.Now)}\n{DateTimeToUnixTimestamp(DateTime.UtcNow)} *******\n");
+    Write($"Today {DateTimeToUnixTimestamp(DateTime.Today)}\n  now {DateTimeToUnixTimestamp(DateTime.Now)}\n  UTC {DateTimeToUnixTimestamp(DateTime.UtcNow)} *******\n");
 
     var sr = new List<int>(_sunrizes);
     var min = sr.Min();
     var dt = 0;
     //foreach (int sunrize in sr.Distinct().OrderBy(r => r)) { Write($"  {sunrize}, // {UnixTimeStampToDateTime(sunrize)}  {sunrize - dt - 86400} \n"); dt = sunrize; }
 
-    for (int i = -5; i <= 0; i++) { _ = await GetIt(code, what: OpenWeatherCd.TimeMachin, time: DateTimeToUnixTimestamp(DateTime.Today.AddDays(i)).ToString()); await Task.Delay(1111); }
+    //for (int i = -5; i <= 0; i++) { _ = await GetIt(code, what: OpenWeatherCd.TimeMachin, time: DateTimeToUnixTimestamp(DateTime.Today.AddDays(i)).ToString()); await Task.Delay(1111); }
     ////await Test_(code, what: OpenWeatherCd.Forecast16);
     ////await Test_(code, what: OpenWeatherCd.CurrentWea);
-    //await GetIt(code, what: OpenWeatherCd.OneCallApi);
+    await GetIt(code, what: OpenWeatherCd.Frc5Day3Hr);
 
     await Task.Yield();
     return true;
   }
-  public async Task<RootobjectOneCallApi?> GetIt(
-    string code,
-    double lat = +43.8001,
-    double lon = -79.4829,
-    string city = "Toronto,ON,CA",
+  public async Task<RootobjectOneCallApi?> GetIt(string code, double lat = 43.8374229, double lon = -79.4961442, // PHC107  
+    string city = "Vaughan,ON,CA",
     string xtra = "&cnt=16",        // 16 is MAX.
     string time = "1586468027",
     string frmt = "json",           // XML gives readable time for sunrise!!!
@@ -39,14 +37,17 @@ public class OpenWeatherRevisit2022
     var sw = Stopwatch.StartNew();
     try
     {
+      var url_ = _url[(int)what];
       var url = what switch
       {
-        OpenWeatherCd.TimeMachin => $"{Forecast16__}lat={lat}&lon={lon}&units=metric&dt={time}&appid={code}", // openweathermap.org/api/one-call-api --5 days back only.
-        OpenWeatherCd.Forecast16 => $"{CurrentWea__}q={city}&units=metric&mode={frmt}{xtra}&appid={code}",    // openweathermap.org/forecast16          
-        OpenWeatherCd.CurrentWea => $"{TimeMachin__}q={city}&units=metric&mode={frmt}&appid={code}",          // openweathermap.org/current        
-        OpenWeatherCd.WeathrMaps => $"{WeathrMaps__}?date={time}&opacity=0.9&fill_bound=true&appid={code}",   //                                   <== needs $ subs-n it seemes.
-        OpenWeatherCd.Forecast30 => $"{Forecast30__}q=London&appid={code}",                                   // openweathermap.org/api/forecast30 <== needs $ subs-n it seemes.      
-        OpenWeatherCd.OneCallApi => $"{OneCallApi__}lat={lat}&lon={lon}&units=metric{excl}&appid={code}",     // openweathermap.org/api/one-call-api
+        //todo: fix what/url mismatch:
+        //OpenWeatherCd.TimeMachin => $"{url_}lat={lat}&lon={lon}&units=metric&dt={time}&appid={code}",
+        //OpenWeatherCd.Forecast16 => $"{url_}q={city}&units=metric&mode={frmt}{xtra}&appid={code}",
+        //OpenWeatherCd.CurrentWea => $"{url_}q={city}&units=metric&mode={frmt}&appid={code}",
+        OpenWeatherCd.WeathrMaps => $"{url_}?date={time}&opacity=0.9&fill_bound=true&appid={code}",
+        OpenWeatherCd.Forecast30 => $"{url_}q={city}&units=metric&appid={code}",
+        OpenWeatherCd.OneCallApi => $"{url_}appid={code}&units=metric&lat={lat}&lon={lon}&{excl}",
+        OpenWeatherCd.Frc5Day3Hr => $"{url_}q={city}&units=metric&appid={code}",
         _ => "",
       };
 
@@ -56,8 +57,8 @@ public class OpenWeatherRevisit2022
 
 #if NotSaveToFile
       var json = await response.Content.ReadAsStringAsync();
-      WriteLine(json);
-      await System.IO.File.WriteAllTextAsync($@"..\..\..\JsonResults\{city}-{xtra}-{what}-{DateTime.Now:yyMMdd·HHmmss}.{frmt}", json);
+      WriteLine($":> {what}  =>  {url}  ==>  {json}");
+      //await System.IO.File.WriteAllTextAsync($@"..\..\..\JsonResults\{city}-{xtra}-{what}-{DateTime.Now:yyMMdd·HHmmss}.{frmt}", json);
 #else
       switch (what) //todo: https://docs.microsoft.com/en-us/aspnet/core/web-api/route-to-code?view=aspnetcore-6.; break ;
       {
@@ -73,7 +74,12 @@ public class OpenWeatherRevisit2022
           oca?.hourly.ToList().ForEach(x => WriteLine($":> {UnixTimeStampToDateTime(x.dt):ddd HH}  {x.temp,6:N1}  {x.feels_like,6:N1}  {x.wind_speed,5:N0}  {x}"));
           oca?.minutely.ToList().ForEach(x => WriteLine($":> {UnixTimeStampToDateTime(x.dt):ddd HH:mm}  {x.precipitation,5:N0}  {x}"));
           break;
-        default: throw new NotImplementedException();
+        case OpenWeatherCd.Frc5Day3Hr:
+          var d5h3 = await response.Content.ReadFromJsonAsync<RootobjectFrc5Day3Hr>();
+          WriteLine($":> {d5h3}");
+          d5h3?.list.ToList().ForEach(x => WriteLine($":> {UnixTimeStampToDateTime(x.dt):ddd HH}  {x.main.temp,6:N1}  {x.main.feels_like,6:N1}  {x.wind.speed,5:N0}  {x.weather[0].main,-22}  {x}"));
+          break;
+        default: throw new NotImplementedException("@@@@@@@@@@@@#############$$$$$$$$$$$$$");
       }
 #endif
 
@@ -84,80 +90,84 @@ public class OpenWeatherRevisit2022
     catch (Exception ex) { WriteLine(ex); throw; }
   }
 
-//  async Task<bool> GetIt(
-//    string code,
-//    double lat = +43.8001,
-//    double lon = -79.4829,
-//    string city = "Toronto,ON,CA",
-//    string xtra = "&cnt=16",        // 16 is MAX.
-//    string time = "1586468027",
-//    string frmt = "json",           // XML gives readable time for sunrise!!!
-//    string excl = "", // &exclude=hourly,daily",
-//    OpenWeatherCd what = OpenWeatherCd.TimeMachin)
-//  {
-//    var sw = Stopwatch.StartNew();
-//    try
-//    {
-//      var url = what switch
-//      {
-//        OpenWeatherCd.TimeMachin => $"{Forecast16__}lat={lat}&lon={lon}&units=metric&dt={time}&appid={code}", // openweathermap.org/api/one-call-api --5 days back only.
-//        OpenWeatherCd.Forecast16 => $"{CurrentWea__}q={city}&units=metric&mode={frmt}{xtra}&appid={code}",    // openweathermap.org/forecast16          
-//        OpenWeatherCd.CurrentWea => $"{TimeMachin__}q={city}&units=metric&mode={frmt}&appid={code}",          // openweathermap.org/current        
-//        OpenWeatherCd.WeathrMaps => $"{WeathrMaps__}?date={time}&opacity=0.9&fill_bound=true&appid={code}",   //                                   <== needs $ subs-n it seemes.
-//        OpenWeatherCd.Forecast30 => $"{Forecast30__}q=London&appid={code}",                                   // openweathermap.org/api/forecast30 <== needs $ subs-n it seemes.      
-//        OpenWeatherCd.OneCallApi => $"{OneCallApi__}lat={lat}&lon={lon}&units=metric{excl}&appid={code}",     // openweathermap.org/api/one-call-api
-//        _ => "",
-//      };
+  //  async Task<bool> GetIt(
+  //    string code,
+  //    double lat = +43.8001,
+  //    double lon = -79.4829,
+  //    string city = "Toronto,ON,CA",
+  //    string xtra = "&cnt=16",        // 16 is MAX.
+  //    string time = "1586468027",
+  //    string frmt = "json",           // XML gives readable time for sunrise!!!
+  //    string excl = "", // &exclude=hourly,daily",
+  //    OpenWeatherCd what = OpenWeatherCd.TimeMachin)
+  //  {
+  //    var sw = Stopwatch.StartNew();
+  //    try
+  //    {
+  //      var url = what switch
+  //      {
+  //        OpenWeatherCd.TimeMachin => $"{Forecast16__}lat={lat}&lon={lon}&units=metric&dt={time}&appid={code}", // openweathermap.org/api/one-call-api --5 days back only.
+  //        OpenWeatherCd.Forecast16 => $"{CurrentWea__}q={city}&units=metric&mode={frmt}{xtra}&appid={code}",    // openweathermap.org/forecast16          
+  //        OpenWeatherCd.CurrentWea => $"{TimeMachin__}q={city}&units=metric&mode={frmt}&appid={code}",          // openweathermap.org/current        
+  //        OpenWeatherCd.WeathrMaps => $"{WeathrMaps__}?date={time}&opacity=0.9&fill_bound=true&appid={code}",   //                                   <== needs $ subs-n it seemes.
+  //        OpenWeatherCd.Forecast30 => $"{Forecast30__}q=London&appid={code}",                                   // openweathermap.org/api/forecast30 <== needs $ subs-n it seemes.      
+  //        OpenWeatherCd.OneCallApi => $"{OneCallApi__}lat={lat}&lon={lon}&units=metric{excl}&appid={code}",     // openweathermap.org/api/one-call-api
+  //        _ => "",
+  //      };
 
-//      using var client = new HttpClient();
-//      var response = await client.GetAsync(url);
-//      if (response == null || response.StatusCode == System.Net.HttpStatusCode.NotFound) return false;
+  //      using var client = new HttpClient();
+  //      var response = await client.GetAsync(url);
+  //      if (response == null || response.StatusCode == System.Net.HttpStatusCode.NotFound) return false;
 
-//#if NotSaveToFile
-//      var json = await response.Content.ReadAsStringAsync();
-//      WriteLine(json);
-//      await System.IO.File.WriteAllTextAsync($@"..\..\..\JsonResults\{city}-{xtra}-{what}-{DateTime.Now:yyMMdd·HHmmss}.{frmt}", json);
-//#else
-//      switch (what) //todo: https://docs.microsoft.com/en-us/aspnet/core/web-api/route-to-code?view=aspnetcore-6.; break ;
-//      {
-//        case OpenWeatherCd.Forecast16: var f16 = await response.Content.ReadFromJsonAsync<RootobjectForecast16>(); f16?.list.ToList().ForEach(x => WriteLine($":> {UnixTimeStampToDateTime(x.sunrise)}  {UnixTimeStampToDateTime(x.sunset)}  {x}")); break;
-//        case OpenWeatherCd.CurrentWea: var pr5 = await response.Content.ReadFromJsonAsync<RootobjectCurrentWea>(); pr5?.weather.ToList().ForEach(x => WriteLine($":> {x}")); break;
-//        case OpenWeatherCd.TimeMachin: var tmn = await response.Content.ReadFromJsonAsync<RootobjectOneCallApi>(); WriteLine($":> {UnixTimeStampToDateTime(tmn.current.sunrise)}  {UnixTimeStampToDateTime(tmn.current.sunset)}  {tmn}");          /*tmn?.hourly.ToList().ForEach(x => WriteLine($":> {x}"));*/          break;
-//        case OpenWeatherCd.OneCallApi:
-//          var och = await response.Content.ReadFromJsonAsync<RootobjectOneCallApi>();
-//          och?.hourly.ToList().ForEach(x => WriteLine($":> {UnixTimeStampToDateTime(x.dt):ddd HH}  {x.temp,6:N1}  {x.feels_like,6:N1}  {x.wind_speed,5:N0}  {x}"));
-//          och?.minutely.ToList().ForEach(x => WriteLine($":> {UnixTimeStampToDateTime(x.dt):ddd HH:mm}  {x.precipitation,5:N0}  {x}"));
-//          break;
-//        default: throw new NotImplementedException();
-//      }
-//#endif
+  //#if NotSaveToFile
+  //      var json = await response.Content.ReadAsStringAsync();
+  //      WriteLine(json);
+  //      await System.IO.File.WriteAllTextAsync($@"..\..\..\JsonResults\{city}-{xtra}-{what}-{DateTime.Now:yyMMdd·HHmmss}.{frmt}", json);
+  //#else
+  //      switch (what) //todo: https://docs.microsoft.com/en-us/aspnet/core/web-api/route-to-code?view=aspnetcore-6.; break ;
+  //      {
+  //        case OpenWeatherCd.Forecast16: var f16 = await response.Content.ReadFromJsonAsync<RootobjectForecast16>(); f16?.list.ToList().ForEach(x => WriteLine($":> {UnixTimeStampToDateTime(x.sunrise)}  {UnixTimeStampToDateTime(x.sunset)}  {x}")); break;
+  //        case OpenWeatherCd.CurrentWea: var pr5 = await response.Content.ReadFromJsonAsync<RootobjectCurrentWea>(); pr5?.weather.ToList().ForEach(x => WriteLine($":> {x}")); break;
+  //        case OpenWeatherCd.TimeMachin: var tmn = await response.Content.ReadFromJsonAsync<RootobjectOneCallApi>(); WriteLine($":> {UnixTimeStampToDateTime(tmn.current.sunrise)}  {UnixTimeStampToDateTime(tmn.current.sunset)}  {tmn}");          /*tmn?.hourly.ToList().ForEach(x => WriteLine($":> {x}"));*/          break;
+  //        case OpenWeatherCd.OneCallApi:
+  //          var och = await response.Content.ReadFromJsonAsync<RootobjectOneCallApi>();
+  //          och?.hourly.ToList().ForEach(x => WriteLine($":> {UnixTimeStampToDateTime(x.dt):ddd HH}  {x.temp,6:N1}  {x.feels_like,6:N1}  {x.wind_speed,5:N0}  {x}"));
+  //          och?.minutely.ToList().ForEach(x => WriteLine($":> {UnixTimeStampToDateTime(x.dt):ddd HH:mm}  {x.precipitation,5:N0}  {x}"));
+  //          break;
+  //        default: throw new NotImplementedException();
+  //      }
+  //#endif
 
-//      WriteLine($"*** {what} ==> {sw.ElapsedMilliseconds}ms");
-//      return url != null;
-//    }
-//    catch (Exception ex) { WriteLine(ex); throw; }
-//  }
+  //      WriteLine($"*** {what} ==> {sw.ElapsedMilliseconds}ms");
+  //      return url != null;
+  //    }
+  //    catch (Exception ex) { WriteLine(ex); throw; }
+  //  }
 
   public static DateTime UnixTimeStampToDateTime(double unixTimeStamp) => new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(unixTimeStamp).ToLocalTime();  // Unix timestamp is seconds past epoch
   public static double DateTimeToUnixTimestamp(DateTime dateTime) => (TimeZoneInfo.ConvertTimeToUtc(dateTime) - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
 
   public enum OpenWeatherCd
   {
-    Forecast16,
-    CurrentWea,
-    TimeMachin,
-    WeathrMaps,
-    Forecast30,
-    OneCallApi
+    Forecast16, // openweathermap.org/api/one-call-api   5 days back only.           
+    CurrentWea, // openweathermap.org/forecast16          
+    TimeMachin, // openweathermap.org/current        
+    WeathrMaps, //                                   <== needs $ subs-n it seemes.
+    Forecast30, // openweathermap.org/api/forecast30 <== needs $ subs-n it seemes.   
+    OneCallApi, // openweathermap.org/api/one-call-api
+    Frc5Day3Hr  // openweathermap.org/forecast5
   }
 
-  const string
-    Forecast16__ = "https://api.openweathermap.org/data/2.5/onecall/timemachine?",
-    CurrentWea__ = "https://api.openweathermap.org/data/2.5/forecast/daily?",
-    TimeMachin__ = "https://api.openweathermap.org/data/2.5/weather?",
-    WeathrMaps__ = "http://maps.openweathermap.org/maps/2.0/weather/TA2/1/48/78?",
-    Forecast30__ = "https://pro.openweathermap.org/data/2.5/forecast/climate?",
-    OneCallApi__ = "https://api.openweathermap.org/data/2.5/onecall?";
+  string[] _url = new string[]
+  {
+    "https://api.openweathermap.org/data/2.5/onecall/timemachine?",
+    "https://api.openweathermap.org/data/2.5/forecast/daily?",
+    "https://api.openweathermap.org/data/2.5/weather?",
+    "http://maps.openweathermap.org/maps/2.0/weather/TA2/1/48/78?",
+    "https://pro.openweathermap.org/data/2.5/forecast/climate?",
+    "https://api.openweathermap.org/data/2.5/onecall?",
+    "https://api.openweathermap.org/data/2.5/forecast?"
+  };
 
   int[] _sunrizes = new int[] {
   1640868706, // 2021-12-30 07:51:46  1640782306 

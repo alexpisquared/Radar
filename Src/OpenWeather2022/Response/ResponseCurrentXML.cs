@@ -1,11 +1,11 @@
-﻿/*namespace Radar.JsonResults.XML;
+﻿namespace OpenWeather2022.Response;
 
 // NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-[System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+[Serializable()]
+[System.ComponentModel.DesignerCategory("code")]
+[System.Xml.Serialization.XmlType(AnonymousType = true)]
+[System.Xml.Serialization.XmlRoot(Namespace = "", IsNullable = false)]
 public partial class current
 {
 
@@ -110,9 +110,9 @@ public partial class current
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[Serializable()]
+[System.ComponentModel.DesignerCategory("code")]
+[System.Xml.Serialization.XmlType(AnonymousType = true)]
 public partial class currentCity
 {
 
@@ -157,7 +157,7 @@ public partial class currentCity
   }
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public uint id
   {
     get => idField;
@@ -165,7 +165,7 @@ public partial class currentCity
   }
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public string name
   {
     get => nameField;
@@ -174,9 +174,9 @@ public partial class currentCity
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[Serializable()]
+[System.ComponentModel.DesignerCategory("code")]
+[System.Xml.Serialization.XmlType(AnonymousType = true)]
 public partial class currentCityCoord
 {
 
@@ -185,7 +185,7 @@ public partial class currentCityCoord
   private decimal latField;
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public decimal lon
   {
     get => lonField;
@@ -193,7 +193,7 @@ public partial class currentCityCoord
   }
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public decimal lat
   {
     get => latField;
@@ -202,27 +202,27 @@ public partial class currentCityCoord
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[Serializable()]
+[System.ComponentModel.DesignerCategory("code")]
+[System.Xml.Serialization.XmlType(AnonymousType = true)]
 public partial class currentCitySun
 {
 
-  private System.DateTime riseField;
+  private DateTime riseField;
 
-  private System.DateTime setField;
+  private DateTime setField;
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
-  public System.DateTime rise
+  [System.Xml.Serialization.XmlAttribute()]
+  public DateTime rise
   {
     get => riseField;
     set => riseField = value;
   }
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
-  public System.DateTime set
+  [System.Xml.Serialization.XmlAttribute()]
+  public DateTime set
   {
     get => setField;
     set => setField = value;
@@ -230,9 +230,9 @@ public partial class currentCitySun
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[Serializable()]
+[System.ComponentModel.DesignerCategory("code")]
+[System.Xml.Serialization.XmlType(AnonymousType = true)]
 public partial class currentTemperature
 {
 
@@ -245,7 +245,7 @@ public partial class currentTemperature
   private string unitField;
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public decimal value
   {
     get => valueField;
@@ -253,7 +253,7 @@ public partial class currentTemperature
   }
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public decimal min
   {
     get => minField;
@@ -261,7 +261,7 @@ public partial class currentTemperature
   }
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public decimal max
   {
     get => maxField;
@@ -269,7 +269,7 @@ public partial class currentTemperature
   }
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public string unit
   {
     get => unitField;
@@ -278,9 +278,9 @@ public partial class currentTemperature
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[Serializable()]
+[System.ComponentModel.DesignerCategory("code")]
+[System.Xml.Serialization.XmlType(AnonymousType = true)]
 public partial class currentFeels_like
 {
 
@@ -289,7 +289,7 @@ public partial class currentFeels_like
   private string unitField;
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public decimal value
   {
     get => valueField;
@@ -297,7 +297,7 @@ public partial class currentFeels_like
   }
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public string unit
   {
     get => unitField;
@@ -306,9 +306,9 @@ public partial class currentFeels_like
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[Serializable()]
+[System.ComponentModel.DesignerCategory("code")]
+[System.Xml.Serialization.XmlType(AnonymousType = true)]
 public partial class currentHumidity
 {
 
@@ -317,7 +317,7 @@ public partial class currentHumidity
   private string unitField;
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public byte value
   {
     get => valueField;
@@ -325,7 +325,7 @@ public partial class currentHumidity
   }
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public string unit
   {
     get => unitField;
@@ -334,9 +334,9 @@ public partial class currentHumidity
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[Serializable()]
+[System.ComponentModel.DesignerCategory("code")]
+[System.Xml.Serialization.XmlType(AnonymousType = true)]
 public partial class currentPressure
 {
 
@@ -345,7 +345,7 @@ public partial class currentPressure
   private string unitField;
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public ushort value
   {
     get => valueField;
@@ -353,7 +353,7 @@ public partial class currentPressure
   }
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public string unit
   {
     get => unitField;
@@ -362,9 +362,9 @@ public partial class currentPressure
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[Serializable()]
+[System.ComponentModel.DesignerCategory("code")]
+[System.Xml.Serialization.XmlType(AnonymousType = true)]
 public partial class currentWind
 {
 
@@ -397,9 +397,9 @@ public partial class currentWind
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[Serializable()]
+[System.ComponentModel.DesignerCategory("code")]
+[System.Xml.Serialization.XmlType(AnonymousType = true)]
 public partial class currentWindSpeed
 {
 
@@ -410,7 +410,7 @@ public partial class currentWindSpeed
   private string nameField;
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public decimal value
   {
     get => valueField;
@@ -418,7 +418,7 @@ public partial class currentWindSpeed
   }
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public string unit
   {
     get => unitField;
@@ -426,7 +426,7 @@ public partial class currentWindSpeed
   }
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public string name
   {
     get => nameField;
@@ -435,16 +435,16 @@ public partial class currentWindSpeed
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[Serializable()]
+[System.ComponentModel.DesignerCategory("code")]
+[System.Xml.Serialization.XmlType(AnonymousType = true)]
 public partial class currentWindGusts
 {
 
   private decimal valueField;
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public decimal value
   {
     get => valueField;
@@ -453,9 +453,9 @@ public partial class currentWindGusts
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[Serializable()]
+[System.ComponentModel.DesignerCategory("code")]
+[System.Xml.Serialization.XmlType(AnonymousType = true)]
 public partial class currentWindDirection
 {
 
@@ -466,7 +466,7 @@ public partial class currentWindDirection
   private string nameField;
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public ushort value
   {
     get => valueField;
@@ -474,7 +474,7 @@ public partial class currentWindDirection
   }
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public string code
   {
     get => codeField;
@@ -482,7 +482,7 @@ public partial class currentWindDirection
   }
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public string name
   {
     get => nameField;
@@ -491,9 +491,9 @@ public partial class currentWindDirection
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[Serializable()]
+[System.ComponentModel.DesignerCategory("code")]
+[System.Xml.Serialization.XmlType(AnonymousType = true)]
 public partial class currentClouds
 {
 
@@ -502,7 +502,7 @@ public partial class currentClouds
   private string nameField;
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public byte value
   {
     get => valueField;
@@ -510,7 +510,7 @@ public partial class currentClouds
   }
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public string name
   {
     get => nameField;
@@ -519,16 +519,16 @@ public partial class currentClouds
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[Serializable()]
+[System.ComponentModel.DesignerCategory("code")]
+[System.Xml.Serialization.XmlType(AnonymousType = true)]
 public partial class currentVisibility
 {
 
   private ushort valueField;
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public ushort value
   {
     get => valueField;
@@ -537,16 +537,16 @@ public partial class currentVisibility
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[Serializable()]
+[System.ComponentModel.DesignerCategory("code")]
+[System.Xml.Serialization.XmlType(AnonymousType = true)]
 public partial class currentPrecipitation
 {
 
   private string modeField;
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public string mode
   {
     get => modeField;
@@ -555,9 +555,9 @@ public partial class currentPrecipitation
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[Serializable()]
+[System.ComponentModel.DesignerCategory("code")]
+[System.Xml.Serialization.XmlType(AnonymousType = true)]
 public partial class currentWeather
 {
 
@@ -568,7 +568,7 @@ public partial class currentWeather
   private string iconField;
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public ushort number
   {
     get => numberField;
@@ -576,7 +576,7 @@ public partial class currentWeather
   }
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public string value
   {
     get => valueField;
@@ -584,7 +584,7 @@ public partial class currentWeather
   }
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
+  [System.Xml.Serialization.XmlAttribute()]
   public string icon
   {
     get => iconField;
@@ -593,20 +593,19 @@ public partial class currentWeather
 }
 
 /// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[Serializable()]
+[System.ComponentModel.DesignerCategory("code")]
+[System.Xml.Serialization.XmlType(AnonymousType = true)]
 public partial class currentLastupdate
 {
 
-  private System.DateTime valueField;
+  private DateTime valueField;
 
   /// <remarks/>
-  [System.Xml.Serialization.XmlAttributeAttribute()]
-  public System.DateTime value
+  [System.Xml.Serialization.XmlAttribute()]
+  public DateTime value
   {
     get => valueField;
     set => valueField = value;
   }
 }
-*/

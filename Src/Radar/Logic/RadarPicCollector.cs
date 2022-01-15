@@ -22,8 +22,8 @@ namespace RadarPicCollect
 
     static readonly string[] _station = { "WKR",								     // king city - RAIN/SNOW
 																          "WSO" };                   // london    - RAIN/SNOW											
-    readonly Point[] _stationOffset = { new Point(0,0),				 // king city - RAIN/SNOW
-															          new Point(-292,131) };  // london    - RAIN/SNOW
+    readonly System.Drawing.Point[] _stationOffset = { new System.Drawing.Point(0,0),				 // king city - RAIN/SNOW
+															          new System.Drawing.Point(-292,131) };  // london    - RAIN/SNOW
 
     public int StationCount => _station.Length;
 

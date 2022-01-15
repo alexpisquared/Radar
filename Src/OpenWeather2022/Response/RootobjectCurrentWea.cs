@@ -1,6 +1,6 @@
 ﻿namespace OpenWeather2022.Response;
 
-public record RootobjectCurrentWea
+public partial record RootobjectCurrentWea
 {
   public Coord coord { get; set; }
   public Weather[] weather { get; set; }
@@ -17,7 +17,7 @@ public record RootobjectCurrentWea
   public int cod { get; set; }
 }
 
-public record Main
+public partial record Main
 {
   public float temp { get; set; }
   public float feels_like { get; set; }
@@ -27,19 +27,19 @@ public record Main
   public int humidity { get; set; }
 }
 
-public record Wind
+public partial record Wind
 {
   public float speed { get; set; }
   public int deg { get; set; }
   public float gust { get; set; }
 }
 
-public record Clouds
+public partial record Clouds
 {
   public int all { get; set; }
 }
 
-public record Sys
+public partial record Sys
 {
   public int type { get; set; }
   public int id { get; set; }

@@ -4,10 +4,7 @@ namespace zWeaChartWpfApp;
 
 public partial class MainWindow : Window
 {
-  public MainWindow()
-  {
-    InitializeComponent();
-  }
+  public MainWindow() => InitializeComponent();
 
   void OnClose(object sender, RoutedEventArgs e) => Close();
 
@@ -16,5 +13,6 @@ public partial class MainWindow : Window
     MainViewModel ataContext = new();
     _ = await ataContext.PopulateAsync();
     DataContext = ataContext;
+    Plot1.InvalidatePlot(true);
   }
 }

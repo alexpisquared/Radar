@@ -1,15 +1,15 @@
 ﻿namespace OpenWeather2022.Response;
 
-public record RootobjectForecast16 // ++Works
+public partial record RootobjectForecast16 // ++Works
 {
   public City city { get; set; }
   public string cod { get; set; }
   public float message { get; set; }
   public int cnt { get; set; }
-  public List[] list { get; set; }
+  public ListF16[] list { get; set; }
 }
 
-public record City
+public partial record City_
 {
   public int id { get; set; }
   public string name { get; set; }
@@ -19,13 +19,13 @@ public record City
   public int timezone { get; set; }
 }
 
-public record Coord
+public partial record Coord
 {
   public float lon { get; set; }
   public float lat { get; set; }
 }
 
-public record List
+public partial record ListF16
 {
   public int dt { get; set; }
   public int sunrise { get; set; }
@@ -44,7 +44,7 @@ public record List
   public float snow { get; set; }
 }
 
-public record Weather
+public partial record Weather
 {
   public int id { get; set; }
   public string main { get; set; }

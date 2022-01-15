@@ -1,6 +1,6 @@
 ﻿namespace OpenWeather2022.Response;
 
-public record RootobjectOneCallApi
+public partial record RootobjectOneCallApi
 {
   public float lat { get; set; }
   public float lon { get; set; }
@@ -12,7 +12,7 @@ public record RootobjectOneCallApi
   public Daily[] daily { get; set; }
 }
 
-public record Current
+public partial record Current
 {
   public int dt { get; set; }
   public int sunrise { get; set; }
@@ -31,13 +31,13 @@ public record Current
   public Weather[] weather { get; set; }
 }
 
-public record Minutely
+public partial record Minutely
 {
   public int dt { get; set; }
   public int precipitation { get; set; }
 }
 
-public record Hourly
+public partial record Hourly
 {
   public int dt { get; set; }
   public float temp { get; set; }
@@ -57,17 +57,17 @@ public record Hourly
   public Rain rain { get; set; }
 }
 
-public record Snow
+public partial record Snow
 {
   public float _1h { get; set; }
 }
 
-public record Rain
+public partial record Rain
 {
   public float _1h { get; set; }
 }
 
-public record Daily
+public partial record Daily
 {
   public int dt { get; set; }
   public int sunrise { get; set; }
@@ -91,7 +91,7 @@ public record Daily
   public float snow { get; set; }
 }
 
-public record Temp
+public partial record Temp
 {
   public float day { get; set; }
   public float min { get; set; }
@@ -101,7 +101,7 @@ public record Temp
   public float morn { get; set; }
 }
 
-public record Feels_Like
+public partial record Feels_Like
 {
   public float day { get; set; }
   public float night { get; set; }
