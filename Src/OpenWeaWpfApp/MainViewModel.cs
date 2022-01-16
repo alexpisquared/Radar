@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using Microsoft.Extensions.Configuration;
 using OpenWeather2022;
 using OpenWeather2022.Response;
 using OxyPlot;
@@ -7,13 +6,13 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using static OpenWeather2022.OpenWea;
 
-namespace zWeaChartWpfApp;
+namespace OpenWeaWpfApp;
 
 public class MainViewModel
 {
-  IConfigurationRoot _config;
-  OpenWea _opnwea;
-  int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _d3r = 4, _d3c = 600, _h = 999, _windClr = 333, _popClr = 0;
+  readonly IConfigurationRoot _config;
+  readonly OpenWea _opnwea;
+  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _d3r = 4, _d3c = 600, _h = 999, _windClr = 333, _popClr = 0;
 
   public MainViewModel()
   {
@@ -31,11 +30,8 @@ public class MainViewModel
 
   async Task PopulateScatModelAsync()
   {
-    var oca = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; // PHC107
-    var d53 = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; // PHC107
-
-    ArgumentNullException.ThrowIfNull(oca);
-    ArgumentNullException.ThrowIfNull(d53);
+    var oca = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(oca); // PHC107
+    var d53 = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(d53); // PHC107
 
     var scaters = new ScatterSeries { MarkerType = MarkerType.Circle };
     var lsDaily = new LineSeries { Color = OxyColor.FromRgb(255, 00, 00), BrokenLineStyle = LineStyle.Solid, StrokeThickness = 1 };
@@ -172,10 +168,10 @@ public class MainViewModel
   public ObservableCollection<DataPoint> PointsTempT { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> PointsFeelT { get; } = new ObservableCollection<DataPoint>();
 
-  public PlotModel FuncModel { get; private set; } = new PlotModel { Title = "FunctionSeries Example" };
-  public PlotModel ScatModel { get; private set; } = new PlotModel { Title = "ScatterSeries" };
+  public PlotModel FuncModel { get; private set; } = new PlotModel { Title = "Function Srs", Background = OxyColor.FromUInt32(123456), LegendTitleColor = OxyColor.FromUInt32(123456)};
+  public PlotModel ScatModel { get; private set; } = new PlotModel { Title = "Scatter Srs" };
 
-  public string Title { get; } = "Example 2";
+  public string Title { get; } = "Main VM !@##!@#!@";
 
 }
 ///todo: https://oxyplot.readthedocs.io/en/latest/models/series/ScatterSeries.html

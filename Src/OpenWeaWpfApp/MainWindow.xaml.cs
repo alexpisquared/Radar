@@ -1,8 +1,7 @@
-﻿namespace zWeaChartWpfApp;
+﻿namespace OpenWeaWpfApp;
 
 public partial class MainWindow : Window
 {
-  MainViewModel ataContext = new();
   public MainWindow()
   {
     InitializeComponent();
@@ -13,13 +12,15 @@ public partial class MainWindow : Window
       {
         case Key.I:
           Beep.Play();
-          Plot1.InvalidatePlot(true); break;
+          plotTR.InvalidatePlot(true); 
+          plotBR.InvalidatePlot(true); break;
         case Key.R:
           Hand.Play();
-          _ = await ataContext.PopulateAsync();
-          Plot1.InvalidatePlot(true); break;
-        default: Plot1.InvalidatePlot(true); break;
+          _ = await ((MainViewModel)DataContext).PopulateAsync();
+          plotTR.InvalidatePlot(true); 
+          plotBR.InvalidatePlot(true); break;
         case Key.Escape: base.OnKeyUp(e); Close(); break;
+        default: break;
       }
     };
   }
@@ -28,7 +29,7 @@ public partial class MainWindow : Window
 
   async void OnLoadad(object sender, RoutedEventArgs e)
   {
-    _ = await ataContext.PopulateAsync();
-    DataContext = ataContext;
+    ArgumentNullException.ThrowIfNull(DataContext, nameof(sender));
+    _ = await ((MainViewModel)DataContext).PopulateAsync();
   }
 }

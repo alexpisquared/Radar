@@ -1,0 +1,10 @@
+﻿global using System;
+global using System.Linq;
+global using System.Threading.Tasks;
+global using System.Windows;
+global using System.Windows.Input;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Hosting;
+global using static System.Diagnostics.Trace;
+global using static System.Media.SystemSounds;
