@@ -5,15 +5,15 @@
         AllowsTransparency="True" WindowStyle="None" ResizeMode="CanResizeWithGrip">
   <Grid>
     <Grid.RowDefinitions>
-      <RowDefinition Height="9*"/>
+      <RowDefinition Height="2*"/>
       <RowDefinition Height="2*"/>
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="1*"/>
-      <ColumnDefinition Width="5*"/>
+      <ColumnDefinition Width="7*"/>
     </Grid.ColumnDefinitions>
 
-    <oxy:PlotView Model="{Binding FuncModel}" Background="#555" Grid.Column="0" Grid.Row="0" Visibility="Collapsed" />
+    <oxy:PlotView Model="{Binding FuncModel}" Background="#555" Grid.Column="0" Grid.Row="0" Visibility="Visible" />
     <oxy:PlotView Model="{Binding ScatModel}" Background="#555" Grid.Column="1" Grid.Row="0" />
 
     <oxy:Plot Title="{Binding Title}" Background="#555" Grid.Column="0" Grid.Row="1" >
@@ -33,11 +33,12 @@
 
     <oxy:Plot Title="{Binding Title}" Background="#555" x:Name="Plot1" Grid.Column="1" Grid.Row="1" >
       <oxy:Plot.Series>
-        <oxy:LineSeries ItemsSource="{Binding PointsGust}" Color="#088" StrokeThickness="1" />
-        <oxy:AreaSeries ItemsSource="{Binding PointsWind}" Color="#0cc" Fill="#10cc" StrokeThickness="0.5" />
-        <oxy:AreaSeries ItemsSource="{Binding PointsTemp}" Color="#20f" Fill="#120f" StrokeThickness="0.5" />
-        <oxy:LineSeries ItemsSource="{Binding PointsFeel}" Color="#20f" />
-        <oxy:LineSeries ItemsSource="{Binding PointsSunT}" Color="#770" />
+        <oxy:LineSeries    ItemsSource="{Binding PointsGust}" Color="#088" StrokeThickness="1" Tag="Gust"/>
+        <oxy:AreaSeries    ItemsSource="{Binding PointsWind}" Color="#0cc" StrokeThickness="0.5" Fill="#10cc" />
+        <oxy:AreaSeries    ItemsSource="{Binding PointsTemp}" Color="#20f" StrokeThickness="0.5" Fill="#120f" />
+        <oxy:LineSeries    ItemsSource="{Binding PointsFeel}" Color="#20f" StrokeThickness="0.5" />
+        <oxy:ScatterSeries ItemsSource="{Binding PointsFeel}" />
+        <oxy:LineSeries    ItemsSource="{Binding PointsSunT}" Color="#770" />
       </oxy:Plot.Series>
       <oxy:Plot.Axes>
         <oxy:LinearAxis   Key="yAxis" TextColor="#ccc" IsZoomEnabled="False" IsPanEnabled="False" Position="Left"   MajorGridlineStyle="Dot" MajorGridlineColor="Gray" Title="Temp [°C]" />
