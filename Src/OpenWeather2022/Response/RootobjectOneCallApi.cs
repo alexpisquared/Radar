@@ -29,6 +29,8 @@ public partial record Current
   public int wind_deg { get; set; }
   public float wind_gust { get; set; }
   public Weather[] weather { get; set; }
+  public Alert[] alerts { get; set; }
+  public Snow snow { get; set; }
 }
 
 public partial record Minutely
@@ -107,4 +109,14 @@ public partial record Feels_Like
   public float night { get; set; }
   public float eve { get; set; }
   public float morn { get; set; }
+}
+
+public partial record Alert
+{
+  public string sender_name { get; set; }
+  public string _event { get; set; }
+  public int start { get; set; }
+  public int end { get; set; }
+  public string description { get; set; }
+  public string[] tags { get; set; }
 }
