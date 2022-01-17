@@ -59,7 +59,7 @@ public class OpenWea
 #if NotSaveToFile
       var json = await response.Content.ReadAsStringAsync();
       WriteLine($":> {what}  =>  {url}  ==> {sw.ElapsedMilliseconds}ms  ==>  {json}");
-      //await System.IO.File.WriteAllTextAsync($@"..\..\..\JsonResults\{city}-{xtra}-{what}-{DateTime.Now:yyMMdd·HHmmss}.{frmt}", json);
+      await System.IO.File.WriteAllTextAsync($@"..\..\..\JsonResults\{city}-{xtra}-{what}-{DateTime.Now:yyMMdd·HHmmss}.{frmt}", json);
 #else
       switch (what) //todo: https://docs.microsoft.com/en-us/aspnet/core/web-api/route-to-code?view=aspnetcore-6.; break ;
       {
@@ -86,7 +86,7 @@ public class OpenWea
 
       return oca;
     }
-    catch (Exception ex) { WriteLine(ex); throw; }
+    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); throw; }
     finally    {      WriteLine($":> {what}  =>  {url}  ==> {sw.ElapsedMilliseconds}ms ");    }
   }
 

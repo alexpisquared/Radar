@@ -34,7 +34,7 @@ public partial record Current
 public partial record Minutely
 {
   public int dt { get; set; }
-  public int precipitation { get; set; }
+  public float precipitation { get; set; }
 }
 
 public partial record Hourly

@@ -36,6 +36,7 @@ public partial class App : Application
   protected override async void OnStartup(StartupEventArgs e)
   {
 #if DEBUG
+
 #if Host
     _host.Start();
     MainWindow = _host.Services.GetRequiredService<MainWindow>();
@@ -44,10 +45,9 @@ public partial class App : Application
     MainWindow.DataContext = _serviceProvider.GetRequiredService<MainViewModel>();
 #endif
 
-   await ((MainViewModel)MainWindow.DataContext).PopulateAsync();  
+    await ((MainViewModel)MainWindow.DataContext).PopulateAsync();
 
     MainWindow.Show();
-    await Task.Yield();
 #else
     var config = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
     Trace.WriteLine($"---   WhereAmI: '{config["WhereAmI"]}'       {config["AppSecrets:MagicNumber"]}");

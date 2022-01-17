@@ -24,4 +24,8 @@
     <ProjectReference Include="..\OpenWeather2022\OpenWeather2022.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="JsonResults\" />
+  </ItemGroup>
+
 </Project>
