@@ -45,7 +45,7 @@ public partial class App : Application
     MainWindow.DataContext = _serviceProvider.GetRequiredService<MainViewModel>();
 #endif
 
-    await ((MainViewModel)MainWindow.DataContext).PopulateAsync();
+    //the only way to populate PlotView: await ((MainViewModel)MainWindow.DataContext).PopulateAsync();
 
     MainWindow.Show();
 #else

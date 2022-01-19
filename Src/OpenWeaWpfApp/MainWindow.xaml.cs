@@ -10,15 +10,8 @@ public partial class MainWindow : Window
     {
       switch (e.Key)
       {
-        case Key.I:
-          Beep.Play();
-          plotTR.InvalidatePlot(true); 
-          plotBR.InvalidatePlot(true); break;
-        case Key.R:
-          Hand.Play();
-          _ = await ((MainViewModel)DataContext).PopulateAsync();
-          plotTR.InvalidatePlot(true); 
-          plotBR.InvalidatePlot(true); break;
+        case Key.R: Hand.Play(); _ = await ((MainViewModel)DataContext).PopulateAsync(); goto case Key.I;
+        case Key.I: Beep.Play(); plotTR.InvalidatePlot(true); plotBR.InvalidatePlot(true); break;
         case Key.Escape: base.OnKeyUp(e); Close(); break;
         default: break;
       }
@@ -27,9 +20,6 @@ public partial class MainWindow : Window
 
   void OnClose(object sender, RoutedEventArgs e) => Close();
 
-  async void OnLoadad(object sender, RoutedEventArgs e)
-  {
-    ArgumentNullException.ThrowIfNull(DataContext, nameof(sender));
-    _ = await ((MainViewModel)DataContext).PopulateAsync();
-  }
+  async void OnLoadad(object sender, RoutedEventArgs e) => _ = await ((MainViewModel)DataContext).PopulateAsync();  // only lines chart is drawn.
+  async void OnPoplte(object sender, RoutedEventArgs e) => _ = await ((MainViewModel)DataContext).PopulateAsync();  // only lines chart is drawn.
 }
