@@ -17,7 +17,7 @@
         -->
   <Grid>
     <Grid.RowDefinitions>
-      <RowDefinition Height="2*"/>
+      <RowDefinition Height="1*"/>
       <RowDefinition Height="2*"/>
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
@@ -44,13 +44,14 @@
 
     <oxy:Plot         Title="{Binding Title}" Background="#333" Margin="2" Grid.Column="1" Grid.Row="1" x:Name="plotBR" >
       <oxy:Plot.Series>
-        <oxy:ScatterSeries ItemsSource="{Binding SctrPtTemp}" Color="#e00" MarkerType="Plus" MarkerFill="Blue" MarkerStroke="Yellow" MarkerStrokeThickness="2" MarkerSize="5" />
-        <oxy:LineSeries    ItemsSource="{Binding PointsGust}" Color="#088" StrokeThickness="1" Tag="Gust"/>
-        <oxy:AreaSeries    ItemsSource="{Binding PointsWind}" Color="#0cc" StrokeThickness="0.5" Fill="#10cc" />
-        <oxy:AreaSeries    ItemsSource="{Binding PointsTemp}" Color="#ee0" StrokeThickness="1.0" Fill="#2ee0" />
-        <oxy:LineSeries    ItemsSource="{Binding PointsFeel}" Color="#ee0" StrokeThickness="1.0" />
+        <oxy:LineSeries    ItemsSource="{Binding PointsNowT}" Color="#550" />
         <oxy:LineSeries    ItemsSource="{Binding PointsSunT}" Color="#550" />
-        <oxy:LineSeries    ItemsSource="{Binding PointsPopr}" Color="#04f" />
+        <oxy:AreaSeries    ItemsSource="{Binding PointsPopr}" Color="#04f" />
+        <oxy:ScatterSeries ItemsSource="{Binding SctrPtTemp}" Color="#e00" MarkerType="Plus" MarkerStroke="Yellow" MarkerStrokeThickness="2" MarkerSize="5" MarkerFill="Blue" />
+        <oxy:LineSeries    ItemsSource="{Binding PointsGust}" Color="#888" StrokeThickness="1.0" />
+        <oxy:AreaSeries    ItemsSource="{Binding PointsWind}" Color="#888" StrokeThickness="0.5" Fill="#1888" />
+        <oxy:AreaSeries    ItemsSource="{Binding PointsTemp}" Color="#a0f" StrokeThickness="0.6" Fill="#2a0f" />
+        <oxy:LineSeries    ItemsSource="{Binding PointsFeel}" Color="#a0f" StrokeThickness="1.0" />
       </oxy:Plot.Series>
       <oxy:Plot.Axes>
         <oxy:LinearAxis   Key="yAxis" TextColor="#ccc" IsZoomEnabled="False" IsPanEnabled="False" Position="Left"   MajorGridlineStyle="Dot" MajorGridlineColor="#222" Title="Temp [°C]" />
