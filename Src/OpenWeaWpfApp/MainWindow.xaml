@@ -18,7 +18,7 @@
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="1*"/>
-      <RowDefinition Height="2*"/>
+      <RowDefinition Height="3*"/>
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="1*"/>
@@ -42,20 +42,27 @@
       </oxy:Plot.Axes>
     </oxy:Plot>
 
-    <oxy:Plot         Title="{Binding Title}" Background="#333" Margin="2" Grid.Column="1" Grid.Row="1" x:Name="plotBR" >
+    <oxy:Plot         Title="{Binding Title}" Background="#444" Margin="2" Grid.Column="1" Grid.Row="1" x:Name="plotBR" >
       <oxy:Plot.Series>
+        <oxy:LineSeries    ItemsSource="{Binding EnvtCaTorono}"   Color="#488" StrokeThickness="5.0" />
+        <oxy:LineSeries    ItemsSource="{Binding EnvtCaMissga}"   Color="#a80" StrokeThickness="3.0" />      <!-- m -->
+        <oxy:LineSeries    ItemsSource="{Binding EnvtCaTOIsld}"   Color="#a00" StrokeThickness="1.0" />      <!-- n -->
+        <oxy:LineSeries    ItemsSource="{Binding EnvtCaVaughan}"  Color="#0c0" StrokeThickness="5.0" />      <!-- v -->
+        <oxy:LineSeries    ItemsSource="{Binding EnvtCaMarkham}"  Color="#06f" StrokeThickness="3.0" />      <!-- m -->
+        <oxy:LineSeries    ItemsSource="{Binding EnvtCaRchmdHl}"  Color="#ff0" StrokeThickness="1.0" />      <!-- r -->
+        
         <oxy:LineSeries    ItemsSource="{Binding PointsNowT}" Color="#550" />
         <oxy:LineSeries    ItemsSource="{Binding PointsSunT}" Color="#550" />
         <oxy:AreaSeries    ItemsSource="{Binding PointsPopr}" Color="#04f" />
-        <oxy:ScatterSeries ItemsSource="{Binding SctrPtTemp}" Color="#e00" MarkerType="Plus" MarkerStroke="Yellow" MarkerStrokeThickness="2" MarkerSize="5" MarkerFill="Blue" />
+        <oxy:ScatterSeries ItemsSource="{Binding SctrPtTemp}" Color="#e00" MarkerType="Plus" MarkerStroke="#eaf" MarkerStrokeThickness="2" MarkerSize="5" MarkerFill="Blue" />
         <oxy:LineSeries    ItemsSource="{Binding PointsGust}" Color="#888" StrokeThickness="1.0" />
         <oxy:AreaSeries    ItemsSource="{Binding PointsWind}" Color="#888" StrokeThickness="0.5" Fill="#1888" />
         <oxy:AreaSeries    ItemsSource="{Binding PointsTemp}" Color="#a0f" StrokeThickness="0.6" Fill="#2a0f" />
         <oxy:LineSeries    ItemsSource="{Binding PointsFeel}" Color="#a0f" StrokeThickness="1.0" />
       </oxy:Plot.Series>
       <oxy:Plot.Axes>
-        <oxy:LinearAxis   Key="yAxis" TextColor="#ccc" IsZoomEnabled="False" IsPanEnabled="False" Position="Left"   MajorGridlineStyle="Dot" MajorGridlineColor="#222" Title="Temp [°C]" />
-        <oxy:DateTimeAxis Key="xAxis" TextColor="#ccc" IsZoomEnabled="False" IsPanEnabled="False" Position="Bottom" MajorGridlineStyle="Dot" MajorGridlineColor="#222" Title="Time [ddd H]" StringFormat="ddd HH" />
+        <oxy:LinearAxis   Key="yAxis" TextColor="#ccc" IsZoomEnabled="False" IsPanEnabled="False" Position="Left"   MajorGridlineStyle="Dot" MajorGridlineColor="#000" Title="Temp [°C]" TitleColor="#ccc" />
+        <oxy:DateTimeAxis Key="xAxis" TextColor="#ccc" IsZoomEnabled="False" IsPanEnabled="False" Position="Bottom" MajorGridlineStyle="Dot" MajorGridlineColor="#000" Title="Time [ddd H]" TitleColor="#ccc" StringFormat="ddd HH" />
       </oxy:Plot.Axes>
     </oxy:Plot>
 

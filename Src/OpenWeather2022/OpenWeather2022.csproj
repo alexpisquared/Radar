@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Include="..\..\..\ScSv\Src\AlexPi.Scr\AlexPi.Scr\AsLink\siteData.cs" Link="AsLink\siteData.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="AsLink\" />
+  </ItemGroup>
+
 </Project>

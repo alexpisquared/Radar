@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Globalization;
 using OpenWeather2022;
 using OpenWeather2022.Response;
 using OxyPlot;
@@ -8,7 +9,7 @@ using static OpenWeather2022.OpenWea;
 
 namespace OpenWeaWpfApp;
 
-public class MainViewModel
+public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableValidator
 {
   readonly IConfigurationRoot _config;
   readonly OpenWea _opnwea;
@@ -23,10 +24,29 @@ public class MainViewModel
   public async Task<bool> PopulateAsync()
   {
     //await Task.Delay(999); no diff
+    await PopulateEnvtCanaAsync();
     await PopulateScatModelAsync();
-    await PopulateFuncModelAsync();
+    //await PopulateFuncModelAsync();
     //await PopulateOpenWeathAsync(); -- extra calls 
     return true;
+  }
+
+  async Task PopulateEnvtCanaAsync()
+  {
+    refill(EnvtCaTorono, await _opnwea.GetEnvtCa("s0000458")); // to
+    refill(EnvtCaTOIsld, await _opnwea.GetEnvtCa("s0000785")); // torIsld refill(EnvtCaTOIsld, await _opnwea.GetEnvtCa("s0000582")); // newmark
+    refill(EnvtCaMissga, await _opnwea.GetEnvtCa("s0000786")); // mississ
+    refill(EnvtCaVaughan, await _opnwea.GetEnvtCa("s0000584")); // vaughan
+    refill(EnvtCaMarkham, await _opnwea.GetEnvtCa("s0000585")); // markham
+    refill(EnvtCaRchmdHl, await _opnwea.GetEnvtCa("s0000773")); // richmhl
+  }
+
+  private static void refill(ObservableCollection<DataPoint> points, XSD.CLS.siteData? siteDt)
+  {
+    ArgumentNullException.ThrowIfNull(siteDt, $"@@@@@@@@@ {nameof(siteDt)}");
+
+    points.Clear(); 
+    siteDt.hourlyForecastGroup.hourlyForecast.ToList().ForEach(x => points.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.ParseExact(x.dateTimeUTC, new string[] { "yyyyMMddHHmm", "yyyyMMddHHmmss" }, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal).ToLocalTime()), double.Parse(x.temperature.Value))));
   }
 
   async Task PopulateScatModelAsync()
@@ -72,10 +92,10 @@ public class MainViewModel
     PointsNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), -25));
     oca.daily.ToList().ForEach(x =>
     {
-        PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.sunrise)), valueMin));
-        PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.sunrise)), valueMax));
-        PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.sunset)), valueMax));
-        PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.sunset)), valueMin));
+      PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.sunrise)), valueMin));
+      PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.sunrise)), valueMax));
+      PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.sunset)), valueMax));
+      PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.sunset)), valueMin));
     });
 
     oca.daily
@@ -96,7 +116,7 @@ public class MainViewModel
       SctrPtTemp.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), value: 10, tag: $"{x.temp.morn} ", y: x.temp.morn));
       SctrPtTemp.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _d)), value: 10, tag: $"{x.temp.day}  ", y: x.temp.day));
       SctrPtTemp.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _e)), value: 10, tag: $"{x.temp.eve}  ", y: x.temp.eve));
-      SctrPtTemp.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), value: 10, tag: $"{x.temp.night}", y: x.temp.night)); 
+      SctrPtTemp.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), value: 10, tag: $"{x.temp.night}", y: x.temp.night));
     });
   }
   async Task PopulateScatModelAsync_TogetherWithPlotView()
@@ -216,7 +236,7 @@ public class MainViewModel
       SctrPtTemp.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), value: 10, tag: $"{x.temp.morn} ", y: x.temp.morn));
       SctrPtTemp.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _d)), value: 10, tag: $"{x.temp.day}  ", y: x.temp.day));
       SctrPtTemp.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _e)), value: 10, tag: $"{x.temp.eve}  ", y: x.temp.eve));
-      SctrPtTemp.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), value: 10, tag: $"{x.temp.night}", y: x.temp.night)); 
+      SctrPtTemp.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), value: 10, tag: $"{x.temp.night}", y: x.temp.night));
     });
 
     oca.daily.
@@ -297,11 +317,17 @@ public class MainViewModel
   public ObservableCollection<DataPoint> PointsTempT { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> PointsFeelT { get; } = new ObservableCollection<DataPoint>();
 
+  public ObservableCollection<DataPoint> EnvtCaTorono { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> EnvtCaVaughan { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> EnvtCaMarkham { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> EnvtCaMissga { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> EnvtCaRchmdHl { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> EnvtCaTOIsld { get; } = new ObservableCollection<DataPoint>();
+
   public PlotModel FuncModel { get; private set; } = new PlotModel { Title = "Function Srs", Background = OxyColor.FromUInt32(123456), LegendTitleColor = OxyColor.FromUInt32(123456) };
   public PlotModel ScatModel { get; private set; } = new PlotModel { Title = "Scatter Srs" };
 
-  public string Title { get; set;  } = "Main VM !@##!@#!@";
-
+  string _t = default!; public string Title { get => _t; set => SetProperty(ref _t, value); }
 }
 ///todo: https://oxyplot.readthedocs.io/en/latest/models/series/ScatterSeries.html
 ///https://docs.microsoft.com/en-us/answers/questions/22863/how-to-customize-charts-in-wpf-using-systemwindows.html
