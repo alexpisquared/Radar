@@ -1,10 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Windows.Media;
 using OpenWeather2022;
 using OpenWeather2022.Response;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
+using static System.Net.WebRequestMethods;
 using static OpenWeather2022.OpenWea;
 
 namespace OpenWeaWpfApp;
@@ -14,6 +16,14 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   readonly IConfigurationRoot _config;
   readonly OpenWea _opnwea;
   readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _d3r = 4, _d3c = 600, _h = 999, _windClr = 333, _popClr = 0;
+  const string _toronto = "s0000458",
+ _torIsld = "s0000785",
+ _mississ = "s0000786",
+ _vaughan = "s0000584",
+ _markham = "s0000585",
+ _richmhl = "s0000773",
+ _newmark = "s0000582";
+
 
   public MainViewModel()
   {
@@ -33,19 +43,19 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
   async Task PopulateEnvtCanaAsync()
   {
-    refill(EnvtCaTorono, await _opnwea.GetEnvtCa("s0000458")); // to
-    refill(EnvtCaTOIsld, await _opnwea.GetEnvtCa("s0000785")); // torIsld refill(EnvtCaTOIsld, await _opnwea.GetEnvtCa("s0000582")); // newmark
-    refill(EnvtCaMissga, await _opnwea.GetEnvtCa("s0000786")); // mississ
-    refill(EnvtCaVaughan, await _opnwea.GetEnvtCa("s0000584")); // vaughan
-    refill(EnvtCaMarkham, await _opnwea.GetEnvtCa("s0000585")); // markham
-    refill(EnvtCaRchmdHl, await _opnwea.GetEnvtCa("s0000773")); // richmhl
+    refill(EnvtCaToronto, await _opnwea.GetEnvtCa(_toronto));
+    refill(EnvtCaTorIsld, await _opnwea.GetEnvtCa(_torIsld));    //refill(EnvtCaTorIsld, await _opnwea.GetEnvtCa(_newmark));
+    refill(EnvtCaMissuga, await _opnwea.GetEnvtCa(_mississ));
+    refill(EnvtCaVaughan, await _opnwea.GetEnvtCa(_vaughan));
+    refill(EnvtCaMarkham, await _opnwea.GetEnvtCa(_markham));
+    refill(EnvtCaRchmdHl, await _opnwea.GetEnvtCa(_richmhl));
   }
 
   private static void refill(ObservableCollection<DataPoint> points, XSD.CLS.siteData? siteDt)
   {
     ArgumentNullException.ThrowIfNull(siteDt, $"@@@@@@@@@ {nameof(siteDt)}");
 
-    points.Clear(); 
+    points.Clear();
     siteDt.hourlyForecastGroup.hourlyForecast.ToList().ForEach(x => points.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.ParseExact(x.dateTimeUTC, new string[] { "yyyyMMddHHmm", "yyyyMMddHHmmss" }, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal).ToLocalTime()), double.Parse(x.temperature.Value))));
   }
 
@@ -61,7 +71,10 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     var oca = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(oca); // PHC107
     var d53 = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(d53); // PHC107
 
-    Title = $"{OpenWea.UnixToDt(oca.current.dt):ddd HH:mm}  {oca.current.temp:N1}°  {oca.current.feels_like:N0}°  {oca.current.wind_deg}";
+    Title = $"{UnixToDt(oca.current.dt):ddd HH:mm}  {oca.current.temp:N1}°  {oca.current.feels_like:N0}°  {oca.current.wind_deg}";
+    CurrentConditions = $"{UnixToDt(oca.current.dt):HH:mm}\n{oca.current.temp,5:N1}°\n {oca.current.feels_like,4:N0}°\n  {oca.current.wind_deg,3}";
+    WindDirn = oca.current.wind_deg;
+    WeaIcom = $"http://openweathermap.org/img/wn/{oca.current.weather.First().icon}@2x.png";
 
     var timeMin = DateTimeAxis.ToDouble(OpenWea.UnixToDt(oca.daily.Min(d => d.dt - 07 * 3600)));
     var timeMax = DateTimeAxis.ToDouble(OpenWea.UnixToDt(oca.daily.Max(d => d.dt + 12 * 3600)));
@@ -317,17 +330,23 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   public ObservableCollection<DataPoint> PointsTempT { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> PointsFeelT { get; } = new ObservableCollection<DataPoint>();
 
-  public ObservableCollection<DataPoint> EnvtCaTorono { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> EnvtCaToronto { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> EnvtCaVaughan { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> EnvtCaMarkham { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> EnvtCaMissga { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> EnvtCaMissuga { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> EnvtCaRchmdHl { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> EnvtCaTOIsld { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> EnvtCaTorIsld { get; } = new ObservableCollection<DataPoint>();
 
   public PlotModel FuncModel { get; private set; } = new PlotModel { Title = "Function Srs", Background = OxyColor.FromUInt32(123456), LegendTitleColor = OxyColor.FromUInt32(123456) };
   public PlotModel ScatModel { get; private set; } = new PlotModel { Title = "Scatter Srs" };
 
   string _t = default!; public string Title { get => _t; set => SetProperty(ref _t, value); }
+  string _c = default!; public string CurrentConditions { get => _c; set => SetProperty(ref _c, value); }
+  int _w = default!; public int WindDirn { get => _w; set => SetProperty(ref _w, value); }
+
+  //ImageSource _i; public ImageSource WeaIcom { get => _i; set => SetProperty(ref _i, value); }
+  //Uri _k = new("http://openweathermap.org/img/wn/04n@2x.png"); public Uri WIcon { get => _k; set => SetProperty(ref _k, value); }
+  string _i= "http://openweathermap.org/img/wn/01d@2x.png"; public string WeaIcom { get => _i; set => SetProperty(ref _i, value); }
 }
 ///todo: https://oxyplot.readthedocs.io/en/latest/models/series/ScatterSeries.html
 ///https://docs.microsoft.com/en-us/answers/questions/22863/how-to-customize-charts-in-wpf-using-systemwindows.html
