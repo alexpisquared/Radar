@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Windows.Media;
 using OpenWeather2022;
@@ -17,13 +19,14 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   readonly OpenWea _opnwea;
   readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _d3r = 4, _d3c = 600, _h = 999, _windClr = 333, _popClr = 0;
   const string _toronto = "s0000458",
- _torIsld = "s0000785",
- _mississ = "s0000786",
- _vaughan = "s0000584",
- _markham = "s0000585",
- _richmhl = "s0000773",
- _newmark = "s0000582";
-
+    _torIsld = "s0000785",
+    _mississ = "s0000786",
+    _vaughan = "s0000584",
+    _markham = "s0000585",
+    _richmhl = "s0000773",
+    _newmark = "s0000582",
+    _urlPast24hrYYZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yyz", // Pearson
+    _urlPast24hrYKZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=ykz"; // Buttonville
 
   public MainViewModel()
   {
@@ -33,25 +36,40 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
   public async Task<bool> PopulateAsync()
   {
-    //await Task.Delay(999); no diff
-    await PopulateEnvtCanaAsync();
-    await PopulateScatModelAsync();
-    //await PopulateFuncModelAsync();
-    //await PopulateOpenWeathAsync(); -- extra calls 
+    try
+    { //await Task.Delay(999); no diff
+      await PopulateEnvtCanaAsync();
+      await PopulateScatModelAsync();
+      //await PopulateFuncModelAsync();
+      //await PopulateOpenWeathAsync(); -- extra calls 
+    }
+    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else throw; }
     return true;
   }
 
   async Task PopulateEnvtCanaAsync()
   {
+    Past24hrHAP p24 = new();
+    refill(EnvtCaPast24Buttnvl, p24.GetIt(_urlPast24hrYKZ));
+    refill(EnvtCaPast24Pearson, p24.GetIt(_urlPast24hrYYZ));
+
     refill(EnvtCaToronto, await _opnwea.GetEnvtCa(_toronto));
     refill(EnvtCaTorIsld, await _opnwea.GetEnvtCa(_torIsld));    //refill(EnvtCaTorIsld, await _opnwea.GetEnvtCa(_newmark));
     refill(EnvtCaMissuga, await _opnwea.GetEnvtCa(_mississ));
     refill(EnvtCaVaughan, await _opnwea.GetEnvtCa(_vaughan));
     refill(EnvtCaMarkham, await _opnwea.GetEnvtCa(_markham));
     refill(EnvtCaRchmdHl, await _opnwea.GetEnvtCa(_richmhl));
+    refill(EnvtCaRchmdHl, await _opnwea.GetEnvtCa(_richmhl));
   }
 
-  private static void refill(ObservableCollection<DataPoint> points, XSD.CLS.siteData? siteDt)
+  static void refill(ObservableCollection<DataPoint> points, List<Meteo>? siteDt)
+  {
+    ArgumentNullException.ThrowIfNull(siteDt, $"@@@@@@@@@ {nameof(siteDt)}");
+
+    points.Clear();
+    siteDt.ForEach(x => points.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), x.TempAir)));
+  }
+  static void refill(ObservableCollection<DataPoint> points, XSD.CLS.siteData? siteDt)
   {
     ArgumentNullException.ThrowIfNull(siteDt, $"@@@@@@@@@ {nameof(siteDt)}");
 
@@ -67,6 +85,9 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     PointsFeel.Clear();
     PointsFeel.Clear();
     PointsSunT.Clear();
+
+    PointsNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), +15));
+    PointsNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), -25));
 
     var oca = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(oca); // PHC107
     var d53 = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(d53); // PHC107
@@ -101,8 +122,6 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       PointsPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 10));
     });
 
-    PointsNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), +15));
-    PointsNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), -25));
     oca.daily.ToList().ForEach(x =>
     {
       PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.sunrise)), valueMin));
@@ -330,6 +349,9 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   public ObservableCollection<DataPoint> PointsTempT { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> PointsFeelT { get; } = new ObservableCollection<DataPoint>();
 
+  public ObservableCollection<DataPoint> EnvtCaPast24Pearson { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> EnvtCaPast24Buttnvl { get; } = new ObservableCollection<DataPoint>();
+
   public ObservableCollection<DataPoint> EnvtCaToronto { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> EnvtCaVaughan { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> EnvtCaMarkham { get; } = new ObservableCollection<DataPoint>();
@@ -346,7 +368,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
   //ImageSource _i; public ImageSource WeaIcom { get => _i; set => SetProperty(ref _i, value); }
   //Uri _k = new("http://openweathermap.org/img/wn/04n@2x.png"); public Uri WIcon { get => _k; set => SetProperty(ref _k, value); }
-  string _i= "http://openweathermap.org/img/wn/01d@2x.png"; public string WeaIcom { get => _i; set => SetProperty(ref _i, value); }
+  string _i = "http://openweathermap.org/img/wn/01d@2x.png"; public string WeaIcom { get => _i; set => SetProperty(ref _i, value); }
 }
 ///todo: https://oxyplot.readthedocs.io/en/latest/models/series/ScatterSeries.html
 ///https://docs.microsoft.com/en-us/answers/questions/22863/how-to-customize-charts-in-wpf-using-systemwindows.html

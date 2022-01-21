@@ -17,7 +17,6 @@ public class OpenWea
 
     var sr = new List<int>(_sunrizes);
     var min = sr.Min();
-    var dt = 0;
     //foreach (int sunrize in sr.Distinct().OrderBy(r => r)) { Write($"  {sunrize}, // {UnixTimeStampToDateTime(sunrize)}  {sunrize - dt - 86400} \n"); dt = sunrize; }
 
     //for (int i = -5; i <= 0; i++) { _ = await GetIt(code, what: OpenWeatherCd.TimeMachin, time: DateTimeToUnixTimestamp(DateTime.Today.AddDays(i)).ToString()); await Task.Delay(1111); }
@@ -31,7 +30,7 @@ public class OpenWea
 
   public async Task<siteData?> GetEnvtCa(string site = "s0000458"/*toronto pearson*/) //   "s0000785_e"/*toronto island*/        }; //         "s0000773_e",/*richmond hill*/   };       // May 2020: localized to the most informative (with extremums). ... https://dd.weather.gc.ca/citypage_weather/xml/siteList.xml
   {
-    await Task.Delay(99);
+    //await Task.Delay(99);
     siteData? oca = default!;
     var sw = Stopwatch.StartNew();
     var url = $"https://dd.weather.gc.ca/citypage_weather/xml/ON/{site}_e.xml";
@@ -47,11 +46,11 @@ public class OpenWea
 #else
       oca = (siteData?)new XmlSerializer(typeof(siteData)).Deserialize(new StringReader(xml));
 #endif
-
-      return oca;
     }
-    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); throw; }
+    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else throw; }
     finally { WriteLine($":> {url}  ==> {sw.ElapsedMilliseconds}ms "); }
+
+    return oca;
   }
 
   public async Task<object?> GetIt(string code, OpenWeatherCd what /*= OpenWeatherCd.OneCallApi*/, double lat = 43.8374229, double lon = -79.4961442, // PHC107  
@@ -114,8 +113,8 @@ public class OpenWea
 
       return oca;
     }
-    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); throw; }
-    finally    {      WriteLine($":> {what}  =>  {url}  ==> {sw.ElapsedMilliseconds}ms ");    }
+    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); throw; }
+    finally { WriteLine($":> {what}  =>  {url}  ==> {sw.ElapsedMilliseconds}ms "); }
   }
 
   //  async Task<bool> GetIt(
@@ -169,7 +168,7 @@ public class OpenWea
   //      WriteLine($"*** {what} ==> {sw.ElapsedMilliseconds}ms");
   //      return url != null;
   //    }
-  //    catch (Exception ex) { WriteLine(ex); throw; }
+  //    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); throw; }
   //  }
 
   public static DateTime UnixToDt(double unixTimeStamp) => new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(unixTimeStamp).ToLocalTime();  // Unix timestamp is seconds past epoch
@@ -186,7 +185,7 @@ public class OpenWea
     Frc5Day3Hr  // openweathermap.org/forecast5
   }
 
-  string[] _url = new string[]
+  readonly string[] _url = new string[]
   {
     "https://api.openweathermap.org/data/2.5/onecall/timemachine?",
     "https://api.openweathermap.org/data/2.5/forecast/daily?",
@@ -196,8 +195,7 @@ public class OpenWea
     "https://api.openweathermap.org/data/2.5/onecall?",
     "https://api.openweathermap.org/data/2.5/forecast?"
   };
-
-  int[] _sunrizes = new int[] {
+  readonly int[] _sunrizes = new int[] {
   1640868706, // 2021-12-30 07:51:46  1640782306 
   1640955112, // 2021-12-31 07:51:52  6 
   1641041517, // 2022-01-01 07:51:57  5 

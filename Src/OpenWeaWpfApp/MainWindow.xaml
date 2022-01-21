@@ -46,15 +46,19 @@
 
     <oxy:Plot         Title="{Binding Title}" Background="#444" Margin="2" Grid.Column="2" Grid.Row="2" x:Name="plotBR" >
       <oxy:Plot.Series>
-        <oxy:LineSeries    ItemsSource="{Binding EnvtCaToronto}"  Color="#488" StrokeThickness="5.0" />
-        <oxy:LineSeries    ItemsSource="{Binding EnvtCaMissuga}"  Color="#a80" StrokeThickness="3.0" />
-        <oxy:LineSeries    ItemsSource="{Binding EnvtCaTorIsld}"  Color="#a00" StrokeThickness="1.0" />
-        <oxy:LineSeries    ItemsSource="{Binding EnvtCaVaughan}"  Color="#0c0" StrokeThickness="5.0" />
-        <oxy:LineSeries    ItemsSource="{Binding EnvtCaMarkham}"  Color="#06f" StrokeThickness="3.0" />
-        <oxy:LineSeries    ItemsSource="{Binding EnvtCaRchmdHl}"  Color="#ff0" StrokeThickness="1.0" />
+        <oxy:LineSeries    ItemsSource="{Binding PointsNowT}" Color="#aaa" StrokeThickness="1.0" />
+        <oxy:LineSeries    ItemsSource="{Binding PointsSunT}" Color="#770" />
 
-        <oxy:LineSeries    ItemsSource="{Binding PointsNowT}" Color="#550" />
-        <oxy:LineSeries    ItemsSource="{Binding PointsSunT}" Color="#550" />
+        <oxy:LineSeries    ItemsSource="{Binding EnvtCaPast24Pearson}"  Color="#d0f" StrokeThickness="3.0" />
+        <oxy:LineSeries    ItemsSource="{Binding EnvtCaPast24Buttnvl}"  Color="#08f" StrokeThickness="3.0" />
+
+        <oxy:LineSeries    ItemsSource="{Binding EnvtCaMissuga}"  Color="#d0f" StrokeThickness="3.0" />
+        <oxy:LineSeries    ItemsSource="{Binding EnvtCaToronto}"  Color="#488" StrokeThickness="5.0" />
+        <oxy:LineSeries    ItemsSource="{Binding EnvtCaTorIsld}"  Color="#a00" StrokeThickness="1.0" />
+        <oxy:LineSeries    ItemsSource="{Binding EnvtCaVaughan}"  Color="#08f" StrokeThickness="3.0" />
+        <oxy:LineSeries    ItemsSource="{Binding EnvtCaMarkham}"  Color="#08f" StrokeThickness="2.0" />
+        <oxy:LineSeries    ItemsSource="{Binding EnvtCaRchmdHl}"  Color="#08f" StrokeThickness="1.0" />
+
         <oxy:AreaSeries    ItemsSource="{Binding PointsPopr}" Color="#04f" />
         <oxy:ScatterSeries ItemsSource="{Binding SctrPtTemp}" Color="#e00" MarkerType="Plus" MarkerStroke="#eaf" MarkerStrokeThickness="2" MarkerSize="5" MarkerFill="Blue" />
         <oxy:LineSeries    ItemsSource="{Binding PointsGust}" Color="#888" StrokeThickness="1.0" />
