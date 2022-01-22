@@ -7,47 +7,48 @@ public class Past24hrHAP
   public List<Meteo> GetIt(string url)
   {
     List<Meteo> rv = new();
-    string sDate = default!, s;
+    string dateStr = default!;
 
     var web = new HtmlWeb();
     var doc = web.Load(url);
 
     foreach (var tr in doc.DocumentNode.SelectNodes("//table/tbody"))
     {
-      //77 Debug.WriteLine("\n============ tr.ChildNodes.Count {0}:", tr.ChildNodes.Count());
+      WriteLine($"\n============ tr.ChildNodes.Count {tr.ChildNodes.Count}:");
 
       foreach (var r in tr.ChildNodes.Where(n => n.ChildNodes.Any()))
       {
-        var c = r.ChildNodes;
-        var cnt = c.Count();
+        var nodes = r.ChildNodes;
+        var cnt = nodes.Count;
 
-        //77 Debug.Write($"\n{c.Count()}:");
         var i = 0;
-        foreach (var t in c) Debug.Write($" {i++}:'{t.InnerText.Replace("\n", "").Replace("\t", "").Replace("    ", " ").Replace("   ", " ").Replace("  ", " ").Trim()}' ");
-        if (c.Count() == 1)
+        Write($"\n{cnt}:");
+        foreach (var n in nodes) Write($" {i++}:'{n.InnerText.Replace("\n", "").Replace("\t", "").Replace("    ", " ").Replace("   ", " ").Replace("  ", " ").Trim()}' ");
+        
+        if (nodes.Count == 1)
         {
-          sDate = c[0].InnerText.Trim();
+          dateStr = nodes[0].InnerText.Trim();
         }
-        else if (c.Count() >= 17)
+        else if (nodes.Count >= 17)
         {
           try
           {
             var e4 = new Meteo { TempAir = -999 };
-            e4.TakenAt = Convert.ToDateTime(sDate + ' ' + c[1].InnerText);
+            e4.TakenAt = Convert.ToDateTime(dateStr + ' ' + nodes[1].InnerText);
 
-            e4.Conditions = c[3].InnerText;
+            e4.Conditions = nodes[3].InnerText;
 
-            var c5 = c[5].InnerText.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var c5 = nodes[5].InnerText.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             if (c5.Count() > 1)
               e4.TempAir = double.Parse(c5[1].Trim(' ').Trim('\n').Trim(' ').Trim('\n').Trim('↑').Trim('↓').Trim('(').Trim(')').Replace("(", "").Trim());
             else
-              e4.TempAir = double.Parse(c[5].InnerText.Trim(' ').Trim('\n').Trim(' ').Trim('\n').Trim('↑').Trim('↓').Trim());
+              e4.TempAir = double.Parse(nodes[5].InnerText.Trim(' ').Trim('\n').Trim(' ').Trim('\n').Trim('↑').Trim('↓').Trim());
 
-            var c7 = c[7].InnerText.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var c7 = nodes[7].InnerText.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             if (c7.Count() > 1)
               e4.Humidity = double.Parse(c7[1].Trim(' ').Trim('\n').Trim(' ').Trim('\n').Trim('↑').Trim('↓').Trim('(').Trim(')').Replace("(", "").Trim());
             else
-              e4.Humidity = double.Parse(c[7].InnerText);
+              e4.Humidity = double.Parse(nodes[7].InnerText);
 
             //var c9 = c[9].InnerText.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             //if (c9.Count() > 1)
@@ -55,12 +56,12 @@ public class Past24hrHAP
             //else
             //  e4.DewPoint = double.Parse(c[9].InnerText);
 
-            e4.Pressure    = double.Parse(c[cnt - 8].InnerText);
-            e4.Visibility  = double.TryParse(c[cnt - 4].InnerText, out double d ) ? d : 0;
-            if (cnt != 27 && !c[13].InnerText.Contains("*"))
-              e4.Humidex     = double.Parse(c[13].InnerText);
+            e4.Pressure = double.Parse(nodes[cnt - 8].InnerText);
+            e4.Visibility = double.TryParse(nodes[cnt - 4].InnerText, out double d) ? d : 0;
+            if (cnt != 27 && !nodes[13].InnerText.Contains("*"))
+              e4.Humidex = double.Parse(nodes[13].InnerText);
 
-            s = c[11].InnerText.Trim();
+            var s = nodes[11].InnerText.Trim();
             var w = s.Split(new char[] { ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             switch (w.Length)
             {
@@ -117,8 +118,8 @@ public class Meteo
 
   public double WaveHeight { get; set; }
   public double WavePeriod { get; set; }
-  public string Conditions { get; set; }= default!;
-  public string ConditiImg { get; set; }= default!;
+  public string Conditions { get; set; } = default!;
+  public string ConditiImg { get; set; } = default!;
   public string RawSrcText { get; set; } = default!;
 
   public override string ToString() => string.Format("{0}\t{1,3:N0}\t{2,3:N0}\t{3,3:N0}\t{4,3:N0}\t{5,3:N0}\t{6,6:N1}\t{7,3:N0}\t{8,3:N0}\t{9,3:N0}\t{10,3:N0}\t{11,3:N0}\t{12,3:N0} \t{13} \t{14} \t{15} \t{16}",

@@ -25,7 +25,7 @@ public partial record Current
   public float uvi { get; set; }
   public int clouds { get; set; }
   public int visibility { get; set; }
-  public float wind_speed { get; set; }
+  public float wind_speed { get; set; } = 111;
   public int wind_deg { get; set; }
   public float wind_gust { get; set; }
   public Weather[] weather { get; set; }

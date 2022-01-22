@@ -89,20 +89,21 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     PointsNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), +15));
     PointsNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), -25));
 
-    var oca = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(oca); // PHC107
-    var d53 = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(d53); // PHC107
+    OCA = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(OCA); // PHC107
+    D53 = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(D53); // PHC107
 
-    Title = $"{UnixToDt(oca.current.dt):ddd HH:mm}  {oca.current.temp:N1}°  {oca.current.feels_like:N0}°  {oca.current.wind_deg}";
-    CurrentConditions = $"{UnixToDt(oca.current.dt):HH:mm}\n{oca.current.temp,5:N1}°\n {oca.current.feels_like,4:N0}°\n  {oca.current.wind_deg,3}";
-    WindDirn = oca.current.wind_deg;
-    WeaIcom = $"http://openweathermap.org/img/wn/{oca.current.weather.First().icon}@2x.png";
+    PlotTitle = $"{UnixToDt(OCA.current.dt):ddd HH:mm}  {OCA.current.temp:N1}°  {OCA.current.feels_like:N0}°   {OCA.current.wind_deg}°-{OCA.current.wind_speed}";
+    CurrentConditions = $"{UnixToDt(OCA.current.dt):HH:mm}\n{OCA.current.temp,5:N1}°\n {OCA.current.feels_like,4:N0}°\n  {OCA.current.wind_deg,3}";
+    WindDirn = OCA.current.wind_deg;
+    WindVelo = OCA.current.wind_speed * 10;
+    WeaIcom = $"http://openweathermap.org/img/wn/{OCA.current.weather.First().icon}@2x.png";
 
-    var timeMin = DateTimeAxis.ToDouble(OpenWea.UnixToDt(oca.daily.Min(d => d.dt - 07 * 3600)));
-    var timeMax = DateTimeAxis.ToDouble(OpenWea.UnixToDt(oca.daily.Max(d => d.dt + 12 * 3600)));
-    var valueMin = oca.daily.Min(r => r.temp.min);
-    var valueMax = oca.daily.Max(r => r.temp.max);
+    var timeMin = DateTimeAxis.ToDouble(OpenWea.UnixToDt(OCA.daily.Min(d => d.dt - 07 * 3600)));
+    var timeMax = DateTimeAxis.ToDouble(OpenWea.UnixToDt(OCA.daily.Max(d => d.dt + 12 * 3600)));
+    var valueMin = OCA.daily.Min(r => r.temp.min);
+    var valueMax = OCA.daily.Max(r => r.temp.max);
 
-    oca.hourly.ToList().ForEach(x =>
+    OCA.hourly.ToList().ForEach(x =>
     {
       //scaters.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.snow?._1h ?? 0, x.snow?._1h ?? 0, _d3c)); // either null or 0 so far.
       PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.temp));
@@ -112,7 +113,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       PointsPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 10));
     });
 
-    d53.list.Where(d => d.dt > oca.hourly.Max(d => d.dt)).ToList().ForEach(x =>
+    D53.list.Where(d => d.dt > OCA.hourly.Max(d => d.dt)).ToList().ForEach(x =>
     {
       //scaters.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.snow?._3h ?? 0, x.snow?._3h ?? 0, _d3c));
       PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.main.temp));
@@ -122,7 +123,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       PointsPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 10));
     });
 
-    oca.daily.ToList().ForEach(x =>
+    OCA.daily.ToList().ForEach(x =>
     {
       PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.sunrise)), valueMin));
       PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.sunrise)), valueMax));
@@ -130,8 +131,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       PointsSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.sunset)), valueMin));
     });
 
-    oca.daily
-      .Where(d => d.dt > d53.list.Max(d => d.dt))
+    OCA.daily
+      .Where(d => d.dt > D53.list.Max(d => d.dt))
       .ToList().ForEach(x =>
     {
       PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), x.temp.morn));
@@ -143,7 +144,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       PointsPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 10));
     });
 
-    oca.daily.ToList().ForEach(x =>
+    OCA.daily.ToList().ForEach(x =>
     {
       SctrPtTemp.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), value: 10, tag: $"{x.temp.morn} ", y: x.temp.morn));
       SctrPtTemp.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _d)), value: 10, tag: $"{x.temp.day}  ", y: x.temp.day));
@@ -362,9 +363,12 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   public PlotModel FuncModel { get; private set; } = new PlotModel { Title = "Function Srs", Background = OxyColor.FromUInt32(123456), LegendTitleColor = OxyColor.FromUInt32(123456) };
   public PlotModel ScatModel { get; private set; } = new PlotModel { Title = "Scatter Srs" };
 
-  string _t = default!; public string Title { get => _t; set => SetProperty(ref _t, value); }
+  string _t = default!; public string PlotTitle { get => _t; set => SetProperty(ref _t, value); }
   string _c = default!; public string CurrentConditions { get => _c; set => SetProperty(ref _c, value); }
   int _w = default!; public int WindDirn { get => _w; set => SetProperty(ref _w, value); }
+  float _v = default!; public float WindVelo { get => _v; set => SetProperty(ref _v, value); }
+  RootobjectOneCallApi? _o = default!; public RootobjectOneCallApi? OCA { get => _o; set => SetProperty(ref _o, value); }
+  RootobjectFrc5Day3Hr? _f = default!; public RootobjectFrc5Day3Hr? D53 { get => _f; set => SetProperty(ref _f, value); }
 
   //ImageSource _i; public ImageSource WeaIcom { get => _i; set => SetProperty(ref _i, value); }
   //Uri _k = new("http://openweathermap.org/img/wn/04n@2x.png"); public Uri WIcon { get => _k; set => SetProperty(ref _k, value); }
