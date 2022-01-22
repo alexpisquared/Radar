@@ -49,8 +49,9 @@
         <oxy:LineSeries    ItemsSource="{Binding PointsNowT}" Color="#aaa" StrokeThickness="1.0" />
         <oxy:LineSeries    ItemsSource="{Binding PointsSunT}" Color="#770" />
 
-        <oxy:LineSeries    ItemsSource="{Binding EnvtCaPast24Pearson}"  Color="#d0f" StrokeThickness="3.0" />
-        <oxy:LineSeries    ItemsSource="{Binding EnvtCaPast24Buttnvl}"  Color="#08f" StrokeThickness="3.0" />
+        <oxy:LineSeries    ItemsSource="{Binding EnvtCaPast24PearsonT}"  Color="#d0f" StrokeThickness="3.0" />
+        <oxy:LineSeries    ItemsSource="{Binding EnvtCaPast24ButtnvlT}"  Color="#08f" StrokeThickness="3.0" />
+        <oxy:AreaSeries    ItemsSource="{Binding EnvtCaPast24BtnvWind}"  Color="#888" StrokeThickness="0.5" Fill="#1888" />
 
         <oxy:LineSeries    ItemsSource="{Binding EnvtCaMissuga}"  Color="#d0f" StrokeThickness="3.0" />
         <oxy:LineSeries    ItemsSource="{Binding EnvtCaToronto}"  Color="#0a0" StrokeThickness="5.0" />
@@ -67,8 +68,9 @@
         <oxy:LineSeries    ItemsSource="{Binding PointsFeel}" Color="#e0f" StrokeThickness="1.0" />
       </oxy:Plot.Series>
       <oxy:Plot.Axes>
-        <oxy:LinearAxis   Key="yAxis" TextColor="#ccc" IsZoomEnabled="False" IsPanEnabled="False" Position="Left"   MajorGridlineStyle="Dot" MajorGridlineColor="#000" Title="Temp [°C]" TitleColor="#ccc" />
-        <oxy:DateTimeAxis Key="xAxis" TextColor="#ccc" IsZoomEnabled="False" IsPanEnabled="False" Position="Bottom" MajorGridlineStyle="Dot" MajorGridlineColor="#000" Title="Time [ddd H]" TitleColor="#ccc" StringFormat="ddd HH" />
+        <oxy:DateTimeAxis Key="xAxis" TextColor="#ccc" IsZoomEnabled="False" IsPanEnabled="False" Position="Bottom" MajorGridlineStyle="Dot" MajorGridlineColor="#000" StringFormat="ddd HH" />
+        <oxy:LinearAxis   Key="yAxis" Minimum="-030" Maximum="010" TextColor="#ccc" TitleColor="#ccc" IsZoomEnabled="False" IsPanEnabled="False" Position="Left"   MajorGridlineStyle="Dot" MajorGridlineColor="#000" Title="Temp [°C]"              />
+        <oxy:LinearAxis   Key="yAxis" Minimum="-300" Maximum="100" TextColor="#ccc" TitleColor="#ccc" IsZoomEnabled="False" IsPanEnabled="False" Position="Right"  MajorGridlineStyle="Dot" MajorGridlineColor="#000" Title="Wind k/h*.1  PoP %*.1"  />
       </oxy:Plot.Axes>
     </oxy:Plot>
 
