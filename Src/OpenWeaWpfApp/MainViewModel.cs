@@ -25,6 +25,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   {
     try
     { //await Task.Delay(999); no diff
+      Clear();
       await PopulateEnvtCanaAsync();
       await PopulateScatModelAsync();
       //await PopulateFuncModelAsync();
@@ -71,20 +72,13 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
   async Task PopulateScatModelAsync()
   {
-    PointsGust.Clear();
-    PointsWind.Clear();
-    PointsTemp.Clear();
-    PointsFeel.Clear();
-    PointsFeel.Clear();
-    PointsSunT.Clear();
-
     PointsNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), +10));
     PointsNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), -25));
 
     OCA = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(OCA); // PHC107
     D53 = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(D53); // PHC107
 
-    PlotTitle = $"{UnixToDt(OCA.current.dt):ddd HH:mm}  {OCA.current.temp:N1}°  {OCA.current.feels_like:N0}°   {OCA.current.wind_deg}°-{OCA.current.wind_speed * _kWind:N0}k/h";
+    PlotTitle = $"{UnixToDt(OCA.current.dt):ddd HH:mm}    {OCA.current.temp:N1}°    {OCA.current.feels_like:N0}°    {OCA.current.wind_speed * _kWind:N1}k/h";
     CurrentConditions = $"{UnixToDt(OCA.current.dt):HH:mm}\n{OCA.current.temp,5:N1}°\n {OCA.current.feels_like,4:N0}°\n  {OCA.current.wind_speed * _kWind:N0}k/h";
     WindDirn = OCA.current.wind_deg;
     WindVelo = OCA.current.wind_speed * _kWind * 10;
@@ -126,15 +120,15 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     OCA.daily
       .Where(d => d.dt > D53.list.Max(d => d.dt))
       .ToList().ForEach(x =>
-    {
-      PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), x.temp.morn));
-      PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _d)), x.temp.day));
-      PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _e)), x.temp.eve));
-      PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), x.temp.night));
-      PointsWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_speed * _kWind));
-      PointsGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_gust * _kWind));
-      PointsPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 10));
-    });
+      {
+        PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), x.temp.morn));
+        PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _d)), x.temp.day));
+        PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _e)), x.temp.eve));
+        PointsTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), x.temp.night));
+        PointsWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_speed * _kWind));
+        PointsGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_gust * _kWind));
+        PointsPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 10));
+      });
 
     OCA.daily.ToList().ForEach(x =>
     {
@@ -144,6 +138,22 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       SctrPtTemp.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), value: 10, tag: $"{x.temp.night}", y: x.temp.night));
     });
   }
+
+  void Clear()
+  {
+    PlotTitle =
+    CurrentConditions = $"Loading...";
+    WindDirn = 0;
+    WindVelo = 0;
+    WeaIcom = "https://i.pinimg.com/originals/aa/56/66/aa5666d4be63b0aefa281e648f14cdcc.gif";
+    PointsGust.Clear();
+    PointsWind.Clear();
+    PointsTemp.Clear();
+    PointsFeel.Clear();
+    PointsFeel.Clear();
+    PointsSunT.Clear();
+  }
+
   async Task PopulateScatModelAsync_TogetherWithPlotView()
   {
     PointsGust.Clear();
