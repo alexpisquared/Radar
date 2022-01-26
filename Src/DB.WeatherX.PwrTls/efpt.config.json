@@ -16,6 +16,26 @@
       {
          "Name": "[dbo].[ForeVsReal]",
          "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[LkuMeasure]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[LkuSite]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[LkuSrc]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PointFore]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PointReal]",
+         "ObjectType": 0
       }
    ],
    "UiHint": "RAZER1\\SQLEXPRESS.WeatherX",
@@ -32,7 +52,7 @@
    "UseNoNavigations": false,
    "UseNoObjectFilter": false,
    "UseNodaTime": false,
-   "UseNullableReferences": false,
+   "UseNullableReferences": true,
    "UseSchemaFolders": false,
    "UseSpatial": false
 }
