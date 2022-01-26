@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DB.WeatherX.PwrTls\DB.WeatherX.PwrTls.csproj" />
     <ProjectReference Include="..\OpenWeather2022\OpenWeather2022.csproj" />
   </ItemGroup>
 

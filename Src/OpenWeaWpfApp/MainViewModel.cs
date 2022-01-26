@@ -1,4 +1,5 @@
 ﻿using System.Windows.Media.Imaging;
+using DB.WeatherX.PwrTls.Models;
 using XSD.CLS;
 
 namespace OpenWeaWpfApp;
@@ -36,25 +37,52 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   async Task PopulateEnvtCanaAsync()
   {
     Past24hrHAP p24 = new();
-    refill(EnvtCaPast24ButtnvlT, EnvtCaPast24PearWind, p24.GetIt(_urlPast24hrYKZ));
-    refill(EnvtCaPast24PearsonT, EnvtCaPast24BtnvWind, p24.GetIt(_urlPast24hrYYZ));
+    RefillPast24(EnvtCaPast24ButtnvlT, EnvtCaPast24PearWind, p24.GetIt(_urlPast24hrYKZ));
+    RefillPast24(EnvtCaPast24PearsonT, EnvtCaPast24BtnvWind, p24.GetIt(_urlPast24hrYYZ));
 
     var sitedataMiss = await _opnwea.GetEnvtCa(_mississ);
     var sitedataVghn = await _opnwea.GetEnvtCa(_vaughan);
 
-    refill(EnvtCaToronto, await _opnwea.GetEnvtCa(_toronto));
-    refill(EnvtCaTorIsld, await _opnwea.GetEnvtCa(_torIsld));    //refill(EnvtCaTorIsld, await _opnwea.GetEnvtCa(_newmark));
-    refill(EnvtCaMissuga, sitedataMiss);
-    refill(EnvtCaVaughan, sitedataVghn);
-    refill(EnvtCaMarkham, await _opnwea.GetEnvtCa(_markham));
-    refill(EnvtCaRchmdHl, await _opnwea.GetEnvtCa(_richmhl));
-    refill(EnvtCaRchmdHl, await _opnwea.GetEnvtCa(_richmhl));
+    await UpdateDB(sitedataMiss);
+    await UpdateDB(sitedataVghn);
 
-    EnvtCaIcomM = ($"https://weather.gc.ca/weathericons/{(sitedataMiss?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"); // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
-    EnvtCaIcomV = ($"https://weather.gc.ca/weathericons/{(sitedataVghn?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"); // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
+    RefillForeEnvtCa(EnvtCaToronto, await _opnwea.GetEnvtCa(_toronto));
+    RefillForeEnvtCa(EnvtCaTorIsld, await _opnwea.GetEnvtCa(_torIsld));    //refill(EnvtCaTorIsld, await _opnwea.GetEnvtCa(_newmark));
+    RefillForeEnvtCa(EnvtCaMissuga, sitedataMiss);
+    RefillForeEnvtCa(EnvtCaVaughan, sitedataVghn);
+    RefillForeEnvtCa(EnvtCaMarkham, await _opnwea.GetEnvtCa(_markham));
+    RefillForeEnvtCa(EnvtCaRchmdHl, await _opnwea.GetEnvtCa(_richmhl));
+    RefillForeEnvtCa(EnvtCaRchmdHl, await _opnwea.GetEnvtCa(_richmhl));
+
+    EnvtCaIconM = ($"https://weather.gc.ca/weathericons/{(sitedataMiss?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"); // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
+    EnvtCaIconV = ($"https://weather.gc.ca/weathericons/{(sitedataVghn?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"); // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
   }
 
-  static void refill(ObservableCollection<DataPoint> temps, ObservableCollection<DataPoint> winds, List<MeteoDataMy>? siteDt)
+  async Task UpdateDB(siteData? siteFore)
+  {
+    ArgumentNullException.ThrowIfNull(siteFore, $"@@@@@@@@@ {nameof(siteFore)}");
+    var now = DateTime.Now;
+    WeatherxContext dbx = new(null);
+
+    siteFore.hourlyForecastGroup.hourlyForecast.ToList().ForEach(f =>
+    {
+      if (!dbx.ForeVsReal.Any(d =>
+      //r.ForecastedFor == x.dateTimeUTC &&
+      d.ForeSiteId == siteFore.location.name.Value))
+      {
+        dbx.ForeVsReal.Add(new ForeVsReal
+        {
+          ForeSiteId = siteFore.location.name.Value,
+          RealSiteId = siteFore.location.name.Value,
+          //TempAirFore = f.temperature.Value,
+          //ForecastedAt = siteFore.dateTime,
+          CreatedAt = now
+        });
+      }
+    });
+  }
+
+  static void RefillPast24(ObservableCollection<DataPoint> temps, ObservableCollection<DataPoint> winds, List<MeteoDataMy>? siteDt)
   {
     ArgumentNullException.ThrowIfNull(siteDt, $"@@@@@@@@@ {nameof(siteDt)}");
 
@@ -66,7 +94,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       winds.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), x.WindKmH * _wk));
     });
   }
-  static void refill(ObservableCollection<DataPoint> points, siteData? siteDt)
+  static void RefillForeEnvtCa(ObservableCollection<DataPoint> points, siteData? siteDt)
   {
     ArgumentNullException.ThrowIfNull(siteDt, $"@@@@@@@@@ {nameof(siteDt)}");
 
@@ -384,8 +412,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   const float _kWind = 3.6f * _wk;
 
   string _j = "http://openweathermap.org/img/wn/01d@2x.png"; public string OpnWeaIcom { get => _j; set => SetProperty(ref _j, value); }
-  string _i = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIcomM { get => _i; set => SetProperty(ref _i, value); }
-  string _k = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIcomV { get => _k; set => SetProperty(ref _k, value); }
+  string _i = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconM { get => _i; set => SetProperty(ref _i, value); }
+  string _k = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconV { get => _k; set => SetProperty(ref _k, value); }
 }
 ///todo: https://oxyplot.readthedocs.io/en/latest/models/series/ScatterSeries.html
 ///https://docs.microsoft.com/en-us/answers/questions/22863/how-to-customize-charts-in-wpf-using-systemwindows.html
