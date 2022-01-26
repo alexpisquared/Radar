@@ -1,8 +1,4 @@
-﻿using System.Windows.Media.Imaging;
-using DB.WeatherX.PwrTls.Models;
-using XSD.CLS;
-
-namespace OpenWeaWpfApp;
+﻿namespace OpenWeaWpfApp;
 
 public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableValidator
 {
@@ -43,8 +39,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     var sitedataMiss = await _opnwea.GetEnvtCa(_mississ);
     var sitedataVghn = await _opnwea.GetEnvtCa(_vaughan);
 
-    await UpdateDB(sitedataMiss);
-    await UpdateDB(sitedataVghn);
+    UpdateDB(sitedataMiss);
+    UpdateDB(sitedataVghn);
 
     RefillForeEnvtCa(EnvtCaToronto, await _opnwea.GetEnvtCa(_toronto));
     RefillForeEnvtCa(EnvtCaTorIsld, await _opnwea.GetEnvtCa(_torIsld));    //refill(EnvtCaTorIsld, await _opnwea.GetEnvtCa(_newmark));
@@ -58,22 +54,21 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     EnvtCaIconV = ($"https://weather.gc.ca/weathericons/{(sitedataVghn?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"); // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
   }
 
-  async Task UpdateDB(siteData? siteFore)
+  void UpdateDB(siteData? siteFore)
   {
     ArgumentNullException.ThrowIfNull(siteFore, $"@@@@@@@@@ {nameof(siteFore)}");
     var now = DateTime.Now;
     WeatherxContext dbx = new(null);
 
-    siteFore.hourlyForecastGroup.hourlyForecast.ToList().ForEach(f =>
+    siteFore.hourlyForecastGroup.hourlyForecast.ToList().ForEach(async f =>
     {
-      if (!dbx.ForeVsReal.Any(d =>
+      if (await dbx.PointReal.AnyAsync(d =>
       //r.ForecastedFor == x.dateTimeUTC &&
-      d.ForeSiteId == siteFore.location.name.Value))
+      d.SiteId == siteFore.location.name.Value) == false)
       {
-        dbx.ForeVsReal.Add(new ForeVsReal
+        dbx.PointReal.Add(new PointReal
         {
-          ForeSiteId = siteFore.location.name.Value,
-          RealSiteId = siteFore.location.name.Value,
+          SiteId = siteFore.location.name.Value,
           //TempAirFore = f.temperature.Value,
           //ForecastedAt = siteFore.dateTime,
           CreatedAt = now

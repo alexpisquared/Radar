@@ -18,6 +18,7 @@
     <!--
     //tu: OxyPlot - do not use latest ver 2.1.0 : it does not even compile!!!
     -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.0" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
     <PackageReference Include="OxyPlot.Core" Version="2.0.0" />

@@ -20,3 +20,6 @@ global using OxyPlot.Axes;
 global using OxyPlot.Series;
 global using static System.Net.WebRequestMethods;
 global using static OpenWeather2022.OpenWea;
+global using DB.WeatherX.PwrTls.Models;
+global using Microsoft.EntityFrameworkCore;
+global using XSD.CLS;
