@@ -60,7 +60,9 @@ public partial class App : Application
     Current.Shutdown();
 #endif
 
-    base.OnStartup(e); Write("");
+    base.OnStartup(e); 
+    Write("");
+    await Task.Yield();
   }
 }
 

@@ -1,17 +1,14 @@
-﻿namespace OpenWeaWpfApp;
+﻿using System.Windows.Media.Imaging;
+using XSD.CLS;
+
+namespace OpenWeaWpfApp;
 
 public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableValidator
 {
   readonly IConfigurationRoot _config;
   readonly OpenWea _opnwea;
-  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _d3r = 4, _d3c = 600, _h = 999, _windClr = 333, _popClr = 0;
-  const string _toronto = "s0000458",
-    _torIsld = "s0000785",
-    _mississ = "s0000786",
-    _vaughan = "s0000584",
-    _markham = "s0000585",
-    _richmhl = "s0000773",
-    _newmark = "s0000582",
+  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _d3r = 4, _d3c = 600, _windClr = 333, _popClr = 0;
+  const string _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaughan = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582",
     _urlPast24hrYYZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yyz", // Pearson
     _urlPast24hrYKZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=ykz"; // Buttonville
 
@@ -30,8 +27,9 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       await PopulateScatModelAsync();
       //await PopulateFuncModelAsync();
       //await PopulateOpenWeathAsync(); -- extra calls 
+      Beep.Play();
     }
-    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else throw; }
+    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else throw; Hand.Play(); }
     return true;
   }
 
@@ -41,13 +39,19 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     refill(EnvtCaPast24ButtnvlT, EnvtCaPast24PearWind, p24.GetIt(_urlPast24hrYKZ));
     refill(EnvtCaPast24PearsonT, EnvtCaPast24BtnvWind, p24.GetIt(_urlPast24hrYYZ));
 
+    var sitedataMiss = await _opnwea.GetEnvtCa(_mississ);
+    var sitedataVghn = await _opnwea.GetEnvtCa(_vaughan);
+
     refill(EnvtCaToronto, await _opnwea.GetEnvtCa(_toronto));
     refill(EnvtCaTorIsld, await _opnwea.GetEnvtCa(_torIsld));    //refill(EnvtCaTorIsld, await _opnwea.GetEnvtCa(_newmark));
-    refill(EnvtCaMissuga, await _opnwea.GetEnvtCa(_mississ));
-    refill(EnvtCaVaughan, await _opnwea.GetEnvtCa(_vaughan));
+    refill(EnvtCaMissuga, sitedataMiss);
+    refill(EnvtCaVaughan, sitedataVghn);
     refill(EnvtCaMarkham, await _opnwea.GetEnvtCa(_markham));
     refill(EnvtCaRchmdHl, await _opnwea.GetEnvtCa(_richmhl));
     refill(EnvtCaRchmdHl, await _opnwea.GetEnvtCa(_richmhl));
+
+    EnvtCaIcomM = ($"https://weather.gc.ca/weathericons/{(sitedataMiss?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"); // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
+    EnvtCaIcomV = ($"https://weather.gc.ca/weathericons/{(sitedataVghn?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"); // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
   }
 
   static void refill(ObservableCollection<DataPoint> temps, ObservableCollection<DataPoint> winds, List<MeteoDataMy>? siteDt)
@@ -62,7 +66,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       winds.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), x.WindKmH * _wk));
     });
   }
-  static void refill(ObservableCollection<DataPoint> points, XSD.CLS.siteData? siteDt)
+  static void refill(ObservableCollection<DataPoint> points, siteData? siteDt)
   {
     ArgumentNullException.ThrowIfNull(siteDt, $"@@@@@@@@@ {nameof(siteDt)}");
 
@@ -82,7 +86,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     CurrentConditions = $"{UnixToDt(OCA.current.dt):HH:mm}\n{OCA.current.temp,5:N1}°\n {OCA.current.feels_like,4:N0}°\n  {OCA.current.wind_speed * _kWind:N0}k/h";
     WindDirn = OCA.current.wind_deg;
     WindVelo = OCA.current.wind_speed * _kWind * 10;
-    WeaIcom = $"http://openweathermap.org/img/wn/{OCA.current.weather.First().icon}@2x.png";
+    OpnWeaIcom = $"http://openweathermap.org/img/wn/{OCA.current.weather.First().icon}@2x.png";
 
     var timeMin = DateTimeAxis.ToDouble(OpenWea.UnixToDt(OCA.daily.Min(d => d.dt - 07 * 3600)));
     var timeMax = DateTimeAxis.ToDouble(OpenWea.UnixToDt(OCA.daily.Max(d => d.dt + 12 * 3600)));
@@ -145,7 +149,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     CurrentConditions = $"Loading...";
     WindDirn = 0;
     WindVelo = 0;
-    WeaIcom = "https://i.pinimg.com/originals/aa/56/66/aa5666d4be63b0aefa281e648f14cdcc.gif";
+    OpnWeaIcom = "https://i.pinimg.com/originals/aa/56/66/aa5666d4be63b0aefa281e648f14cdcc.gif";
     PointsGust.Clear();
     PointsWind.Clear();
     PointsTemp.Clear();
@@ -376,11 +380,12 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
   //ImageSource _i; public ImageSource WeaIcom { get => _i; set => SetProperty(ref _i, value); }
   //Uri _k = new("http://openweathermap.org/img/wn/04n@2x.png"); public Uri WIcon { get => _k; set => SetProperty(ref _k, value); }
-  string _i = "http://openweathermap.org/img/wn/01d@2x.png";
   const float _wk = .1f;
   const float _kWind = 3.6f * _wk;
 
-  public string WeaIcom { get => _i; set => SetProperty(ref _i, value); }
+  string _j = "http://openweathermap.org/img/wn/01d@2x.png"; public string OpnWeaIcom { get => _j; set => SetProperty(ref _j, value); }
+  string _i = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIcomM { get => _i; set => SetProperty(ref _i, value); }
+  string _k = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIcomV { get => _k; set => SetProperty(ref _k, value); }
 }
 ///todo: https://oxyplot.readthedocs.io/en/latest/models/series/ScatterSeries.html
 ///https://docs.microsoft.com/en-us/answers/questions/22863/how-to-customize-charts-in-wpf-using-systemwindows.html
