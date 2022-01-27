@@ -283,13 +283,14 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     CurrentConditions = $"Loading...";
     WindDirn = 0;
     WindVelo = 0;
-    OpnWeaIcom = "https://i.pinimg.com/originals/aa/56/66/aa5666d4be63b0aefa281e648f14cdcc.gif";
+    OpnWeaIcom = "http://openweathermap.org/img/wn/01n@2x.png";
     PointsGust.Clear();
     PointsWind.Clear();
     PointsTemp.Clear();
     PointsFeel.Clear();
     PointsFeel.Clear();
     PointsSunT.Clear();
+    PointsPopr.Clear();
   }
 
   async Task PopulateScatModelAsync_TogetherWithPlotView()

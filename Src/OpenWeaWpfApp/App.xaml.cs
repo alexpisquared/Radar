@@ -1,6 +1,4 @@
 ﻿#define Host
-using OpenWeather2022.Response;
-
 namespace OpenWeaWpfApp;
 
 public partial class App : Application
