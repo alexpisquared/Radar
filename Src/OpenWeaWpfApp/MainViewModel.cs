@@ -113,11 +113,13 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     foreach (var f in siteFore.hourlyForecastGroup.hourlyForecast.ToList()) //siteFore.hourlyForecastGroup.hourlyForecast.ToList().ForEach(async f =>
     {
       var forecastedFor = EnvtCaDate(f.dateTimeUTC);
+      var val = double.Parse(f.temperature.Value);
 
       if (await _dbx.PointFore.AnyAsync(d =>
           d.SrcId == srcId &&
           d.SiteId == siteId &&
           d.MeasureId == measureId &&
+          d.MeasureValue == val && // store only changes in recalculation results
           d.ForecastedFor == forecastedFor) == false)
       {
         _dbx.PointFore.Add(new PointFore
@@ -125,7 +127,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
           SrcId = srcId,
           SiteId = siteId,
           MeasureId = measureId,
-          MeasureValue = double.Parse(f.temperature.Value),
+          MeasureValue = val,
           ForecastedFor = forecastedFor,
           ForecastedAt = forecastedAt,
           Note64 = "[early runs]",
@@ -154,6 +156,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       if (await _dbx.PointFore.AnyAsync(d =>
           d.SrcId == srcId &&
           d.SiteId == siteId &&
+          d.MeasureValue == f.temp && // store only changes in recalculation results
           d.MeasureId == measureId &&
           d.ForecastedFor == forecastedFor) == false)
       {

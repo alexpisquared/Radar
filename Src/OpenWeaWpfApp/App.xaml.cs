@@ -8,6 +8,8 @@ public partial class App : Application
 
   public App()
   {
+    Beep.Play();
+
     _host = Host.CreateDefaultBuilder()
       .AddViewModels()
       .ConfigureServices((hostContext, services) =>
@@ -43,10 +45,10 @@ public partial class App : Application
 
 #if Host
     _host.Start();
-    MainWindow = _host.Services.GetRequiredService<MainWindow>();
+    MainWindow = _host.Services.GetRequiredService<MainWindow>();                       // 1.050 ms!!!
 #else
-    MainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-    MainWindow.DataContext = _serviceProvider.GetRequiredService<MainViewModel>();
+    MainWindow = _serviceProvider.GetRequiredService<MainWindow>();                     //   400 ms
+    MainWindow.DataContext = _serviceProvider.GetRequiredService<MainViewModel>();      //   700 ms
 #endif
 
     //the only way to populate PlotView: await ((MainViewModel)MainWindow.DataContext).PopulateAsync();
