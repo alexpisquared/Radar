@@ -1,4 +1,8 @@
-﻿namespace OpenWeaWpfApp;
+﻿using System.ComponentModel.Design.Serialization;
+using DB.WeatherX.PwrTls;
+using OpenWeather2022.Response;
+
+namespace OpenWeaWpfApp;
 
 public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableValidator
 {
@@ -33,14 +37,20 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   async Task PopulateEnvtCanaAsync()
   {
     Past24hrHAP p24 = new();
-    RefillPast24(EnvtCaPast24ButtnvlT, EnvtCaPast24PearWind, p24.GetIt(_urlPast24hrYKZ));
-    RefillPast24(EnvtCaPast24PearsonT, EnvtCaPast24BtnvWind, p24.GetIt(_urlPast24hrYYZ));
+    var b = p24.GetIt(_urlPast24hrYKZ);
+    var p = p24.GetIt(_urlPast24hrYYZ);
+
+    await AddPastDataToDB_EnvtCa("bvl", b);
+    await AddPastDataToDB_EnvtCa("pea", p);
+
+    RefillPast24(EnvtCaPast24ButtnvlT, EnvtCaPast24PearWind, b);
+    RefillPast24(EnvtCaPast24PearsonT, EnvtCaPast24BtnvWind, p);
 
     var sitedataMiss = await _opnwea.GetEnvtCa(_mississ);
     var sitedataVghn = await _opnwea.GetEnvtCa(_vaughan);
 
-    UpdateDB(sitedataMiss);
-    UpdateDB(sitedataVghn);
+    await AddForeDataToDB_EnvtCa("mis", sitedataMiss);
+    await AddForeDataToDB_EnvtCa("vgn", sitedataVghn);
 
     RefillForeEnvtCa(EnvtCaToronto, await _opnwea.GetEnvtCa(_toronto));
     RefillForeEnvtCa(EnvtCaTorIsld, await _opnwea.GetEnvtCa(_torIsld));    //refill(EnvtCaTorIsld, await _opnwea.GetEnvtCa(_newmark));
@@ -54,27 +64,125 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     EnvtCaIconV = ($"https://weather.gc.ca/weathericons/{(sitedataVghn?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"); // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
   }
 
-  void UpdateDB(siteData? siteFore)
+  async Task AddPastDataToDB_EnvtCa(string siteId, List<MeteoDataMy> sitePast, string srcId = "eca", string measureId = "tar")
   {
-    ArgumentNullException.ThrowIfNull(siteFore, $"@@@@@@@@@ {nameof(siteFore)}");
+    ArgumentNullException.ThrowIfNull(sitePast, $"@@@@@@@@@ {nameof(sitePast)}");
     var now = DateTime.Now;
-    WeatherxContext dbx = new(null);
 
-    siteFore.hourlyForecastGroup.hourlyForecast.ToList().ForEach(async f =>
+    var connectionString = _config.GetConnectionString("Exprs");
+    WeatherxContextFactory dbf = new(connectionString);
+    using WeatherxContext dbx = dbf.CreateDbContext();
+
+    foreach (var f in sitePast) //sitePast.hourlyPastcastGroup.hourlyPastcast.ToList().ForEach(async f =>
     {
       if (await dbx.PointReal.AnyAsync(d =>
-      //r.ForecastedFor == x.dateTimeUTC &&
-      d.SiteId == siteFore.location.name.Value) == false)
+          d.SrcId == srcId &&
+          d.SiteId == siteId &&
+          d.MeasureId == measureId &&
+          d.MeasureTime == f.TakenAt) == false)
       {
         dbx.PointReal.Add(new PointReal
         {
-          SiteId = siteFore.location.name.Value,
-          //TempAirFore = f.temperature.Value,
-          //ForecastedAt = siteFore.dateTime,
+          SrcId = srcId,
+          SiteId = siteId,
+          MeasureId = measureId,
+          MeasureValue = f.TempAir,
+          MeasureTime = f.TakenAt,
+          Note64 = "[early runs]",
           CreatedAt = now
         });
       }
-    });
+    };
+
+    WriteLine($"PP{await dbx.SaveChangesAsync()}");
+  }
+  async Task AddForeDataToDB_EnvtCa(string siteId, siteData? siteFore, string srcId = "eca", string measureId = "tar")
+  {
+    ArgumentNullException.ThrowIfNull(siteFore, $"@@@@@@@@@ {nameof(siteFore)}");
+    var now = DateTime.Now;
+
+    var connectionString = _config.GetConnectionString("Exprs");
+    WeatherxContextFactory dbf = new(connectionString);
+    using WeatherxContext dbx = dbf.CreateDbContext();
+
+    var forecastedAt = EnvtCaDate(siteFore.currentConditions.dateTime[1]);
+
+    foreach (var f in siteFore.hourlyForecastGroup.hourlyForecast.ToList()) //siteFore.hourlyForecastGroup.hourlyForecast.ToList().ForEach(async f =>
+    {
+      var forecastedFor = EnvtCaDate(f.dateTimeUTC);
+
+      if (await dbx.PointFore.AnyAsync(d =>
+          d.SrcId == srcId &&
+          d.SiteId == siteId &&
+          d.MeasureId == measureId &&
+          d.ForecastedFor == forecastedFor) == false)
+      {
+        dbx.PointFore.Add(new PointFore
+        {
+          SrcId = srcId,
+          SiteId = siteId,
+          MeasureId = measureId,
+          MeasureValue = double.Parse(f.temperature.Value),
+          ForecastedFor = forecastedFor,
+          ForecastedAt = forecastedAt,
+          Note64 = "[early runs]",
+          CreatedAt = now
+        });
+      }
+    };
+
+    WriteLine($"PP{await dbx.SaveChangesAsync()}");
+  }
+  async Task AddForeDataToDB_OpnWea(string siteId, RootobjectOneCallApi? siteFore, string srcId = "owa", string measureId = "tar")
+  {
+    ArgumentNullException.ThrowIfNull(siteFore, $"@@@@@@@@@ {nameof(siteFore)}");
+    var now = DateTime.Now;
+
+    var connectionString = _config.GetConnectionString("Exprs");
+    WeatherxContextFactory dbf = new(connectionString);
+    using WeatherxContext dbx = dbf.CreateDbContext();
+
+    var forecastedAt = OpenWea.UnixToDt(siteFore.current.dt);
+
+    foreach (var f in siteFore.hourly.ToList()) //siteFore.hourlyForecastGroup.hourlyForecast.ToList().ForEach(async f =>
+    {
+      var forecastedFor = OpenWea.UnixToDt(f.dt);
+
+      if (await dbx.PointFore.AnyAsync(d =>
+          d.SrcId == srcId &&
+          d.SiteId == siteId &&
+          d.MeasureId == measureId &&
+          d.ForecastedFor == forecastedFor) == false)
+      {
+        dbx.PointFore.Add(new PointFore
+        {
+          SrcId = srcId,
+          SiteId = siteId,
+          MeasureId = measureId,
+          MeasureValue = f.temp,
+          ForecastedFor = forecastedFor,
+          ForecastedAt = forecastedAt,
+          Note64 = "[early runs]",
+          CreatedAt = now
+        });
+      }
+    };
+
+    WriteLine($"PP{await dbx.SaveChangesAsync()}");
+  }
+
+  static DateTimeOffset EnvtCaDate(string yyyyMMddHHmm)
+  {
+    if (!DateTime.TryParseExact(yyyyMMddHHmm, new string[] { "yyyyMMddHHmm", "yyyyMMddHHmmss" }, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out var utc)) //var lcl = DateTime.ParseExact(yyyyMMddHHmm, "yyyyMMddHHmm", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal).ToLocalTime(); //tu: UTC to Local time.
+      throw new ArgumentOutOfRangeException(nameof(yyyyMMddHHmm), yyyyMMddHHmm, "@@@@@@@@ Can you imagine?!?!?!");
+
+    return utc.ToLocalTime(); //tu: UTC to Local time.
+  }
+  static DateTimeOffset EnvtCaDate(dateStampType dateStampType)
+  {
+    if (!DateTimeOffset.TryParseExact($"{dateStampType.year}-{dateStampType.month.Value}-{dateStampType.day.Value} {dateStampType.hour.Value}:{dateStampType.minute}", "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var dt))
+      throw new ArgumentException();
+    return dt;
   }
 
   static void RefillPast24(ObservableCollection<DataPoint> temps, ObservableCollection<DataPoint> winds, List<MeteoDataMy>? siteDt)
@@ -94,7 +202,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     ArgumentNullException.ThrowIfNull(siteDt, $"@@@@@@@@@ {nameof(siteDt)}");
 
     points.Clear();
-    siteDt.hourlyForecastGroup.hourlyForecast.ToList().ForEach(x => points.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.ParseExact(x.dateTimeUTC, new string[] { "yyyyMMddHHmm", "yyyyMMddHHmmss" }, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal).ToLocalTime()), double.Parse(x.temperature.Value))));
+    siteDt.hourlyForecastGroup.hourlyForecast.ToList().ForEach(x => points.Add(new DataPoint(DateTimeAxis.ToDouble(EnvtCaDate(x.dateTimeUTC).DateTime), double.Parse(x.temperature.Value))));
   }
 
   async Task PopulateScatModelAsync()
@@ -115,6 +223,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     var timeMax = DateTimeAxis.ToDouble(OpenWea.UnixToDt(OCA.daily.Max(d => d.dt + 12 * 3600)));
     var valueMin = OCA.daily.Min(r => r.temp.min);
     var valueMax = OCA.daily.Max(r => r.temp.max);
+
+    await AddForeDataToDB_OpnWea("phc", OCA);
 
     OCA.hourly.ToList().ForEach(x =>
     {
@@ -165,6 +275,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       SctrPtTemp.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), value: 10, tag: $"{x.temp.night}", y: x.temp.night));
     });
   }
+
 
   void Clear()
   {
