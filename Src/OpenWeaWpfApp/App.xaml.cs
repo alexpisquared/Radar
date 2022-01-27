@@ -1,4 +1,4 @@
-﻿#define Host
+﻿#define Host_
 namespace OpenWeaWpfApp;
 
 public partial class App : Application
@@ -46,12 +46,12 @@ public partial class App : Application
     //the only way to populate PlotView: await ((MainViewModel)MainWindow.DataContext).PopulateAsync();
 
     MainWindow.Show();
-#else
+#else // Release:
     var config = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
     Trace.WriteLine($"---   WhereAmI: '{config["WhereAmI"]}'       {config["AppSecrets:MagicNumber"]}");
 
     /* //tu: not storing file in the GitHub:     (https://youtu.be/ASraHYMi808?t=832)
-    git update-index --assume-unchanged AppSettings.json
+    git update-index    --assume-unchanged AppSettings.json
     git update-index --no-assume-unchanged AppSettings.json            */
 
     var rv = await new OpenWeather2022.OpenWea().ParseJsonToClasses(config["AppSecrets:MagicNumber"]);
@@ -64,6 +64,7 @@ public partial class App : Application
   }
 }
 
+#if Host
 public static class AddViewModelsHostBuilderExtensions
 {
   public static IHostBuilder AddViewModels(this IHostBuilder hostBuilder)
@@ -76,3 +77,4 @@ public static class AddViewModelsHostBuilderExtensions
     return hostBuilder;
   }
 }
+#endif

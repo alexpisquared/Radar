@@ -28,7 +28,7 @@
 
     <oxy:PlotView Model="{Binding FuncModel}" Background="#333" Margin="2" Grid.Column="0" Grid.Row="0" x:Name="plotTL" Visibility="Visible" />
     <oxy:PlotView Model="{Binding ScatModel}" Background="#444" Margin="2" Grid.Column="2" Grid.Row="0" x:Name="plotTR" />
-    <oxy:Plot     Title="{Binding PlotTitle}" Background="#555" Margin="2" Grid.Column="0" Grid.Row="2" x:Name="plotBL"    >
+    <oxy:Plot     Title="{Binding PlotTitle}" Background="#555" Margin="2" Grid.Column="0" Grid.Row="2" x:Name="plotBL"  >
       <oxy:Plot.Series>
         <oxy:LineSeries    ItemsSource="{Binding PointsTempC}" Color="#f0f" MarkerType="Cross" />
         <oxy:ScatterSeries ItemsSource="{Binding PointsFeelC}" />
