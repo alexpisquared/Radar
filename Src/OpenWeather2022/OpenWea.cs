@@ -1,8 +1,4 @@
 ﻿#define SaveToFile_
-using System.Xml.Serialization;
-using OpenWeather2022.Response;
-using XSD.CLS;
-
 namespace OpenWeather2022;
 
 // PHC107         43.8374229, -79.4961442

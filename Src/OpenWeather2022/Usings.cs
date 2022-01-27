@@ -5,5 +5,8 @@ global using System.Linq;
 global using System.Net.Http;
 global using System.Net.Http.Json;
 global using System.Threading.Tasks;
-
+global using System.Xml.Serialization;
+global using OpenWeather2022.Response;
+global using XSD.CLS;
 global using static System.Diagnostics.Trace;
+

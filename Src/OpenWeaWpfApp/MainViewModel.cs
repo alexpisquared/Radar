@@ -9,14 +9,17 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   readonly IConfigurationRoot _config;
   readonly OpenWea _opnwea;
   readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _d3r = 4, _d3c = 600, _windClr = 333, _popClr = 0;
+  readonly WeatherxContext _dbx;
   const string _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaughan = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582",
     _urlPast24hrYYZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yyz", // Pearson
     _urlPast24hrYKZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=ykz"; // Buttonville
 
-  public MainViewModel()
+  public MainViewModel(WeatherxContext weatherxContext)
   {
     _config = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
     _opnwea = new OpenWea();
+    _dbx = weatherxContext;
+    WriteLine($"*** {_dbx.Database.GetConnectionString()}");
   }
 
   public async Task<bool> PopulateAsync()
@@ -69,19 +72,19 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     ArgumentNullException.ThrowIfNull(sitePast, $"@@@@@@@@@ {nameof(sitePast)}");
     var now = DateTime.Now;
 
-    var connectionString = _config.GetConnectionString("Exprs");
-    WeatherxContextFactory dbf = new(connectionString);
-    using WeatherxContext dbx = dbf.CreateDbContext();
+    //var connectionString = _config.GetConnectionString("Exprs");
+    //WeatherxContextFactory dbf = new(connectionString);
+    //using WeatherxContext _dbx = dbf.CreateDbContext();
 
     foreach (var f in sitePast) //sitePast.hourlyPastcastGroup.hourlyPastcast.ToList().ForEach(async f =>
     {
-      if (await dbx.PointReal.AnyAsync(d =>
+      if (await _dbx.PointReal.AnyAsync(d =>
           d.SrcId == srcId &&
           d.SiteId == siteId &&
           d.MeasureId == measureId &&
           d.MeasureTime == f.TakenAt) == false)
       {
-        dbx.PointReal.Add(new PointReal
+        _dbx.PointReal.Add(new PointReal
         {
           SrcId = srcId,
           SiteId = siteId,
@@ -94,16 +97,16 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       }
     };
 
-    WriteLine($"PP{await dbx.SaveChangesAsync()}");
+    WriteLine($"PP{await _dbx.SaveChangesAsync()}");
   }
   async Task AddForeDataToDB_EnvtCa(string siteId, siteData? siteFore, string srcId = "eca", string measureId = "tar")
   {
     ArgumentNullException.ThrowIfNull(siteFore, $"@@@@@@@@@ {nameof(siteFore)}");
     var now = DateTime.Now;
 
-    var connectionString = _config.GetConnectionString("Exprs");
-    WeatherxContextFactory dbf = new(connectionString);
-    using WeatherxContext dbx = dbf.CreateDbContext();
+    //var connectionString = _config.GetConnectionString("Exprs");
+    //WeatherxContextFactory dbf = new(connectionString);
+    //using WeatherxContext _dbx = dbf.CreateDbContext();
 
     var forecastedAt = EnvtCaDate(siteFore.currentConditions.dateTime[1]);
 
@@ -111,13 +114,13 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     {
       var forecastedFor = EnvtCaDate(f.dateTimeUTC);
 
-      if (await dbx.PointFore.AnyAsync(d =>
+      if (await _dbx.PointFore.AnyAsync(d =>
           d.SrcId == srcId &&
           d.SiteId == siteId &&
           d.MeasureId == measureId &&
           d.ForecastedFor == forecastedFor) == false)
       {
-        dbx.PointFore.Add(new PointFore
+        _dbx.PointFore.Add(new PointFore
         {
           SrcId = srcId,
           SiteId = siteId,
@@ -131,16 +134,16 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       }
     };
 
-    WriteLine($"PP{await dbx.SaveChangesAsync()}");
+    WriteLine($"PP{await _dbx.SaveChangesAsync()}");
   }
   async Task AddForeDataToDB_OpnWea(string siteId, RootobjectOneCallApi? siteFore, string srcId = "owa", string measureId = "tar")
   {
     ArgumentNullException.ThrowIfNull(siteFore, $"@@@@@@@@@ {nameof(siteFore)}");
     var now = DateTime.Now;
 
-    var connectionString = _config.GetConnectionString("Exprs");
-    WeatherxContextFactory dbf = new(connectionString);
-    using WeatherxContext dbx = dbf.CreateDbContext();
+    //var connectionString = _config.GetConnectionString("Exprs");
+    //WeatherxContextFactory dbf = new(connectionString);
+    //using WeatherxContext _dbx = dbf.CreateDbContext();
 
     var forecastedAt = OpenWea.UnixToDt(siteFore.current.dt);
 
@@ -148,13 +151,13 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     {
       var forecastedFor = OpenWea.UnixToDt(f.dt);
 
-      if (await dbx.PointFore.AnyAsync(d =>
+      if (await _dbx.PointFore.AnyAsync(d =>
           d.SrcId == srcId &&
           d.SiteId == siteId &&
           d.MeasureId == measureId &&
           d.ForecastedFor == forecastedFor) == false)
       {
-        dbx.PointFore.Add(new PointFore
+        _dbx.PointFore.Add(new PointFore
         {
           SrcId = srcId,
           SiteId = siteId,
@@ -168,7 +171,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       }
     };
 
-    WriteLine($"PP{await dbx.SaveChangesAsync()}");
+    WriteLine($"PP{await _dbx.SaveChangesAsync()}");
   }
 
   static DateTimeOffset EnvtCaDate(string yyyyMMddHHmm)
@@ -214,7 +217,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     D53 = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(D53); // PHC107
 
     PlotTitle = $"{UnixToDt(OCA.current.dt):ddd HH:mm}    {OCA.current.temp:N1}°    {OCA.current.feels_like:N0}°    {OCA.current.wind_speed * _kWind:N1}k/h";
-    CurrentConditions = $"{UnixToDt(OCA.current.dt):HH:mm}\n{OCA.current.temp,5:N1}°\n {OCA.current.feels_like,4:N0}°\n  {OCA.current.wind_speed * _kWind:N0}k/h";
+    CurrentConditions = $"{UnixToDt(OCA.current.dt):HH:mm:ss}\n{OCA.current.temp,5:N1}°\n {OCA.current.feels_like,4:N0}°\n  {OCA.current.wind_speed * _kWind:N0}k/h";
     WindDirn = OCA.current.wind_deg;
     WindVelo = OCA.current.wind_speed * _kWind * 10;
     OpnWeaIcom = $"http://openweathermap.org/img/wn/{OCA.current.weather.First().icon}@2x.png";

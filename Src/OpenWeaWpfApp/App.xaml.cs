@@ -1,4 +1,4 @@
-﻿#define Host_
+﻿#define Host
 namespace OpenWeaWpfApp;
 
 public partial class App : Application
@@ -12,10 +12,13 @@ public partial class App : Application
       .AddViewModels()
       .ConfigureServices((hostContext, services) =>
       {
-        services.AddSingleton(s => new MainWindow()
+        _ = services.AddSingleton(s => new MainWindow()
         {
           DataContext = s.GetRequiredService<MainViewModel>()
         });
+
+        Dbx(services);
+
       })
       .Build();
   }
@@ -26,7 +29,10 @@ public partial class App : Application
   {
     var services = new ServiceCollection();
     _ = services.AddTransient<MainViewModel>();
-    _ = services.AddSingleton<MainWindow>(); // (sp => new MainView(sp.GetRequiredService<ILogger>(), sp.GetRequiredService<IConfigurationRoot>(), sp.GetRequiredService<InventoryContext>(), _started));
+    _ = services.AddSingleton<MainWindow>(); 
+
+    Dbx(services);
+
     _serviceProvider = services.BuildServiceProvider();
   }
 #endif
@@ -58,10 +64,18 @@ public partial class App : Application
     Current.Shutdown();
 #endif
 
-    base.OnStartup(e); 
+    base.OnStartup(e);
     Write("");
     await Task.Yield();
   }
+
+
+  static void Dbx(IServiceCollection services) => _ = services.AddDbContext<WeatherxContext>(optionsBuilder => //tu: dbcontext connstr https://youtu.be/7OBMhoKieqk?t=505 + https://codedocu.com/details?d=2653&a=9&f=425&d=0  :Project\Manage Connected Svcs !!! 2021-12
+  {
+    var cfg = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets         //todo: var cfg = _serviceProvider?.GetRequiredService<IConfigurationRoot>();
+
+    optionsBuilder.UseSqlServer(cfg.GetConnectionString("Exprs") ?? throw new ArgumentNullException(".GetConnectionString('Exprs')"));
+  });
 }
 
 #if Host
