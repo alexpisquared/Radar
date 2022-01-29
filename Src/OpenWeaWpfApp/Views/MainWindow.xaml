@@ -26,11 +26,11 @@
           <oxy:AreaSeries    ItemsSource="{Binding EnvtCaPast24BtnvWind}"  Color="{StaticResource Phc}" StrokeThickness="0.5" Title="Buttnvl" ToolTip="Buttnvl" Fill="#1888" />
 
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaToronto}"  Color="#b80" StrokeThickness="5.0" Title="TO" />
-          <oxy:LineSeries    ItemsSource="{Binding EnvtCaMissuga}"  Color="#0f6" StrokeThickness="3.0" Title="Mis" />
+          <oxy:LineSeries    ItemsSource="{Binding EnvtCaMissuga}"  Color="{StaticResource Mis}" StrokeThickness="3.0" Title="Mis" />
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaTorIsld}"  Color="#d00" StrokeThickness="1.0" Title="TI" />
-          <oxy:LineSeries    ItemsSource="{Binding EnvtCaVaughan}"  Color="#08f" StrokeThickness="3.0" Title="VA" />
-          <oxy:LineSeries    ItemsSource="{Binding EnvtCaMarkham}"  Color="#08f" StrokeThickness="2.0" Title="MA" />
-          <oxy:LineSeries    ItemsSource="{Binding EnvtCaRchmdHl}"  Color="#08f" StrokeThickness="1.0" Title="RH" />
+          <oxy:LineSeries    ItemsSource="{Binding EnvtCaVaughan}"  Color="{StaticResource Vgn}" StrokeThickness="3.0" Title="VA" />
+          <oxy:LineSeries    ItemsSource="{Binding EnvtCaMarkham}"  Color="{StaticResource Vgn}" StrokeThickness="2.0" Title="MA" />
+          <oxy:LineSeries    ItemsSource="{Binding EnvtCaRchmdHl}"  Color="{StaticResource Vgn}" StrokeThickness="1.0" Title="RH" />
 
           <oxy:AreaSeries    ItemsSource="{Binding DataPtPopr}" Color="#04f" />
           <oxy:LineSeries    ItemsSource="{Binding DataPtGust}" Color="#888" StrokeThickness="1.0" />
@@ -41,8 +41,15 @@
           <oxy:ScatterSeries ItemsSource="{Binding SctrPtTFFPhc}" MarkerType="Plus"    MarkerStroke="#eaf" MarkerStrokeThickness="2" MarkerSize="5" MarkerFill="#0f0" Title="OWA" />
         </oxy:Plot.Series>
         <oxy:Plot.Axes>
-          <oxy:DateTimeAxis Key="xAxis" TextColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Top" StringFormat="                  ddd" MajorStep="1" MinorStep="0.25" MajorGridlineStyle="Solid" MajorGridlineColor="#000" MinorTickSize="10" MinorGridlineColor="#000" MinorGridlineStyle="LongDashDotDot" />
-          <oxy:LinearAxis   Key="yAxis" Minimum="-28"  Maximum="12"  MajorStep="10"  MinorStep="1"  TextColor="#eee" TitleColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Left"   MajorGridlineStyle="Solid" MajorGridlineColor="#000" Title="Temp [°C]"              />
+          <oxy:DateTimeAxis Key="xAxis" TextColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Top" StringFormat="                  ddd" MajorStep="1" MinorStep="0.25" 
+                            MajorGridlineStyle="Solid" 
+                            MajorGridlineColor="#000" 
+                            MinorGridlineStyle="Solid" MinorGridlineColor="#333" 
+                            d:Minimum="0"
+                            d:Maximum="7"
+                            MinorTickSize="4" TicklineColor="#ccc" />
+          <oxy:LinearAxis   Key="yAxis" Minimum="-28"  Maximum="12"  MajorStep="10"  MinorStep="1"  TextColor="#eee" TitleColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Left"   MajorGridlineStyle="Solid" MajorGridlineColor="#000" Title="Temp [°C]"              
+                            MinorTickSize="4" TicklineColor="#ccc" />
           <oxy:LinearAxis   Key="yAxis" Minimum="-280" Maximum="120" MajorStep="100" MinorStep="10" TextColor="#eee" TitleColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Right"  MajorGridlineStyle="None"  MajorGridlineColor="#000" Title="Wind k/h*.1  PoP %*.1"  />
         </oxy:Plot.Axes>
       </oxy:Plot>
