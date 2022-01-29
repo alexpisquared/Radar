@@ -11,7 +11,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _d3r = 4, _d3c = 600, _windClr = 333, _popClr = 0;
   readonly WeatherxContext _dbx;
   const string _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaughan = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582",
-    _phc = "phc", _vgn="vgn", _mis="mis",
+    _phc = "phc", _vgn = "vgn", _mis = "mis",
     _urlPast24hrYYZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yyz", // Pearson
     _urlPast24hrYKZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=ykz"; // Buttonville
 
@@ -28,22 +28,28 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     try
     { //await Task.Delay(999); no diff
       Clear();
+
+      await PrevForecastFromDB();
       await PopulateEnvtCanaAsync();
       await PopulateScatModelAsync();
       //await PopulateFuncModelAsync();
       //await PopulateOpenWeathAsync(); -- extra calls 
 
-      var now = DateTime.Now;
-      var ytd = DateTime.Now.AddHours(-24);
-
-      (await _dbx.PointFore.Where(r => r.SiteId == _phc && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), value: 5, tag: $"{r.MeasureValue} ", y: r.MeasureValue)));
-      (await _dbx.PointFore.Where(r => r.SiteId == _vgn && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFVgn.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), value: 5, tag: $"{r.MeasureValue} ", y: r.MeasureValue)));
-      (await _dbx.PointFore.Where(r => r.SiteId == _mis && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFMis.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), value: 5, tag: $"{r.MeasureValue} ", y: r.MeasureValue)));
-
       Beep.Play();
     }
     catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else throw; Hand.Play(); }
     return true;
+  }
+
+  async Task PrevForecastFromDB()
+  {
+    var now = DateTime.Now;
+    var ytd = DateTime.Now.AddHours(-24);
+    var dby = DateTime.Now.AddHours(-48);
+
+    (await _dbx.PointFore.Where(r => r.SiteId == _phc && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 2 + .2 * (r.ForecastedFor - r.ForecastedAt).TotalHours, y: r.MeasureValue, tag: $" pre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
+    (await _dbx.PointFore.Where(r => r.SiteId == _vgn && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFVgn.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 2 + .2 * (r.ForecastedFor - r.ForecastedAt).TotalHours, y: r.MeasureValue, tag: $" pre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
+    (await _dbx.PointFore.Where(r => r.SiteId == _mis && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFMis.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 2 + .2 * (r.ForecastedFor - r.ForecastedAt).TotalHours, y: r.MeasureValue, tag: $" pre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
   }
 
   async Task PopulateEnvtCanaAsync()
@@ -284,10 +290,10 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
     OCA.daily.ToList().ForEach(x =>
     {
-      SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), value: 10, tag: $"{x.temp.morn} ", y: x.temp.morn));
-      SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _d)), value: 10, tag: $"{x.temp.day}  ", y: x.temp.day));
-      SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _e)), value: 10, tag: $"{x.temp.eve}  ", y: x.temp.eve));
-      SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), value: 10, tag: $"{x.temp.night}", y: x.temp.night));
+      SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), value: 10, y: x.temp.morn));
+      SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _d)), value: 20, y: x.temp.day));
+      SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _e)), value: 30, y: x.temp.eve));
+      SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), value: 40, y: x.temp.night));
     });
   }
 
@@ -307,6 +313,82 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     DataPtPopr.Clear();
   }
 
+  void CopyOpenWeaToDataPtLists(RootobjectOneCallApi? ocv, ObservableCollection<DataPoint> pointsTemp, ObservableCollection<DataPoint> pointsFeel)
+  {
+    ArgumentNullException.ThrowIfNull(ocv);
+
+    ocv.hourly.ToList().ForEach(x =>
+    {
+      pointsTemp.Add(new(x.dt, x.temp));
+      pointsFeel.Add(new(x.dt, x.feels_like));
+    });
+
+    ocv.daily.Where(d => d.dt > ocv.hourly.Max(d => d.dt)).ToList().ForEach(x =>
+    {
+      pointsTemp.Add(new(x.dt + _m, x.temp.morn));
+      pointsTemp.Add(new(x.dt + _d, x.temp.day));
+      pointsTemp.Add(new(x.dt + _e, x.temp.eve));
+      pointsTemp.Add(new(x.dt + _n, x.temp.night));
+      pointsFeel.Add(new(x.dt + _m, x.feels_like.morn));
+      pointsFeel.Add(new(x.dt + _d, x.feels_like.day));
+      pointsFeel.Add(new(x.dt + _e, x.feels_like.eve));
+      pointsFeel.Add(new(x.dt + _n, x.feels_like.night));
+    });
+  }
+
+  public ObservableCollection<ScatterPoint> SctrPtTFFPhc { get; } = new ObservableCollection<ScatterPoint>();
+  public ObservableCollection<ScatterPoint> SctrPtTPFVgn { get; } = new ObservableCollection<ScatterPoint>();
+  public ObservableCollection<ScatterPoint> SctrPtTPFPhc { get; } = new ObservableCollection<ScatterPoint>();
+  public ObservableCollection<ScatterPoint> SctrPtTPFMis { get; } = new ObservableCollection<ScatterPoint>();
+  public ObservableCollection<DataPoint> DataPtTemp { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> DataPtFeel { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> DataPtWind { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> DataPtGust { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> DataPtSunT { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> DataPtNowT { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> DataPtPopr { get; } = new ObservableCollection<DataPoint>();
+
+  public ObservableCollection<DataPoint> DataPtTempC { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> DataPtFeelC { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> DataPtTempT { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> DataPtFeelT { get; } = new ObservableCollection<DataPoint>();
+
+  public ObservableCollection<DataPoint> EnvtCaPast24PearsonT { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> EnvtCaPast24ButtnvlT { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> EnvtCaPast24PearWind { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> EnvtCaPast24BtnvWind { get; } = new ObservableCollection<DataPoint>();
+
+  public ObservableCollection<DataPoint> EnvtCaToronto { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> EnvtCaVaughan { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> EnvtCaMarkham { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> EnvtCaMissuga { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> EnvtCaRchmdHl { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> EnvtCaTorIsld { get; } = new ObservableCollection<DataPoint>();
+
+  public PlotModel FuncModel { get; private set; } = new PlotModel { Title = "Function Srs", Background = OxyColor.FromUInt32(123456), LegendTitleColor = OxyColor.FromUInt32(123456) };
+  public PlotModel ScatModel { get; private set; } = new PlotModel { Title = "Scatter Srs" };
+
+  string _t = default!; public string PlotTitle { get => _t; set => SetProperty(ref _t, value); }
+  string _c = default!; public string CurrentConditions { get => _c; set => SetProperty(ref _c, value); }
+  int _w = default!; public int WindDirn { get => _w; set => SetProperty(ref _w, value); }
+  float _v = default!; public float WindVelo { get => _v; set => SetProperty(ref _v, value); }
+  RootobjectOneCallApi? _o = default!; public RootobjectOneCallApi? OCA { get => _o; set => SetProperty(ref _o, value); }
+  RootobjectFrc5Day3Hr? _f = default!; public RootobjectFrc5Day3Hr? D53 { get => _f; set => SetProperty(ref _f, value); }
+
+  //ImageSource _i; public ImageSource WeaIcom { get => _i; set => SetProperty(ref _i, value); }
+  //Uri _k = new("http://openweathermap.org/img/wn/04n@2x.png"); public Uri WIcon { get => _k; set => SetProperty(ref _k, value); }
+  const float _wk = .1f;
+  const float _kWind = 3.6f * _wk;
+
+  string _j = "http://openweathermap.org/img/wn/01d@2x.png"; public string OpnWeaIcom { get => _j; set => SetProperty(ref _j, value); }
+  string _i = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconM { get => _i; set => SetProperty(ref _i, value); }
+  string _k = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconV { get => _k; set => SetProperty(ref _k, value); }
+}
+///todo: https://oxyplot.readthedocs.io/en/latest/models/series/ScatterSeries.html
+///https://docs.microsoft.com/en-us/answers/questions/22863/how-to-customize-charts-in-wpf-using-systemwindows.html
+///https://docs.microsoft.com/en-us/answers/questions/10086/draw-chart-with-systemwindowscontrolsdatavisualiza.html
+
+/*
   async Task PopulateScatModelAsync_TogetherWithPlotView()
   {
     DataPtGust.Clear();
@@ -421,10 +503,10 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
     oca.daily.ToList().ForEach(x =>
     {
-      SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), value: 10, tag: $"{x.temp.morn} ", y: x.temp.morn));
-      SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _d)), value: 10, tag: $"{x.temp.day}  ", y: x.temp.day));
-      SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _e)), value: 10, tag: $"{x.temp.eve}  ", y: x.temp.eve));
-      SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), value: 10, tag: $"{x.temp.night}", y: x.temp.night));
+      SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), value: 20, tag: $"{x.temp.morn} ", y: x.temp.morn));
+      SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _d)), value: 20, tag: $"{x.temp.day}  ", y: x.temp.day));
+      SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _e)), value: 20, tag: $"{x.temp.eve}  ", y: x.temp.eve));
+      SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), value: 20, tag: $"{x.temp.night}", y: x.temp.night));
     });
 
     oca.daily.
@@ -468,77 +550,4 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   }
   async Task PopulateFuncModelAsync() { await Task.Yield(); FuncModel.Series.Add(new FunctionSeries(Math.Cos, 0, 10, 0.1, "cos(x)")); }
 
-  void CopyOpenWeaToDataPtLists(RootobjectOneCallApi? ocv, ObservableCollection<DataPoint> pointsTemp, ObservableCollection<DataPoint> pointsFeel)
-  {
-    ArgumentNullException.ThrowIfNull(ocv);
-
-    ocv.hourly.ToList().ForEach(x =>
-    {
-      pointsTemp.Add(new(x.dt, x.temp));
-      pointsFeel.Add(new(x.dt, x.feels_like));
-    });
-
-    ocv.daily.Where(d => d.dt > ocv.hourly.Max(d => d.dt)).ToList().ForEach(x =>
-    {
-      pointsTemp.Add(new(x.dt + _m, x.temp.morn));
-      pointsTemp.Add(new(x.dt + _d, x.temp.day));
-      pointsTemp.Add(new(x.dt + _e, x.temp.eve));
-      pointsTemp.Add(new(x.dt + _n, x.temp.night));
-      pointsFeel.Add(new(x.dt + _m, x.feels_like.morn));
-      pointsFeel.Add(new(x.dt + _d, x.feels_like.day));
-      pointsFeel.Add(new(x.dt + _e, x.feels_like.eve));
-      pointsFeel.Add(new(x.dt + _n, x.feels_like.night));
-    });
-  }
-
-  public ObservableCollection<ScatterPoint> SctrPtTFFPhc { get; } = new ObservableCollection<ScatterPoint>();
-  public ObservableCollection<ScatterPoint> SctrPtTPFVgn { get; } = new ObservableCollection<ScatterPoint>();
-  public ObservableCollection<ScatterPoint> SctrPtTPFPhc { get; } = new ObservableCollection<ScatterPoint>();
-  public ObservableCollection<ScatterPoint> SctrPtTPFMis { get; } = new ObservableCollection<ScatterPoint>();
-  public ObservableCollection<DataPoint> DataPtTemp { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> DataPtFeel { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> DataPtWind { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> DataPtGust { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> DataPtSunT { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> DataPtNowT { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> DataPtPopr { get; } = new ObservableCollection<DataPoint>();
-
-  public ObservableCollection<DataPoint> DataPtTempC { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> DataPtFeelC { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> DataPtTempT { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> DataPtFeelT { get; } = new ObservableCollection<DataPoint>();
-
-  public ObservableCollection<DataPoint> EnvtCaPast24PearsonT { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> EnvtCaPast24ButtnvlT { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> EnvtCaPast24PearWind { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> EnvtCaPast24BtnvWind { get; } = new ObservableCollection<DataPoint>();
-
-  public ObservableCollection<DataPoint> EnvtCaToronto { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> EnvtCaVaughan { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> EnvtCaMarkham { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> EnvtCaMissuga { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> EnvtCaRchmdHl { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> EnvtCaTorIsld { get; } = new ObservableCollection<DataPoint>();
-
-  public PlotModel FuncModel { get; private set; } = new PlotModel { Title = "Function Srs", Background = OxyColor.FromUInt32(123456), LegendTitleColor = OxyColor.FromUInt32(123456) };
-  public PlotModel ScatModel { get; private set; } = new PlotModel { Title = "Scatter Srs" };
-
-  string _t = default!; public string PlotTitle { get => _t; set => SetProperty(ref _t, value); }
-  string _c = default!; public string CurrentConditions { get => _c; set => SetProperty(ref _c, value); }
-  int _w = default!; public int WindDirn { get => _w; set => SetProperty(ref _w, value); }
-  float _v = default!; public float WindVelo { get => _v; set => SetProperty(ref _v, value); }
-  RootobjectOneCallApi? _o = default!; public RootobjectOneCallApi? OCA { get => _o; set => SetProperty(ref _o, value); }
-  RootobjectFrc5Day3Hr? _f = default!; public RootobjectFrc5Day3Hr? D53 { get => _f; set => SetProperty(ref _f, value); }
-
-  //ImageSource _i; public ImageSource WeaIcom { get => _i; set => SetProperty(ref _i, value); }
-  //Uri _k = new("http://openweathermap.org/img/wn/04n@2x.png"); public Uri WIcon { get => _k; set => SetProperty(ref _k, value); }
-  const float _wk = .1f;
-  const float _kWind = 3.6f * _wk;
-
-  string _j = "http://openweathermap.org/img/wn/01d@2x.png"; public string OpnWeaIcom { get => _j; set => SetProperty(ref _j, value); }
-  string _i = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconM { get => _i; set => SetProperty(ref _i, value); }
-  string _k = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconV { get => _k; set => SetProperty(ref _k, value); }
-}
-///todo: https://oxyplot.readthedocs.io/en/latest/models/series/ScatterSeries.html
-///https://docs.microsoft.com/en-us/answers/questions/22863/how-to-customize-charts-in-wpf-using-systemwindows.html
-///https://docs.microsoft.com/en-us/answers/questions/10086/draw-chart-with-systemwindowscontrolsdatavisualiza.html
+ */

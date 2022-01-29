@@ -8,22 +8,26 @@
   </WindowChrome.WindowChrome>
   <Border CornerRadius="6" Background="#2fff" Padding="6">
     <Grid>
-
-      <oxy:Plot Title="{Binding PlotTitle}" TitleColor="#bdf" Background="#555" x:Name="plotBR" SubtitleColor="Red" LegendTextColor="#eee" LegendTitleColor="Yellow" TextColor="#0f0" PlotAreaBorderColor="Transparent" >
+      <Grid.Resources>
+        <Color x:Key="Vgn">#08f</Color>
+        <Color x:Key="Mis">#080</Color>
+        <Color x:Key="Phc">#e0e</Color>
+      </Grid.Resources>
+      <oxy:Plot Title="{Binding PlotTitle}" TitleColor="#bdf" Background="#222" x:Name="plotBR" SubtitleColor="Red" LegendTextColor="#eee" LegendTitleColor="Yellow" TextColor="#0f0" PlotAreaBorderColor="Transparent" >
         <oxy:Plot.Series>
           <oxy:LineSeries    ItemsSource="{Binding DataPtNowT}" Color="#aaa" StrokeThickness="1.0" />
           <oxy:LineSeries    ItemsSource="{Binding DataPtSunT}" Color="#770" />
 
-          <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFVgn}" Color="#e00" MarkerType="Cross"   MarkerStroke="#e0f" MarkerStrokeThickness="2" MarkerSize="5" MarkerFill="#0f0" Title="OWA" />
-          <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFMis}" Color="#e00" MarkerType="Square"  MarkerStroke="#f00" MarkerStrokeThickness="2" MarkerSize="5" MarkerFill="#0f0" Title="OWA" />
-          <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFPhc}" Color="#e00" MarkerType="Diamond" MarkerStroke="#08f" MarkerStrokeThickness="2" MarkerSize="5" MarkerFill="#0f0" Title="OWA" />
-          <oxy:LineSeries    ItemsSource="{Binding EnvtCaPast24PearsonT}"  Color="#d0f" StrokeThickness="3.0" Title="Pearson" ToolTip="Pearson" />
-          <oxy:LineSeries    ItemsSource="{Binding EnvtCaPast24ButtnvlT}"  Color="#08f" StrokeThickness="3.0" Title="Buttnvl" ToolTip="Buttnvl" />
-          <oxy:AreaSeries    ItemsSource="{Binding EnvtCaPast24BtnvWind}"  Color="#888" StrokeThickness="0.5" Title="Buttnvl" ToolTip="Buttnvl" Fill="#1888" />
+          <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFVgn}" MarkerType="Circle" Title="ECa Vgn" MarkerStroke="{StaticResource Vgn}" MarkerFill="Transparent" x:Name="SctrPtTPFVgn" />
+          <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFMis}" MarkerType="Circle" Title="ECa Mis" MarkerStroke="{StaticResource Mis}" MarkerFill="Transparent" x:Name="SctrPtTPFMis" />
+          <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFPhc}" MarkerType="Circle" Title="OWA Phc" MarkerStroke="{StaticResource Phc}" MarkerFill="Transparent" x:Name="SctrPtTPFPhc" />
+          <oxy:LineSeries    ItemsSource="{Binding EnvtCaPast24ButtnvlT}"  Color="{StaticResource Vgn}" StrokeThickness="3.0" Title="Buttnvl" ToolTip="Buttnvl" />
+          <oxy:LineSeries    ItemsSource="{Binding EnvtCaPast24PearsonT}"  Color="{StaticResource Mis}" StrokeThickness="3.0" Title="Pearson" ToolTip="Pearson" />
+          <oxy:AreaSeries    ItemsSource="{Binding EnvtCaPast24BtnvWind}"  Color="{StaticResource Phc}" StrokeThickness="0.5" Title="Buttnvl" ToolTip="Buttnvl" Fill="#1888" />
 
-          <oxy:LineSeries    ItemsSource="{Binding EnvtCaToronto}"  Color="#0a0" StrokeThickness="5.0" Title="TO" />
-          <oxy:LineSeries    ItemsSource="{Binding EnvtCaMissuga}"  Color="#f00" StrokeThickness="3.0" Title="Mississauga" />
-          <oxy:LineSeries    ItemsSource="{Binding EnvtCaTorIsld}"  Color="#0f0" StrokeThickness="1.0" Title="TI" />
+          <oxy:LineSeries    ItemsSource="{Binding EnvtCaToronto}"  Color="#b80" StrokeThickness="5.0" Title="TO" />
+          <oxy:LineSeries    ItemsSource="{Binding EnvtCaMissuga}"  Color="#0f6" StrokeThickness="3.0" Title="Mis" />
+          <oxy:LineSeries    ItemsSource="{Binding EnvtCaTorIsld}"  Color="#d00" StrokeThickness="1.0" Title="TI" />
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaVaughan}"  Color="#08f" StrokeThickness="3.0" Title="VA" />
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaMarkham}"  Color="#08f" StrokeThickness="2.0" Title="MA" />
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaRchmdHl}"  Color="#08f" StrokeThickness="1.0" Title="RH" />
@@ -31,13 +35,13 @@
           <oxy:AreaSeries    ItemsSource="{Binding DataPtPopr}" Color="#04f" />
           <oxy:LineSeries    ItemsSource="{Binding DataPtGust}" Color="#888" StrokeThickness="1.0" />
           <oxy:AreaSeries    ItemsSource="{Binding DataPtWind}" Color="#888" StrokeThickness="0.5" Fill="#1888" Title="OWA" />
-          <oxy:AreaSeries    ItemsSource="{Binding DataPtTemp}" Color="#e0f" StrokeThickness="1.0" Fill="#2a0f" Title="OWA" />
-          <oxy:LineSeries    ItemsSource="{Binding DataPtFeel}" Color="#e0f" StrokeThickness="1.0" />
+          <oxy:AreaSeries    ItemsSource="{Binding DataPtTemp}" Color="{StaticResource Phc}" StrokeThickness="1.0" Fill="#2a0f" Title="OWA" />
+          <oxy:LineSeries    ItemsSource="{Binding DataPtFeel}" Color="{StaticResource Phc}" StrokeThickness="1.0" />
 
-          <oxy:ScatterSeries ItemsSource="{Binding SctrPtTFFPhc}" Color="#e00" MarkerType="Plus"    MarkerStroke="#eaf" MarkerStrokeThickness="2" MarkerSize="5" MarkerFill="#0f0" Title="OWA" />
+          <oxy:ScatterSeries ItemsSource="{Binding SctrPtTFFPhc}" MarkerType="Plus"    MarkerStroke="#eaf" MarkerStrokeThickness="2" MarkerSize="5" MarkerFill="#0f0" Title="OWA" />
         </oxy:Plot.Series>
         <oxy:Plot.Axes>
-          <oxy:DateTimeAxis Key="xAxis" TextColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Top" StringFormat="                  ddd" MajorStep="1" MinorStep="0.25" MajorGridlineStyle="Solid" MajorGridlineColor="#000" MinorTickSize="10" MinorGridlineColor="#444" MinorGridlineStyle="LongDashDotDot" />
+          <oxy:DateTimeAxis Key="xAxis" TextColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Top" StringFormat="                  ddd" MajorStep="1" MinorStep="0.25" MajorGridlineStyle="Solid" MajorGridlineColor="#000" MinorTickSize="10" MinorGridlineColor="#000" MinorGridlineStyle="LongDashDotDot" />
           <oxy:LinearAxis   Key="yAxis" Minimum="-28"  Maximum="12"  MajorStep="10"  MinorStep="1"  TextColor="#eee" TitleColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Left"   MajorGridlineStyle="Solid" MajorGridlineColor="#000" Title="Temp [°C]"              />
           <oxy:LinearAxis   Key="yAxis" Minimum="-280" Maximum="120" MajorStep="100" MinorStep="10" TextColor="#eee" TitleColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Right"  MajorGridlineStyle="None"  MajorGridlineColor="#000" Title="Wind k/h*.1  PoP %*.1"  />
         </oxy:Plot.Axes>
