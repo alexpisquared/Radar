@@ -16,7 +16,7 @@
       <oxy:Plot Title="{Binding PlotTitle}" TitleColor="#bdf" Background="#222" x:Name="plotBR" SubtitleColor="Red" LegendTextColor="#eee" LegendTitleColor="Yellow" TextColor="#0f0" PlotAreaBorderColor="Transparent" >
         <oxy:Plot.Series>
           <oxy:LineSeries    ItemsSource="{Binding DataPtNowT}" Color="#aaa" StrokeThickness="1.0" />
-          <oxy:LineSeries    ItemsSource="{Binding DataPtSunT}" Color="#770" />
+          <oxy:AreaSeries    ItemsSource="{Binding DataPtSunT}" Color="#440" StrokeThickness="0.0" />
 
           <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFVgn}" MarkerType="Circle" Title="ECa Vgn" MarkerStroke="{StaticResource Vgn}" MarkerFill="Transparent" x:Name="SctrPtTPFVgn" />
           <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFMis}" MarkerType="Circle" Title="ECa Mis" MarkerStroke="{StaticResource Mis}" MarkerFill="Transparent" x:Name="SctrPtTPFMis" />
