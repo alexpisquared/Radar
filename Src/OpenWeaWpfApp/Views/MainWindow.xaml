@@ -14,13 +14,33 @@
         <Color x:Key="Phc">#e0e</Color>
       </Grid.Resources>
       <oxy:Plot Title="{Binding PlotTitle}" TitleColor="#bdf" Background="#222" x:Name="plotBR" SubtitleColor="Red" LegendTextColor="#eee" LegendTitleColor="Yellow" TextColor="#0f0" PlotAreaBorderColor="Transparent" >
+        <!--<oxy:Plot.DefaultTrackerTemplate>
+          <ControlTemplate>
+            <oxy:TrackerControl Position="{Binding Position}" BorderThickness="8" Background="#444">
+              <oxy:TrackerControl.Content>
+                <StackPanel Margin="8">
+                  <TextBlock Text="{Binding XAxis.Title}" Foreground="Red" />
+                  <TextBlock DockPanel.Dock="Right" Text="{Binding DataPoint.X, StringFormat='{}{0:N1}'}" Foreground="#ff0" />
+                  <TextBlock Text="{Binding YAxis.Title}" Foreground="Green" />
+                  <TextBlock DockPanel.Dock="Right" Text="{Binding DataPoint.Y, StringFormat='{}{0:N1}°'}" Foreground="#ff0" FontWeight="Bold" />
+                  <TextBlock DockPanel.Dock="Right" Text="{Binding DataPoint.Tag}" Foreground="#f0f" FontWeight="Bold" />
+                  <TextBlock DockPanel.Dock="Right" Text="{Binding DataPoint.Size}" Foreground="#f0f" FontWeight="Bold" />
+                  <TextBlock DockPanel.Dock="Right" Text="{Binding DataPoint.Value}" Foreground="#f0f" FontWeight="Bold" />
+                </StackPanel>
+              </oxy:TrackerControl.Content>
+            </oxy:TrackerControl>
+          </ControlTemplate>
+        </oxy:Plot.DefaultTrackerTemplate>-->
+
         <oxy:Plot.Series>
           <oxy:LineSeries    ItemsSource="{Binding DataPtNowT}" Color="#aaa" StrokeThickness="1.0" />
           <oxy:AreaSeries    ItemsSource="{Binding DataPtSunT}" Color="#440" StrokeThickness="0.0" />
 
           <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFVgn}" MarkerType="Circle" Title="ECa Vgn" MarkerStroke="{StaticResource Vgn}" MarkerFill="Transparent" x:Name="SctrPtTPFVgn" />
           <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFMis}" MarkerType="Circle" Title="ECa Mis" MarkerStroke="{StaticResource Mis}" MarkerFill="Transparent" x:Name="SctrPtTPFMis" />
-          <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFPhc}" MarkerType="Circle" Title="OWA Phc" MarkerStroke="{StaticResource Phc}" MarkerFill="Transparent" x:Name="SctrPtTPFPhc" />
+          <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFPhc}" MarkerType="Circle" Title="OWA Phc" MarkerStroke="{StaticResource Phc}" MarkerFill="Transparent" x:Name="SctrPtTPFPhc" 
+                             TrackerFormatString="{}{0}&#x0a;Time:   {2:HH:mm} &#x0a;Temp:  {4:0.0}° " 
+                             />
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaPast24ButtnvlT}"  Color="{StaticResource Vgn}" StrokeThickness="3.0" Title="Buttnvl" ToolTip="Buttnvl" />
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaPast24PearsonT}"  Color="{StaticResource Mis}" StrokeThickness="3.0" Title="Pearson" ToolTip="Pearson" />
           <oxy:AreaSeries    ItemsSource="{Binding EnvtCaPast24BtnvWind}"  Color="{StaticResource Phc}" StrokeThickness="0.5" Title="Buttnvl" ToolTip="Buttnvl" Fill="#1888" />

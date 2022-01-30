@@ -40,7 +40,7 @@ public partial class App : Application
 
   protected override async void OnStartup(StartupEventArgs e)
   {
-#if DEBUG
+#if !ParseToClasses
 
 #if Host
     _host.Start();
@@ -61,7 +61,7 @@ public partial class App : Application
     git update-index    --assume-unchanged AppSettings.json
     git update-index --no-assume-unchanged AppSettings.json            */
 
-    var rv = await new OpenWeather2022.OpenWea().ParseJsonToClasses(config["AppSecrets:MagicNumber"]);
+    var rv = await new OpenWea().ParseJsonToClasses(config["AppSecrets:MagicNumber"]);
     Current.Shutdown();
 #endif
 

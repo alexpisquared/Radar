@@ -29,12 +29,15 @@ public partial class MainWindow : Window
     }
     else
     {
-      WindowState = WindowState.Normal;
-      WindowStartupLocation = WindowStartupLocation.Manual;
-      Left = 1920;
-      Top = -1120;
-      Width = 3000;
-      Height = 1080;
+      if (Environment.UserDomainName == "RAZER1")
+      {
+        WindowState = WindowState.Normal;
+        WindowStartupLocation = WindowStartupLocation.Manual;
+        Left = 1920;
+        Top = -1120;
+        Width = 3000;
+        Height = 1080;
+      }
     }
   }
 
