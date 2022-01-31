@@ -12,6 +12,7 @@
         <Color x:Key="Vgn">#08f</Color>
         <Color x:Key="Mis">#080</Color>
         <Color x:Key="Phc">#e0e</Color>
+        <Color x:Key="WDir">#888</Color>
       </Grid.Resources>
       <oxy:Plot Title="{Binding PlotTitle}" TitleColor="#bdf" Background="#222" x:Name="plotBR" SubtitleColor="Red" LegendTextColor="#eee" LegendTitleColor="Yellow" TextColor="#0f0" PlotAreaBorderColor="Transparent" >
         <!--<oxy:Plot.DefaultTrackerTemplate>
@@ -53,10 +54,10 @@
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaRchmdHl}"  Color="{StaticResource Vgn}" StrokeThickness="1.0" Title="RH" />
 
           <oxy:AreaSeries    ItemsSource="{Binding DataPtPopr}" Color="#04f" />
-          <oxy:LineSeries    ItemsSource="{Binding DataPtGust}" Color="#888" StrokeThickness="1.0" />
-          <oxy:AreaSeries    ItemsSource="{Binding DataPtWind}" Color="#888" StrokeThickness="0.5" Fill="#1888" Title="OWA" />
-          <oxy:AreaSeries    ItemsSource="{Binding DataPtTemp}" Color="{StaticResource Phc}" StrokeThickness="1.0" Fill="#2a0f" Title="OWA" />
-          <oxy:LineSeries    ItemsSource="{Binding DataPtFeel}" Color="{StaticResource Phc}" StrokeThickness="1.0" />
+          <oxy:LineSeries    ItemsSource="{Binding DataPtGust}" Color="{StaticResource WDir}" StrokeThickness="0.5" />
+          <oxy:LineSeries    ItemsSource="{Binding DataPtWDir}" Color="{StaticResource WDir}" StrokeThickness="1.5" />
+          <oxy:AreaSeries    ItemsSource="{Binding DataPtTemp}" Color="{StaticResource Phc}" StrokeThickness="1.5" Fill="#2a0f" Title="OWA" />
+          <oxy:LineSeries    ItemsSource="{Binding DataPtFeel}" Color="{StaticResource Phc}" StrokeThickness="0.5" />          
 
           <oxy:ScatterSeries ItemsSource="{Binding SctrPtTFFPhc}" MarkerType="Plus"    MarkerStroke="#eaf" MarkerStrokeThickness="2" MarkerSize="5" MarkerFill="#0f0" Title="OWA" />
         </oxy:Plot.Series>

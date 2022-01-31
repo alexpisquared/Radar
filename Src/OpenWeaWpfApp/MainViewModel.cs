@@ -38,7 +38,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     }
     catch (Exception ex)
     {
-      WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); 
+      WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@");
       if (Debugger.IsAttached) Debugger.Break(); else MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
       return false;
     }
@@ -262,6 +262,17 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       DataPtWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_speed * _kWind));
       DataPtGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_gust * _kWind));
       DataPtPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 10));
+
+      var rad = Math.PI * x.wind_deg * 2 / 360;
+      var dx = 0.10 * Math.Cos(rad);
+      var dy = 1.00 * Math.Sin(rad);
+      var tx = .002 * Math.Cos(rad + 90);
+      var ty = 0.02 * Math.Sin(rad + 90);
+      var sx = .002 * Math.Cos(rad - 90);
+      var sy = 0.02 * Math.Sin(rad - 90);
+      DataPtWDir.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + tx, ty + x.wind_speed * _kWind));
+      DataPtWDir.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + dx, dy + x.wind_speed * _kWind));
+      DataPtWDir.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + sx, sy + x.wind_speed * _kWind));
     });
 
     D53.list.Where(d => d.dt > OCA.hourly.Max(d => d.dt)).ToList().ForEach(x =>
@@ -272,6 +283,13 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       DataPtWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.speed * _kWind));
       DataPtGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.gust * _kWind));
       DataPtPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 10));
+
+      var rad = Math.PI * x.wind.deg * 2 / 360;
+      var dx = 0.1 * Math.Cos(rad);
+      var dy = 1.0 * Math.Sin(rad);
+      DataPtWDir.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.speed * _kWind));
+      DataPtWDir.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + dx, dy + x.wind.speed * _kWind));
+      DataPtWDir.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.speed * _kWind));
     });
 
     OCA.daily.ToList().ForEach(x =>
@@ -311,8 +329,9 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     WindDirn = 0;
     WindVelo = 0;
     OpnWeaIcom = "http://openweathermap.org/img/wn/01n@2x.png";
-    DataPtGust.Clear();
+    DataPtWDir.Clear();
     DataPtWind.Clear();
+    DataPtGust.Clear();
     DataPtTemp.Clear();
     DataPtFeel.Clear();
     DataPtFeel.Clear();
@@ -351,6 +370,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   public ObservableCollection<DataPoint> DataPtFeel { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> DataPtWind { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> DataPtGust { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> DataPtWDir { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> DataPtSunT { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> DataPtNowT { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> DataPtPopr { get; } = new ObservableCollection<DataPoint>();
