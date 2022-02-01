@@ -13,6 +13,7 @@
         <Color x:Key="Mis">#080</Color>
         <Color x:Key="Phc">#e0e</Color>
         <Color x:Key="WDir">#888</Color>
+        <Color x:Key="Prsr">#bb0</Color>
       </Grid.Resources>
       <oxy:Plot Title="{Binding PlotTitle}" TitleColor="#bdf" Background="#222" x:Name="plotBR" SubtitleColor="Red" LegendTextColor="#eee" LegendTitleColor="Yellow" TextColor="#0f0" PlotAreaBorderColor="Transparent" >
         <!--<oxy:Plot.DefaultTrackerTemplate>
@@ -39,9 +40,8 @@
 
           <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFVgn}" MarkerType="Circle" Title="ECa Vgn" MarkerStroke="{StaticResource Vgn}" MarkerFill="Transparent" x:Name="SctrPtTPFVgn" />
           <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFMis}" MarkerType="Circle" Title="ECa Mis" MarkerStroke="{StaticResource Mis}" MarkerFill="Transparent" x:Name="SctrPtTPFMis" />
-          <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFPhc}" MarkerType="Circle" Title="OWA Phc" MarkerStroke="{StaticResource Phc}" MarkerFill="Transparent" x:Name="SctrPtTPFPhc" 
-                             TrackerFormatString="{}{0}&#x0a;Time:   {2:HH:mm} &#x0a;Temp:  {4:0.0}° " 
-                             />
+          <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFPhc}" MarkerType="Circle" Title="OWA Phc" MarkerStroke="{StaticResource Phc}" MarkerFill="Transparent" x:Name="SctrPtTPFPhc" TrackerFormatString="{}{0}&#x0a;Time:   {2:HH:mm} &#x0a;Temp:  {4:0.0}° " />
+          
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaPast24ButtnvlT}"  Color="{StaticResource Vgn}" StrokeThickness="3.0" Title="Buttnvl" ToolTip="Buttnvl" />
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaPast24PearsonT}"  Color="{StaticResource Mis}" StrokeThickness="3.0" Title="Pearson" ToolTip="Pearson" />
           <oxy:AreaSeries    ItemsSource="{Binding EnvtCaPast24BtnvWind}"  Color="{StaticResource Phc}" StrokeThickness="0.5" Title="Buttnvl" ToolTip="Buttnvl" Fill="#1888" />
@@ -55,6 +55,7 @@
 
           <oxy:AreaSeries    ItemsSource="{Binding DataPtPopr}" Color="#04f" />
           <oxy:LineSeries    ItemsSource="{Binding DataPtGust}" Color="{StaticResource WDir}" StrokeThickness="0.5" />
+          <oxy:LineSeries    ItemsSource="{Binding DataPtWind}" Color="{StaticResource Prsr}" StrokeThickness="1.5" />
           <oxy:LineSeries    ItemsSource="{Binding DataPtWDir}" Color="{StaticResource WDir}" StrokeThickness="1.5" />
           <oxy:AreaSeries    ItemsSource="{Binding DataPtTemp}" Color="{StaticResource Phc}" StrokeThickness="1.5" Fill="#2a0f" Title="OWA" />
           <oxy:LineSeries    ItemsSource="{Binding DataPtFeel}" Color="{StaticResource Phc}" StrokeThickness="0.5" />          
