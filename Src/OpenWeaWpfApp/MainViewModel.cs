@@ -316,13 +316,13 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
         DataPtPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 10));
       });
 
-    OCA.daily.ToList().ForEach(x =>
-    {
-      SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), value: 10, y: x.temp.morn));
-      SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _d)), value: 20, y: x.temp.day));
-      SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _e)), value: 30, y: x.temp.eve));
-      SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), value: 40, y: x.temp.night));
-    });
+    //OCA.daily.ToList().ForEach(x =>
+    //{
+    //  SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), size: 3, y: x.temp.morn));
+    //  SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _d)), size: 5, y: x.temp.day));
+    //  SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _e)), size: 7, y: x.temp.eve));
+    //  SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), size: 9, y: x.temp.night));
+    //});
   }
 
   void Clear()
@@ -365,7 +365,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     });
   }
 
-  public ObservableCollection<ScatterPoint> SctrPtTFFPhc { get; } = new ObservableCollection<ScatterPoint>();
+  //public ObservableCollection<ScatterPoint> SctrPtTFFPhc { get; } = new ObservableCollection<ScatterPoint>();
   public ObservableCollection<ScatterPoint> SctrPtTPFVgn { get; } = new ObservableCollection<ScatterPoint>();
   public ObservableCollection<ScatterPoint> SctrPtTPFPhc { get; } = new ObservableCollection<ScatterPoint>();
   public ObservableCollection<ScatterPoint> SctrPtTPFMis { get; } = new ObservableCollection<ScatterPoint>();
