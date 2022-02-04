@@ -13,17 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace xEnvtCanRadar
+namespace xEnvtCanRadar;
+
+/// <summary>
+/// Interaction logic for LbxItemRadarTemplate.xaml
+/// </summary>
+public partial class LbxItemRadarTemplate : UserControl
 {
-  /// <summary>
-  /// Interaction logic for LbxItemRadarTemplate.xaml
-  /// </summary>
-  public partial class LbxItemRadarTemplate : UserControl
+  public LbxItemRadarTemplate()
   {
-    public LbxItemRadarTemplate()
-    {
-      InitializeComponent();
-      //DataContext = this;
-    }
+    InitializeComponent();
+    //DataContext = this;
   }
 }

@@ -9,3 +9,5 @@ global using System.Windows;
 global using static System.Diagnostics.Trace;
 global using System.IO;
 global using Radar;
+global using System.Windows.Controls;
+global using System.Text.RegularExpressions;
