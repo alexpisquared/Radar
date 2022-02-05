@@ -2,7 +2,7 @@
 
 public class WebDirectoryLoader
 {
-  const int lastMany = 24;
+  const int lastMany = 240;
   public async Task<List<string>> ParseFromHtmlUsingRegex(string url)
   {
     using var client = new HttpClient();
