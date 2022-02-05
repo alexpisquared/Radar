@@ -11,14 +11,16 @@ public partial class SiteViewUserControl : UserControl
   {
     try
     {
-      var gifurls = await (new WebDirectoryLoader()).UseRegex(RootUrl);
-      tbxTitle.Text = $"Found {gifurls.Count} files";
+      var gifurls = await (new WebDirectoryLoader()).ParseFromHtmlUsingRegex(RootUrl);
+      tbxTitle.Text = $"{RootUrl}   {gifurls.Count} files";
       foreach (var imgFile in gifurls)
       {
-        lbx.Items.Add(new RI { GifUrl = $"{RootUrl}/{imgFile}", FileName =         Path.GetFileNameWithoutExtension( imgFile), ImgTime = getTime(imgFile) });
+        lbx.Items.Add(new RI { GifUrl = $"{RootUrl}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile), ImgTime = getTime(imgFile) });
       }
+
+      Beep.Play();
     }
-    catch (Exception ex)    {      MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);    }
+    catch (Exception ex) { Hand.Play(); MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
   }
 
   DateTimeOffset getTime(string item) => DateTimeOffset.Now;

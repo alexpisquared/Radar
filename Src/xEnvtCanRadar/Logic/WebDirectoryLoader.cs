@@ -2,8 +2,8 @@
 
 public class WebDirectoryLoader
 {
-  const int lastMany = 24;
-  public async Task<List<string>> UseRegex(string url)
+  const int lastMany = 240;
+  public async Task<List<string>> ParseFromHtmlUsingRegex(string url)
   {
     using var client = new HttpClient();
     var response = await client.GetAsync(url).ConfigureAwait(false);

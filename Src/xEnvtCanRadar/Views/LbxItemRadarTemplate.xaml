@@ -2,7 +2,7 @@
              Height="240" Width="290" Background="#444">
   <Grid>
     <Image Source="{Binding GifUrl}" />
-    <TextBlock Text="{Binding FileName}" d:Text="202202042100_WKR_COMP_PRECIPET_RAIN.gif" FontSize="12" Foreground="#00f" VerticalAlignment="Top" HorizontalAlignment="Center" />
-    <TextBlock Text="{Binding FileName}" d:Text="202202042100_WKR_COMP_PRECIPET_RAIN.gif" FontSize="12" Foreground="#f00" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+    <TextBlock Text="{Binding FileName}" d:Text="202202042100_WKR_COMP_PRECIPET_RAIN.gif" FontSize="13" Foreground="#00f" Margin="0 18" VerticalAlignment="Top" HorizontalAlignment="Center" />
+    <TextBlock Text="{Binding FileName}" d:Text="202202042100_WKR_COMP_PRECIPET_RAIN.gif" FontSize="13" Foreground="#fff" Margin="0 18" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
   </Grid>
 </UserControl>
