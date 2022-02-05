@@ -20,8 +20,7 @@ public partial class App : Application
   {
     base.OnStartup(e);
 
-#if DEBUG
-
+#if DEBUG_
     var url = "https://dd.meteo.gc.ca/radar/PRECIPET/GIF/WKR/";    //var files = System.IO.Directory.GetFiles(@"\\dd.meteo.gc.ca\radar\PRECIPET\GIF\WKR");
     await (new WebDirectoryLoader()).UseRegex(url);
 
@@ -84,7 +83,7 @@ public partial class App : Application
       var maxPicsToGet = 2; // 1 hr + 10 min.
       var minRainPace = Settings.AlarmThreshold; // .01 - .05
       var rpc = new RadarPicCollector();
-      rpc.DownloadRadarPics_MostRecent_RAIN_only(maxPicsToGet);
+      rpc.DownloadRadarPics_MostRecent_RAIN_only(maxPicsToGet, 10);
       if (rpc.Pics.Count < maxPicsToGet)
         rainAndUptimeMsg += ($"Not enough radar pictures have been acquired: {rpc.Pics.Count}, while {maxPicsToGet} is needed.");
       else

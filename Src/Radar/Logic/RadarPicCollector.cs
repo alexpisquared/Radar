@@ -30,28 +30,29 @@ namespace RadarPicCollect
     public string DownloadRadarPics(int max = 99999)
     {
       _backLenCur = _backLenLive;
+      int period = 6;
 
-      var gmt10 = RoundBy10min(DateTime.UtcNow); // DateTime.Now.AddHours(4));//.AddMinutes(-10 * backLen);//shows 1 hr behind at winter time (Dec2007)  Debug.Assert(DateTime.Now.AddHours(4) == DateTime.UtcNow); //Apr2015
+      var gmt10 = RoundBy10min(DateTime.UtcNow, period); // DateTime.Now.AddHours(4));//.AddMinutes(-10 * backLen);//shows 1 hr behind at winter time (Dec2007)  Debug.Assert(DateTime.Now.AddHours(4) == DateTime.UtcNow); //Apr2015
 
       for (var back = _backLenCur; back >= 0; back--)
       {
-        getPic(back, gmt10);
+        getPic(back, gmt10, period);
         if (_urlPicList.Count >= max) break;
       }
 
       return string.Format("   <{0} out of {1} Pics Loaded @{2}>", _picDtlList.Count, _backLenCur, DateTime.Now.ToString("d HH:mm"));
     }
-    public string DownloadRadarPics_MostRecent_RAIN_only(int max)
+    public string DownloadRadarPics_MostRecent_RAIN_only(int max, int period)
     {
       var gmt10 = RoundBy10min(DateTime.UtcNow); // DateTime.Now.AddHours(4));//.AddMinutes(-10 * backLen);//shows 1 hr behind at winter time (Dec2007)  Debug.Assert(DateTime.Now.AddHours(4) == DateTime.UtcNow); //Apr2015
 
       for (var times10minBack = 0; times10minBack < _backLenLive && _urlPicList.Count < max; times10minBack++)
-        getPic(times10minBack, gmt10, "RAIN");
+        getPic(times10minBack, gmt10, period, "RAIN");
 
       return string.Format("   <{0} out of {1} Pics Loaded @{2}>", _picDtlList.Count, _backLenCur, DateTime.Now.ToString("d HH:mm"));
     }
 
-    void getPic(int times10minBack, DateTime gmt10Now, string? rainOrSnow = null)
+    void getPic(int times10minBack, DateTime gmt10Now, int period, string? rainOrSnow = null)
     {
       if (!string.IsNullOrEmpty(rainOrSnow))
         RainOrSnow = rainOrSnow;
@@ -65,7 +66,7 @@ namespace RadarPicCollect
       try
       {
         _stationIndex = 0;
-        var dt = gmt10Now.AddMinutes(-10 * times10minBack);
+        var dt = gmt10Now.AddMinutes(-period * times10minBack);
 
 
         if (times10minBack < _backLenLive)
@@ -153,9 +154,9 @@ namespace RadarPicCollect
       }
       return null;
     }
-    public static DateTime RoundBy10min(DateTime dt)
+    public static DateTime RoundBy10min(DateTime dt, int period = 10)
     {
-      dt = dt.AddTicks(-dt.Ticks % (10 * TimeSpan.TicksPerMinute));
+      dt = dt.AddTicks(-dt.Ticks % (period * TimeSpan.TicksPerMinute));
       return dt;
     }
     public static TimeSpan RoundBy10min(TimeSpan dt)

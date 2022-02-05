@@ -314,7 +314,7 @@ namespace Radar
       _animationLength = _radarPicCollector.Pics.Count - 1;
 
       await OnKeyDown__Async(Key.End);
-      await OnKeyDown__Async(Key.NumPad1);
+      await OnKeyDown__Async(Key.NumPad3);
       LTitle.Text += title;
       _getFromWebTimer.Start();
 
