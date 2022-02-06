@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-namespace xEnvtCanRadar.Views;
+﻿namespace xEnvtCanRadar.Views;
 
 public partial class RadarTypeViewUserControl : UserControl
 {
@@ -20,19 +18,15 @@ public partial class RadarTypeViewUserControl : UserControl
 
       var cts = new CancellationTokenSource();
 
-      using (var timer = new PeriodicTimer(TimeSpan.FromSeconds(.1)))
+      using var timer = new PeriodicTimer(TimeSpan.FromSeconds(.1));
+      var counter = 0;
+
+      while (await timer.WaitForNextTickAsync(cts.Token))
       {
-        var counter = 0;
+        //if (counter == 555)            cts.Cancel();
 
-        while (await timer.WaitForNextTickAsync(cts.Token))
-        {
-          //if (counter == 555)            cts.Cancel();
-
-          WriteLine($"Running logic at {DateTime.Now}");
-          counter++;
-
-          lbx.SelectedIndex = counter % lbx.Items.Count;
-        }
+        if (chkIsPlaying.IsChecked == true)
+          lbx.SelectedIndex = ++counter % lbx.Items.Count;
       }
     }
     catch (Exception ex) { Hand.Play(); MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error); }

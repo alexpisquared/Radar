@@ -25,5 +25,7 @@
       </ListView.ItemsPanel>
     </ListView>
 
+    <CheckBox x:Name="chkIsPlaying" />
+
   </Grid>
 </UserControl>
