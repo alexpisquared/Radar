@@ -8,9 +8,9 @@ public partial class RadarTypeViewUserControl : UserControl
   {
     try
     {
-      var gifurls = await (new WebDirectoryLoader()).ParseFromHtmlUsingRegex(RootUrl);
+      var gifurls = await (new WebDirectoryLoader()).ParseFromHtmlUsingRegex(RootUrl, PreciTp);
       tbxTitle.Text = $"{RootUrl}   {gifurls.Count} files";
-      foreach (var imgFile in gifurls.Where(r => r.EndsWith(PreciTp)))
+      foreach (var imgFile in gifurls)
       {
         lbx.Items.Add(new RI { GifUrl = $"{RootUrl}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile), ImgTime = getTime(imgFile) });
       }
@@ -21,15 +21,19 @@ public partial class RadarTypeViewUserControl : UserControl
 
       var cts = new CancellationTokenSource();
 
-      using var timer = new PeriodicTimer(TimeSpan.FromSeconds(.1));
+      using var timer = new PeriodicTimer(TimeSpan.FromSeconds(.04));
       var counter = 0;
+      var pause = 25;
 
       while (await timer.WaitForNextTickAsync(cts.Token))
       {
         //if (counter == 555)            cts.Cancel();
 
-        if (chkIsPlaying.IsChecked == true)
-          lbx.SelectedIndex = ++counter % lbx.Items.Count;
+        if (chkIsPlaying.IsChecked != true) continue;
+
+        var c = ++counter % (lbx.Items.Count+pause);
+
+        lbx.SelectedIndex = c >= lbx.Items.Count  ? lbx.Items.Count : c;
       }
     }
     catch (Exception ex) { Hand.Play(); MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error); }

@@ -2,7 +2,7 @@
              Background="#444">
   <Grid>
     <Image   Source="{Binding GifUrl}" d:Source="https://dd.meteo.gc.ca/radar/PRECIPET/GIF/CASKR/202202052030_CASKR_PRECIPET_SNOW.gif"/>
-    <TextBlock Text="{Binding FileName}" d:Text="202202042100_WKR_COMP_PRECIPET_RAIN.gif" FontSize="13" Foreground="#00f" Margin="0 18" VerticalAlignment="Top" HorizontalAlignment="Center" />
-    <TextBlock Text="{Binding FileName}" d:Text="202202042100_WKR_COMP_PRECIPET_RAIN.gif" FontSize="13" Foreground="#fff" Margin="0 18" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+    <TextBlock Text="{Binding FileName}" d:Text="202202042100_WKR_COMP_PRECIPET_RAIN.gif" FontSize="13" Foreground="#00f" Margin="0 18" HorizontalAlignment="Center" VerticalAlignment="Top"    />
+    <TextBlock Text="{Binding FileName}" d:Text="202202042100_WKR_COMP_PRECIPET_RAIN.gif" FontSize="13" Foreground="#fff" Margin="0 18" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
   </Grid>
 </UserControl>
