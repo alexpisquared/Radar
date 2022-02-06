@@ -16,6 +16,9 @@ public partial class RadarTypeViewUserControl : UserControl
       }
       Beep.Play();
 
+      await Task.Delay(1000);
+      chkIsPlaying.IsChecked = true;
+
       var cts = new CancellationTokenSource();
 
       using var timer = new PeriodicTimer(TimeSpan.FromSeconds(.1));
