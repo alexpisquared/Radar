@@ -15,7 +15,7 @@ public partial class SiteViewUserControl : UserControl
       tbxTitle.Text = $"{RootUrl}   {gifurls.Count} files";
       foreach (var imgFile in gifurls)
       {
-        lbx.Items.Add(new RI { GifUrl = $"{RootUrl}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile), ImgTime = getTime(imgFile) });
+        lbx.Items.Add(new RI { GifUrl = $"{RootUrl}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile)});
       }
 
       Beep.Play();
@@ -25,5 +25,5 @@ public partial class SiteViewUserControl : UserControl
 
   DateTimeOffset getTime(string item) => DateTimeOffset.Now;
 
-  public string RootUrl { get; set; } = "https://dd.meteo.gc.ca/radar/PRECIPET/GIF/WKR";
+  public string RootUrl { get; set; } = "PRECIPET/GIF/WKR";
 }

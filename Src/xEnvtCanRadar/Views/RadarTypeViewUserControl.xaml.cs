@@ -2,18 +2,24 @@
 
 public partial class RadarTypeViewUserControl : UserControl
 {
-  public RadarTypeViewUserControl() { InitializeComponent(); }
+  public RadarTypeViewUserControl() => InitializeComponent();
 
   async void OnLoaded(object sender, RoutedEventArgs e)
   {
+    const string name = "https://dd.meteo.gc.ca/radar/";
+
     try
     {
-      var gifurls = await (new WebDirectoryLoader()).ParseFromHtmlUsingRegex(RootUrl, PreciTp);
-      tbxTitle.Text = $"{RootUrl}   {gifurls.Count} files";
-      foreach (var imgFile in gifurls)
-      {
-        lbx.Items.Add(new RI { GifUrl = $"{RootUrl}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile), ImgTime = getTime(imgFile) });
-      }
+      var gifurls = await (new WebDirectoryLoader()).ParseFromHtmlUsingRegex($"{name}{RootUrl}", PreciTp);
+
+      var list = new List<RI>();
+      gifurls.ForEach(imgFile => /**/ list.Add(new RI { GifUrl = $"{name}{RootUrl}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile) }));
+      gifurls.ForEach(imgFile => lbx.Items.Add(new RI { GifUrl = $"{name}{RootUrl}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile) }));
+      //lbx.ItemsSource = list;
+
+      //tbxRange.Text = $"";
+      tbxTitle.Text = $"{RootUrl}   {gifurls.Count} files   {list.First().ImgTime:ddd HH:mm}  ÷  {list.Last().ImgTime:ddd HH:mm}";
+
       Beep.Play();
 
       await Task.Delay(1000);
@@ -31,16 +37,15 @@ public partial class RadarTypeViewUserControl : UserControl
 
         if (chkIsPlaying.IsChecked != true) continue;
 
-        var c = ++counter % (lbx.Items.Count+pause);
+        var c = ++counter % (lbx.Items.Count + pause);
 
-        lbx.SelectedIndex = c >= lbx.Items.Count  ? lbx.Items.Count : c;
+        lbx.SelectedIndex = c >= lbx.Items.Count ? lbx.Items.Count : c;
       }
     }
     catch (Exception ex) { Hand.Play(); MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
   }
 
-  DateTimeOffset getTime(string item) => DateTimeOffset.Now;
-
-  public string RootUrl { get; set; } = "https://dd.meteo.gc.ca/radar/PRECIPET/GIF/WKR";
+  public string RootUrl { get; set; } = "{name}PRECIPET/GIF/WKR";
   public string PreciTp { get; set; } = "Snow";
+  public string Range { get; set; } = "Snow";
 }
