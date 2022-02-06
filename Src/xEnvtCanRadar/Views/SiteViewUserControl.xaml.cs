@@ -15,7 +15,7 @@ public partial class SiteViewUserControl : UserControl
       tbxTitle.Text = $"{RootUrl}   {gifurls.Count} files";
       foreach (var imgFile in gifurls)
       {
-        lbx.Items.Add(new RI { GifUrl = $"{RootUrl}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile)});
+        lbx.Items.Add(new Logic.RI { GifUrl = $"{RootUrl}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile)});
       }
 
       Beep.Play();

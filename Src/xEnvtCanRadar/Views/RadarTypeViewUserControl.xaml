@@ -13,11 +13,12 @@
       <RowDefinition Height="1*"/>
     </Grid.RowDefinitions>
 
-    <TextBlock x:Name="tbxTitle" d:Text="Found CCC thingies." VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="#08f"/>
+    <!--<TextBlock x:Name="tbxTitle" d:Text="Found CCC thingies." VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="#08f"/>-->
+    <CheckBox x:Name="chkIsPlaying" VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="#0af" FontWeight="Medium"/>
 
     <Views:LbxItemRadarTemplate Grid.Row="1" DataContext="{Binding ElementName=lbx, Path=SelectedItem}" Height="480" Width="580" />
     
-    <ListView Grid.Row="2" x:Name="lbx" ItemTemplate="{StaticResource gif}" Background="#222" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+    <ListView Grid.Row="2" x:Name="lbx" ItemTemplate="{StaticResource gif}" Background="#222" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Center">
       <ListView.ItemsPanel>
         <ItemsPanelTemplate>
           <WrapPanel Orientation="Horizontal" />
@@ -25,7 +26,6 @@
       </ListView.ItemsPanel>
     </ListView>
 
-    <CheckBox x:Name="chkIsPlaying" />
 
     <!--<TextBlock x:Name="tbxRange" d:Text="Sun 12:06  -  TUe 12:36" FontSize="16" Foreground="#fff" Margin="2,30" Background="#f888" Padding="8 4" HorizontalAlignment="Left"  VerticalAlignment="Bottom" />-->
 

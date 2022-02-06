@@ -15,7 +15,7 @@
         <Color x:Key="WDir">#888</Color>
         <Color x:Key="Prsr">#bb0</Color>
       </Grid.Resources>
-      <oxy:Plot Title="{Binding PlotTitle}" TitleColor="#bdf" Background="#222" x:Name="plotBR" SubtitleColor="Red" LegendTextColor="#eee" LegendTitleColor="Yellow" TextColor="#0f0" PlotAreaBorderColor="Transparent" >
+      <oxy:Plot Title="{Binding PlotTitle}" d:Title="LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ "  TitleColor="#bdf" Background="#222" x:Name="plotBR" SubtitleColor="Red" LegendTextColor="#eee" LegendTitleColor="Yellow" TextColor="#0f0" PlotAreaBorderColor="Transparent" >
         <!--<oxy:Plot.DefaultTrackerTemplate>
           <ControlTemplate>
             <oxy:TrackerControl Position="{Binding Position}" BorderThickness="8" Background="#444">
@@ -96,6 +96,8 @@
       <Image Margin="0,26,170,0"  Source="{Binding EnvtCaIconV, FallbackValue='http://openweathermap.org/img/wn/01n@2x.png'}" d:Source="https://weather.gc.ca/weathericons/00.gif"   Width="90"  Height="90"  VerticalAlignment="Top" HorizontalAlignment="Right"/>
       <Image Margin="0,4,255,0"                Source="{Binding OpnWeaIcom,  FallbackValue='http://openweathermap.org/img/wn/01n@2x.png'}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" Width="180" Height="180" VerticalAlignment="Top" HorizontalAlignment="Right" />
       <Image Margin="0,148,350,0" Source="{Binding EnvtCaIconM, FallbackValue='http://openweathermap.org/img/wn/01n@2x.png'}" d:Source="https://weather.gc.ca/weathericons/02.gif"   Width="90"  Height="90"  VerticalAlignment="Top" HorizontalAlignment="Right" RenderTransformOrigin="-0.2,0.551"/>
+
+      <TextBlock Text="{Binding SubHeader}" d:Text="SubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeader" HorizontalAlignment="Center" Foreground="#ff0" Margin="0 80" VerticalAlignment="Top" />
 
     </Grid>
   </Border>

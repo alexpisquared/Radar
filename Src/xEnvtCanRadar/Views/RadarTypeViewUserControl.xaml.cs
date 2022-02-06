@@ -1,4 +1,6 @@
-﻿namespace xEnvtCanRadar.Views;
+﻿using xEnvtCanRadar.Logic;
+
+namespace xEnvtCanRadar.Views;
 
 public partial class RadarTypeViewUserControl : UserControl
 {
@@ -14,11 +16,9 @@ public partial class RadarTypeViewUserControl : UserControl
 
       var list = new List<RI>();
       gifurls.ForEach(imgFile => /**/ list.Add(new RI { GifUrl = $"{name}{RootUrl}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile) }));
-      gifurls.ForEach(imgFile => lbx.Items.Add(new RI { GifUrl = $"{name}{RootUrl}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile) }));
-      //lbx.ItemsSource = list;
+      gifurls.ForEach(imgFile => lbx.Items.Add(new RI { GifUrl = $"{name}{RootUrl}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile) }));      //lbx.ItemsSource = list;
 
-      //tbxRange.Text = $"";
-      tbxTitle.Text = $"{RootUrl}   {gifurls.Count} files   {list.First().ImgTime:ddd HH:mm}  ÷  {list.Last().ImgTime:ddd HH:mm}";
+      chkIsPlaying.Content =  $"_{RootUrl}      {gifurls.Count} files      {list.First().ImgTime:ddd HH:mm} ÷ {list.Last().ImgTime:ddd HH:mm}";
 
       Beep.Play();
 

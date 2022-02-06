@@ -243,8 +243,10 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     OCA = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(OCA); // PHC107
     D53 = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(D53); // PHC107
 
-    PlotTitle = $"{UnixToDt(OCA.current.dt):ddd HH:mm}    {OCA.current.temp:N1}°    {OCA.current.feels_like:N0}°    {OCA.current.wind_speed * _kWind:N1}k/h";
+    SubHeader = PlotTitle = $"{OCA.current}";
     CurrentConditions = $"{UnixToDt(OCA.current.dt):HH:mm:ss}\n  {OCA.current.temp,5:N1}°\n   {OCA.current.feels_like,4:N0}°\n  {OCA.current.wind_speed * _kWind:N1}k/h";
+    PlotTitle = CurrentConditions.Replace("\n", "");
+
     WindDirn = OCA.current.wind_deg;
     WindVelo = OCA.current.wind_speed * _kWind * 10;
     OpnWeaIcom = $"http://openweathermap.org/img/wn/{OCA.current.weather.First().icon}@2x.png";
@@ -413,6 +415,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   string _j = "http://openweathermap.org/img/wn/01d@2x.png"; public string OpnWeaIcom { get => _j; set => SetProperty(ref _j, value); }
   string _i = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconM { get => _i; set => SetProperty(ref _i, value); }
   string _k = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconV { get => _k; set => SetProperty(ref _k, value); }
+
+  string _s="Loading..."; public string SubHeader { get => _s; set => SetProperty(ref _s, value); }
 }
 ///todo: https://oxyplot.readthedocs.io/en/latest/models/series/ScatterSeries.html
 ///https://docs.microsoft.com/en-us/answers/questions/22863/how-to-customize-charts-in-wpf-using-systemwindows.html
