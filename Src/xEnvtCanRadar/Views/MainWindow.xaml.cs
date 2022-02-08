@@ -28,17 +28,17 @@ public partial class MainWindow : Window
       //Width = 3000;
       //Height = 1080;
     }
-    else if (Environment.UserDomainName == "RAZER1")
+    else if (Environment.UserDomainName != "RAZER1")
     {
       //WindowState = WindowState.Normal;
       //WindowStartupLocation = WindowStartupLocation.Manual;
-      //Left = 1400;
-      //Top = -1120;
+      Left = 100;
+      Top = 100;
       //Width = 3750;
       //Height = 1080;
     }
   }
 
   void OnClose(object sender, RoutedEventArgs e) => Close();
-  void OnLoaded(object sender, RoutedEventArgs e)  {  }
+  void OnLoaded(object sender, RoutedEventArgs e) { }
 }
