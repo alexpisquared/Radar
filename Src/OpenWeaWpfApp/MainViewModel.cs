@@ -68,8 +68,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     await AddPastDataToDB_EnvtCa("bvl", bvl);
     await AddPastDataToDB_EnvtCa("pea", pea);
 
-    RefillPast24(EnvtCaPast24ButtnvlT, EnvtCaPast24PearWind, bvl);
-    RefillPast24(EnvtCaPast24PearsonT, EnvtCaPast24BtnvWind, pea);
+    RefillPast24(EnvtCaVaughan, EnvtCaPast24PearWind, bvl);
+    RefillPast24(EnvtCaMissuga, EnvtCaPast24BtnvWind, pea);
 
     DataPtWind.Clear(); pea.OrderBy(r => r.TakenAt).ToList().ForEach(x => DataPtWind.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), 10 * x.Pressure - 1030)));
 
@@ -87,8 +87,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     RefillForeEnvtCa(EnvtCaRchmdHl, await _opnwea.GetEnvtCa(_richmhl));
     RefillForeEnvtCa(EnvtCaRchmdHl, await _opnwea.GetEnvtCa(_richmhl));
 
-    EnvtCaIconM = ($"https://weather.gc.ca/weathericons/{(sitedataMiss?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"); // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
-    EnvtCaIconV = ($"https://weather.gc.ca/weathericons/{(sitedataVghn?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"); // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
+    EnvtCaIconM = $"https://weather.gc.ca/weathericons/{sitedataMiss?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
+    EnvtCaIconV = $"https://weather.gc.ca/weathericons/{sitedataVghn?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
   }
 
   async Task AddPastDataToDB_EnvtCa(string siteId, List<MeteoDataMy> sitePast, string srcId = "eca", string measureId = "tar")
@@ -222,17 +222,17 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
     temps.Clear();
     winds.Clear();
-    siteDt.ForEach(x =>
-    {
-      temps.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), x.TempAir));
-      winds.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), x.WindKmH * _wk));
-    });
+    siteDt.OrderBy(x => x.TakenAt).ToList().ForEach(x =>
+      {
+        temps.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), x.TempAir));
+        winds.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), x.WindKmH * _wk));
+      });
   }
   static void RefillForeEnvtCa(ObservableCollection<DataPoint> points, siteData? siteDt)
   {
     ArgumentNullException.ThrowIfNull(siteDt, $"@@@@@@@@@ {nameof(siteDt)}");
 
-    points.Clear();
+    //points.Clear();
     siteDt.hourlyForecastGroup.hourlyForecast.ToList().ForEach(x => points.Add(new DataPoint(DateTimeAxis.ToDouble(EnvtCaDate(x.dateTimeUTC).DateTime), double.Parse(x.temperature.Value))));
   }
 
@@ -386,8 +386,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   public ObservableCollection<DataPoint> DataPtTempT { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> DataPtFeelT { get; } = new ObservableCollection<DataPoint>();
 
-  public ObservableCollection<DataPoint> EnvtCaPast24PearsonT { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> EnvtCaPast24ButtnvlT { get; } = new ObservableCollection<DataPoint>();
+  //public ObservableCollection<DataPoint> EnvtCaMissuga { get; } = new ObservableCollection<DataPoint>();
+  //public ObservableCollection<DataPoint> EnvtCaVaughan { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> EnvtCaPast24PearWind { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> EnvtCaPast24BtnvWind { get; } = new ObservableCollection<DataPoint>();
 

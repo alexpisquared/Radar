@@ -15,7 +15,7 @@
         <Color x:Key="WDir">#888</Color>
         <Color x:Key="Prsr">#bb0</Color>
       </Grid.Resources>
-      <oxy:Plot Title="{Binding PlotTitle}" d:Title="LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ "  TitleColor="#bdf" Background="#222" x:Name="plotBR" SubtitleColor="Red" LegendTextColor="#eee" LegendTitleColor="Yellow" TextColor="#0f0" PlotAreaBorderColor="Transparent" >
+      <oxy:Plot Title="{Binding PlotTitle}" d:Title="LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ "  TitleColor="#bdf" Background="#222" x:Name="plotBR" SubtitleColor="Red" LegendTextColor="#eee" LegendTitleColor="Yellow" TextColor="#0f0" PlotAreaBorderColor="Transparent" >
         <!--<oxy:Plot.DefaultTrackerTemplate>
           <ControlTemplate>
             <oxy:TrackerControl Position="{Binding Position}" BorderThickness="8" Background="#444">
@@ -41,17 +41,15 @@
           <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFVgn}" MarkerType="Circle" Title="ECa Vgn" MarkerStroke="{StaticResource Vgn}" MarkerFill="Transparent" x:Name="SctrPtTPFVgn" />
           <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFMis}" MarkerType="Circle" Title="ECa Mis" MarkerStroke="{StaticResource Mis}" MarkerFill="Transparent" x:Name="SctrPtTPFMis" />
           <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFPhc}" MarkerType="Circle" Title="OWA Phc" MarkerStroke="{StaticResource Phc}" MarkerFill="Transparent" x:Name="SctrPtTPFPhc" TrackerFormatString="{}{0}&#x0a;Time:   {2:HH:mm} &#x0a;Temp:  {4:0.0}° " />
-          
-          <oxy:LineSeries    ItemsSource="{Binding EnvtCaPast24ButtnvlT}"  Color="{StaticResource Vgn}" StrokeThickness="3.0" Title="Buttnvl" ToolTip="Buttnvl" />
-          <oxy:LineSeries    ItemsSource="{Binding EnvtCaPast24PearsonT}"  Color="{StaticResource Mis}" StrokeThickness="3.0" Title="Pearson" ToolTip="Pearson" />
-          <oxy:AreaSeries    ItemsSource="{Binding EnvtCaPast24BtnvWind}"  Color="{StaticResource Phc}" StrokeThickness="0.5" Title="Buttnvl" ToolTip="Buttnvl" Fill="#1888" />
 
-          <oxy:LineSeries    ItemsSource="{Binding EnvtCaToronto}"  Color="#b80" StrokeThickness="5.0" Title="TO" />
-          <oxy:LineSeries    ItemsSource="{Binding EnvtCaMissuga}"  Color="{StaticResource Mis}" StrokeThickness="3.0" Title="Mis" />
-          <oxy:LineSeries    ItemsSource="{Binding EnvtCaTorIsld}"  Color="#d00" StrokeThickness="1.0" Title="TI" />
-          <oxy:LineSeries    ItemsSource="{Binding EnvtCaVaughan}"  Color="{StaticResource Vgn}" StrokeThickness="3.0" Title="VA" />
-          <oxy:LineSeries    ItemsSource="{Binding EnvtCaMarkham}"  Color="{StaticResource Vgn}" StrokeThickness="2.0" Title="MA" />
-          <oxy:LineSeries    ItemsSource="{Binding EnvtCaRchmdHl}"  Color="{StaticResource Vgn}" StrokeThickness="1.0" Title="RH" />
+          <oxy:AreaSeries    ItemsSource="{Binding EnvtCaPast24BtnvWind}"  Color="{StaticResource Phc}" StrokeThickness="0.5" Title="Bvl Wind" ToolTip="Bvl Wind" Fill="#1888" />
+
+          <oxy:LineSeries    ItemsSource="{Binding EnvtCaToronto}"  Color="#b80" StrokeThickness="5.0" Title="EC TO" />
+          <oxy:LineSeries    ItemsSource="{Binding EnvtCaMissuga}"  Color="{StaticResource Mis}" StrokeThickness="3.0" Title="EC Mis" />
+          <oxy:LineSeries    ItemsSource="{Binding EnvtCaTorIsld}"  Color="#d00" StrokeThickness="1.0" Title="EC TI" />
+          <oxy:LineSeries    ItemsSource="{Binding EnvtCaVaughan}"  Color="{StaticResource Vgn}" StrokeThickness="3.0" Title="EC VA" />
+          <oxy:LineSeries    ItemsSource="{Binding EnvtCaMarkham}"  Color="{StaticResource Vgn}" StrokeThickness="2.0" Title="EC MA" />
+          <oxy:LineSeries    ItemsSource="{Binding EnvtCaRchmdHl}"  Color="{StaticResource Vgn}" StrokeThickness="1.0" Title="EC RH" />
 
           <oxy:AreaSeries    ItemsSource="{Binding DataPtPopr}" Color="#04f" />
           <oxy:LineSeries    ItemsSource="{Binding DataPtGust}" Color="{StaticResource WDir}" StrokeThickness="0.5" />
