@@ -4,7 +4,7 @@
   <Grid>
     <Grid.Resources>
       <DataTemplate x:Key="gif">
-        <Views:LbxItemRadarTemplate Margin="-4 -1" Height="24" Width="29" />
+        <Views:LbxItemRadarTemplate Margin="-4 -1" Height="14" Width="16" />
       </DataTemplate>
     </Grid.Resources>
     <Grid.RowDefinitions>
