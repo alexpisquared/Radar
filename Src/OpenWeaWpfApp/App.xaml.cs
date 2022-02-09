@@ -83,7 +83,7 @@ public partial class App : Application
 //#endif
 
 
-    optionsBuilder.UseSqlServer(cfg.GetConnectionString("Exprs") ?? throw new ArgumentNullException(".GetConnectionString('Exprs')"));
+    optionsBuilder.UseSqlServer(cfg.GetConnectionString("Exprs") ?? throw new ArgumentNullException(".GetConnectionString('Exprs')", nameof(services)));
   });
 }
 

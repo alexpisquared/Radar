@@ -8,7 +8,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 {
   readonly IConfigurationRoot _config;
   readonly OpenWea _opnwea;
-  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _d3r = 4, _d3c = 600, _windClr = 333, _popClr = 0;
+  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600;
   readonly WeatherxContext _dbx;
   const string _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaughan = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582",
     _phc = "phc", _vgn = "vgn", _mis = "mis",
@@ -71,7 +71,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     RefillPast24(EnvtCaPast24ButtnvlT, EnvtCaPast24PearWind, bvl);
     RefillPast24(EnvtCaPast24PearsonT, EnvtCaPast24BtnvWind, pea);
 
-    DataPtWind.Clear(); pea.OrderBy(r=>r.TakenAt).ToList().ForEach(x => DataPtWind.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), 10*x.Pressure - 1030)));
+    DataPtWind.Clear(); pea.OrderBy(r => r.TakenAt).ToList().ForEach(x => DataPtWind.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), 10 * x.Pressure - 1030)));
 
     var sitedataMiss = await _opnwea.GetEnvtCa(_mississ);
     var sitedataVghn = await _opnwea.GetEnvtCa(_vaughan);
@@ -211,7 +211,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   static DateTimeOffset EnvtCaDate(dateStampType dateStampType)
   {
     if (!DateTimeOffset.TryParseExact($"{dateStampType.year}-{dateStampType.month.Value}-{dateStampType.day.Value} {dateStampType.hour.Value}:{dateStampType.minute}", "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var dt))
-      throw new ArgumentException();
+      throw new ArgumentException(nameof(dateStampNameType));
+
     return dt;
   }
 
@@ -416,7 +417,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   string _i = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconM { get => _i; set => SetProperty(ref _i, value); }
   string _k = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconV { get => _k; set => SetProperty(ref _k, value); }
 
-  string _s="Loading..."; public string SubHeader { get => _s; set => SetProperty(ref _s, value); }
+  string _s = "Loading..."; public string SubHeader { get => _s; set => SetProperty(ref _s, value); }
 }
 ///todo: https://oxyplot.readthedocs.io/en/latest/models/series/ScatterSeries.html
 ///https://docs.microsoft.com/en-us/answers/questions/22863/how-to-customize-charts-in-wpf-using-systemwindows.html
