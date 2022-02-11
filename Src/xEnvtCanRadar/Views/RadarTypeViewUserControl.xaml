@@ -12,13 +12,14 @@
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="1*"/>
     </Grid.RowDefinitions>
-
     <!--<TextBlock x:Name="tbxTitle" d:Text="Found CCC thingies." VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="#08f"/>-->
-    <CheckBox x:Name="chkIsPlaying" VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="#0af" FontWeight="Medium"/>
 
-    <Views:LbxItemRadarTemplate Grid.Row="1" DataContext="{Binding ElementName=lbx, Path=SelectedItem}" Height="480" Width="580" />
-    
-    <ListView Grid.Row="2" x:Name="lbx" ItemTemplate="{StaticResource gif}" Background="#222" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Center">
+    <Views:LbxItemRadarTemplate DataContext="{Binding ElementName=lbx, Path=SelectedItem}" Height="480" Width="580" />
+
+    <Rectangle Width="500" Height="26" VerticalAlignment="Top" HorizontalAlignment="Center" Fill="#4000" />
+    <CheckBox  Width="500" Height="26" VerticalAlignment="Top" HorizontalAlignment="Center" x:Name="chkIsPlaying" Foreground="#ff0" Background="#ff0" FontWeight="Medium" Margin="4"/>
+   
+    <ListView x:Name="lbx" ItemTemplate="{StaticResource gif}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Center" VerticalAlignment="Bottom" Opacity=".8">
       <ListView.ItemsPanel>
         <ItemsPanelTemplate>
           <WrapPanel Orientation="Horizontal" />

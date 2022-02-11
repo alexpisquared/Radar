@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "OpenWeaWpfApp": {
+      "commandName": "Project",
+      "commandLineArgs": "\"First Argument\" Second Third"
+    }
+  }
+}

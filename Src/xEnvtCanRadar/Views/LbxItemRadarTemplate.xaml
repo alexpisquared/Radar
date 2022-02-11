@@ -2,7 +2,7 @@
              xmlns:vms="clr-namespace:xEnvtCanRadar.Logic" d:DataContext="{d:DesignInstance Type=vms:RI}" Background="#202">
   <Grid>
     <Image   Source="{Binding GifUrl}" d:Source="PRECIPET/GIF/CASKR/202202052030_CASKR_PRECIPET_SNOW.gif"/>
-    <TextBlock Text="{Binding FileName}" d:Text="202202042100_WKR_COMP_PRECIPET_RAIN.gif"  FontSize="13" Foreground="#fff" Margin="88,2" Background="#8000" Padding="8 2"            HorizontalAlignment="Left"  VerticalAlignment="Bottom" />
-    <TextBlock Text="{Binding ImgTime, StringFormat='{}{0:ddd HH:mm}'}" d:Text="Sun 12:05" FontSize="16" Foreground="#ff0" Margin="2,60" Background="#f000" Padding="8 4" Width="96" HorizontalAlignment="Right" VerticalAlignment="Top" />
+    <TextBlock Text="{Binding FileName}" d:Text="202202042100_WKR_COMP_PRECIPET_RAIN.gif"  FontSize="13" Foreground="#fff" Margin="88,26" Background="#4000" Padding="8 2"            HorizontalAlignment="Left"  VerticalAlignment="Top" />
+    <TextBlock Text="{Binding ImgTime, StringFormat='{}{0:ddd HH:mm}'}" d:Text="Sun 12:05" FontSize="16" Foreground="#ff0" Margin="02,60" Background="#f000" Padding="8 4" Width="96" HorizontalAlignment="Right" VerticalAlignment="Top" />
   </Grid>
 </UserControl>

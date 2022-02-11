@@ -36,6 +36,8 @@ public partial class MainWindow : Window
       Width = 3000;
       Height = 1080;
     }
+
+    Title = $"OpenWeaWpfApp - {string.Join(',', Environment.GetCommandLineArgs())}";
   }
 
   void OnClose(object sender, RoutedEventArgs e) => Close();
