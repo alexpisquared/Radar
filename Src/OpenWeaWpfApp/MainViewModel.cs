@@ -84,8 +84,6 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     RefillForeEnvtCa(EnvtCaMissuga, sitedataMiss);
     RefillForeEnvtCa(EnvtCaVaughan, sitedataVghn);
     RefillForeEnvtCa(EnvtCaMarkham, await _opnwea.GetEnvtCa(_markham));
-    RefillForeEnvtCa(EnvtCaRchmdHl, await _opnwea.GetEnvtCa(_richmhl));
-    RefillForeEnvtCa(EnvtCaRchmdHl, await _opnwea.GetEnvtCa(_richmhl));
 
     EnvtCaIconM = $"https://weather.gc.ca/weathericons/{sitedataMiss?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
     EnvtCaIconV = $"https://weather.gc.ca/weathericons/{sitedataVghn?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
@@ -245,8 +243,11 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     D53 = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(D53); // PHC107
 
     SubHeader = PlotTitle = $"{OCA.current}";
-    CurrentConditions = $"{UnixToDt(OCA.current.dt):HH:mm:ss}\n  {OCA.current.temp,5:N1}°\n   {OCA.current.feels_like,4:N0}°\n  {OCA.current.wind_speed * _kWind:N1}k/h";
-    PlotTitle = CurrentConditions.Replace("\n", "");
+    PlotTitle = CurrentConditions = $"{UnixToDt(OCA.current.dt):HH:mm:ss}   {OCA.current.temp,5:N1}°   {OCA.current.feels_like,4:N0}°  {OCA.current.wind_speed * _kWind:N1}k/h";
+    CurTempReal = $"{OCA.current.temp,5:N1}°";
+    CurTempFeel = $"{OCA.current.feels_like,4:N0}°";
+    CurWindKmHr = $"{OCA.current.wind_speed * _kWind:N1}";
+
 
     WindDirn = OCA.current.wind_deg;
     WindVelo = OCA.current.wind_speed * _kWind * 10;
@@ -395,7 +396,6 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   public ObservableCollection<DataPoint> EnvtCaVaughan { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> EnvtCaMarkham { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> EnvtCaMissuga { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> EnvtCaRchmdHl { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> EnvtCaTorIsld { get; } = new ObservableCollection<DataPoint>();
 
   public PlotModel FuncModel { get; private set; } = new PlotModel { Title = "Function Srs", Background = OxyColor.FromUInt32(123456), LegendTitleColor = OxyColor.FromUInt32(123456) };
@@ -403,10 +403,13 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
   string _t = default!; public string PlotTitle { get => _t; set => SetProperty(ref _t, value); }
   string _c = default!; public string CurrentConditions { get => _c; set => SetProperty(ref _c, value); }
-  int _w = default!; public int WindDirn { get => _w; set => SetProperty(ref _w, value); }
+  string _r = default!; public string CurTempReal { get => _r; set => SetProperty(ref _r, value); }
+  string _f = default!; public string CurTempFeel { get => _f; set => SetProperty(ref _f, value); }
+  string _w = default!; public string CurWindKmHr { get => _w; set => SetProperty(ref _w, value); }
+  int _b = default!; public int WindDirn { get => _b; set => SetProperty(ref _b, value); }
   float _v = default!; public float WindVelo { get => _v; set => SetProperty(ref _v, value); }
   RootobjectOneCallApi? _o = default!; public RootobjectOneCallApi? OCA { get => _o; set => SetProperty(ref _o, value); }
-  RootobjectFrc5Day3Hr? _f = default!; public RootobjectFrc5Day3Hr? D53 { get => _f; set => SetProperty(ref _f, value); }
+  RootobjectFrc5Day3Hr? _5 = default!; public RootobjectFrc5Day3Hr? D53 { get => _5; set => SetProperty(ref _5, value); }
 
   //ImageSource _i; public ImageSource WeaIcom { get => _i; set => SetProperty(ref _i, value); }
   //Uri _k = new("http://openweathermap.org/img/wn/04n@2x.png"); public Uri WIcon { get => _k; set => SetProperty(ref _k, value); }

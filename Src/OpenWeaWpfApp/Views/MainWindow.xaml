@@ -49,14 +49,13 @@
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaTorIsld}"  Color="#d00" StrokeThickness="1.0" Title="EC TI" />
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaVaughan}"  Color="{StaticResource Vgn}" StrokeThickness="3.0" Title="EC VA" />
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaMarkham}"  Color="{StaticResource Vgn}" StrokeThickness="2.0" Title="EC MA" />
-          <oxy:LineSeries    ItemsSource="{Binding EnvtCaRchmdHl}"  Color="{StaticResource Vgn}" StrokeThickness="1.0" Title="EC RH" />
 
           <oxy:AreaSeries    ItemsSource="{Binding DataPtPopr}" Color="#04f" />
           <oxy:LineSeries    ItemsSource="{Binding DataPtGust}" Color="{StaticResource WDir}" StrokeThickness="0.5" />
           <oxy:LineSeries    ItemsSource="{Binding DataPtWind}" Color="{StaticResource Prsr}" StrokeThickness="1.5" />
           <oxy:LineSeries    ItemsSource="{Binding DataPtWDir}" Color="{StaticResource WDir}" StrokeThickness="1.5" />
           <oxy:LineSeries    ItemsSource="{Binding DataPtTemp}" Color="{StaticResource Phc}" StrokeThickness="1.5" Title="OWA" />
-          <oxy:LineSeries    ItemsSource="{Binding DataPtFeel}" Color="{StaticResource Phc}" StrokeThickness="0.5" />          
+          <oxy:LineSeries    ItemsSource="{Binding DataPtFeel}" Color="{StaticResource Phc}" StrokeThickness="0.5" />
 
           <!--<oxy:ScatterSeries ItemsSource="{Binding SctrPtTFFPhc}" MarkerType="Plus"    MarkerStroke="#eaf" MarkerStrokeThickness="2" MarkerSize="5" MarkerFill="#0f0" Title="OWA" />-->
         </oxy:Plot.Series>
@@ -88,7 +87,14 @@
           <Rectangle Width="6" Height="{Binding WindVelo}" StrokeThickness="2" Stroke="#888" Fill="#fff" VerticalAlignment="Bottom" Margin="2"/>
           <!--<Ellipse   Width="024" Height="024" StrokeThickness="0" Stroke="#567" Fill="#f555" />-->
         </Grid>
-        <TextBlock Text="{Binding CurrentConditions}" Foreground="#eee" HorizontalAlignment="Center" VerticalAlignment="Center" d:Text="sfflsdk DFDFDF;" FontSize="26" FontWeight="Bold" />
+        <StackPanel VerticalAlignment="Center">
+          <Label Content="Real °" Foreground="#ccc" HorizontalAlignment="Center" FontSize="8" Margin="0"/>
+          <TextBlock d:Text="+21" Text="{Binding CurTempReal}" Foreground="#eee" HorizontalAlignment="Center" FontSize="36" FontWeight="SemiBold" Margin="0 -16 0 10"/>
+          <Label Content="Feel °" Foreground="#ccc" HorizontalAlignment="Center" FontSize="8" />
+          <TextBlock d:Text="+21" Text="{Binding CurTempFeel}" Foreground="#eee" HorizontalAlignment="Center" FontSize="46" FontWeight="SemiBold" Margin="0 -18 0 10"/>
+          <Label Content="Wind k/h" Foreground="#ccc" HorizontalAlignment="Center" FontSize="8" />
+          <TextBlock d:Text="+21" Text="{Binding CurWindKmHr}" Foreground="#eee" HorizontalAlignment="Center" FontSize="36" FontWeight="SemiBold" Margin="0 -16 0 10"/>
+        </StackPanel>
       </Grid>
 
       <Image Margin="0,26,170,0"  Source="{Binding EnvtCaIconV, FallbackValue='http://openweathermap.org/img/wn/01n@2x.png'}" d:Source="https://weather.gc.ca/weathericons/00.gif"   Width="90"  Height="90"  VerticalAlignment="Top" HorizontalAlignment="Right"/>
