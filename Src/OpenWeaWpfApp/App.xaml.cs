@@ -1,4 +1,6 @@
 ﻿#define Host_
+using System.Windows.Controls;
+
 namespace OpenWeaWpfApp;
 
 public partial class App : Application
@@ -39,6 +41,13 @@ public partial class App : Application
 
   protected override async void OnStartup(StartupEventArgs e)
   {
+    //++if (Environment.UserDomainName != "RAZER1")      MessageBox.Show("OnStartup", $"{Environment.UserDomainName} != RAZER1");
+
+    Current.DispatcherUnhandledException += UnhandledExceptionHndlr.OnCurrentDispatcherUnhandledException;
+    EventManager.RegisterClassHandler(typeof(TextBox), TextBox.GotFocusEvent, new RoutedEventHandler((s, re) => { (s as TextBox ?? new TextBox()).SelectAll(); }));
+    ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
+
+
 #if !ParseToClasses
 
 #if Host
@@ -66,6 +75,12 @@ public partial class App : Application
 
     base.OnStartup(e);
     await Task.Yield();
+  }
+  protected override void OnExit(ExitEventArgs e)
+  {
+    Current.DispatcherUnhandledException -= UnhandledExceptionHndlr.OnCurrentDispatcherUnhandledException;
+
+    base.OnExit(e);
   }
 
   static void Dbx(IServiceCollection services) => _ = services.AddDbContext<WeatherxContext>(optionsBuilder => //tu: dbcontext connstr https://youtu.be/7OBMhoKieqk?t=505 + https://codedocu.com/details?d=2653&a=9&f=425&d=0  :Project\Manage Connected Svcs !!! 2021-12

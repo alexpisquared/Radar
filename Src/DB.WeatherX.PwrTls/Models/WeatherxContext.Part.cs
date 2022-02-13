@@ -1,13 +1,19 @@
-﻿namespace DB.WeatherX.PwrTls.Models;
+﻿using System.Diagnostics;
+
+namespace DB.WeatherX.PwrTls.Models;
 
 public partial class WeatherxContext
 {
-  public void EnsureExists()
+  public void EnsureCreated22()
   {
-    if (Environment.UserDomainName != "RAZER1")
+    try
     {
-      //Debugger.Break();
       Database.EnsureCreated(); // 693ms
+    }
+    catch (Exception ex)
+    {
+      Trace.WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@");
+      if (Debugger.IsAttached) Debugger.Break(); else throw;
     }
   }
 }

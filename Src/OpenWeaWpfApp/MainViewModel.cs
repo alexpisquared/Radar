@@ -17,6 +17,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
   public MainViewModel(WeatherxContext weatherxContext, OpenWea openWea)
   {
+    if (Environment.UserDomainName != "RAZER1") MessageBox.Show("MainViewModel.CTor", $"{Environment.UserDomainName} != RAZER1");
+
     _config = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
     _opnwea = openWea;
     _dbx = weatherxContext; // WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
@@ -24,6 +26,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
   public async Task<bool> PopulateAsync()
   {
+    if (Environment.UserDomainName != "RAZER1") MessageBox.Show("MainViewModel.PopulateAsync()", $"{Environment.UserDomainName} != RAZER1");
+
     try
     { //await Task.Delay(999); no diff
       Clear();
@@ -52,7 +56,19 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     var ytd = DateTime.Now.AddHours(-24);
     var dby = DateTime.Now.AddHours(-48);
 
-    _dbx.EnsureExists();
+    if (Environment.UserDomainName != "RAZER1")
+    {
+      MessageBox.Show($"{Environment.UserDomainName} != RAZER1", "About to   _dbx.EnsureExists();");      //Debugger.Break();
+      try
+      {
+        _dbx.EnsureCreated22();
+      }
+      catch (Exception ex)
+      {
+        WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@");
+        if (Debugger.IsAttached) Debugger.Break(); else MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
+      }
+    }
 
     (await _dbx.PointFore.Where(r => r.SiteId == _phc && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + .25 * (r.ForecastedFor - r.ForecastedAt).TotalHours, y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
     (await _dbx.PointFore.Where(r => r.SiteId == _vgn && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFVgn.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + .25 * (r.ForecastedFor - r.ForecastedAt).TotalHours, y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
