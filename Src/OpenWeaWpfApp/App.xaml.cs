@@ -41,8 +41,6 @@ public partial class App : Application
 
   protected override async void OnStartup(StartupEventArgs e)
   {
-    //++if (Environment.UserDomainName != "RAZER1")      MessageBox.Show("OnStartup", $"{Environment.UserDomainName} != RAZER1");
-
     Current.DispatcherUnhandledException += UnhandledExceptionHndlr.OnCurrentDispatcherUnhandledException;
     EventManager.RegisterClassHandler(typeof(TextBox), TextBox.GotFocusEvent, new RoutedEventHandler((s, re) => { (s as TextBox ?? new TextBox()).SelectAll(); }));
     ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));

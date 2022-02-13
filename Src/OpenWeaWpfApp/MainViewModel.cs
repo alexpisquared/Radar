@@ -17,8 +17,6 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
   public MainViewModel(WeatherxContext weatherxContext, OpenWea openWea)
   {
-    if (Environment.UserDomainName != "RAZER1") MessageBox.Show("MainViewModel.CTor", $"{Environment.UserDomainName} != RAZER1");
-
     _config = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
     _opnwea = openWea;
     _dbx = weatherxContext; // WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
@@ -26,8 +24,6 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
   public async Task<bool> PopulateAsync()
   {
-    if (Environment.UserDomainName != "RAZER1") MessageBox.Show("MainViewModel.PopulateAsync()", $"{Environment.UserDomainName} != RAZER1");
-
     try
     { //await Task.Delay(999); no diff
       Clear();
@@ -58,7 +54,6 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
     if (Environment.UserDomainName != "RAZER1")
     {
-      MessageBox.Show($"{Environment.UserDomainName} != RAZER1", "About to   _dbx.EnsureExists();");      //Debugger.Break();
       try
       {
         _dbx.EnsureCreated22();
