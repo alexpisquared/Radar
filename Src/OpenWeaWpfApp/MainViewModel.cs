@@ -1,9 +1,4 @@
-﻿using System.ComponentModel.Design.Serialization;
-using DB.WeatherX.PwrTls;
-using OpenWeather2022.Response;
-
-namespace OpenWeaWpfApp;
-
+﻿namespace OpenWeaWpfApp;
 public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableValidator
 {
   readonly IConfigurationRoot _config;
@@ -22,15 +17,18 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     _dbx = weatherxContext; // WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
   }
 
-  public async Task<bool> PopulateAsync()
+  public async Task<bool> PopulateAsync(int days = 5)
   {
+    _busy = true;
     try
     { //await Task.Delay(999); no diff
       Clear();
 
       await PrevForecastFromDB();
       await PopulateEnvtCanaAsync();
-      await PopulateScatModelAsync();
+
+      await PopulateScatModelAsync(days);
+
       //await PopulateFuncModelAsync();
       //await PopulateOpenWeathAsync(); -- extra calls 
 
@@ -41,6 +39,10 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@");
       if (Debugger.IsAttached) Debugger.Break(); else MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
       return false;
+    }
+    finally
+    {
+      _busy = false;
     }
 
     return true;
@@ -69,7 +71,6 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     (await _dbx.PointFore.Where(r => r.SiteId == _vgn && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFVgn.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + .25 * (r.ForecastedFor - r.ForecastedAt).TotalHours, y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
     (await _dbx.PointFore.Where(r => r.SiteId == _mis && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFMis.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + .25 * (r.ForecastedFor - r.ForecastedAt).TotalHours, y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
   }
-
   async Task PopulateEnvtCanaAsync()
   {
     Past24hrHAP p24 = new();
@@ -99,7 +100,6 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     EnvtCaIconM = $"https://weather.gc.ca/weathericons/{sitedataMiss?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
     EnvtCaIconV = $"https://weather.gc.ca/weathericons/{sitedataVghn?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
   }
-
   async Task AddPastDataToDB_EnvtCa(string siteId, List<MeteoDataMy> sitePast, string srcId = "eca", string measureId = "tar")
   {
     ArgumentNullException.ThrowIfNull(sitePast, $"@@@@@@@@@ {nameof(sitePast)}");
@@ -245,7 +245,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     siteDt.hourlyForecastGroup.hourlyForecast.ToList().ForEach(x => points.Add(new DataPoint(DateTimeAxis.ToDouble(EnvtCaDate(x.dateTimeUTC).DateTime), double.Parse(x.temperature.Value))));
   }
 
-  async Task PopulateScatModelAsync()
+  async Task PopulateScatModelAsync(int days = 5)
   {
     DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), +10));
     DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), -25));
@@ -259,13 +259,12 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     CurTempFeel = $"{OCA.current.feels_like,4:N0}°";
     CurWindKmHr = $"{OCA.current.wind_speed * _kWind:N1}";
 
-
     WindDirn = OCA.current.wind_deg;
     WindVelo = OCA.current.wind_speed * _kWind * 10;
     OpnWeaIcom = $"http://openweathermap.org/img/wn/{OCA.current.weather.First().icon}@2x.png";
 
-    var timeMin = DateTimeAxis.ToDouble(OpenWea.UnixToDt(OCA.daily.Min(d => d.dt - 07 * 3600)));
-    var timeMax = DateTimeAxis.ToDouble(OpenWea.UnixToDt(OCA.daily.Max(d => d.dt + 12 * 3600)));
+    //var timeMin = DateTimeAxis.ToDouble(OpenWea.UnixToDt(OCA.daily.Min(d => d.dt - 07 * 3600)));
+    ForeMax = DateTimeAxis.ToDouble(days == 5 ? OpenWea.UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Today.AddDays(days));
     var valueMin = OCA.daily.Min(r => r.temp.min);
     var valueMax = OCA.daily.Max(r => r.temp.max);
 
@@ -412,6 +411,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   public PlotModel FuncModel { get; private set; } = new PlotModel { Title = "Function Srs", Background = OxyColor.FromUInt32(123456), LegendTitleColor = OxyColor.FromUInt32(123456) };
   public PlotModel ScatModel { get; private set; } = new PlotModel { Title = "Scatter Srs" };
 
+  double _fm; public double ForeMax { get => _fm; set => SetProperty(ref _fm, value); }
   string _t = default!; public string PlotTitle { get => _t; set => SetProperty(ref _t, value); }
   string _c = default!; public string CurrentConditions { get => _c; set => SetProperty(ref _c, value); }
   string _r = default!; public string CurTempReal { get => _r; set => SetProperty(ref _r, value); }
@@ -432,6 +432,16 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   string _k = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconV { get => _k; set => SetProperty(ref _k, value); }
 
   string _s = "Loading..."; public string SubHeader { get => _s; set => SetProperty(ref _s, value); }
+
+  bool _busy;
+  IRelayCommand? _cd; public IRelayCommand GetDaysComman_ => _cd ??= new RelayCommand(GetDays); void GetDays() { }
+  IRelayCommand? _gs; public IRelayCommand GetDaysCommand => _gs ??= new AsyncRelayCommand<object>(DoGen, (days) => !_busy); async Task DoGen(object? days_)
+  {
+    if (int.TryParse(days_?.ToString(), out var days))
+      ForeMax = DateTimeAxis.ToDouble(days == 5 ? OpenWea.UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Now.AddDays(days-1));
+    
+    await Task.Yield();// PopulateAsync((int?)days ?? 5);
+  }
 }
 ///todo: https://oxyplot.readthedocs.io/en/latest/models/series/ScatterSeries.html
 ///https://docs.microsoft.com/en-us/answers/questions/22863/how-to-customize-charts-in-wpf-using-systemwindows.html

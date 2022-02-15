@@ -66,6 +66,7 @@
                             MinorGridlineStyle="Solid" MinorGridlineColor="#333" 
                             d:Minimum="0"
                             d:Maximum="7"
+                            Maximum="{Binding ForeMax}"
                             MinorTickSize="4" TicklineColor="#ccc" />
           <oxy:LinearAxis   Key="yAxis" Minimum="-28"  Maximum="12"  MajorStep="10"  MinorStep="1"  TextColor="#eee" TitleColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Left"   MajorGridlineStyle="Solid" MajorGridlineColor="#000" Title="Temp [°C]"              
                             MinorTickSize="4" TicklineColor="#ccc" />
@@ -102,6 +103,19 @@
       <Image Margin="0,148,350,0" Source="{Binding EnvtCaIconM, FallbackValue='http://openweathermap.org/img/wn/01n@2x.png'}" d:Source="https://weather.gc.ca/weathericons/02.gif"   Width="90"  Height="90"  VerticalAlignment="Top" HorizontalAlignment="Right" RenderTransformOrigin="-0.2,0.551"/>
 
       <TextBlock Text="{Binding SubHeader}" d:Text="SubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeader" HorizontalAlignment="Center" Foreground="#ff0" Margin="0 80" VerticalAlignment="Top" />
+
+      <Menu Margin="15 10" Visibility="{Binding IsDevDbgViz}" FontStyle="Oblique" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent" Foreground="#ddd">
+        <MenuItem   Header="Days: _1 " Command="{Binding GetDaysCommand}" CommandParameter="1" InputGestureText="F1" ToolTip="Check DB for changes"  />
+        <MenuItem   Header="_2" Command="{Binding GetDaysCommand}" CommandParameter="2" InputGestureText="F2" ToolTip="Check DB for changes"  />
+        <MenuItem   Header="_3" Command="{Binding GetDaysCommand}" CommandParameter="3" InputGestureText="F3" ToolTip="Check DB for changes"  />
+        <MenuItem   Header="_4" Command="{Binding GetDaysCommand}" CommandParameter="4" InputGestureText="F4" ToolTip="Check DB for changes"  />
+        <MenuItem   Header="_5" Command="{Binding GetDaysCommand}" CommandParameter="5" InputGestureText="F5" ToolTip="Check DB for changes"  />
+        <MenuItem   Header="° ° °"  >
+          <MenuItem Header="Dmp" Command="{Binding SaveExcelTsvCommand}"  ToolTip="Dump tsv"                                          />
+          <MenuItem Header="Tgl _DevDbgViz" IsCheckable="True" IsChecked="{Binding IsDevDbg}"/>
+        </MenuItem>
+        <MenuItem   Header="New" ToolTip="No action" FontStyle="Normal" />
+      </Menu>
 
     </Grid>
   </Border>
