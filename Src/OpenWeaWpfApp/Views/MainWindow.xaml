@@ -89,11 +89,11 @@
           <!--<Ellipse   Width="024" Height="024" StrokeThickness="0" Stroke="#567" Fill="#f555" />-->
         </Grid>
         <StackPanel VerticalAlignment="Center">
-          <Label Content="Real °" Foreground="#ccc" HorizontalAlignment="Center" FontSize="8" Margin="0"/>
+          <Label Content="Real °"                              Foreground="#aaa" HorizontalAlignment="Center" FontSize="08" />
           <TextBlock d:Text="+21" Text="{Binding CurTempReal}" Foreground="#eee" HorizontalAlignment="Center" FontSize="26" FontWeight="SemiBold" Margin="0 -12 0 10"/>
-          <Label Content="Feel °" Foreground="#ccc" HorizontalAlignment="Center" FontSize="8" />
+          <Label Content="Feel °"                              Foreground="#aaa" HorizontalAlignment="Center" FontSize="08" />
           <TextBlock d:Text="+21" Text="{Binding CurTempFeel}" Foreground="#eee" HorizontalAlignment="Center" FontSize="60" FontWeight="SemiBold" Margin="0 -18 0 10"/>
-          <Label Content="Wind k/h" Foreground="#ccc" HorizontalAlignment="Center" FontSize="8" />
+          <Label Content="Wind k/h"                            Foreground="#aaa" HorizontalAlignment="Center" FontSize="08" />
           <TextBlock d:Text="+21" Text="{Binding CurWindKmHr}" Foreground="#eee" HorizontalAlignment="Center" FontSize="26" FontWeight="SemiBold" Margin="0 -12 0 10"/>
         </StackPanel>
       </Grid>

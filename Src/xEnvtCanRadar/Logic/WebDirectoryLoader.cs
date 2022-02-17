@@ -12,6 +12,8 @@ public class WebDirectoryLoader
       .Where(r => r.Success)
       .Select(r => r.Groups["name"].ToString())
       .Where(r => r.EndsWith(endsWith))
-      .TakeLast(takeLastCount).ToList();
+      .TakeLast(takeLastCount)
+      .OrderBy(r => r)
+      .ToList();
   }
 }

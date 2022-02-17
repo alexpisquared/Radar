@@ -255,8 +255,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
     SubHeader = PlotTitle = $"{OCA.current}";
     PlotTitle = CurrentConditions = $"{UnixToDt(OCA.current.dt):HH:mm:ss}   {OCA.current.temp,5:N1}°   {OCA.current.feels_like,4:N0}°  {OCA.current.wind_speed * _kWind:N1}k/h";
-    CurTempReal = $"{OCA.current.temp,5:N1}°";
-    CurTempFeel = $"{OCA.current.feels_like,4:N0}°";
+    CurTempReal = $"{OCA.current.temp:+#.#;-#.#;0}°";
+    CurTempFeel = $"{OCA.current.feels_like:+#;-#;0}°";
     CurWindKmHr = $"{OCA.current.wind_speed * _kWind:N1}";
 
     WindDirn = OCA.current.wind_deg;

@@ -14,12 +14,24 @@
     </Grid.RowDefinitions>
     <!--<TextBlock x:Name="tbxTitle" d:Text="Found CCC thingies." VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="#08f"/>-->
 
-    <Views:LbxItemRadarTemplate DataContext="{Binding ElementName=lbx, Path=SelectedItem}" Height="480" Width="580" />
+    <Views:LbxItemRadarTemplate DataContext="{Binding ElementName=lbxAllPics, Path=SelectedItem}" Height="480" Width="580" />
 
     <Rectangle Width="500" Height="26" VerticalAlignment="Top" HorizontalAlignment="Center" Fill="#4000" />
     <CheckBox  Width="500" Height="26" VerticalAlignment="Top" HorizontalAlignment="Center" x:Name="chkIsPlaying" Foreground="#ff0" Background="#ff0" FontWeight="Medium" Margin="4"/>
-   
-    <ListView x:Name="lbx" ItemTemplate="{StaticResource gif}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Center" VerticalAlignment="Bottom" Opacity=".8">
+    <Menu Margin="80 50" FontStyle="Oblique" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent" Foreground="#ddd">
+      <MenuItem Header="_h" Click="OnReload" Tag="011" InputGestureText="F1" ToolTip="Check DB for changes"  />
+      <MenuItem Header="_0" Click="OnReload" Tag="031" InputGestureText="F1" ToolTip="Check DB for changes"  />
+      <MenuItem Header="_1" Click="OnReload" Tag="100" InputGestureText="F1" ToolTip="Check DB for changes"  />
+      <MenuItem Header="_2" Click="OnReload" Tag="200" InputGestureText="F2" ToolTip="Check DB for changes"  />
+      <MenuItem Header="_3" Click="OnReload" Tag="300" InputGestureText="F3" ToolTip="Check DB for changes"  />
+      <MenuItem Header="_4" Click="OnReload" Tag="400" InputGestureText="F4" ToolTip="Check DB for changes"  />
+      <MenuItem Header="_5" Click="OnReload" Tag="500" InputGestureText="F5" ToolTip="Check DB for changes"  />
+      <MenuItem Header="x100"  />
+    </Menu>
+
+
+    <ListView x:Name="lbxAllPics" ItemTemplate="{StaticResource gif}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Center" VerticalAlignment="Bottom" Opacity=".8"
+              Background="Transparent" BorderThickness="0">
       <ListView.ItemsPanel>
         <ItemsPanelTemplate>
           <WrapPanel Orientation="Horizontal" />

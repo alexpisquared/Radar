@@ -1,24 +1,30 @@
-﻿using xEnvtCanRadar.Logic;
-
-namespace xEnvtCanRadar.Views;
+﻿namespace xEnvtCanRadar.Views;
 
 public partial class RadarTypeViewUserControl : UserControl
 {
+  const string urlRoot = "https://dd.meteo.gc.ca/radar/";
+  const double _fpsPeriod = .04;
+
   public RadarTypeViewUserControl() => InitializeComponent();
 
-  async void OnLoaded(object sender, RoutedEventArgs e)
+  async void OnLoaded(object s, RoutedEventArgs e) => await ReLoad(31);
+  async void OnReload(object s, RoutedEventArgs e) => await ReLoad(int.Parse(((FrameworkElement)s).Tag?.ToString() ?? "0")); // max is 480 == 2 days on 10 per hour basis.
+  async Task ReLoad(int takeLastCount)
   {
-    const string name = "https://dd.meteo.gc.ca/radar/";
+    chkIsPlaying.IsChecked = false;
+    await Task.Delay(TimeSpan.FromSeconds(_fpsPeriod));
 
     try
     {
-      var gifurls = await (new WebDirectoryLoader()).ParseFromHtmlUsingRegex($"{name}{RootUrl}", PreciTp);
+      var gifurls = await new WebDirectoryLoader().ParseFromHtmlUsingRegex($"{urlRoot}{UrlSuffix}", PreciTp, takeLastCount);
 
       var list = new List<RI>();
-      gifurls.ForEach(imgFile => /**/ list.Add(new RI { GifUrl = $"{name}{RootUrl}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile) }));
-      gifurls.ForEach(imgFile => lbx.Items.Add(new RI { GifUrl = $"{name}{RootUrl}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile) }));      //lbx.ItemsSource = list;
+      lbxAllPics.Items.Clear();
 
-      chkIsPlaying.Content =  $"_{RootUrl}      {gifurls.Count} files      {list.First().ImgTime:ddd HH:mm} ÷ {list.Last().ImgTime:ddd HH:mm}";
+      gifurls.ForEach(imgFile => /**/ list.Add(new RI { GifUrl = $"{urlRoot}{UrlSuffix}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile) }));
+      gifurls.ForEach(imgFile => lbxAllPics.Items.Add(new RI { GifUrl = $"{urlRoot}{UrlSuffix}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile) }));      //lbxAllPics.ItemsSource = list;
+
+      chkIsPlaying.Content = $"_{UrlSuffix}      {gifurls.Count} files      {list.First().ImgTime:ddd HH:mm} ÷ {list.Last().ImgTime:ddd HH:mm}";
 
       Beep.Play();
 
@@ -27,25 +33,26 @@ public partial class RadarTypeViewUserControl : UserControl
 
       var cts = new CancellationTokenSource();
 
-      using var timer = new PeriodicTimer(TimeSpan.FromSeconds(.04));
+      using var timer = new PeriodicTimer(TimeSpan.FromSeconds(_fpsPeriod));
       var counter = 0;
       var pause = 25;
 
+      chkIsPlaying.IsChecked = true;
       while (await timer.WaitForNextTickAsync(cts.Token))
       {
         //if (counter == 555)            cts.Cancel();
 
-        if (chkIsPlaying.IsChecked != true) continue;
+        if (chkIsPlaying.IsChecked != true) return;
 
-        var c = ++counter % (lbx.Items.Count + pause);
+        var c = ++counter % (lbxAllPics.Items.Count + pause);
 
-        lbx.SelectedIndex = c >= lbx.Items.Count ? lbx.Items.Count : c;
+        lbxAllPics.SelectedIndex = c >= lbxAllPics.Items.Count ? lbxAllPics.Items.Count : c;
       }
     }
     catch (Exception ex) { Hand.Play(); MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
   }
 
-  public string RootUrl { get; set; } = "{name}PRECIPET/GIF/WKR";
+  public string UrlSuffix { get; set; } = "{name}PRECIPET/GIF/WKR";
   public string PreciTp { get; set; } = "Snow";
-  public string Range { get; set; } = "Snow";
+
 }

@@ -13,7 +13,7 @@
     </Grid.ColumnDefinitions>
     <Button IsCancel="True" Click="OnClose" Opacity="0" />
 
-    <Views:RadarTypeViewUserControl Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" RootUrl="PRECIPET/GIF/WKR"   PreciTp="SNOW.gif" />
-    <Views:RadarTypeViewUserControl Grid.Column="1" Grid.Row="2" VerticalAlignment="Top" RootUrl="DPQPE/GIF/CASKR"    PreciTp="Snow.gif" />
+    <Views:RadarTypeViewUserControl Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" UrlSuffix="PRECIPET/GIF/WKR"   PreciTp="SNOW.gif" />
+    <Views:RadarTypeViewUserControl Grid.Column="1" Grid.Row="2" VerticalAlignment="Top" UrlSuffix="DPQPE/GIF/CASKR"    PreciTp="Snow.gif" />
   </Grid>
 </Window>

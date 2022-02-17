@@ -22,5 +22,6 @@ global using System.Threading.Tasks;
 global using System.Windows;
 global using System.Windows.Input;
 global using static System.Media.SystemSounds;
-
 global using System.Threading;
+global using xEnvtCanRadar.Logic;
+
