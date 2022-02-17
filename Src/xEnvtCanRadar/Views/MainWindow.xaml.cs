@@ -47,7 +47,4 @@ public partial class MainWindow : Window
       //Height = 1080;
     }
   }
-
-  void OnClose(object sender, RoutedEventArgs e) => Close();
-  void OnLoaded(object sender, RoutedEventArgs e) { }
 }

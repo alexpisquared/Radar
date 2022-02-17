@@ -3,8 +3,8 @@
   <Viewbox>
     <Grid>
       <Grid.Resources>
-        <DataTemplate x:Key="gif">
-          <Views:LbxItemRadarTemplate Margin="-4 -1" Height="14" Width="15" />
+        <DataTemplate x:Key="radarThumbnail">
+          <Views:LbxItemRadarTemplate Margin="-3 -0" Height="14" Width="14.6" />
         </DataTemplate>
       </Grid.Resources>
       <Grid.RowDefinitions>
@@ -24,11 +24,11 @@
         <MenuItem Header="_48" Click="OnReload" Tag="480" InputGestureText="F3" ToolTip="Check DB for changes"  />
       </Menu>
 
-      <CheckBox  Width="500" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="44 21 0 0" x:Name="chkIsPlaying" Foreground="#ff0" Background="#ff0" FontWeight="Medium" d:Content="~DPQPE/GIF/CASKR~" Checked="chkIsPlaying_Checked"/>
+      <CheckBox  Width="500" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="44 21 0 0" x:Name="chkIsPlaying" Foreground="#ff0" Background="#ff0" FontWeight="Medium" d:Content="~DPQPE/GIF/CASKR~" Checked="chkIsPlaying_Checked" FocusVisualStyle="{x:Null}" FontSize="13"/>
 
-      <ListView x:Name="lbxAllPics" ItemTemplate="{StaticResource gif}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Center" VerticalAlignment="Bottom" Opacity=".8"
-              Background="Transparent" BorderThickness="0" MaxWidth="580" 
-                GotFocus="lbxAllPics_GotFocus" LostFocus="lbxAllPics_LostFocus">
+      <ListView x:Name="lbxAllPics" ItemTemplate="{StaticResource radarThumbnail}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                HorizontalAlignment="Center" VerticalAlignment="Bottom" Opacity="1"
+                Background="Transparent" BorderThickness="0" MaxWidth="580" GotFocus="lbxAllPics_GotFocus" LostFocus="lbxAllPics_LostFocus">
         <ListView.ItemsPanel>
           <ItemsPanelTemplate>
             <WrapPanel Orientation="Horizontal" />
