@@ -5,6 +5,19 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>RadarCircles.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="RadarCircles.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="RadarCircles.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="RadarCircles.ico" />
+  </ItemGroup>
 
 </Project>
