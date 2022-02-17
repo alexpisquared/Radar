@@ -29,15 +29,15 @@ public partial class RadarTypeViewUserControl : UserControl
       Beep.Play();
 
       await Task.Delay(1000);
-      chkIsPlaying.IsChecked = true;
 
       var cts = new CancellationTokenSource();
 
       using var timer = new PeriodicTimer(TimeSpan.FromSeconds(_fpsPeriod));
       var counter = 0;
       var pause = 25;
-
+      var prv = StartPlaying;
       chkIsPlaying.IsChecked = true;
+      StartPlaying = prv;
       while (await timer.WaitForNextTickAsync(cts.Token))
       {
         //if (counter == 555)            cts.Cancel();
@@ -45,6 +45,9 @@ public partial class RadarTypeViewUserControl : UserControl
         if (chkIsPlaying.IsChecked != true) return;
 
         var c = ++counter % (lbxAllPics.Items.Count + pause);
+
+        if (c == lbxAllPics.Items.Count && StartPlaying == "0")
+          chkIsPlaying.IsChecked = false;
 
         lbxAllPics.SelectedIndex = c >= lbxAllPics.Items.Count ? lbxAllPics.Items.Count : c;
       }
@@ -54,5 +57,10 @@ public partial class RadarTypeViewUserControl : UserControl
 
   public string UrlSuffix { get; set; } = "{name}PRECIPET/GIF/WKR";
   public string PreciTp { get; set; } = "Snow";
+  public string StartPlaying { get; set; } = "0";
 
+  void chkIsPlaying_Checked(object sender, RoutedEventArgs e) => StartPlaying = "1";
+  void lbxAllPics_GotFocus(object sender, RoutedEventArgs e) => chkIsPlaying.IsChecked = false;
+  void lbxAllPics_SelectionChanged(object sender, SelectionChangedEventArgs e) { }
+  void lbxAllPics_LostFocus(object sender, RoutedEventArgs e) { }
 }

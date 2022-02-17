@@ -2,10 +2,17 @@
         x:Name="wnd" Title="MainWindow" Left="3900" Top="-690" MinHeight="90" Loaded="OnLoaded" Height="480" Width="580" 
         WindowStyle="None" AllowsTransparency="True" Background="#8000" ResizeMode="CanResizeWithGrip" >
   <Grid>
-    <Views:RadarTypeViewUserControl UrlSuffix="DPQPE/GIF/CASKR"    PreciTp="Snow.gif" />
-    <Views:RadarTypeViewUserControl UrlSuffix="PRECIPET/GIF/WKR"   PreciTp="SNOW.gif" 
-                                    VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="200" Height="200" />
-    
-    <Button IsCancel="True" Click="OnClose" Opacity="1" HorizontalAlignment="Right" VerticalAlignment="Top" Content=" x "/>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="3*"/>
+      <ColumnDefinition Width="1*"/>
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="3*"/>
+      <RowDefinition Height="1*"/>
+    </Grid.RowDefinitions>
+    <Views:RadarTypeViewUserControl UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="Snow.gif" StartPlaying="1" Grid.RowSpan="2" Grid.ColumnSpan="2" />
+    <Views:RadarTypeViewUserControl UrlSuffix="PRECIPET/GIF/WKR" PreciTp="SNOW.gif" StartPlaying="0" Grid.Row="1" Grid.Column="1" />
+
+    <Button IsCancel="True" Click="OnClose" Opacity="0" HorizontalAlignment="Right" VerticalAlignment="Top" Content=" x " Grid.Column="1"/>
   </Grid>
 </Window>
