@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="xEnvtCanRadar.LbxItemRadarTemplate" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" 
              xmlns:vms="clr-namespace:xEnvtCanRadar.Logic" d:DataContext="{d:DesignInstance Type=vms:RI}" Background="#202">
   <Grid>
-    <Image   Source="{Binding GifUrl}" d:Source="PRECIPET/GIF/CASKR/202202052030_CASKR_PRECIPET_SNOW.gif"/>
+    <Image   Source="{Binding GifUrl}" d:Source="https://dd.meteo.gc.ca/radar/PRECIPET/GIF/CASKR/202202170930_CASKR_PRECIPET_SNOW.gif"/>
     <TextBlock Text="{Binding FileName}" d:Text="202202042100_WKR_COMP_PRECIPET_RAIN.gif"  FontSize="13" Foreground="#fff" Margin="88,26" Background="#4000" Padding="8 2"            HorizontalAlignment="Left"  VerticalAlignment="Top" />
     <TextBlock Text="{Binding ImgTime, StringFormat='{}{0:ddd HH:mm}'}" d:Text="Sun 12:05" FontSize="16" Foreground="#ff0" Margin="02,60" Background="#f000" Padding="8 4" Width="96" HorizontalAlignment="Right" VerticalAlignment="Top" />
   </Grid>
