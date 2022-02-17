@@ -1,19 +1,11 @@
 ﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:Views="clr-namespace:xEnvtCanRadar.Views" x:Class="xEnvtCanRadar.MainWindow" mc:Ignorable="d"
-        x:Name="wnd" Title="MainWindow" Left="3900" Width="1160" Top="-690" Height="690" Loaded="OnLoaded" 
-        WindowStyle="None" AllowsTransparency="True" Background="#8000" ResizeMode="CanResizeWithGrip">
+        x:Name="wnd" Title="MainWindow" Left="3900" Top="-690" MinHeight="90" Loaded="OnLoaded" Height="480" Width="580" 
+        WindowStyle="None" AllowsTransparency="True" Background="#8000" ResizeMode="CanResizeWithGrip" >
   <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="22"/>
-      <RowDefinition Height="08"/>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="*"/>
-      <ColumnDefinition Width="*"/>
-    </Grid.ColumnDefinitions>
-    <Button IsCancel="True" Click="OnClose" Opacity="0" />
-
-    <Views:RadarTypeViewUserControl Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" UrlSuffix="PRECIPET/GIF/WKR"   PreciTp="SNOW.gif" />
-    <Views:RadarTypeViewUserControl Grid.Column="1" Grid.Row="2" VerticalAlignment="Top" UrlSuffix="DPQPE/GIF/CASKR"    PreciTp="Snow.gif" />
+    <Views:RadarTypeViewUserControl UrlSuffix="DPQPE/GIF/CASKR"    PreciTp="Snow.gif" />
+    <Views:RadarTypeViewUserControl UrlSuffix="PRECIPET/GIF/WKR"   PreciTp="SNOW.gif" 
+                                    VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="200" Height="200" />
+    
+    <Button IsCancel="True" Click="OnClose" Opacity="1" HorizontalAlignment="Right" VerticalAlignment="Top" Content=" x "/>
   </Grid>
 </Window>

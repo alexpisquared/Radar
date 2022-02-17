@@ -21,6 +21,15 @@ public partial class MainWindow : Window
     if (Debugger.IsAttached)
     {
       Topmost = true;
+      if (Environment.UserDomainName != "RAZER1")
+      {
+        //WindowState = WindowState.Normal;
+        //WindowStartupLocation = WindowStartupLocation.Manual;
+        Left = 100;
+        Top = 100;
+        //Width = 3750;
+        //Height = 1080;
+      }
       //WindowState = WindowState.Normal;
       //WindowStartupLocation = WindowStartupLocation.Manual;
       //Left = 1920;
