@@ -109,6 +109,7 @@ public class OpenWea
 
       return oca;
     }
+    catch (ArgumentNullException ex) { WriteLine($"▄▀▄▀▄▀ Keys are missing??? {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); throw; }
     catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); throw; }
     finally { WriteLine($":> {what}  =>  {url}  ==> {sw.ElapsedMilliseconds}ms "); }
   }

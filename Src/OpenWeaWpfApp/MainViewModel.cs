@@ -50,6 +50,9 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
   async Task PrevForecastFromDB()
   {
+    if (_config["StoreData"] != "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
+      return;
+
     var now = DateTime.Now;
     var ytd = DateTime.Now.AddHours(-24);
     var dby = DateTime.Now.AddHours(-48);
@@ -77,8 +80,11 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     var bvl = p24.GetIt(_urlPast24hrYKZ);
     var pea = p24.GetIt(_urlPast24hrYYZ);
 
-    await AddPastDataToDB_EnvtCa("bvl", bvl);
-    await AddPastDataToDB_EnvtCa("pea", pea);
+    if (_config["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")         "StoreData": "No",
+    {
+      await AddPastDataToDB_EnvtCa("bvl", bvl);
+      await AddPastDataToDB_EnvtCa("pea", pea);
+    }
 
     RefillPast24(EnvtCaVaughan, EnvtCaPast24PearWind, bvl);
     RefillPast24(EnvtCaMissuga, EnvtCaPast24BtnvWind, pea);
@@ -88,8 +94,11 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     var sitedataMiss = await _opnwea.GetEnvtCa(_mississ);
     var sitedataVghn = await _opnwea.GetEnvtCa(_vaughan);
 
-    await AddForeDataToDB_EnvtCa("mis", sitedataMiss);
-    await AddForeDataToDB_EnvtCa("vgn", sitedataVghn);
+    if (_config["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
+    {
+      await AddForeDataToDB_EnvtCa("mis", sitedataMiss);
+      await AddForeDataToDB_EnvtCa("vgn", sitedataVghn);
+    }
 
     RefillForeEnvtCa(EnvtCaToronto, await _opnwea.GetEnvtCa(_toronto));
     RefillForeEnvtCa(EnvtCaTorIsld, await _opnwea.GetEnvtCa(_torIsld));    //refill(EnvtCaTorIsld, await _opnwea.GetEnvtCa(_newmark));
@@ -268,7 +277,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     var valueMin = OCA.daily.Min(r => r.temp.min);
     var valueMax = OCA.daily.Max(r => r.temp.max);
 
-    await AddForeDataToDB_OpnWea("phc", OCA);
+    if (_config["StoreData"] == "Yes") //if (_config["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
+      await AddForeDataToDB_OpnWea("phc", OCA);
 
     OCA.hourly.ToList().ForEach(x =>
     {
@@ -438,8 +448,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   IRelayCommand? _gs; public IRelayCommand GetDaysCommand => _gs ??= new AsyncRelayCommand<object>(DoGen, (days) => !_busy); async Task DoGen(object? days_)
   {
     if (int.TryParse(days_?.ToString(), out var days))
-      ForeMax = DateTimeAxis.ToDouble(days == 5 ? OpenWea.UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Now.AddDays(days-1));
-    
+      ForeMax = DateTimeAxis.ToDouble(days == 5 ? OpenWea.UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Now.AddDays(days - 1));
+
     await Task.Yield();// PopulateAsync((int?)days ?? 5);
   }
 }

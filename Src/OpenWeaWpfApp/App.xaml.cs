@@ -33,7 +33,7 @@ public partial class App : Application
     _ = services.AddSingleton<MainWindow>();
     _ = services.AddTransient<OpenWea>();
 
-    Dbx(services);
+      Dbx(services);
 
     _serviceProvider = services.BuildServiceProvider();
   }
