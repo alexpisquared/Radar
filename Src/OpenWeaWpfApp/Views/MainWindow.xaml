@@ -54,7 +54,7 @@
 
           <oxy:AreaSeries    ItemsSource="{Binding DataPtPopr}" Color="#04f" />
           <oxy:LineSeries    ItemsSource="{Binding DataPtGust}" Color="{StaticResource WDir}" StrokeThickness="0.5" />
-          <oxy:LineSeries    ItemsSource="{Binding DataPtWind}" Color="{StaticResource Prsr}" StrokeThickness="1.5" />
+          <oxy:LineSeries    ItemsSource="{Binding DataPtWind}" Color="{StaticResource Prsr}" StrokeThickness="0.5" LineStyle="LongDashDotDot" />
           <oxy:LineSeries    ItemsSource="{Binding DataPtWDir}" Color="{StaticResource WDir}" StrokeThickness="1.5" />
           <oxy:LineSeries    ItemsSource="{Binding DataPtTemp}" Color="{StaticResource PhcT}" StrokeThickness="1.5" Title="OWA" />
           <oxy:LineSeries    ItemsSource="{Binding DataPtFeel}" Color="{StaticResource PhcT}" StrokeThickness="0.5" />
