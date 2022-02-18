@@ -14,7 +14,7 @@
       </Grid.RowDefinitions>
       <!--<TextBlock x:Name="tbxTitle" d:Text="Found CCC thingies." VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="#08f"/>-->
 
-      <Views:LbxItemRadarTemplate DataContext="{Binding ElementName=lbxAllPics, Path=SelectedItem}" Height="480" Width="580" />
+      <Views:LbxItemRadarTemplate DataContext="{Binding ElementName=lbxAllPics, Path=SelectedItem}" Height="480" />
 
       <Menu VerticalAlignment="Top" HorizontalAlignment="Left" Margin="38 1" Background="Transparent" Foreground="#ff0" Padding="4 0 0 1" FontSize="12" FontStyle="Oblique" IsEnabled="{Binding ElementName=chkIsPlaying, Path=IsChecked}">
         <MenuItem Header="1_h" Click="OnReload" Tag="011" InputGestureText="F1" ToolTip="Check DB for changes"  />
@@ -35,7 +35,6 @@
           </ItemsPanelTemplate>
         </ListView.ItemsPanel>
       </ListView>
-      <!--<TextBlock x:Name="tbxRange" d:Text="Sun 12:06  -  TUe 12:36" FontSize="16" Foreground="#fff" Margin="2,30" Background="#f888" Padding="8 4" HorizontalAlignment="Left"  VerticalAlignment="Bottom" />-->
     </Grid>
   </Viewbox>
 </UserControl>

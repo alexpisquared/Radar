@@ -41,7 +41,6 @@ public partial class RadarTypeViewUserControl : UserControl
       while (await timer.WaitForNextTickAsync(cts.Token))
       {
         //if (counter == 555)            cts.Cancel();
-
         if (chkIsPlaying.IsChecked != true) return;
 
         var c = ++counter % (lbxAllPics.Items.Count + pause);
