@@ -15,6 +15,7 @@
         <Color x:Key="b80">#b80</Color>
         <Color x:Key="PhcT">#e0e</Color>
         <Color x:Key="WDir">#888</Color>
+        <Color x:Key="PoPr">#04f</Color>
         <Color x:Key="Prsr">#bb0</Color>
       </Grid.Resources>
       <oxy:Plot Title="{Binding PlotTitle}" d:Title="LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ "  TitleColor="#bdf" Background="#222" x:Name="plotBR" SubtitleColor="Red" LegendTextColor="#eee" LegendTitleColor="Yellow" TextColor="#0f0" PlotAreaBorderColor="Transparent" >
@@ -52,12 +53,12 @@
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaVaughan}"  Color="{StaticResource Vgn}" StrokeThickness="3.0" Title="EC VA"  LineStyle="Dash" />
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaMarkham}"  Color="{StaticResource Vgn}" StrokeThickness="2.0" Title="EC MA"  LineStyle="Dash" />
 
-          <oxy:AreaSeries    ItemsSource="{Binding DataPtPopr}" Color="#04f" />
-          <oxy:LineSeries    ItemsSource="{Binding DataPtGust}" Color="{StaticResource WDir}" StrokeThickness="0.5" />
+          <oxy:AreaSeries    ItemsSource="{Binding DataPtPopr}" Color="{StaticResource PoPr}" StrokeThickness="0.0" Title="PoPr"/>
+          <oxy:LineSeries    ItemsSource="{Binding DataPtGust}" Color="{StaticResource WDir}" StrokeThickness="0.5" Title="owa G" />
           <oxy:LineSeries    ItemsSource="{Binding DataPtWind}" Color="{StaticResource Prsr}" StrokeThickness="0.5" LineStyle="LongDashDotDot" />
-          <oxy:LineSeries    ItemsSource="{Binding DataPtWDir}" Color="{StaticResource WDir}" StrokeThickness="1.5" />
-          <oxy:LineSeries    ItemsSource="{Binding DataPtTemp}" Color="{StaticResource PhcT}" StrokeThickness="1.5" Title="OWA" />
-          <oxy:LineSeries    ItemsSource="{Binding DataPtFeel}" Color="{StaticResource PhcT}" StrokeThickness="0.5" />
+          <oxy:LineSeries    ItemsSource="{Binding DataPtWDir}" Color="{StaticResource WDir}" StrokeThickness="1.5" Title="owa W" />
+          <oxy:LineSeries    ItemsSource="{Binding DataPtTemp}" Color="{StaticResource PhcT}" StrokeThickness="1.5" Title="owa T" />
+          <oxy:LineSeries    ItemsSource="{Binding DataPtFeel}" Color="{StaticResource PhcT}" StrokeThickness="0.5" Title="owa F" />
 
           <!--<oxy:ScatterSeries ItemsSource="{Binding SctrPtTFFPhc}" MarkerType="Plus"    MarkerStroke="#eaf" MarkerStrokeThickness="2" MarkerSize="5" MarkerFill="#0f0" Title="OWA" />-->
         </oxy:Plot.Series>
@@ -104,7 +105,7 @@
       <Image Margin="0,4,255,0"                Source="{Binding OpnWeaIcom,  FallbackValue='http://openweathermap.org/img/wn/01n@2x.png'}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" Width="180" Height="180" VerticalAlignment="Top" HorizontalAlignment="Right" />
       <Image Margin="0,148,350,0" Source="{Binding EnvtCaIconM, FallbackValue='http://openweathermap.org/img/wn/01n@2x.png'}" d:Source="https://weather.gc.ca/weathericons/02.gif"   Width="90"  Height="90"  VerticalAlignment="Top" HorizontalAlignment="Right" RenderTransformOrigin="-0.2,0.551"/>
 
-      <TextBlock Text="{Binding SubHeader}" d:Text="SubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeader" HorizontalAlignment="Center" Foreground="#ff0" Margin="0 80" VerticalAlignment="Top" />
+      <TextBlock Text="{Binding SubHeader}" d:Text="SubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeader" HorizontalAlignment="Center" Foreground="#ff0" Margin="0 10" VerticalAlignment="Bottom" />
 
       <Menu Margin="15 10" Visibility="{Binding IsDevDbgViz}" FontStyle="Oblique" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent" Foreground="#ddd">
         <MenuItem   Header="Days: _1 " Command="{Binding GetDaysCommand}" CommandParameter="1" InputGestureText="F1" ToolTip="Check DB for changes"  />

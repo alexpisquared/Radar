@@ -16,7 +16,7 @@
     </Grid.RowDefinitions>
     <Views:RadarTypeViewUserControl UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="Snow.gif"    StartPlaying="1" Grid.RowSpan="4" />
     <GridSplitter Grid.Row="1" Background="Transparent" HorizontalAlignment="Stretch" FocusVisualStyle="{x:Null}" />
-    <Views:RadarTypeViewUserControl UrlSuffix="PRECIPET/GIF/WKR" PreciTp="SNOW.gif"    StartPlaying="0" Grid.Row="2" HorizontalAlignment="Left"  />
+    <Views:RadarTypeViewUserControl UrlSuffix="PRECIPET/GIF/WKR" PreciTp="SNOW.gif"    StartPlaying="0" Grid.Row="2" HorizontalAlignment="Left" IsEnabled="False" />
     <Views:RadarTypeViewUserControl UrlSuffix="PRECIPET/GIF/ONT" PreciTp="SNOW_WT.gif" StartPlaying="1" Grid.Row="2" HorizontalAlignment="Right" />
     <!--          https://dd.meteo.gc.ca/radar/PRECIPET/GIF/ONT/202202180150_ONT_PRECIPET_SNOW_WT.gif   573c300-->
   </Grid>

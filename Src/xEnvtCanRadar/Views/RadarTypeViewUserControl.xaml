@@ -1,5 +1,5 @@
 ﻿<UserControl x:Class="xEnvtCanRadar.Views.RadarTypeViewUserControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" 
-             xmlns:Views="clr-namespace:xEnvtCanRadar" d:DesignHeight="480" d:DesignWidth="580" Loaded="OnLoaded">
+             xmlns:Views="clr-namespace:xEnvtCanRadar" d:DesignHeight="480" d:DesignWidth="580" Loaded="OnReload">
   <Viewbox>
     <Grid>
       <Grid.Resources>
@@ -24,10 +24,13 @@
         <MenuItem Header="_48" Click="OnReload" Tag="480" InputGestureText="F3" ToolTip="Check DB for changes"  />
       </Menu>
 
-      <CheckBox  Width="500" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="44 21 0 0" x:Name="chkIsPlaying" Foreground="#ff0" Background="#ff0" FontWeight="Medium" d:Content="~DPQPE/GIF/CASKR~" Checked="chkIsPlaying_Checked" FocusVisualStyle="{x:Null}" FontSize="13"/>
+      <CheckBox  Width="500" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="44 21 0 0" x:Name="chkIsPlaying" Foreground="#ff0" Background="#ff0" FontWeight="Medium" d:Content="~DPQPE/GIF/CASKR~" 
+                 Checked="chkIsPlaying_Checked" 
+                 Unchecked="chkIsPlaying_Unchecked"
+                 FocusVisualStyle="{x:Null}" FontSize="13"/>
 
       <ListView x:Name="lbxAllPics" ItemTemplate="{StaticResource radarThumbnail}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-                HorizontalAlignment="Center" VerticalAlignment="Bottom" Opacity="1"
+                VerticalAlignment="Bottom" 
                 Background="Transparent" BorderThickness="0" MaxWidth="580" GotFocus="lbxAllPics_GotFocus" LostFocus="lbxAllPics_LostFocus">
         <ListView.ItemsPanel>
           <ItemsPanelTemplate>
