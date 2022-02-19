@@ -106,6 +106,14 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     RefillForeEnvtCa(EnvtCaVaughan, sitedataVghn);
     RefillForeEnvtCa(EnvtCaMarkham, await _opnwea.GetEnvtCa(_markham));
 
+    ArgumentNullException.ThrowIfNull(sitedataMiss, $"@@@@@@@@@ {nameof(sitedataMiss)}");
+
+    double d;
+    if (double.TryParse((sitedataMiss.almanac.temperature)[0].Value, out d)) YAxiXMax = 10 * (YAxisMax = d);
+    if (double.TryParse((sitedataMiss.almanac.temperature)[1].Value, out d)) YAxiXMin = 10 * (YAxisMin = d);
+    if (double.TryParse((sitedataMiss.almanac.temperature)[2].Value, out d)) NormTMax = d;
+    if (double.TryParse((sitedataMiss.almanac.temperature)[3].Value, out d)) NormTMin = d;
+
     EnvtCaIconM = $"https://weather.gc.ca/weathericons/{sitedataMiss?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
     EnvtCaIconV = $"https://weather.gc.ca/weathericons/{sitedataVghn?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
   }
@@ -274,8 +282,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
     //var timeMin = DateTimeAxis.ToDouble(OpenWea.UnixToDt(OCA.daily.Min(d => d.dt - 07 * 3600)));
     ForeMax = DateTimeAxis.ToDouble(days == 5 ? OpenWea.UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Today.AddDays(days));
-    var valueMin = OCA.daily.Min(r => r.temp.min);
-    var valueMax = OCA.daily.Max(r => r.temp.max);
+    var valueMin = YAxisMin; // OCA.daily.Min(r => r.temp.min);
+    var valueMax = YAxisMax; // OCA.daily.Max(r => r.temp.max);
 
     if (_config["StoreData"] == "Yes") //if (_config["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
       await AddForeDataToDB_OpnWea("phc", OCA);
@@ -452,6 +460,13 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
     await Task.Yield();// PopulateAsync((int?)days ?? 5);
   }
+
+  double _yMin = -28; public double YAxisMin { get => _yMin; set => SetProperty(ref _yMin, value); }
+  double _yMax = +12; public double YAxisMax { get => _yMax; set => SetProperty(ref _yMax, value); }
+  double _tMin = -08; public double NormTMin { get => _tMin; set => SetProperty(ref _tMin, value); }
+  double _tMax = +02; public double NormTMax { get => _tMax; set => SetProperty(ref _tMax, value); }
+  double _YMin = -01; public double YAxiXMin { get => _YMin; set => SetProperty(ref _YMin, value); }
+  double _YMax = -01; public double YAxiXMax { get => _YMax; set => SetProperty(ref _YMax, value); }
 }
 ///todo: https://oxyplot.readthedocs.io/en/latest/models/series/ScatterSeries.html
 ///https://docs.microsoft.com/en-us/answers/questions/22863/how-to-customize-charts-in-wpf-using-systemwindows.html

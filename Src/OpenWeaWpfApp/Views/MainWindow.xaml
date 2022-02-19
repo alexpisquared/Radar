@@ -40,6 +40,8 @@
         <oxy:Plot.Series>
           <oxy:LineSeries    ItemsSource="{Binding DataPtNowT}" Color="#aaa" StrokeThickness="1.0" />
           <oxy:AreaSeries    ItemsSource="{Binding DataPtSunT}" Color="#440" StrokeThickness="0.0" />
+          <oxy:RectangleSeries ItemsSource="{Binding DataPtSunT}" Color="#4f0" />
+          <oxy:RectangleSeries ItemsSource="{Binding DataPtNowT}" Color="#4f0" />
 
           <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFVgn}" MarkerType="Circle" Title="ECa Vgn" MarkerStroke="{StaticResource Vgn}" MarkerFill="Transparent" x:Name="SctrPtTPFVgn" />
           <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFMis}" MarkerType="Circle" Title="ECa Mis" MarkerStroke="{StaticResource Mis}" MarkerFill="Transparent" x:Name="SctrPtTPFMis" />
@@ -71,9 +73,9 @@
                             d:Maximum="7"
                             Maximum="{Binding ForeMax}"
                             MinorTickSize="4" TicklineColor="#ccc" />
-          <oxy:LinearAxis   Key="yAxis" Minimum="-28"  Maximum="12"  MajorStep="10"  MinorStep="1"  TextColor="#eee" TitleColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Left"   MajorGridlineStyle="Solid" MajorGridlineColor="#000" Title="Temp [°C]"              
+          <oxy:LinearAxis   Key="yAxis" Minimum="{Binding YAxisMin}" Maximum="{Binding YAxisMax}"  MajorStep="10"  MinorStep="1"  TextColor="#eee" TitleColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Left"   MajorGridlineStyle="Solid" MajorGridlineColor="#000" Title="Temp [°C]"              
                             MinorTickSize="4" TicklineColor="#ccc" />
-          <oxy:LinearAxis   Key="yAxis" Minimum="-280" Maximum="120" MajorStep="100" MinorStep="10" TextColor="#eee" TitleColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Right"  MajorGridlineStyle="None"  MajorGridlineColor="#000" Title="Wind k/h*.1  PoP %*.1"  />
+          <oxy:LinearAxis   Key="yAxis" Minimum="{Binding YAxiXMin}" Maximum="{Binding YAxiXMax}" MajorStep="100" MinorStep="10" TextColor="#eee" TitleColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Right"  MajorGridlineStyle="None"  MajorGridlineColor="#000" Title="Wind k/h*.1  PoP %*.1"  />
         </oxy:Plot.Axes>
       </oxy:Plot>
 
