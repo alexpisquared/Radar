@@ -4,7 +4,7 @@
     <Grid>
       <Grid.Resources>
         <DataTemplate x:Key="radarThumbnail">
-          <Views:LbxItemRadarTemplate Margin="-3 -0" Height="14" Width="14.6" />
+          <Views:LbxItemRadarTemplate Margin="-4 -1" Height="14" Width="14.6" FocusVisualStyle="{x:Null}" />
         </DataTemplate>
       </Grid.Resources>
       <Grid.RowDefinitions>
@@ -30,7 +30,7 @@
                  FocusVisualStyle="{x:Null}" FontSize="13"/>
 
       <ListView x:Name="lbxAllPics" ItemTemplate="{StaticResource radarThumbnail}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-                VerticalAlignment="Bottom" 
+                VerticalAlignment="Bottom" FocusVisualStyle="{x:Null}" 
                 Background="Transparent" BorderThickness="0" MaxWidth="580" GotFocus="lbxAllPics_GotFocus" LostFocus="lbxAllPics_LostFocus">
         <ListView.ItemsPanel>
           <ItemsPanelTemplate>
