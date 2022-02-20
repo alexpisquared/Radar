@@ -363,7 +363,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   void Clear()
   {
     PlotTitle =
-    CurrentConditions = $"Loading...";
+    CurrentConditions = "";
     WindDirn = 0;
     WindVeloKmHr = 0;
     OpnWeaIcom = "http://openweathermap.org/img/wn/01n@2x.png";
@@ -459,6 +459,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   double _tMax = +02; public double NormTMax { get => _tMax; set => SetProperty(ref _tMax, value); }
   double _YMin = -01; public double YAxiXMin { get => _YMin; set => SetProperty(ref _YMin, value); }
   double _YMax = -01; public double YAxiXMax { get => _YMax; set => SetProperty(ref _YMax, value); }
+
+  IInterpolationAlgorithm iA = InterpolationAlgorithms.CatmullRomSpline;  public IInterpolationAlgorithm IA { get => iA; set => SetProperty(ref iA, value); } // the least vertical jumping beyond y value.
 }
 ///todo: https://oxyplot.readthedocs.io/en/latest/models/series/ScatterSeries.html
 ///https://docs.microsoft.com/en-us/answers/questions/22863/how-to-customize-charts-in-wpf-using-systemwindows.html
