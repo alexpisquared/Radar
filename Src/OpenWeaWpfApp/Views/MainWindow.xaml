@@ -40,14 +40,13 @@
         <oxy:Plot.Series>
           <oxy:LineSeries    ItemsSource="{Binding DataPtNowT}" Color="#aaa" StrokeThickness="1.0" />
           <oxy:AreaSeries    ItemsSource="{Binding DataPtSunT}" Color="#440" StrokeThickness="0.0" />
-          <oxy:RectangleSeries ItemsSource="{Binding DataPtSunT}" Color="#4f0" />
-          <oxy:RectangleSeries ItemsSource="{Binding DataPtNowT}" Color="#4f0" />
 
           <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFVgn}" MarkerType="Circle" Title="ECa Vgn" MarkerStroke="{StaticResource Vgn}" MarkerFill="Transparent" x:Name="SctrPtTPFVgn" />
           <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFMis}" MarkerType="Circle" Title="ECa Mis" MarkerStroke="{StaticResource Mis}" MarkerFill="Transparent" x:Name="SctrPtTPFMis" />
           <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFPhc}" MarkerType="Circle" Title="OWA Phc" MarkerStroke="{StaticResource PhcT}" MarkerFill="Transparent" x:Name="SctrPtTPFPhc" TrackerFormatString="{}{0}&#x0a;Time:   {2:HH:mm} &#x0a;Temp:  {4:0.0}° " />
 
-          <oxy:AreaSeries    ItemsSource="{Binding EnvtCaPast24BtnvWind}"  Color="{StaticResource PhcT}" StrokeThickness="0.5" Title="Bvl Wind" ToolTip="Bvl Wind" Fill="#1888" />
+          <oxy:AreaSeries    ItemsSource="{Binding WindOwaBtvl}" Color="{StaticResource PhcT}" StrokeThickness="0.5" Title="Wind EC Owa" Fill="#550f" />
+          <oxy:LineSeries    ItemsSource="{Binding WindOwaPear}" Color="{StaticResource PhcT}" StrokeThickness="0.5" Title="Wind EC Pea"  />
 
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaToronto}"  Color="{StaticResource b80}" StrokeThickness="5.0" Title="EC TO"  LineStyle="LongDash" />
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaMissuga}"  Color="{StaticResource Mis}" StrokeThickness="3.0" Title="EC Mis" LineStyle="LongDashDotDot" />
@@ -57,8 +56,8 @@
 
           <oxy:AreaSeries    ItemsSource="{Binding DataPtPopr}" Color="{StaticResource PoPr}" StrokeThickness="0.0" Title="PoPr"/>
           <oxy:LineSeries    ItemsSource="{Binding DataPtGust}" Color="{StaticResource WDir}" StrokeThickness="0.5" Title="owa G" />
-          <oxy:LineSeries    ItemsSource="{Binding DataPtWind}" Color="{StaticResource Prsr}" StrokeThickness="0.5" LineStyle="LongDashDotDot" />
-          <oxy:LineSeries    ItemsSource="{Binding DataPtWDir}" Color="{StaticResource WDir}" StrokeThickness="1.5" Title="owa W" />
+          <oxy:LineSeries    ItemsSource="{Binding DataPtPrsr}" Color="{StaticResource Prsr}" StrokeThickness="0.5" Title="owa P" LineStyle="LongDashDotDot" />
+          <!--<oxy:AreaSeries    ItemsSource="{Binding WindOwaBtvl}" Color="{StaticResource WDir}" StrokeThickness="1.5" Title="owa W" />-->
           <oxy:LineSeries    ItemsSource="{Binding DataPtTemp}" Color="{StaticResource PhcT}" StrokeThickness="1.5" Title="owa T" />
           <oxy:LineSeries    ItemsSource="{Binding DataPtFeel}" Color="{StaticResource PhcT}" StrokeThickness="0.5" Title="owa F" />
 
@@ -90,16 +89,16 @@
             </TransformGroup>
           </Grid.RenderTransform>
           <Ellipse   Width="222" Height="222" StrokeThickness="2" Stroke="#555" Fill="#4006" HorizontalAlignment="Center"/>
-          <Rectangle Width="6" Height="{Binding WindVelo}" StrokeThickness="2" Stroke="#888" Fill="#fff" VerticalAlignment="Bottom" Margin="2"/>
+          <Rectangle Width="6" Height="{Binding WindVeloKmHr}" StrokeThickness="2" Stroke="#888" Fill="#fff" VerticalAlignment="Bottom" Margin="2"/>
           <!--<Ellipse   Width="024" Height="024" StrokeThickness="0" Stroke="#567" Fill="#f555" />-->
         </Grid>
         <StackPanel VerticalAlignment="Center">
           <Label Content="Real °"                              Foreground="#aaa" HorizontalAlignment="Center" FontSize="08" />
-          <TextBlock d:Text="+21" Text="{Binding CurTempReal}" Foreground="#eee" HorizontalAlignment="Center" FontSize="26" FontWeight="SemiBold" Margin="0 -12 0 10"/>
+          <TextBlock d:Text="+21"  Text="{Binding CurTempReal}" Foreground="#eee" HorizontalAlignment="Center" FontSize="26" FontWeight="SemiBold" Margin="0 -12 0 10"/>
           <Label Content="Feel °"                              Foreground="#aaa" HorizontalAlignment="Center" FontSize="08" />
-          <TextBlock d:Text="+21" Text="{Binding CurTempFeel}" Foreground="#eee" HorizontalAlignment="Center" FontSize="60" FontWeight="SemiBold" Margin="0 -18 0 10"/>
+          <TextBlock d:Text="+21"  Text="{Binding CurTempFeel}" Foreground="#eee" HorizontalAlignment="Center" FontSize="60" FontWeight="SemiBold" Margin="0 -18 0 10"/>
           <Label Content="Wind k/h"                            Foreground="#aaa" HorizontalAlignment="Center" FontSize="08" />
-          <TextBlock d:Text="+21" Text="{Binding CurWindKmHr}" Foreground="#eee" HorizontalAlignment="Center" FontSize="26" FontWeight="SemiBold" Margin="0 -12 0 10"/>
+          <TextBlock d:Text="12.1" Text="{Binding CurWindKmHr}" Foreground="#eee" HorizontalAlignment="Center" FontSize="26" FontWeight="SemiBold" Margin="0 -12 0 10"/>
         </StackPanel>
       </Grid>
 

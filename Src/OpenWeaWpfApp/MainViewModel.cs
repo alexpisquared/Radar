@@ -86,10 +86,10 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       await AddPastDataToDB_EnvtCa("pea", pea);
     }
 
-    RefillPast24(EnvtCaVaughan, EnvtCaPast24PearWind, bvl);
-    RefillPast24(EnvtCaMissuga, EnvtCaPast24BtnvWind, pea);
+    RefillPast24(EnvtCaVaughan, WindOwaPear, bvl);
+    RefillPast24(EnvtCaMissuga, WindOwaBtvl, pea);
 
-    DataPtWind.Clear(); pea.OrderBy(r => r.TakenAt).ToList().ForEach(x => DataPtWind.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), 10 * x.Pressure - 1030)));
+    DataPtPrsr.Clear(); pea.OrderBy(r => r.TakenAt).ToList().ForEach(x => DataPtPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), 10 * x.Pressure - 1030)));
 
     var sitedataMiss = await _opnwea.GetEnvtCa(_mississ);
     var sitedataVghn = await _opnwea.GetEnvtCa(_vaughan);
@@ -107,12 +107,18 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     RefillForeEnvtCa(EnvtCaMarkham, await _opnwea.GetEnvtCa(_markham));
 
     ArgumentNullException.ThrowIfNull(sitedataMiss, $"@@@@@@@@@ {nameof(sitedataMiss)}");
+    SubHeader += $"{sitedataMiss.currentConditions.wind.speed}\n";
 
     double d;
-    if (double.TryParse((sitedataMiss.almanac.temperature)[0].Value, out d)) YAxiXMax = 10 * (YAxisMax = d);
-    if (double.TryParse((sitedataMiss.almanac.temperature)[1].Value, out d)) YAxiXMin = 10 * (YAxisMin = d);
+    if (double.TryParse((sitedataMiss.almanac.temperature)[0].Value, out d)) YAxiXMax = 10 * (YAxisMax = d + 1);
+    if (double.TryParse((sitedataMiss.almanac.temperature)[1].Value, out d)) YAxiXMin = 10 * (YAxisMin = d - 1);
     if (double.TryParse((sitedataMiss.almanac.temperature)[2].Value, out d)) NormTMax = d;
     if (double.TryParse((sitedataMiss.almanac.temperature)[3].Value, out d)) NormTMin = d;
+
+    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(8)), NormTMax));
+    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMax));
+    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMin));
+    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(8)), NormTMin));
 
     EnvtCaIconM = $"https://weather.gc.ca/weathericons/{sitedataMiss?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
     EnvtCaIconV = $"https://weather.gc.ca/weathericons/{sitedataVghn?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
@@ -264,26 +270,23 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
   async Task PopulateScatModelAsync(int days = 5)
   {
-    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), +10));
-    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), -25));
-
     OCA = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(OCA); // PHC107
     D53 = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(D53); // PHC107
 
-    SubHeader = PlotTitle = $"{OCA.current}";
+    SubHeader += $"{OCA.current}\n";
     PlotTitle = CurrentConditions = $"{UnixToDt(OCA.current.dt):HH:mm:ss}   {OCA.current.temp,5:N1}°   {OCA.current.feels_like,4:N0}°  {OCA.current.wind_speed * _kWind:N1}k/h";
+    WindDirn = OCA.current.wind_deg;
+    WindVeloKmHr = OCA.current.wind_speed * _kWind / _wk;
     CurTempReal = $"{OCA.current.temp:+#.#;-#.#;0}°";
     CurTempFeel = $"{OCA.current.feels_like:+#;-#;0}°";
-    CurWindKmHr = $"{OCA.current.wind_speed * _kWind:N1}";
+    CurWindKmHr = $"{WindVeloKmHr:N1}";
 
-    WindDirn = OCA.current.wind_deg;
-    WindVelo = OCA.current.wind_speed * _kWind * 10;
     OpnWeaIcom = $"http://openweathermap.org/img/wn/{OCA.current.weather.First().icon}@2x.png";
 
     //var timeMin = DateTimeAxis.ToDouble(OpenWea.UnixToDt(OCA.daily.Min(d => d.dt - 07 * 3600)));
     ForeMax = DateTimeAxis.ToDouble(days == 5 ? OpenWea.UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Today.AddDays(days));
-    var valueMin = YAxisMin; // OCA.daily.Min(r => r.temp.min);
-    var valueMax = YAxisMax; // OCA.daily.Max(r => r.temp.max);
+    var valueMin = YAxisMin + 1; // OCA.daily.Min(r => r.temp.min);
+    var valueMax = YAxisMax - 1; // OCA.daily.Max(r => r.temp.max);
 
     if (_config["StoreData"] == "Yes") //if (_config["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
       await AddForeDataToDB_OpnWea("phc", OCA);
@@ -293,7 +296,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       //scaters.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.snow?._1h ?? 0, x.snow?._1h ?? 0, _d3c)); // either null or 0 so far.
       DataPtTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.temp));
       DataPtFeel.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.feels_like));
-      DataPtWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pressure - 1030));
+      DataPtPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pressure - 1030));
       DataPtGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_gust * _kWind));
       DataPtPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 10));
 
@@ -304,9 +307,9 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       var ty = 0.02 * Math.Sin(rad + 90);
       var sx = .002 * Math.Cos(rad - 90);
       var sy = 0.02 * Math.Sin(rad - 90);
-      DataPtWDir.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + tx, ty + x.wind_speed * _kWind));
-      DataPtWDir.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + dx, dy + x.wind_speed * _kWind));
-      DataPtWDir.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + sx, sy + x.wind_speed * _kWind));
+      WindOwaBtvl.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + tx, ty + x.wind_speed * _kWind));
+      WindOwaBtvl.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + dx, dy + x.wind_speed * _kWind));
+      WindOwaBtvl.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + sx, sy + x.wind_speed * _kWind));
     });
 
     D53.list.Where(d => d.dt > OCA.hourly.Max(d => d.dt)).ToList().ForEach(x =>
@@ -314,16 +317,16 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       //scaters.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.snow?._3h ?? 0, x.snow?._3h ?? 0, _d3c));
       DataPtTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.main.temp));
       DataPtFeel.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.main.feels_like));
-      DataPtWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.main.pressure - 1030));
+      DataPtPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.main.pressure - 1030));
       DataPtGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.gust * _kWind));
       DataPtPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 10));
 
       var rad = Math.PI * x.wind.deg * 2 / 360;
       var dx = 0.1 * Math.Cos(rad);
       var dy = 1.0 * Math.Sin(rad);
-      DataPtWDir.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.speed * _kWind));
-      DataPtWDir.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + dx, dy + x.wind.speed * _kWind));
-      DataPtWDir.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.speed * _kWind));
+      WindOwaBtvl.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.speed * _kWind));
+      WindOwaBtvl.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + dx, dy + x.wind.speed * _kWind));
+      WindOwaBtvl.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.speed * _kWind));
     });
 
     OCA.daily.ToList().ForEach(x =>
@@ -343,7 +346,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
         DataPtTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _e)), x.temp.eve));
         DataPtTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), x.temp.night));
 
-        DataPtWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pressure - 1030));
+        DataPtPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pressure - 1030));
         DataPtGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_gust * _kWind));
         DataPtPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 10));
       });
@@ -362,10 +365,10 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     PlotTitle =
     CurrentConditions = $"Loading...";
     WindDirn = 0;
-    WindVelo = 0;
+    WindVeloKmHr = 0;
     OpnWeaIcom = "http://openweathermap.org/img/wn/01n@2x.png";
-    DataPtWDir.Clear();
-    DataPtWind.Clear();
+    WindOwaBtvl.Clear();
+    DataPtPrsr.Clear();
     DataPtGust.Clear();
     DataPtTemp.Clear();
     DataPtFeel.Clear();
@@ -397,29 +400,18 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     });
   }
 
-  //public ObservableCollection<ScatterPoint> SctrPtTFFPhc { get; } = new ObservableCollection<ScatterPoint>();
   public ObservableCollection<ScatterPoint> SctrPtTPFVgn { get; } = new ObservableCollection<ScatterPoint>();
   public ObservableCollection<ScatterPoint> SctrPtTPFPhc { get; } = new ObservableCollection<ScatterPoint>();
   public ObservableCollection<ScatterPoint> SctrPtTPFMis { get; } = new ObservableCollection<ScatterPoint>();
   public ObservableCollection<DataPoint> DataPtTemp { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> DataPtFeel { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> DataPtWind { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> DataPtPrsr { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> DataPtGust { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> DataPtWDir { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> WindOwaBtvl { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> WindOwaPear { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> DataPtSunT { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> DataPtNowT { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> DataPtPopr { get; } = new ObservableCollection<DataPoint>();
-
-  public ObservableCollection<DataPoint> DataPtTempC { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> DataPtFeelC { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> DataPtTempT { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> DataPtFeelT { get; } = new ObservableCollection<DataPoint>();
-
-  //public ObservableCollection<DataPoint> EnvtCaMissuga { get; } = new ObservableCollection<DataPoint>();
-  //public ObservableCollection<DataPoint> EnvtCaVaughan { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> EnvtCaPast24PearWind { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> EnvtCaPast24BtnvWind { get; } = new ObservableCollection<DataPoint>();
-
   public ObservableCollection<DataPoint> EnvtCaToronto { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> EnvtCaVaughan { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> EnvtCaMarkham { get; } = new ObservableCollection<DataPoint>();
@@ -436,7 +428,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   string _f = default!; public string CurTempFeel { get => _f; set => SetProperty(ref _f, value); }
   string _w = default!; public string CurWindKmHr { get => _w; set => SetProperty(ref _w, value); }
   int _b = default!; public int WindDirn { get => _b; set => SetProperty(ref _b, value); }
-  float _v = default!; public float WindVelo { get => _v; set => SetProperty(ref _v, value); }
+  float _v = default!; public float WindVeloKmHr { get => _v; set => SetProperty(ref _v, value); }
   RootobjectOneCallApi? _o = default!; public RootobjectOneCallApi? OCA { get => _o; set => SetProperty(ref _o, value); }
   RootobjectFrc5Day3Hr? _5 = default!; public RootobjectFrc5Day3Hr? D53 { get => _5; set => SetProperty(ref _5, value); }
 
