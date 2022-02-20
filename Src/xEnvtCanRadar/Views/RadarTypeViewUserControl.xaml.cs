@@ -11,7 +11,7 @@ public partial class RadarTypeViewUserControl : UserControl
 
   public RadarTypeViewUserControl() => InitializeComponent();
 
-  async void OnReload(object s, RoutedEventArgs e) { await ReLoad(int.Parse(((FrameworkElement)s).Tag?.ToString() ?? "30")); _loaded = true; chkIsPlaying.IsChecked = true; } // max is 480 == 2 days on 10 per hour basis.
+  async void OnReload(object s, RoutedEventArgs e) { await ReLoad(int.Parse(((FrameworkElement)s).Tag?.ToString() ?? "11")); _loaded = true; chkIsPlaying.IsChecked = true; } // max is 480 == 2 days on 10 per hour basis.
   async Task ReLoad(int takeLastCount)
   {
     chkIsPlaying.IsChecked = false;

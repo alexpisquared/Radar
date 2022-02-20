@@ -37,6 +37,11 @@ public partial class MainWindow : Window
       //Width = 3000;
       //Height = 1080;
     }
+    else if (Environment.UserDomainName == "RAZER1")
+    {
+      Left = 3100;
+      Top = -1200;
+    }
     else if (Environment.UserDomainName != "RAZER1")
     {
       //WindowState = WindowState.Normal;

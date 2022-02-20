@@ -2,7 +2,7 @@
 
 public class WebDirectoryLoader
 {
-  public async Task<List<string>> ParseFromHtmlUsingRegex(string gigUrl, string endsWith = ".gif", int takeLastCount = 31)
+  public async Task<List<string>> ParseFromHtmlUsingRegex(string gigUrl, string endsWith = ".gif", int takeLastCount = 11)
   {
     using var client = new HttpClient();
     var response = await client.GetAsync(gigUrl).ConfigureAwait(false);
