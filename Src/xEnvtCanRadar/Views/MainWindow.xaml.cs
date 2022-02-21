@@ -13,7 +13,7 @@ public partial class MainWindow : Window
         case Key.F1: Hand.Play(); await Task.Yield(); break;
         //case Key.R: Hand.Play(); _ = await ((MainViewModel)DataContext).PopulateAsync(); goto case Key.I;
         //case Key.I: Beep.Play(); plotBR.InvalidatePlot(true); break;
-        case Key.Escape: base.OnKeyUp(e); Close(); break;
+        case Key.Escape: base.OnKeyUp(e); e.Handled = true; Close(); break;
         default: break;
       }
     };
