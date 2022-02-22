@@ -7,14 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\ScSv\Src\AlexPi.Scr\AlexPi.Scr\AsLink\siteData.cs" Link="AsLink\siteData.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="AsLink\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.40" />
   </ItemGroup>
 
