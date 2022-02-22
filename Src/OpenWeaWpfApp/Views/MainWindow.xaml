@@ -6,7 +6,7 @@
   <WindowChrome.WindowChrome>
     <WindowChrome CaptionHeight="0" ResizeBorderThickness="10" />
   </WindowChrome.WindowChrome>
-  <Border CornerRadius="6" Padding="0" BorderBrush="#333" BorderThickness="8" >
+  <Border CornerRadius="6" Padding="3" BorderBrush="#ccc" BorderThickness="1" >
     <Grid>
       <Grid.Resources>
         <Color x:Key="Vgn">#08f</Color>
@@ -45,22 +45,20 @@
           <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFMis}" MarkerType="Circle" Title="ECa Mis" MarkerStroke="{StaticResource Mis}" MarkerFill="Transparent" x:Name="SctrPtTPFMis" />
           <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFPhc}" MarkerType="Circle" Title="OWA Phc" MarkerStroke="{StaticResource Phc}" MarkerFill="Transparent" x:Name="SctrPtTPFPhc" TrackerFormatString="{}{0}&#x0a;Time:   {2:HH:mm} &#x0a;Temp:  {4:0.0}° " />
 
-          <oxy:AreaSeries    ItemsSource="{Binding WindOwaBtvl}" Color="{StaticResource Phc}" StrokeThickness="0.5" Title="Wind EC Owa" Fill="#550f" />
-          <oxy:LineSeries    ItemsSource="{Binding WindOwaPear}" Color="{StaticResource Phc}" StrokeThickness="0.5" Title="Wind EC Pea"  />
-
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaToronto}"  Color="{StaticResource b80}" StrokeThickness="5.0" Title="EC TO"  LineStyle="LongDash" />
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaMissuga}"  Color="{StaticResource Mis}" StrokeThickness="3.0" Title="EC Mis" LineStyle="LongDashDotDot" />
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaTorIsld}"  Color="{StaticResource d00}" StrokeThickness="1.0" Title="EC TI"  LineStyle="Dot" />
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaVaughan}"  Color="{StaticResource Vgn}" StrokeThickness="3.0" Title="EC VA"  LineStyle="Dash" />
           <oxy:LineSeries    ItemsSource="{Binding EnvtCaMarkham}"  Color="{StaticResource Vgn}" StrokeThickness="2.0" Title="EC MA"  LineStyle="Dash" InterpolationAlgorithm="{Binding IA}" />
-
-          <oxy:AreaSeries    ItemsSource="{Binding DataPtPopr}" Color="{StaticResource PoPr}" StrokeThickness="0.0" Title="PoPr"  InterpolationAlgorithm="{Binding IA}" />
-          <oxy:LineSeries    ItemsSource="{Binding DataPtGust}" Color="{StaticResource WDir}" StrokeThickness="0.5" Title="owa G" InterpolationAlgorithm="{Binding IA}" />
-          
-          <oxy:LineSeries    ItemsSource="{Binding DataPtPrsr}" Color="{StaticResource Prsr}" StrokeThickness="1.0" Title="owa P" InterpolationAlgorithm="{Binding IA}" LineStyle="LongDashDotDot" />
           
           <oxy:LineSeries    ItemsSource="{Binding DataPtTemp}" Color="{StaticResource Phc}" StrokeThickness="1.5" Title="owa T"  InterpolationAlgorithm="{Binding IA}" />
           <oxy:LineSeries    ItemsSource="{Binding DataPtFeel}" Color="{StaticResource Phc}" StrokeThickness="0.5" Title="owa F"  InterpolationAlgorithm="{Binding IA}" />
+          <oxy:LineSeries    ItemsSource="{Binding DataPtPrsr}" Color="{StaticResource Prsr}" StrokeThickness="1.0" Title="owa P" InterpolationAlgorithm="{Binding IA}" LineStyle="LongDashDotDot" />
+
+          <oxy:AreaSeries    ItemsSource="{Binding WindOwaBtvl}" Color="{StaticResource Phc}" StrokeThickness="0.5" Title="Wind EC Owa" YAxisKey="yAxisR" Fill="#550f" />
+          <oxy:LineSeries    ItemsSource="{Binding WindOwaPear}" Color="{StaticResource Phc}" StrokeThickness="0.5" Title="Wind EC Pea" YAxisKey="yAxisR"  />
+          <oxy:AreaSeries    ItemsSource="{Binding DataPtPopr}" Color="{StaticResource PoPr}" StrokeThickness="0.0" Title="PoPr"  InterpolationAlgorithm="{Binding IA}" YAxisKey="yAxisR" />
+          <oxy:LineSeries    ItemsSource="{Binding DataPtGust}" Color="{StaticResource WDir}" StrokeThickness="0.5" Title="owa G" InterpolationAlgorithm="{Binding IA}" YAxisKey="yAxisR" />
 
           <!--<oxy:ScatterSeries ItemsSource="{Binding SctrPtTFFPhc}" MarkerType="Plus"    MarkerStroke="#eaf" MarkerStrokeThickness="2" MarkerSize="5" MarkerFill="#0f0" Title="OWA" />-->
         </oxy:Plot.Series>
@@ -71,11 +69,10 @@
                             MinorGridlineStyle="Solid" MinorGridlineColor="#333" 
                             d:Minimum="0"
                             d:Maximum="7"
-                            Maximum="{Binding ForeMax}"
+                            Maximum="{Binding ForeMax, FallbackValue=1}"
                             MinorTickSize="4" TicklineColor="#ccc" />
-          <oxy:LinearAxis   Key="yAxis" Minimum="{Binding YAxisMin}" Maximum="{Binding YAxisMax}"  MajorStep="10"  MinorStep="1"  TextColor="#eee" TitleColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Left"   MajorGridlineStyle="Solid" MajorGridlineColor="#000" Title="Temp [°C]"              
-                            MinorTickSize="4" TicklineColor="#ccc" />
-          <oxy:LinearAxis   Key="yAxis" Minimum="{Binding YAxiXMin}" Maximum="{Binding YAxiXMax}" MajorStep="100" MinorStep="10" TextColor="#eee" TitleColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Right"  MajorGridlineStyle="None"  MajorGridlineColor="#000" Title="Wind k/h*.1  PoP %*.1"  />
+          <oxy:LinearAxis   Key="yAxisL" Minimum="{Binding YAxisMin}" Maximum="{Binding YAxisMax}" MajorStep="010" MinorStep="01" TextColor="#eee" TitleColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Left"   MajorGridlineStyle="Solid" MajorGridlineColor="#000" Title="Temp [°C]" MinorTickSize="4" TicklineColor="#ccc" />
+          <oxy:LinearAxis   Key="yAxisR" Minimum="{Binding YAxiXMin}" Maximum="{Binding YAxiXMax}" MajorStep="100" MinorStep="10" TextColor="#eee" TitleColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Right"  MajorGridlineStyle="None"  MajorGridlineColor="#000" Title="Wind k/h*.1  PoP %*.1"  />
         </oxy:Plot.Axes>
       </oxy:Plot>
 
@@ -93,11 +90,11 @@
           <!--<Ellipse   Width="024" Height="024" StrokeThickness="0" Stroke="#567" Fill="#f555" />-->
         </Grid>
         <StackPanel VerticalAlignment="Center">
-          <Label Content="Real °"                              Foreground="#aaa" HorizontalAlignment="Center" FontSize="08" />
+          <Label Content="Real °"                               Foreground="#aaa" HorizontalAlignment="Center" FontSize="08" />
           <TextBlock d:Text="+21"  Text="{Binding CurTempReal}" Foreground="#eee" HorizontalAlignment="Center" FontSize="26" FontWeight="SemiBold" Margin="0 -12 0 10"/>
-          <Label Content="Feel °"                              Foreground="#aaa" HorizontalAlignment="Center" FontSize="08" />
+          <Label Content="Feel °"                               Foreground="#aaa" HorizontalAlignment="Center" FontSize="08" />
           <TextBlock d:Text="+21"  Text="{Binding CurTempFeel}" Foreground="#eee" HorizontalAlignment="Center" FontSize="60" FontWeight="SemiBold" Margin="0 -18 0 10"/>
-          <Label Content="Wind k/h"                            Foreground="#aaa" HorizontalAlignment="Center" FontSize="08" />
+          <Label Content="Wind k/h"                             Foreground="#aaa" HorizontalAlignment="Center" FontSize="08" />
           <TextBlock d:Text="12.1" Text="{Binding CurWindKmHr}" Foreground="#eee" HorizontalAlignment="Center" FontSize="26" FontWeight="SemiBold" Margin="0 -12 0 10"/>
         </StackPanel>
       </Grid>

@@ -110,8 +110,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     SubHeader += $"{sitedataMiss.currentConditions.wind.speed}\n";
 
     double d;
-    if (double.TryParse((sitedataMiss.almanac.temperature)[0].Value, out d)) YAxiXMax = 10 * (YAxisMax = d + 1);
-    if (double.TryParse((sitedataMiss.almanac.temperature)[1].Value, out d)) YAxiXMin = 10 * (YAxisMin = d - 1);
+    if (double.TryParse((sitedataMiss.almanac.temperature)[0].Value, out d)) YAxiXMax = 10 * (YAxisMax = d + 01) + 200;
+    if (double.TryParse((sitedataMiss.almanac.temperature)[1].Value, out d)) YAxiXMin = 10 * (YAxisMin = d - 10) + 200;
     if (double.TryParse((sitedataMiss.almanac.temperature)[2].Value, out d)) NormTMax = d;
     if (double.TryParse((sitedataMiss.almanac.temperature)[3].Value, out d)) NormTMin = d;
 
@@ -285,8 +285,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
     //var timeMin = DateTimeAxis.ToDouble(OpenWea.UnixToDt(OCA.daily.Min(d => d.dt - 07 * 3600)));
     ForeMax = DateTimeAxis.ToDouble(days == 5 ? OpenWea.UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Today.AddDays(days));
-    var valueMin = YAxisMin + 1; // OCA.daily.Min(r => r.temp.min);
-    var valueMax = YAxisMax - 1; // OCA.daily.Max(r => r.temp.max);
+    var valueMax = YAxisMax - 01; // OCA.daily.Max(r => r.temp.max);
+    var valueMin = YAxisMin + 10; // OCA.daily.Min(r => r.temp.min);
 
     if (_config["StoreData"] == "Yes") //if (_config["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
       await AddForeDataToDB_OpnWea("phc", OCA);
@@ -298,7 +298,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       DataPtFeel.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.feels_like));
       DataPtPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pressure - 1030));
       DataPtGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_gust * _kWind));
-      DataPtPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 10));
+      DataPtPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 100));
 
       var rad = Math.PI * x.wind_deg * 2 / 360;
       var dx = 0.10 * Math.Cos(rad);
@@ -434,7 +434,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
   //ImageSource _i; public ImageSource WeaIcom { get => _i; set => SetProperty(ref _i, value); }
   //Uri _k = new("http://openweathermap.org/img/wn/04n@2x.png"); public Uri WIcon { get => _k; set => SetProperty(ref _k, value); }
-  const float _wk = .1f, _kprsr = .01f;
+  const float _wk = 1f, _kprsr = .01f;
   const float _kWind = 3.6f * _wk;
 
   string _j = "http://openweathermap.org/img/wn/01d@2x.png"; public string OpnWeaIcom { get => _j; set => SetProperty(ref _j, value); }
@@ -460,7 +460,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   double _YMin = -01; public double YAxiXMin { get => _YMin; set => SetProperty(ref _YMin, value); }
   double _YMax = -01; public double YAxiXMax { get => _YMax; set => SetProperty(ref _YMax, value); }
 
-  IInterpolationAlgorithm iA = InterpolationAlgorithms.CatmullRomSpline;  public IInterpolationAlgorithm IA { get => iA; set => SetProperty(ref iA, value); } // the least vertical jumping beyond y value.
+  IInterpolationAlgorithm iA = InterpolationAlgorithms.CatmullRomSpline; public IInterpolationAlgorithm IA { get => iA; set => SetProperty(ref iA, value); } // the least vertical jumping beyond y value.
 }
 ///todo: https://oxyplot.readthedocs.io/en/latest/models/series/ScatterSeries.html
 ///https://docs.microsoft.com/en-us/answers/questions/22863/how-to-customize-charts-in-wpf-using-systemwindows.html
