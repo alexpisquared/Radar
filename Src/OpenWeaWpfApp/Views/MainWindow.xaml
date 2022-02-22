@@ -6,7 +6,7 @@
   <WindowChrome.WindowChrome>
     <WindowChrome CaptionHeight="0" ResizeBorderThickness="10" />
   </WindowChrome.WindowChrome>
-  <Border CornerRadius="6" Background="#2fff" Padding="6">
+  <Border CornerRadius="6" Padding="0" BorderBrush="#333" BorderThickness="8" >
     <Grid>
       <Grid.Resources>
         <Color x:Key="Vgn">#08f</Color>
@@ -80,7 +80,6 @@
       </oxy:Plot>
 
       <Button IsDefault="True" Click="OnPoplte" VerticalAlignment="Top" HorizontalAlignment="Right" />
-      <Button IsCancel="True"  Click="OnClose"  VerticalAlignment="Top" HorizontalAlignment="Right" />
 
       <Grid Width="222" Height="222" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top">
         <Grid RenderTransformOrigin="0.5,0.5">
@@ -107,7 +106,7 @@
       <Image Margin="0,4,255,0"                Source="{Binding OpnWeaIcom,  FallbackValue='http://openweathermap.org/img/wn/01n@2x.png'}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" Width="180" Height="180" VerticalAlignment="Top" HorizontalAlignment="Right" />
       <Image Margin="0,148,350,0" Source="{Binding EnvtCaIconM, FallbackValue='http://openweathermap.org/img/wn/01n@2x.png'}" d:Source="https://weather.gc.ca/weathericons/02.gif"   Width="90"  Height="90"  VerticalAlignment="Top" HorizontalAlignment="Right" RenderTransformOrigin="-0.2,0.551"/>
 
-      <TextBlock Text="{Binding SubHeader}" d:Text="SubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeader" HorizontalAlignment="Center" Foreground="#ff0" Margin="0 10" VerticalAlignment="Bottom" />
+      <TextBlock Text="{Binding SubHeader}" d:Text="SubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeader" HorizontalAlignment="Center" Foreground="#ff0" Margin="0 4" VerticalAlignment="Bottom" />
 
       <Menu Margin="15 10" Visibility="{Binding IsDevDbgViz}" FontStyle="Oblique" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent" Foreground="#ddd">
         <MenuItem   Header="Days: _1 " Command="{Binding GetDaysCommand}" CommandParameter="1" InputGestureText="F1" ToolTip="Check DB for changes"  />
