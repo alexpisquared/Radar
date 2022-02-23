@@ -106,10 +106,10 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     SubHeader += $"{sitedataMiss.currentConditions.wind.speed}\n";
 
     double d;
-    if (double.TryParse((sitedataMiss.almanac.temperature)[0].Value, out d)) YAxiXMax = 10 * (YAxisMax = d + _yHi) + 300;
-    if (double.TryParse((sitedataMiss.almanac.temperature)[1].Value, out d)) YAxiXMin = 10 * (YAxisMin = d - _yLo) + 300;
-    if (double.TryParse((sitedataMiss.almanac.temperature)[2].Value, out d)) NormTMax = d;
-    if (double.TryParse((sitedataMiss.almanac.temperature)[3].Value, out d)) NormTMin = d;
+    if (double.TryParse(sitedataMiss.almanac.temperature[0].Value, out d)) YAxiXMax = 10 * (YAxisMax = d + _yHi) + 300;
+    if (double.TryParse(sitedataMiss.almanac.temperature[1].Value, out d)) YAxiXMin = 10 * (YAxisMin = d - _yLo) + 300;
+    if (double.TryParse(sitedataMiss.almanac.temperature[2].Value, out d)) NormTMax = d;
+    if (double.TryParse(sitedataMiss.almanac.temperature[3].Value, out d)) NormTMin = d;
 
     DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-1)), YAxisMax - _yHi));
     DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), YAxisMax - _yHi));
@@ -119,7 +119,6 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMin));
     DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), YAxisMin + _yLo));
     DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-1)), YAxisMin + _yLo));
-
 
     EnvtCaIconM = $"https://weather.gc.ca/weathericons/{sitedataMiss?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
     EnvtCaIconV = $"https://weather.gc.ca/weathericons/{sitedataVghn?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
@@ -284,6 +283,11 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
     OpnWeaIcom = $"http://openweathermap.org/img/wn/{OCA.current.weather.First().icon}@2x.png";
 
+    for (int i = 0; i < OCA.daily.Length; i++)
+    {
+      OpnWeaIcoA.Add($"http://openweathermap.org/img/wn/{OCA.daily[i].weather[0].icon}@2x.png");
+    }
+
     //var timeMin = DateTimeAxis.ToDouble(OpenWea.UnixToDt(OCA.daily.Min(d => d.dt - 07 * 3600)));
     ForeMax = DateTimeAxis.ToDouble(days == 5 ? OpenWea.UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Today.AddDays(days));
     var valueMax = YAxisMax - _yHi; // OCA.daily.Max(r => r.temp.max);
@@ -431,13 +435,14 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   int _b = default!; public int WindDirn { get => _b; set => SetProperty(ref _b, value); }
   float _v = default!; public float WindVeloKmHr { get => _v; set => SetProperty(ref _v, value); }
   RootobjectOneCallApi? _o = default!; public RootobjectOneCallApi? OCA { get => _o; set => SetProperty(ref _o, value); }
-  RootobjectFrc5Day3Hr? _5 = default!; public RootobjectFrc5Day3Hr? D53 { get => _5; set => SetProperty(ref _5, value); }
+  RootobjectFrc5Day3Hr? _y = default!; public RootobjectFrc5Day3Hr? D53 { get => _y; set => SetProperty(ref _y, value); }
 
   //ImageSource _i; public ImageSource WeaIcom { get => _i; set => SetProperty(ref _i, value); }
   //Uri _k = new("http://openweathermap.org/img/wn/04n@2x.png"); public Uri WIcon { get => _k; set => SetProperty(ref _k, value); }
   const float _wk = 1f, _kprsr = .01f;
   const float _kWind = 3.6f * _wk;
 
+  ObservableCollection<string> _a = new (); public ObservableCollection<string> OpnWeaIcoA { get => _a; set => SetProperty(ref _a, value); }
   string _j = "http://openweathermap.org/img/wn/01d@2x.png"; public string OpnWeaIcom { get => _j; set => SetProperty(ref _j, value); }
   string _i = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconM { get => _i; set => SetProperty(ref _i, value); }
   string _k = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconV { get => _k; set => SetProperty(ref _k, value); }

@@ -24,6 +24,7 @@ public partial class PocBin : Window
     else
     {
     }
+
     WindowState = WindowState.Normal;
     WindowStartupLocation = WindowStartupLocation.Manual;
     Left = 1920;
