@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="WKR_roads.gif" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="WKR_roads.gif" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Views\CompareAllUrlsUserControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
