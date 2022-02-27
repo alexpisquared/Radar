@@ -1,5 +1,5 @@
 ﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:Views="clr-namespace:xEnvtCanRadar.Views;assembly=Radar22.Lib" x:Class="Radar22.MainWindow" mc:Ignorable="d"
-                x:Name="wnd" Title="Radar22" MinHeight="90" Height="960" Width="1160" 
+        x:Name="wnd" Title="Radar22" MinHeight="90" Height="960" Width="1160" 
         WindowStyle="None" AllowsTransparency="True" Background="#8000" ResizeMode="CanResizeWithGrip" >
   <WindowChrome.WindowChrome>
     <WindowChrome CaptionHeight="0" ResizeBorderThickness="10" />
@@ -16,9 +16,9 @@
     </Grid.RowDefinitions>
     <Views:RadarTypeViewUserControl UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="Snow.gif"    StartPlaying="1" Grid.RowSpan="4" />
     <GridSplitter Grid.Row="1" Background="Transparent" HorizontalAlignment="Stretch" FocusVisualStyle="{x:Null}" />
+    <Views:RadarTypeViewUserControl UrlSuffix="PRECIPET/GIF/ONT" PreciTp="SNOW_WT.gif" StartPlaying="1" Grid.Row="2" HorizontalAlignment="Right" Margin="0 0 -100 0"/>
+    <!--
     <Views:RadarTypeViewUserControl UrlSuffix="PRECIPET/GIF/WKR" PreciTp="SNOW.gif"    StartPlaying="0" Grid.Row="2" HorizontalAlignment="Left" IsEnabled="False" />
-    <Views:RadarTypeViewUserControl UrlSuffix="PRECIPET/GIF/ONT" PreciTp="SNOW_WT.gif" StartPlaying="1" Grid.Row="2" HorizontalAlignment="Right" 
-                                    Margin="0 0 -100 0"/>
-    <!--          https://dd.meteo.gc.ca/radar/PRECIPET/GIF/ONT/202202180150_ONT_PRECIPET_SNOW_WT.gif   573c300-->
+    https://dd.meteo.gc.ca/radar/PRECIPET/GIF/ONT/202202180150_ONT_PRECIPET_SNOW_WT.gif   573c300-->
   </Grid>
 </Window>
