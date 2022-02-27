@@ -277,6 +277,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     PlotTitle = CurrentConditions = $"{UnixToDt(OCA.current.dt):HH:mm:ss}   {OCA.current.temp,5:N1}°   {OCA.current.feels_like,4:N0}°  {OCA.current.wind_speed * _kWind:N1}k/h";
     WindDirn = OCA.current.wind_deg;
     WindVeloKmHr = OCA.current.wind_speed * _kWind / _wk;
+    WindGustKmHr = OCA.current.wind_gust * _kWind / _wk;
     CurTempReal = $"{OCA.current.temp:+#.#;-#.#;0}°";
     CurTempFeel = $"{OCA.current.feels_like:+#;-#;0}°";
     CurWindKmHr = $"{WindVeloKmHr:N1}";
@@ -467,6 +468,10 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   double _YMax = -01; public double YAxiXMax { get => _YMax; set => SetProperty(ref _YMax, value); }
 
   IInterpolationAlgorithm iA = InterpolationAlgorithms.CatmullRomSpline; public IInterpolationAlgorithm IA { get => iA; set => SetProperty(ref iA, value); } // the least vertical jumping beyond y value.
+
+  private double windGustKmHr;
+
+  public double WindGustKmHr { get => windGustKmHr; set => SetProperty(ref windGustKmHr, value); }
 }
 ///todo: https://oxyplot.readthedocs.io/en/latest/models/series/ScatterSeries.html
 ///https://docs.microsoft.com/en-us/answers/questions/22863/how-to-customize-charts-in-wpf-using-systemwindows.html

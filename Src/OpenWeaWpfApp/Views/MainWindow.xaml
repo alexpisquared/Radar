@@ -90,11 +90,12 @@
         <Grid RenderTransformOrigin="0.5,0.5">
           <Grid.RenderTransform>
             <TransformGroup>
-              <RotateTransform Angle="{Binding WindDirn}"/>
+              <RotateTransform Angle="{Binding WindDirn}" d:Angle="44"/>
             </TransformGroup>
           </Grid.RenderTransform>
           <Ellipse   Width="222" Height="222" StrokeThickness="2" Stroke="#555" Fill="#4006" HorizontalAlignment="Center"/>
-          <Rectangle Width="6" Height="{Binding WindVeloKmHr}" StrokeThickness="2" Stroke="#888" Fill="#fff" VerticalAlignment="Bottom" Margin="2"/>
+          <Rectangle Width="2" Height="{Binding WindGustKmHr}" d:Height="50" StrokeThickness="0" Fill="#68a" VerticalAlignment="Bottom" Margin="2" />
+          <Rectangle Width="6" Height="{Binding WindVeloKmHr}" d:Height="40" StrokeThickness="0" Fill="#68a" VerticalAlignment="Bottom" Margin="2" />
           <!--<Ellipse   Width="024" Height="024" StrokeThickness="0" Stroke="#567" Fill="#f555" />-->
         </Grid>
         <StackPanel VerticalAlignment="Center">
@@ -134,7 +135,7 @@
         <Image Grid.Column="8" Source="{Binding OpnWeaIcoA[7]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
       </Grid>
 
-      <TextBlock Text="{Binding SubHeader}" d:Text="SubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeader" HorizontalAlignment="Left" Foreground="#ff0" Margin="289,385,0,0" VerticalAlignment="Top" Grid.Row="1" Grid.Column="1" />
+      <TextBlock Text="{Binding SubHeader}" d:Text="SubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeader" HorizontalAlignment="Left" Foreground="#ff0" Margin="5" VerticalAlignment="Bottom" Grid.RowSpan="3" Grid.ColumnSpan="3" />
 
       <Menu Margin="0,10,15,0" Visibility="{Binding IsDevDbgViz}" FontStyle="Oblique" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent" Foreground="#ddd" Grid.Column="0" Grid.ColumnSpan="3">
         <MenuItem   Header="Days: _1 " Command="{Binding GetDaysCommand}" CommandParameter="1" InputGestureText="F1" ToolTip="Check DB for changes"  />
@@ -143,14 +144,14 @@
         <MenuItem   Header="_4" Command="{Binding GetDaysCommand}" CommandParameter="4" InputGestureText="F4" ToolTip="Check DB for changes"  />
         <MenuItem   Header="_5" Command="{Binding GetDaysCommand}" CommandParameter="5" InputGestureText="F5" ToolTip="Check DB for changes"  />
         <MenuItem   Header="° ° °"  >
-          <MenuItem Header="Dmp" Command="{Binding SaveExcelTsvCommand}"  ToolTip="Dump tsv"                                          />
-          <MenuItem Header="Tgl _DevDbgViz" IsCheckable="True" IsChecked="{Binding IsDevDbg}"/>
+          <MenuItem Header="Dmp" Command="{Binding SaveExcelTsvCommand}"  ToolTip="Dump tsv"  />
+          <MenuItem Header="Tgl _DevDbgViz" IsCheckable="True" IsChecked="{Binding IsDevDbg}" />
         </MenuItem>
         <MenuItem   Header="New" ToolTip="No action" FontStyle="Normal" />
       </Menu>
 
       <GridSplitter Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" FocusVisualStyle="{x:Null}"/>
-      <Views:RadarTypeViewUserControl Margin="12" UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="Snow.gif"    StartPlaying="1" Grid.RowSpan="2" Grid.Column="2" Opacity=".8" VerticalAlignment="Bottom"/>
+      <Views:RadarTypeViewUserControl Margin="12 26" UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="Snow.gif"    StartPlaying="1" Grid.RowSpan="2" Grid.Column="2" Opacity=".8" VerticalAlignment="Bottom"/>
 
     </Grid>
   </Border>
