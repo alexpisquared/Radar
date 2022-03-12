@@ -87,17 +87,7 @@
       <Button IsDefault="True" Click="OnPoplte" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="1" />
 
       <Grid Width="222" Height="222" Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="2">
-        <Grid RenderTransformOrigin="0.5,0.5">
-          <Grid.RenderTransform>
-            <TransformGroup>
-              <RotateTransform Angle="{Binding WindDirn}" d:Angle="44"/>
-            </TransformGroup>
-          </Grid.RenderTransform>
-          <Ellipse   Width="222" Height="222" StrokeThickness="2" Stroke="#555" Fill="#4006" HorizontalAlignment="Center"/>
-          <Rectangle Width="2" Height="{Binding WindGustKmHr}" d:Height="50" StrokeThickness="0" Fill="#68a" VerticalAlignment="Bottom" Margin="2" />
-          <Rectangle Width="6" Height="{Binding WindVeloKmHr}" d:Height="40" StrokeThickness="0" Fill="#68a" VerticalAlignment="Bottom" Margin="2" />
-          <!--<Ellipse   Width="024" Height="024" StrokeThickness="0" Stroke="#567" Fill="#f555" />-->
-        </Grid>
+        <Ellipse   Width="222" Height="222" StrokeThickness="2" Stroke="#555" Fill="#4006" HorizontalAlignment="Center"/>
         <StackPanel VerticalAlignment="Center">
           <Label Content="Real °"                               Foreground="#aaa" HorizontalAlignment="Center" FontSize="08" />
           <TextBlock d:Text="+21"  Text="{Binding CurTempReal}" Foreground="#eee" HorizontalAlignment="Center" FontSize="26" FontWeight="SemiBold" Margin="0 -12 0 10"/>
@@ -106,6 +96,18 @@
           <Label Content="Wind k/h"                             Foreground="#aaa" HorizontalAlignment="Center" FontSize="08" />
           <TextBlock d:Text="12.1" Text="{Binding CurWindKmHr}" Foreground="#eee" HorizontalAlignment="Center" FontSize="26" FontWeight="SemiBold" Margin="0 -12 0 10"/>
         </StackPanel>
+        
+        <Grid Width="111" Height="111" RenderTransformOrigin="0.5,0.5">
+          <Grid.RenderTransform>
+            <TransformGroup>
+              <RotateTransform Angle="{Binding WindDirn}" d:Angle="44"/>
+              <ScaleTransform ScaleX="2" ScaleY="2" />
+            </TransformGroup>
+          </Grid.RenderTransform>
+          <Rectangle Width="1.5" Height="{Binding WindGustKmHr}" d:Height="50" StrokeThickness="0" Fill="#68a" VerticalAlignment="Bottom" Margin="1" />
+          <Rectangle Width="5"   Height="{Binding WindVeloKmHr}" d:Height="40" StrokeThickness="0" Fill="#68a" VerticalAlignment="Bottom" Margin="1" />
+          <!--<Ellipse   Width="024" Height="024" StrokeThickness="0" Stroke="#567" Fill="#f555" />-->
+        </Grid>
       </Grid>
 
       <Image Margin="0,26,170,0"  Source="{Binding EnvtCaIconV, FallbackValue=http://openweathermap.org/img/wn/01n@2x.png}" d:Source="https://weather.gc.ca/weathericons/00.gif"   Width="90"  Height="90"  VerticalAlignment="Top" HorizontalAlignment="Right" Grid.RowSpan="2" Grid.Column="1"/>
