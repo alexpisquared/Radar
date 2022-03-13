@@ -36,6 +36,8 @@ public partial class App : Application
 
     Dbx(services);
 
+        // need logging (ap: mar-12)
+
     _serviceProvider = services.BuildServiceProvider();
   }
 #endif
