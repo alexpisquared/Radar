@@ -22,3 +22,8 @@ global using static System.Diagnostics.Trace;
 global using static System.Media.SystemSounds;
 global using static OpenWeather2022.OpenWea;
 global using Microsoft.Toolkit.Mvvm.Input;
+global using System.Reflection;
+global using System.Windows.Controls;
+global using CI.Standard.Lib.Helpers;
+global using Microsoft.Extensions.Logging;
+

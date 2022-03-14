@@ -28,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\CI-Reimagined-Invention\Src\CI-RI\CI.Standard.Lib\CI.Standard.Lib.csproj" />
     <ProjectReference Include="..\DB.WeatherX.PwrTls\DB.WeatherX.PwrTls.csproj" />
     <ProjectReference Include="..\OpenWeather2022\OpenWeather2022.csproj" />
     <ProjectReference Include="..\Radar22.Lib\Radar22.Lib.csproj" />
@@ -35,6 +36,7 @@
 
   <ItemGroup>
     <Folder Include="AsLink\" />
+    <Folder Include="bin\Logs\" />
   </ItemGroup>
 
 </Project>

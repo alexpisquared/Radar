@@ -1,10 +1,13 @@
 ﻿#define Host_
-using System.Windows.Controls;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic.Devices;
 
 namespace OpenWeaWpfApp;
 
 public partial class App : Application
 {
+  string _audit = "Default!!";
+
 #if Host
   readonly IHost _host;
 
@@ -34,9 +37,15 @@ public partial class App : Application
     _ = services.AddSingleton<MainWindow>();
     _ = services.AddTransient<OpenWea>();
 
+    _ = services.AddSingleton<IConfigurationRoot>(AutoInitConfigHardcoded());
+    _ = services.AddSingleton<ILogger>(sp => SeriLogHelper.InitLoggerFactory( //todo: this allows to override by UserSettings entry: UserSettingsIPM.UserLogFolderFile ??= // if new - store in usersettings for next uses.    
+      FSHelper.GetCreateSafeLogFolderAndFile(new[]  {
+        sp.GetRequiredService<IConfigurationRoot>()["LogFolder"].Replace("..", $"{(Assembly.GetExecutingAssembly().GetName().Name??"Unkwn")[..5]}.{Environment.UserName[..3]}.."), // First, get from AppSettings.
+        @$"..\Logs\"  })).CreateLogger<MainWindow>());
+
     Dbx(services);
 
-        // need logging (ap: mar-12)
+    // need logging (ap: mar-12)
 
     _serviceProvider = services.BuildServiceProvider();
   }
@@ -48,6 +57,9 @@ public partial class App : Application
     EventManager.RegisterClassHandler(typeof(TextBox), TextBox.GotFocusEvent, new RoutedEventHandler((s, re) => { (s as TextBox ?? new TextBox()).SelectAll(); }));
     ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
 
+    SafeAudit();
+
+    _serviceProvider.GetRequiredService<ILogger>().LogInformation($"║       ██  OnStrt  {_audit}");
 
 #if !ParseToClasses
 
@@ -84,7 +96,7 @@ public partial class App : Application
     base.OnExit(e);
   }
 
-  static void Dbx(IServiceCollection services) => _ = services.AddDbContext<WeatherxContext>(optionsBuilder => //tu: dbcontext connstr https://youtu.be/7OBMhoKieqk?t=505 + https://codedocu.com/details?d=2653&a=9&f=425&d=0  :Project\Manage Connected Svcs !!! 2021-12
+  void Dbx(IServiceCollection services) => _ = services.AddDbContext<WeatherxContext>(optionsBuilder => //tu: dbcontext connstr https://youtu.be/7OBMhoKieqk?t=505 + https://codedocu.com/details?d=2653&a=9&f=425&d=0  :Project\Manage Connected Svcs !!! 2021-12
   {
     try
     {
@@ -100,8 +112,71 @@ public partial class App : Application
 
       optionsBuilder.UseSqlServer(cfg.GetConnectionString("Exprs") ?? throw new ArgumentNullException(nameof(services), "cfg.GetConnectionString('Exprs')"));
     }
-    catch (Exception ex) { Clipboard.SetText(ex.Message); MessageBox.Show(ex.Message, "Exception - Clipboarded"); }
+    catch (Exception ex)
+    {
+      _serviceProvider.GetRequiredService<ILogger>().LogError(ex, _audit);
+      Clipboard.SetText(ex.Message);
+      MessageBox.Show(ex.Message, "Exception - Clipboarded");
+    }
   });
+  void SafeAudit()
+  {
+    try
+    {
+      var cfg = _serviceProvider.GetRequiredService<IConfigurationRoot>();
+
+      _audit = VersionHelper.DevDbgAudit(cfg, $"wai:{cfg["WhereAmI"]}");
+    }
+    catch (Exception ex)
+    {
+      _serviceProvider.GetRequiredService<ILogger>().LogError(ex, _audit);
+    }
+  }
+  public static IConfigurationRoot AutoInitConfigHardcoded(string defaultValues = _defaultAppSetValues, bool enforceCreation = false)
+  {
+    var server = Environment.MachineName == "RAZER1" ? @".\SqlExpress" : "mtDEVsqldb,1625";
+    var config = new ConfigurationBuilder()
+      .AddInMemoryCollection()
+      .Build();
+
+    config["WhereAmI"] = "Mem";
+    config["LogFolder"] = new[] { "D21-MJ0AWBEV", "RAZER1" }.Contains(Environment.MachineName) ? "C:\\g\\Radar\\Src\\OpenWeaWpfApp\\bin\\Logs\\OWA..log" : "C:\\Users\\alexp\\OneDrive\\Logs\\..log";
+    config["ServerList"] = ".\\sqlexpress mtDEVsqldb,1625 mtUATsqldb mtPRDsqldb";
+    config["SqlConStrSansSnI"] =   /**/  "Server={0};     Database={1};       persist security info=True;user id=IpmDevDbgUser;password=IpmDevDbgUser;MultipleActiveResultSets=True;App=EntityFramework;Connection Timeout=152";
+    config["SqlConStrSansSnD"] =   /**/  "Server={0};     Database={1};       Trusted_Connection=True;Connection Timeout=52";
+    config["SqlConStrBR"] =        /**/ $"Server={server};Database=BR;        Trusted_Connection=True;Connection Timeout=52";
+    config["SqlConStrVBCM"] =      /**/ $"Server={server};Database=VBCM;      Trusted_Connection=True;Connection Timeout=52";
+    config["SqlConStrAlpha"] =     /**/ $"Server={server};Database=Alpha;     Trusted_Connection=True;Connection Timeout=52";
+    config["SqlConStrBanking"] =   /**/ $"Server={server};Database=Banking;   Trusted_Connection=True;Connection Timeout=52";
+    config["SqlConStrInventory"] = /**/ $"Server={server};Database=Inventory; Trusted_Connection=True;Connection Timeout=52";
+
+#if !true
+      var appConfig = new AppConfig();
+      config.Bind(appConfig);
+      string json = JsonConvert.SerializeObject(appConfig);
+      File.WriteAllText("exported-" + _appSettingsFileNameOnly, json);
+#endif
+
+    return config;
+  }
+  const string
+    _appSettingsFileNameOnly = "AppSettings.json",
+    _defaultAppSetValues = @"{{
+      ""WhereAmI"":             ""{0}"",
+      ""LogFolder"":            ""\\\\bbsfile01\\Public\\Dev\\AlexPi\\Misc\\Logs\\..log"",
+      ""ServerList"":           "".\\sqlexpress mtDEVsqldb,1625 mtUATsqldb mtPRDsqldb"",
+      ""SqlConStrSansSnD"":     ""Server={{0}};Database={{1}};          Trusted_Connection=True;Connection Timeout=52"",
+      ""SqlConStrBR"":          ""Server={{server}};Database=BR;        Trusted_Connection=True;Connection Timeout=52"",
+      ""SqlConStrVBCM"":        ""Server={{server}};Database=VBCM;      Trusted_Connection=True;Connection Timeout=52"",
+      ""SqlConStrAlpha"":       ""Server={{server}};Database=Alpha;     Trusted_Connection=True;Connection Timeout=52"",
+      ""SqlConStrBanking"":     ""Server={{server}};Database=Banking;   Trusted_Connection=True;Connection Timeout=52"",
+      ""SqlConStrInventory"":   ""Server={{server}};Database=Inventory; Trusted_Connection=True;Connection Timeout=52"",
+      ""AppSettings"": {{
+        ""ServerList"":         "".\\sqlexpress mtDEVsqldb mtUATsqldb mtPRDsqldb"",
+        ""KeyVaultURL"":        ""<moved to a safer place>"",
+        ""LastSaved"":          ""{2}""
+      }}
+}}";
 }
 
 #if Host
