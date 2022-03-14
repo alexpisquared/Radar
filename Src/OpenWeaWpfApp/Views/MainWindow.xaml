@@ -37,6 +37,7 @@
                             MinorGridlineStyle="Solid" MinorGridlineColor="#333" 
                             d:Minimum="0"
                             d:Maximum="7"
+                            Minimum="{Binding ForeMin, FallbackValue=1}"
                             Maximum="{Binding ForeMax, FallbackValue=1}"
                             MinorTickSize="4" TicklineColor="#ccc" />
           <oxy:LinearAxis   Key="yAxisL" Minimum="{Binding YAxisMin}" Maximum="{Binding YAxisMax}" MajorStep="010" MinorStep="01" TextColor="#eee" TitleColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Left"   MajorGridlineStyle="Solid" MajorGridlineColor="#000" Title="Temp [°C]" MinorTickSize="4" TicklineColor="#ccc" />

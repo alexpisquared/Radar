@@ -290,7 +290,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     }
 
     //var timeMin = DateTimeAxis.ToDouble(OpenWea.UnixToDt(OCA.daily.Min(d => d.dt - 07 * 3600)));
-    ForeMax = DateTimeAxis.ToDouble(days == 5 ? OpenWea.UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Today.AddDays(days));
+    ForeMin = (DateTime.Today.AddDays(-1).ToOADate()); // == DateTimeAxis.ToDouble(DateTime.Today.AddDays(-1));
+    ForeMax = DateTimeAxis.ToDouble(days == 5 ? UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Today.AddDays(days));
     var valueMax = YAxisMax - _yHi; // OCA.daily.Max(r => r.temp.max);
     var valueMin = YAxisMin + _yLo; // OCA.daily.Min(r => r.temp.min);
 
@@ -300,11 +301,11 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     OCA.hourly.ToList().ForEach(x =>
     {
       //scaters.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.snow?._1h ?? 0, x.snow?._1h ?? 0, _d3c)); // either null or 0 so far.
-      DataPtTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.temp));
-      DataPtFeel.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.feels_like));
-      DataPtPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pressure - 1030));
-      DataPtGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_gust * _kWind));
-      DataPtPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 100));
+      DataPtTemp.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)), x.temp));
+      DataPtFeel.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)), x.feels_like));
+      DataPtPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)), x.pressure - 1030));
+      DataPtGust.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)), x.wind_gust * _kWind));
+      DataPtPopr.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)), x.pop * 100));
 
       var rad = Math.PI * x.wind_deg * 2 / 360;
       var dx = 0.10 * Math.Cos(rad);
@@ -313,9 +314,9 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       var ty = 0.20 * Math.Sin(rad + 90);
       var sx = .002 * Math.Cos(rad - 90);
       var sy = 0.20 * Math.Sin(rad - 90);
-      WindOwaBtvl.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + tx, ty + x.wind_speed * _kWind));
-      WindOwaBtvl.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + dx, dy + x.wind_speed * _kWind));
-      WindOwaBtvl.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + sx, sy + x.wind_speed * _kWind));
+      WindOwaBtvl.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)) + tx, ty + x.wind_speed * _kWind));
+      WindOwaBtvl.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)) + dx, dy + x.wind_speed * _kWind));
+      WindOwaBtvl.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)) + sx, sy + x.wind_speed * _kWind));
     });
 
     D53.list.Where(d => d.dt > OCA.hourly.Max(d => d.dt)).ToList().ForEach(x =>
@@ -427,6 +428,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   public PlotModel FuncModel { get; private set; } = new PlotModel { Title = "Function Srs", Background = OxyColor.FromUInt32(123456), LegendTitleColor = OxyColor.FromUInt32(123456) };
   public PlotModel ScatModel { get; private set; } = new PlotModel { Title = "Scatter Srs" };
 
+  double _fn; public double ForeMin { get => _fn; set => SetProperty(ref _fn, value); }
   double _fm; public double ForeMax { get => _fm; set => SetProperty(ref _fm, value); }
   string _t = default!; public string PlotTitle { get => _t; set => SetProperty(ref _t, value); }
   string _c = default!; public string CurrentConditions { get => _c; set => SetProperty(ref _c, value); }
