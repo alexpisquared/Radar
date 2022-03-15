@@ -50,8 +50,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       return;
 
     var now = DateTime.Now;
-    var ytd = DateTime.Now.AddHours(-24);
-    var dby = DateTime.Now.AddHours(-48);
+    var ytd = now.AddHours(-24);
+    var dby = now.AddHours(-48);
 
     if (Environment.UserDomainName != "RAZER1")
     {
@@ -111,14 +111,14 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     if (double.TryParse(sitedataMiss.almanac.temperature[2].Value, out d)) NormTMax = d;
     if (double.TryParse(sitedataMiss.almanac.temperature[3].Value, out d)) NormTMin = d;
 
-    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-1)), YAxisMax - _yHi));
+    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), YAxisMax - _yHi));
     DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), YAxisMax - _yHi));
     DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMax));
     DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMax));
     DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMin));
     DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMin));
     DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), YAxisMin + _yLo));
-    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-1)), YAxisMin + _yLo));
+    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), YAxisMin + _yLo));
 
     EnvtCaIconM = $"https://weather.gc.ca/weathericons/{sitedataMiss?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
     EnvtCaIconV = $"https://weather.gc.ca/weathericons/{sitedataVghn?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
@@ -289,9 +289,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       OpnWeaIcoA.Add($"http://openweathermap.org/img/wn/{OCA.daily[i].weather[0].icon}@2x.png");
     }
 
-    //var timeMin = DateTimeAxis.ToDouble(OpenWea.UnixToDt(OCA.daily.Min(d => d.dt - 07 * 3600)));
-    ForeMin = (DateTime.Today.AddDays(-1).ToOADate()); // == DateTimeAxis.ToDouble(DateTime.Today.AddDays(-1));
-    ForeMax = DateTimeAxis.ToDouble(days == 5 ? UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Today.AddDays(days));
+    ForeMin = DateTime.Today.AddDays(-1).ToOADate(); // == DateTimeAxis.ToDouble(DateTime.Today.AddDays(-1));
+    ForeMax = DateTime.Today.AddDays(+3).ToOADate(); // DateTimeAxis.ToDouble(days == 5 ? UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Today.AddDays(days));
     var valueMax = YAxisMax - _yHi; // OCA.daily.Max(r => r.temp.max);
     var valueMin = YAxisMin + _yLo; // OCA.daily.Min(r => r.temp.min);
 
@@ -336,12 +335,19 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       WindOwaBtvl.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.speed * _kWind));
     });
 
+
+    var x = OCA.daily.First();
+    DataPtSunT.Add(new DataPoint((UnixToDt(x.sunrise).AddDays(-1).ToOADate()), valueMin));
+    DataPtSunT.Add(new DataPoint((UnixToDt(x.sunrise).AddDays(-1).ToOADate()), valueMax));
+    DataPtSunT.Add(new DataPoint((UnixToDt(x.sunset).AddDays(-1).ToOADate()), valueMax));
+    DataPtSunT.Add(new DataPoint((UnixToDt(x.sunset).AddDays(-1).ToOADate()), valueMin));
+
     OCA.daily.ToList().ForEach(x =>
     {
-      DataPtSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.sunrise)), valueMin));
-      DataPtSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.sunrise)), valueMax));
-      DataPtSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.sunset)), valueMax));
-      DataPtSunT.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.sunset)), valueMin));
+      DataPtSunT.Add(new DataPoint((UnixToDt(x.sunrise).ToOADate()), valueMin));
+      DataPtSunT.Add(new DataPoint((UnixToDt(x.sunrise).ToOADate()), valueMax));
+      DataPtSunT.Add(new DataPoint((UnixToDt(x.sunset).ToOADate()), valueMax));
+      DataPtSunT.Add(new DataPoint((UnixToDt(x.sunset).ToOADate()), valueMin));
     });
 
     OCA.daily
@@ -456,7 +462,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   IRelayCommand? _cd; public IRelayCommand GetDaysComman_ => _cd ??= new RelayCommand(GetDays); void GetDays() { }
   IRelayCommand? _gs; public IRelayCommand GetDaysCommand => _gs ??= new AsyncRelayCommand<object>(DoGen, (days) => !_busy); async Task DoGen(object? days_)
   {
-    if (int.TryParse(days_?.ToString(), out var days))
+    if (OCA is not null && int.TryParse(days_?.ToString(), out var days))
       ForeMax = DateTimeAxis.ToDouble(days == 5 ? OpenWea.UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Now.AddDays(days - 1));
 
     await Task.Yield();// PopulateAsync((int?)days ?? 5);
