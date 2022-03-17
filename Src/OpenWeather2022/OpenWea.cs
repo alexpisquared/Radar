@@ -95,8 +95,8 @@ public class OpenWea
           break;
         case OpenWeatherCd.OneCallApi:
           oca = await response.Content.ReadFromJsonAsync<RootobjectOneCallApi>();
-          oca?.hourly.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.dt):ddd HH}  {x.temp,6:N1}  {x.feels_like,6:N1}  {x.wind_speed,5:N0}  {x}"));
-          oca?.minutely.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.dt):ddd HH:mm}  {x.precipitation,5:N0}  {x}"));
+          //oca?.hourly.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.dt):ddd HH}  {x.temp,6:N1}  {x.feels_like,6:N1}  {x.wind_speed,5:N0}  {x}"));
+          //oca?.minutely.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.dt):ddd HH:mm}  {x.precipitation,5:N0}  {x}"));
           break;
         case OpenWeatherCd.Frc5Day3Hr:
           var d5h3 = await response.Content.ReadFromJsonAsync<RootobjectFrc5Day3Hr>();
