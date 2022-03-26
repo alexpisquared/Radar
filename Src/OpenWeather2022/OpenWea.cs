@@ -11,8 +11,8 @@ public class OpenWea
   {
     Write($"Today {DateTimeToUnixTimestamp(DateTime.Today)}\n  now {DateTimeToUnixTimestamp(DateTime.Now)}\n  UTC {DateTimeToUnixTimestamp(DateTime.UtcNow)} *******\n");
 
-    var sr = new List<int>(_sunrizes);
-    var min = sr.Min();
+    //var sr = new List<int>(_sunrizes);
+    //var min = sr.Min();
     //foreach (int sunrize in sr.Distinct().OrderBy(r => r)) { Write($"  {sunrize}, // {UnixTimeStampToDateTime(sunrize)}  {sunrize - dt - 86400} \n"); dt = sunrize; }
 
     //for (int i = -5; i <= 0; i++) { _ = await GetIt(code, what: OpenWeatherCd.TimeMachin, time: DateTimeToUnixTimestamp(DateTime.Today.AddDays(i)).ToString()); await Task.Delay(1111); }
@@ -88,21 +88,9 @@ public class OpenWea
       {
         case OpenWeatherCd.Forecast16: var f16 = await response.Content.ReadFromJsonAsync<RootobjectForecast16>(); f16?.list.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.sunrise)}  {UnixToDt(x.sunset)}  {x}")); break;
         case OpenWeatherCd.CurrentWea: var pr5 = await response.Content.ReadFromJsonAsync<RootobjectCurrentWea>(); pr5?.weather.ToList().ForEach(x => WriteLine($":> {x}")); break;
-        case OpenWeatherCd.TimeMachin:
-          oca = await response.Content.ReadFromJsonAsync<RootobjectOneCallApi>();
-          WriteLine($":> {UnixToDt(oca.current.sunrise)}  {UnixToDt(oca.current.sunset)}  {oca}");          /*tmn?.hourly.ToList().ForEach(x => WriteLine($":> {x}"));*/
-          oca?.hourly.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.dt):ddd HH}  {x.temp,6:N1}  {x.feels_like,6:N1}  {x.wind_speed,5:N0}  {x}"));
-          break;
-        case OpenWeatherCd.OneCallApi:
-          oca = await response.Content.ReadFromJsonAsync<RootobjectOneCallApi>();
-          //oca?.hourly.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.dt):ddd HH}  {x.temp,6:N1}  {x.feels_like,6:N1}  {x.wind_speed,5:N0}  {x}"));
-          //oca?.minutely.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.dt):ddd HH:mm}  {x.precipitation,5:N0}  {x}"));
-          break;
-        case OpenWeatherCd.Frc5Day3Hr:
-          var d5h3 = await response.Content.ReadFromJsonAsync<RootobjectFrc5Day3Hr>();
-          WriteLine($":> {d5h3}");
-          d5h3?.list.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.dt):ddd HH}  {x.main.temp,6:N1}  {x.main.feels_like,6:N1}  {x.wind.speed,5:N0}  {x.weather[0].main,-22}  {x}"));
-          return d5h3;
+        case OpenWeatherCd.TimeMachin: oca = await response.Content.ReadFromJsonAsync<RootobjectOneCallApi>(); break;          //WriteLine($":> {UnixToDt(oca.current.sunrise)}  {UnixToDt(oca.current.sunset)}  {oca}");          oca?.hourly.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.dt):ddd HH}  {x.temp,6:N1}  {x.feels_like,6:N1}  {x.wind_speed,5:N0}  {x}"));
+        case OpenWeatherCd.OneCallApi: oca = await response.Content.ReadFromJsonAsync<RootobjectOneCallApi>(); break;          //oca?.hourly.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.dt):ddd HH}  {x.temp,6:N1}  {x.feels_like,6:N1}  {x.wind_speed,5:N0}  {x}")); oca?.minutely.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.dt):ddd HH:mm}  {x.precipitation,5:N0}  {x}"));
+        case OpenWeatherCd.Frc5Day3Hr: var d5h3 = await response.Content.ReadFromJsonAsync<RootobjectFrc5Day3Hr>(); return d5h3;          //WriteLine($":> {d5h3}");          d5h3?.list.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.dt):ddd HH}  {x.main.temp,6:N1}  {x.main.feels_like,6:N1}  {x.wind.speed,5:N0}  {x.weather[0].main,-22}  {x}"));
         default: throw new NotImplementedException("@@@@@@@@@@@@#############$$$$$$$$$$$$$");
       }
 #endif
