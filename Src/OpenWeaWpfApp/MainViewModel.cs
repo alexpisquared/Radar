@@ -5,6 +5,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   readonly OpenWea _opnwea;
   readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _yHi = 2, _yLo = 13;
   readonly WeatherxContext _dbx;
+  double  extrMax = +20, extrMin = -20;
   const string _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaughan = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582",
     _phc = "phc", _vgn = "vgn", _mis = "mis",
     _urlPast24hrYYZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yyz", // Pearson
@@ -106,19 +107,19 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     SubHeader += $"{sitedataMiss.currentConditions.wind.speed}\n";
 
     double d;
-    if (double.TryParse(sitedataMiss.almanac.temperature[0].Value, out d)) YAxiXMax = 10 * (YAxisMax = d + _yHi) + 300;
-    if (double.TryParse(sitedataMiss.almanac.temperature[1].Value, out d)) YAxiXMin = 10 * (YAxisMin = d - _yLo) + 300;
+    if (double.TryParse(sitedataMiss.almanac.temperature[0].Value, out d)) { YAxiXMax = 10 * (YAxisMax = d + _yHi) + 300; extrMax = d; }
+    if (double.TryParse(sitedataMiss.almanac.temperature[1].Value, out d)) { YAxiXMin = 10 * (YAxisMin = Math.Floor(d / 10) * 10 - _yLo) + 300; extrMin = d; }
     if (double.TryParse(sitedataMiss.almanac.temperature[2].Value, out d)) NormTMax = d;
     if (double.TryParse(sitedataMiss.almanac.temperature[3].Value, out d)) NormTMin = d;
 
-    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), YAxisMax - _yHi));
-    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), YAxisMax - _yHi));
+    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), extrMax));
+    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), extrMax));
     DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMax));
     DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMax));
     DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMin));
     DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMin));
-    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), YAxisMin + _yLo));
-    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), YAxisMin + _yLo));
+    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), extrMin));
+    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), extrMin));
 
     EnvtCaIconM = $"https://weather.gc.ca/weathericons/{sitedataMiss?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
     EnvtCaIconV = $"https://weather.gc.ca/weathericons/{sitedataVghn?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
@@ -289,10 +290,10 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       OpnWeaIcoA.Add($"http://openweathermap.org/img/wn/{OCA.daily[i].weather[0].icon}@2x.png");
     }
 
-    ForeMin = DateTime.Today.AddDays(-1).ToOADate(); // == DateTimeAxis.ToDouble(DateTime.Today.AddDays(-1));
-    ForeMax = DateTime.Today.AddDays(+3).ToOADate(); // DateTimeAxis.ToDouble(days == 5 ? UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Today.AddDays(days));
-    var valueMax = YAxisMax - _yHi; // OCA.daily.Max(r => r.temp.max);
-    var valueMin = YAxisMin + _yLo; // OCA.daily.Min(r => r.temp.min);
+    TimeMin = DateTime.Today.AddDays(-1).ToOADate(); // == DateTimeAxis.ToDouble(DateTime.Today.AddDays(-1));
+    TimeMax = DateTime.Today.AddDays(+3).ToOADate(); // DateTimeAxis.ToDouble(days == 5 ? UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Today.AddDays(days));
+    var valueMax = extrMax ; // OCA.daily.Max(r => r.temp.max);
+    var valueMin = extrMin ; // OCA.daily.Min(r => r.temp.min);
 
     if (_config["StoreData"] == "Yes") //if (_config["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
       await AddForeDataToDB_OpnWea("phc", OCA);
@@ -434,8 +435,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   public PlotModel FuncModel { get; private set; } = new PlotModel { Title = "Function Srs", Background = OxyColor.FromUInt32(123456), LegendTitleColor = OxyColor.FromUInt32(123456) };
   public PlotModel ScatModel { get; private set; } = new PlotModel { Title = "Scatter Srs" };
 
-  double _fn; public double ForeMin { get => _fn; set => SetProperty(ref _fn, value); }
-  double _fm; public double ForeMax { get => _fm; set => SetProperty(ref _fm, value); }
+  double _fn; public double TimeMin { get => _fn; set => SetProperty(ref _fn, value); }
+  double _fm; public double TimeMax { get => _fm; set => SetProperty(ref _fm, value); }
   string _t = default!; public string PlotTitle { get => _t; set => SetProperty(ref _t, value); }
   string _c = default!; public string CurrentConditions { get => _c; set => SetProperty(ref _c, value); }
   string _r = default!; public string CurTempReal { get => _r; set => SetProperty(ref _r, value); }
@@ -451,7 +452,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   const float _wk = 1f, _kprsr = .01f;
   const float _kWind = 3.6f * _wk;
 
-  ObservableCollection<string> _a = new (); public ObservableCollection<string> OpnWeaIcoA { get => _a; set => SetProperty(ref _a, value); }
+  ObservableCollection<string> _a = new(); public ObservableCollection<string> OpnWeaIcoA { get => _a; set => SetProperty(ref _a, value); }
   string _j = "http://openweathermap.org/img/wn/01d@2x.png"; public string OpnWeaIcom { get => _j; set => SetProperty(ref _j, value); }
   string _i = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconM { get => _i; set => SetProperty(ref _i, value); }
   string _k = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconV { get => _k; set => SetProperty(ref _k, value); }
@@ -463,7 +464,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   IRelayCommand? _gs; public IRelayCommand GetDaysCommand => _gs ??= new AsyncRelayCommand<object>(DoGen, (days) => !_busy); async Task DoGen(object? days_)
   {
     if (OCA is not null && int.TryParse(days_?.ToString(), out var days))
-      ForeMax = DateTimeAxis.ToDouble(days == 5 ? OpenWea.UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Now.AddDays(days - 1));
+      TimeMax = DateTimeAxis.ToDouble(days == 5 ? OpenWea.UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Now.AddDays(days - 1));
 
     await Task.Yield();// PopulateAsync((int?)days ?? 5);
   }
@@ -477,9 +478,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
   IInterpolationAlgorithm iA = InterpolationAlgorithms.CatmullRomSpline; public IInterpolationAlgorithm IA { get => iA; set => SetProperty(ref iA, value); } // the least vertical jumping beyond y value.
 
-  private double windGustKmHr;
-
-  public double WindGustKmHr { get => windGustKmHr; set => SetProperty(ref windGustKmHr, value); }
+  double windGustKmHr;  public double WindGustKmHr { get => windGustKmHr; set => SetProperty(ref windGustKmHr, value); }
 }
 ///todo: https://oxyplot.readthedocs.io/en/latest/models/series/ScatterSeries.html
 ///https://docs.microsoft.com/en-us/answers/questions/22863/how-to-customize-charts-in-wpf-using-systemwindows.html
