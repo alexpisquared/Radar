@@ -5,7 +5,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   readonly OpenWea _opnwea;
   readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _yHi = 2, _yLo = 13;
   readonly WeatherxContext _dbx;
-  double  extrMax = +20, extrMin = -20;
+  double extrMax = +20, extrMin = -20;
   const string _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaughan = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582",
     _phc = "phc", _vgn = "vgn", _mis = "mis",
     _urlPast24hrYYZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yyz", // Pearson
@@ -292,8 +292,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
     TimeMin = DateTime.Today.AddDays(-1).ToOADate(); // == DateTimeAxis.ToDouble(DateTime.Today.AddDays(-1));
     TimeMax = DateTime.Today.AddDays(+3).ToOADate(); // DateTimeAxis.ToDouble(days == 5 ? UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Today.AddDays(days));
-    var valueMax = extrMax ; // OCA.daily.Max(r => r.temp.max);
-    var valueMin = extrMin ; // OCA.daily.Min(r => r.temp.min);
+    var valueMax = extrMax; // OCA.daily.Max(r => r.temp.max);
+    var valueMin = extrMin; // OCA.daily.Min(r => r.temp.min);
 
     if (_config["StoreData"] == "Yes") //if (_config["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
       await AddForeDataToDB_OpnWea("phc", OCA);
@@ -453,6 +453,14 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   const float _kWind = 3.6f * _wk;
 
   ObservableCollection<string> _a = new(); public ObservableCollection<string> OpnWeaIcoA { get => _a; set => SetProperty(ref _a, value); }
+  GridLength _iw0; public GridLength IconWidth0 { get => _iw0; set => SetProperty(ref _iw0, value); }
+  GridLength _iw1; public GridLength IconWidth1 { get => _iw1; set => SetProperty(ref _iw1, value); }
+  GridLength _iw2; public GridLength IconWidth2 { get => _iw2; set => SetProperty(ref _iw2, value); }
+  GridLength _iw3; public GridLength IconWidth3 { get => _iw3; set => SetProperty(ref _iw3, value); }
+  GridLength _iw4; public GridLength IconWidth4 { get => _iw4; set => SetProperty(ref _iw4, value); }
+  GridLength _iw5; public GridLength IconWidth5 { get => _iw5; set => SetProperty(ref _iw5, value); }
+  GridLength _iw6; public GridLength IconWidth6 { get => _iw6; set => SetProperty(ref _iw6, value); }
+  GridLength _iw7; public GridLength IconWidth7 { get => _iw7; set => SetProperty(ref _iw7, value); }
   string _j = "http://openweathermap.org/img/wn/01d@2x.png"; public string OpnWeaIcom { get => _j; set => SetProperty(ref _j, value); }
   string _i = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconM { get => _i; set => SetProperty(ref _i, value); }
   string _k = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconV { get => _k; set => SetProperty(ref _k, value); }
@@ -464,7 +472,18 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   IRelayCommand? _gs; public IRelayCommand GetDaysCommand => _gs ??= new AsyncRelayCommand<object>(DoGen, (days) => !_busy); async Task DoGen(object? days_)
   {
     if (OCA is not null && int.TryParse(days_?.ToString(), out var days))
-      TimeMax = DateTimeAxis.ToDouble(days == 5 ? OpenWea.UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Now.AddDays(days - 1));
+    {
+      TimeMax = DateTimeAxis.ToDouble(DateTime.Today.AddDays(days));
+
+      IconWidth0 = 0 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+      IconWidth1 = 1 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+      IconWidth2 = 2 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+      IconWidth3 = 3 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+      IconWidth4 = 4 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+      IconWidth5 = 5 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+      IconWidth6 = 6 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+      IconWidth7 = 7 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+    }
 
     await Task.Yield();// PopulateAsync((int?)days ?? 5);
   }
@@ -478,7 +497,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
   IInterpolationAlgorithm iA = InterpolationAlgorithms.CatmullRomSpline; public IInterpolationAlgorithm IA { get => iA; set => SetProperty(ref iA, value); } // the least vertical jumping beyond y value.
 
-  double windGustKmHr;  public double WindGustKmHr { get => windGustKmHr; set => SetProperty(ref windGustKmHr, value); }
+  double _wg; public double WindGustKmHr { get => _wg; set => SetProperty(ref _wg, value); }
 }
 ///todo: https://oxyplot.readthedocs.io/en/latest/models/series/ScatterSeries.html
 ///https://docs.microsoft.com/en-us/answers/questions/22863/how-to-customize-charts-in-wpf-using-systemwindows.html
