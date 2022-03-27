@@ -17,6 +17,8 @@
       <Views:LbxItemRadarTemplate DataContext="{Binding ElementName=lbxAllPics, Path=SelectedItem}" Height="480" />
       <Image Source="/Radar22.Lib;component/WKR_roads.gif" HorizontalAlignment="Left" Opacity=".5"  Height="480" />
       <Ellipse Width="10" Height="10" StrokeThickness="1.5" Stroke="#ff0" Margin="234,240,320,214" />
+      <Ellipse Width="20" Height="20" StrokeThickness="2.5" Stroke="#037" Margin="424,293,120,167" />
+      <!--ipse Width="20" Height="20" StrokeThickness="2.5" Stroke="#f0f"  Margin="600,313,304,201" />-->
 
       <Menu VerticalAlignment="Top" HorizontalAlignment="Left" Margin="38 1" Background="Transparent" Foreground="#ff0" Padding="4 0 0 1" FontSize="12" FontStyle="Oblique" IsEnabled="{Binding ElementName=chkIsPlaying, Path=IsChecked}">
         <MenuItem Header="1_h" Click="OnReload" Tag="011" InputGestureText="F1" ToolTip="Check DB for changes"  />

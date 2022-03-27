@@ -104,7 +104,7 @@ public partial class App : Application
     catch (Exception ex) { System.Diagnostics.Trace.WriteLine(ex.Message, System.Reflection.MethodInfo.GetCurrentMethod()?.Name); if (System.Diagnostics.Debugger.IsAttached) System.Diagnostics.Debugger.Break(); throw; }
     finally
     {
-      if ((args.Length > 1 && args[1].Equals("ShowLsaPopup")) || isDue(uptime))
+      if ((args.Length > 1 && args[1].Equals("ShowLsaPopup")) || IsDue(uptime))
         showLongStretchAlertPopup(uptime, rainAndUptimeMsg);
       else if (rainAndUptimeMsg.Length > 0)
         Synth.SpeakFaF(rainAndUptimeMsg);
@@ -113,7 +113,7 @@ public partial class App : Application
     return true; // show anyway in case of issues.
   }
 
-  bool isDue(TimeSpan uptime)
+  static bool IsDue(TimeSpan uptime)
   {
 #if DEBUG
     var timeLimitHr = .01;
