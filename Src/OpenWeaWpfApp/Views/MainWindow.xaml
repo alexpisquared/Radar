@@ -141,9 +141,9 @@
       <TextBlock Text="{Binding SubHeader}" d:Text="SubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeader" HorizontalAlignment="Left" Foreground="#ff0" Margin="5" VerticalAlignment="Bottom" Grid.RowSpan="3" Grid.ColumnSpan="3" />
 
       <Menu Margin="0,10,15,0" Visibility="{Binding IsDevDbgViz}" FontStyle="Oblique" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent" Foreground="#ddd" Grid.Column="0" Grid.ColumnSpan="3">
-        <MenuItem   Header="_2" Command="{Binding GetDaysCommand}" CommandParameter="2" InputGestureText="F2" ToolTip="Check DB for changes"  />
-        <MenuItem   Header="_3" Command="{Binding GetDaysCommand}" CommandParameter="3" InputGestureText="F3" ToolTip="Check DB for changes"  />
-        <MenuItem   Header="_8" Command="{Binding GetDaysCommand}" CommandParameter="8" InputGestureText="F8" ToolTip="Check DB for changes"  />
+        <MenuItem   Header="_A 2" Command="{Binding GetDaysCommand}" CommandParameter="2" InputGestureText="F2" ToolTip="Check DB for changes"  />
+        <MenuItem   Header="_B 3" Command="{Binding GetDaysCommand}" CommandParameter="3" InputGestureText="F3" ToolTip="Check DB for changes"  />
+        <MenuItem   Header="_C 8" Command="{Binding GetDaysCommand}" CommandParameter="8" InputGestureText="F8" ToolTip="Check DB for changes"  />
         <!--
         <MenuItem   Header="Days: _1 " Command="{Binding GetDaysCommand}" CommandParameter="1" InputGestureText="F1" ToolTip="Check DB for changes"  />
         <MenuItem   Header="_4" Command="{Binding GetDaysCommand}" CommandParameter="4" InputGestureText="F4" ToolTip="Check DB for changes"  />
