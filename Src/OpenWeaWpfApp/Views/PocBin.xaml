@@ -55,11 +55,11 @@
         <oxy:LineSeries    ItemsSource="{Binding EnvtCaPast24ButtnvlT}"  Color="#08f" StrokeThickness="3.0" Title="Buttnvl" ToolTip="Buttnvl" />
         <oxy:AreaSeries    ItemsSource="{Binding EnvtCaPast24BtnvWind}"  Color="#888" StrokeThickness="0.5" Title="Buttnvl" ToolTip="Buttnvl" Fill="#1888" />
 
-        <oxy:LineSeries    ItemsSource="{Binding EnvtCaToronto}"  Color="#080" StrokeThickness="5.0" Title="TO" />
-        <oxy:LineSeries    ItemsSource="{Binding EnvtCaMissuga}"  Color="#d0f" StrokeThickness="3.0" Title="Mississauga" />
-        <oxy:LineSeries    ItemsSource="{Binding EnvtCaTorIsld}"  Color="#0f0" StrokeThickness="1.0" Title="TI" />
-        <oxy:LineSeries    ItemsSource="{Binding EnvtCaVaughan}"  Color="#08f" StrokeThickness="3.0" Title="VA" />
-        <oxy:LineSeries    ItemsSource="{Binding EnvtCaMarkham}"  Color="#08f" StrokeThickness="2.0" Title="MA" />
+        <oxy:LineSeries    ItemsSource="{Binding ECaToroTemp}"  Color="#080" StrokeThickness="5.0" Title="TO" />
+        <oxy:LineSeries    ItemsSource="{Binding ECaMissTemp}"  Color="#d0f" StrokeThickness="3.0" Title="Mississauga" />
+        <oxy:LineSeries    ItemsSource="{Binding ECaTIslTemp}"  Color="#0f0" StrokeThickness="1.0" Title="TI" />
+        <oxy:LineSeries    ItemsSource="{Binding ECaVghnTemp}"  Color="#08f" StrokeThickness="3.0" Title="VA" />
+        <oxy:LineSeries    ItemsSource="{Binding ECaMrkhTemp}"  Color="#08f" StrokeThickness="2.0" Title="MA" />
         <oxy:LineSeries    ItemsSource="{Binding EnvtCaRchmdHl}"  Color="#08f" StrokeThickness="1.0" Title="RH" />
 
         <oxy:AreaSeries    ItemsSource="{Binding PointsPopr}" Color="#04f" />

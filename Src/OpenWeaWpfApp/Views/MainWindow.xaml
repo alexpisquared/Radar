@@ -61,27 +61,27 @@
           </ControlTemplate>
         </oxy:Plot.DefaultTrackerTemplate>-->
 
-        <oxy:LineSeries    ItemsSource="{Binding DataPtNowT}" Color="#aaa" StrokeThickness="1.0" />
-        <oxy:AreaSeries    ItemsSource="{Binding DataPtSunT}" Color="#440" StrokeThickness="0.0" />
+        <oxy:LineSeries    ItemsSource="{Binding OwaLoclNowT}" Color="#aaa" StrokeThickness="1.0" />
+        <oxy:AreaSeries    ItemsSource="{Binding OwaLoclSunT}" Color="#440" StrokeThickness="0.0" />
 
         <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFVgn}" MarkerType="Circle" Title="ECa Vgn" MarkerStroke="{StaticResource Vgn}" MarkerFill="Transparent" x:Name="SctrPtTPFVgn" />
         <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFMis}" MarkerType="Circle" Title="ECa Mis" MarkerStroke="{StaticResource Mis}" MarkerFill="Transparent" x:Name="SctrPtTPFMis" />
         <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFPhc}" MarkerType="Circle" Title="OWA Phc" MarkerStroke="{StaticResource Phc}" MarkerFill="Transparent" x:Name="SctrPtTPFPhc" TrackerFormatString="{}{0}&#xA;Time:   {2:HH:mm} &#xA;Temp:  {4:0.0}° " />
 
-        <oxy:LineSeries    ItemsSource="{Binding EnvtCaToronto}"  Color="{StaticResource b80}" StrokeThickness="5.0" Title="EC TO"  LineStyle="LongDash" />
-        <oxy:LineSeries    ItemsSource="{Binding EnvtCaMissuga}"  Color="{StaticResource Mis}" StrokeThickness="3.0" Title="EC Mis" LineStyle="LongDashDotDot" />
-        <oxy:LineSeries    ItemsSource="{Binding EnvtCaTorIsld}"  Color="{StaticResource d00}" StrokeThickness="1.0" Title="EC TI"  LineStyle="Dot" />
-        <oxy:LineSeries    ItemsSource="{Binding EnvtCaVaughan}"  Color="{StaticResource Vgn}" StrokeThickness="3.0" Title="EC VA"  LineStyle="Dash" />
-        <oxy:LineSeries    ItemsSource="{Binding EnvtCaMarkham}"  Color="{StaticResource Vgn}" StrokeThickness="2.0" Title="EC MA"  LineStyle="Dash" InterpolationAlgorithm="{Binding IA}" />
+        <oxy:LineSeries    ItemsSource="{Binding ECaToroTemp}" Color="{StaticResource b80}" StrokeThickness="5.0" Title="EC TO"  LineStyle="LongDash" />
+        <oxy:LineSeries    ItemsSource="{Binding ECaMissTemp}" Color="{StaticResource Mis}" StrokeThickness="3.0" Title="EC Mis" LineStyle="LongDashDotDot" />
+        <oxy:LineSeries    ItemsSource="{Binding ECaTIslTemp}" Color="{StaticResource d00}" StrokeThickness="1.0" Title="EC TI"  LineStyle="Dot" />
+        <oxy:LineSeries    ItemsSource="{Binding ECaVghnTemp}" Color="{StaticResource Vgn}" StrokeThickness="3.0" Title="EC VA"  LineStyle="Dash" />
+        <oxy:LineSeries    ItemsSource="{Binding ECaMrkhTemp}" Color="{StaticResource Vgn}" StrokeThickness="2.0" Title="EC MA"  LineStyle="Dash" InterpolationAlgorithm="{Binding IA}" />
 
-        <oxy:LineSeries    ItemsSource="{Binding DataPtTemp}" Color="{StaticResource Phc}" StrokeThickness="1.5" Title="owa T"  InterpolationAlgorithm="{Binding IA}" />
-        <oxy:LineSeries    ItemsSource="{Binding DataPtFeel}" Color="{StaticResource Phc}" StrokeThickness="0.5" Title="owa F"  InterpolationAlgorithm="{Binding IA}" />
-        <oxy:LineSeries    ItemsSource="{Binding DataPtPrsr}" Color="{StaticResource Prsr}" StrokeThickness="1.0" Title="owa P" InterpolationAlgorithm="{Binding IA}" LineStyle="LongDashDotDot" />
+        <oxy:LineSeries    ItemsSource="{Binding OwaLoclTemp}" Color="{StaticResource Phc}" StrokeThickness="1.5" Title="owa T"  InterpolationAlgorithm="{Binding IA}" />
+        <oxy:LineSeries    ItemsSource="{Binding OwaLoclFeel}" Color="{StaticResource Phc}" StrokeThickness="0.5" Title="owa F"  InterpolationAlgorithm="{Binding IA}" />
+        <oxy:LineSeries    ItemsSource="{Binding OwaLoclPrsr}" Color="{StaticResource Prsr}" StrokeThickness="1.0" Title="owa P" InterpolationAlgorithm="{Binding IA}" LineStyle="LongDashDotDot" />
 
-        <oxy:AreaSeries    ItemsSource="{Binding WindOwaBtvl}" Color="{StaticResource Phc}" StrokeThickness="0.5" Title="Wind EC Owa" YAxisKey="yAxisR" Fill="#550f" />
-        <oxy:LineSeries    ItemsSource="{Binding WindOwaPear}" Color="{StaticResource Phc}" StrokeThickness="0.5" Title="Wind EC Pea" YAxisKey="yAxisR"  />
-        <oxy:AreaSeries    ItemsSource="{Binding DataPtPopr}" Color="{StaticResource PoPr}" StrokeThickness="0.0" Title="PoPr"  InterpolationAlgorithm="{Binding IA}" YAxisKey="yAxisR" />
-        <oxy:LineSeries    ItemsSource="{Binding DataPtGust}" Color="{StaticResource WDir}" StrokeThickness="0.5" Title="owa G" InterpolationAlgorithm="{Binding IA}" YAxisKey="yAxisR" />
+        <oxy:AreaSeries    ItemsSource="{Binding ECaBtvlWind}" Color="{StaticResource Phc}" StrokeThickness="0.5" Title="Wind EC Owa" YAxisKey="yAxisR" Fill="#550f" />
+        <oxy:LineSeries    ItemsSource="{Binding ECaPearWind}" Color="{StaticResource Phc}" StrokeThickness="0.5" Title="Wind EC Pea" YAxisKey="yAxisR"  />
+        <oxy:AreaSeries    ItemsSource="{Binding OwaLoclPopr}" Color="{StaticResource PoPr}" StrokeThickness="0.0" Title="PoPr"  InterpolationAlgorithm="{Binding IA}" YAxisKey="yAxisR" />
+        <oxy:LineSeries    ItemsSource="{Binding OwaLoclGust}" Color="{StaticResource WDir}" StrokeThickness="0.5" Title="owa G" InterpolationAlgorithm="{Binding IA}" YAxisKey="yAxisR" />
 
       </oxy:Plot>
 
@@ -96,8 +96,8 @@
               <ScaleTransform ScaleX="2" ScaleY="2" />
             </TransformGroup>
           </Grid.RenderTransform>
-          <Rectangle Width="1.5" Height="{Binding WindGustKmHr}" d:Height="80" StrokeThickness="0" Fill="#0ee" VerticalAlignment="Bottom" Margin="1" />
-          <Rectangle Width="5"   Height="{Binding WindVeloKmHr}" d:Height="40" StrokeThickness="0" Fill="#0ee" VerticalAlignment="Bottom" Margin="1" />
+          <Rectangle Width="1.5" Height="{Binding WindGustKmHr}" d:Height="80" StrokeThickness="0" Fill="#c0c" VerticalAlignment="Bottom" Margin="1" />
+          <Rectangle Width="5"   Height="{Binding WindVeloKmHr}" d:Height="40" StrokeThickness="0" Fill="#c0c" VerticalAlignment="Bottom" Margin="1" />
           <!--<Ellipse   Width="024" Height="024" StrokeThickness="0" Stroke="#567" Fill="#f555" />-->
         </Grid>
         <StackPanel VerticalAlignment="Center">

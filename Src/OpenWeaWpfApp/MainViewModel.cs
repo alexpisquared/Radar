@@ -83,10 +83,10 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       await AddPastDataToDB_EnvtCa("pea", pea);
     }
 
-    RefillPast24(EnvtCaVaughan, WindOwaPear, bvl);
-    RefillPast24(EnvtCaMissuga, WindOwaBtvl, pea);
+    RefillPast24(ECaVghnTemp, ECaPearWind, bvl);
+    RefillPast24(ECaMissTemp, ECaBtvlWind, pea);
 
-    DataPtPrsr.Clear(); pea.OrderBy(r => r.TakenAt).ToList().ForEach(x => DataPtPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), 10 * x.Pressure - 1030)));
+    OwaLoclPrsr.Clear(); pea.OrderBy(r => r.TakenAt).ToList().ForEach(x => OwaLoclPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), 10 * x.Pressure - 1030)));
 
     var sitedataMiss = await _opnwea.GetEnvtCa(_mississ);
     var sitedataVghn = await _opnwea.GetEnvtCa(_vaughan);
@@ -97,29 +97,28 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       await AddForeDataToDB_EnvtCa("vgn", sitedataVghn);
     }
 
-    RefillForeEnvtCa(EnvtCaToronto, await _opnwea.GetEnvtCa(_toronto));
-    RefillForeEnvtCa(EnvtCaTorIsld, await _opnwea.GetEnvtCa(_torIsld));    //refill(EnvtCaTorIsld, await _opnwea.GetEnvtCa(_newmark));
-    RefillForeEnvtCa(EnvtCaMissuga, sitedataMiss);
-    RefillForeEnvtCa(EnvtCaVaughan, sitedataVghn);
-    RefillForeEnvtCa(EnvtCaMarkham, await _opnwea.GetEnvtCa(_markham));
+    RefillForeEnvtCa(ECaToroTemp, await _opnwea.GetEnvtCa(_toronto));
+    RefillForeEnvtCa(ECaTIslTemp, await _opnwea.GetEnvtCa(_torIsld));    //refill(ECaTIslTemp, await _opnwea.GetEnvtCa(_newmark));
+    RefillForeEnvtCa(ECaMissTemp, sitedataMiss);
+    RefillForeEnvtCa(ECaVghnTemp, sitedataVghn);
+    RefillForeEnvtCa(ECaMrkhTemp, await _opnwea.GetEnvtCa(_markham));
 
     ArgumentNullException.ThrowIfNull(sitedataMiss, $"@@@@@@@@@ {nameof(sitedataMiss)}");
     SubHeader += $"{sitedataMiss.currentConditions.wind.speed}\n";
 
-    double d;
-    if (double.TryParse(sitedataMiss.almanac.temperature[0].Value, out d)) { YAxiXMax = 10 * (YAxisMax = d + _yHi) + 300; extrMax = d; }
+    if (double.TryParse(sitedataMiss.almanac.temperature[0].Value, out var d)) { YAxiXMax = 10 * (YAxisMax = d + _yHi) + 300; extrMax = d; }
     if (double.TryParse(sitedataMiss.almanac.temperature[1].Value, out d)) { YAxiXMin = 10 * (YAxisMin = Math.Floor(d / 10) * 10 - _yLo) + 300; extrMin = d; }
     if (double.TryParse(sitedataMiss.almanac.temperature[2].Value, out d)) NormTMax = d;
     if (double.TryParse(sitedataMiss.almanac.temperature[3].Value, out d)) NormTMin = d;
 
-    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), extrMax));
-    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), extrMax));
-    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMax));
-    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMax));
-    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMin));
-    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMin));
-    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), extrMin));
-    DataPtNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), extrMin));
+    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), extrMax));
+    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), extrMax));
+    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMax));
+    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMax));
+    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMin));
+    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMin));
+    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), extrMin));
+    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), extrMin));
 
     EnvtCaIconM = $"https://weather.gc.ca/weathericons/{sitedataMiss?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
     EnvtCaIconV = $"https://weather.gc.ca/weathericons/{sitedataVghn?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
@@ -285,7 +284,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
     OpnWeaIcom = $"http://openweathermap.org/img/wn/{OCA.current.weather.First().icon}@2x.png";
 
-    for (int i = 0; i < OCA.daily.Length; i++)
+    for (var i = 0; i < OCA.daily.Length; i++)
     {
       OpnWeaIcoA.Add($"http://openweathermap.org/img/wn/{OCA.daily[i].weather[0].icon}@2x.png");
     }
@@ -303,11 +302,11 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     OCA.hourly.ToList().ForEach(x =>
     {
       //scaters.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.snow?._1h ?? 0, x.snow?._1h ?? 0, _d3c)); // either null or 0 so far.
-      DataPtTemp.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)), x.temp));
-      DataPtFeel.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)), x.feels_like));
-      DataPtPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)), x.pressure - 1030));
-      DataPtGust.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)), x.wind_gust * _kWind));
-      DataPtPopr.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)), x.pop * 100));
+      OwaLoclTemp.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)), x.temp));
+      OwaLoclFeel.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)), x.feels_like));
+      OwaLoclPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)), x.pressure - 1030));
+      OwaLoclGust.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)), x.wind_gust * _kWind));
+      OwaLoclPopr.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)), x.pop * 100));
 
       var rad = Math.PI * x.wind_deg * 2 / 360;
       var dx = 0.10 * Math.Cos(rad);
@@ -316,55 +315,53 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       var ty = 0.20 * Math.Sin(rad + 90);
       var sx = .002 * Math.Cos(rad - 90);
       var sy = 0.20 * Math.Sin(rad - 90);
-      WindOwaBtvl.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)) + tx, ty + x.wind_speed * _kWind));
-      WindOwaBtvl.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)) + dx, dy + x.wind_speed * _kWind));
-      WindOwaBtvl.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)) + sx, sy + x.wind_speed * _kWind));
+      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)) + tx, ty + x.wind_speed * _kWind));
+      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)) + dx, dy + x.wind_speed * _kWind));
+      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)) + sx, sy + x.wind_speed * _kWind));
     });
 
     D53.list.Where(d => d.dt > OCA.hourly.Max(d => d.dt)).ToList().ForEach(x =>
     {
       //scaters.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.snow?._3h ?? 0, x.snow?._3h ?? 0, _d3c));
-      DataPtTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.main.temp));
-      DataPtFeel.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.main.feels_like));
-      DataPtPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.main.pressure - 1030));
-      DataPtGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.gust * _kWind));
-      DataPtPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 100));
+      OwaLoclTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.main.temp));
+      OwaLoclFeel.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.main.feels_like));
+      OwaLoclPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.main.pressure - 1030));
+      OwaLoclGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.gust * _kWind));
+      OwaLoclPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 100));
 
       var rad = Math.PI * x.wind.deg * 2 / 360;
       var dx = 0.1 * Math.Cos(rad);
       var dy = 1.0 * Math.Sin(rad);
-      WindOwaBtvl.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.speed * _kWind));
-      WindOwaBtvl.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + dx, dy + x.wind.speed * _kWind));
-      WindOwaBtvl.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.speed * _kWind));
+      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.speed * _kWind));
+      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + dx, dy + x.wind.speed * _kWind));
+      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.speed * _kWind));
     });
 
-
     var x = OCA.daily.First();
-    DataPtSunT.Add(new DataPoint((UnixToDt(x.sunrise).AddDays(-1).ToOADate()), valueMin));
-    DataPtSunT.Add(new DataPoint((UnixToDt(x.sunrise).AddDays(-1).ToOADate()), valueMax));
-    DataPtSunT.Add(new DataPoint((UnixToDt(x.sunset).AddDays(-1).ToOADate()), valueMax));
-    DataPtSunT.Add(new DataPoint((UnixToDt(x.sunset).AddDays(-1).ToOADate()), valueMin));
-
+    OwaLoclSunT.Add(new DataPoint((UnixToDt(x.sunrise).AddDays(-1).ToOADate()), valueMin));
+    OwaLoclSunT.Add(new DataPoint((UnixToDt(x.sunrise).AddDays(-1).ToOADate()), valueMax));
+    OwaLoclSunT.Add(new DataPoint((UnixToDt(x.sunset).AddDays(-1).ToOADate()), valueMax));
+    OwaLoclSunT.Add(new DataPoint((UnixToDt(x.sunset).AddDays(-1).ToOADate()), valueMin));
     OCA.daily.ToList().ForEach(x =>
     {
-      DataPtSunT.Add(new DataPoint((UnixToDt(x.sunrise).ToOADate()), valueMin));
-      DataPtSunT.Add(new DataPoint((UnixToDt(x.sunrise).ToOADate()), valueMax));
-      DataPtSunT.Add(new DataPoint((UnixToDt(x.sunset).ToOADate()), valueMax));
-      DataPtSunT.Add(new DataPoint((UnixToDt(x.sunset).ToOADate()), valueMin));
+      OwaLoclSunT.Add(new DataPoint((UnixToDt(x.sunrise).ToOADate()), valueMin));
+      OwaLoclSunT.Add(new DataPoint((UnixToDt(x.sunrise).ToOADate()), valueMax));
+      OwaLoclSunT.Add(new DataPoint((UnixToDt(x.sunset).ToOADate()), valueMax));
+      OwaLoclSunT.Add(new DataPoint((UnixToDt(x.sunset).ToOADate()), valueMin));
     });
 
     OCA.daily
       .Where(d => d.dt > D53.list.Max(d => d.dt))
       .ToList().ForEach(x =>
       {
-        DataPtTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), x.temp.morn));
-        DataPtTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _d)), x.temp.day));
-        DataPtTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _e)), x.temp.eve));
-        DataPtTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), x.temp.night));
+        OwaLoclTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), x.temp.morn));
+        OwaLoclTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _d)), x.temp.day));
+        OwaLoclTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _e)), x.temp.eve));
+        OwaLoclTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), x.temp.night));
 
-        DataPtPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pressure - 1030));
-        DataPtGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_gust * _kWind));
-        DataPtPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 100));
+        OwaLoclPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pressure - 1030));
+        OwaLoclGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_gust * _kWind));
+        OwaLoclPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 100));
       });
 
     //OCA.daily.ToList().ForEach(x =>
@@ -383,17 +380,17 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     WindDirn = 0;
     WindVeloKmHr = 0;
     OpnWeaIcom = "http://openweathermap.org/img/wn/01n@2x.png";
-    WindOwaBtvl.Clear();
-    DataPtPrsr.Clear();
-    DataPtGust.Clear();
-    DataPtTemp.Clear();
-    DataPtFeel.Clear();
-    DataPtFeel.Clear();
-    DataPtSunT.Clear();
-    DataPtPopr.Clear();
+    ECaBtvlWind.Clear();
+    OwaLoclPrsr.Clear();
+    OwaLoclGust.Clear();
+    OwaLoclTemp.Clear();
+    OwaLoclFeel.Clear();
+    OwaLoclFeel.Clear();
+    OwaLoclSunT.Clear();
+    OwaLoclPopr.Clear();
   }
 
-  void CopyOpenWeaToDataPtLists(RootobjectOneCallApi? ocv, ObservableCollection<DataPoint> pointsTemp, ObservableCollection<DataPoint> pointsFeel)
+  void CopyOpenWeaToOwaLoclLists(RootobjectOneCallApi? ocv, ObservableCollection<DataPoint> pointsTemp, ObservableCollection<DataPoint> pointsFeel)
   {
     ArgumentNullException.ThrowIfNull(ocv);
 
@@ -419,20 +416,20 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   public ObservableCollection<ScatterPoint> SctrPtTPFVgn { get; } = new ObservableCollection<ScatterPoint>();
   public ObservableCollection<ScatterPoint> SctrPtTPFPhc { get; } = new ObservableCollection<ScatterPoint>();
   public ObservableCollection<ScatterPoint> SctrPtTPFMis { get; } = new ObservableCollection<ScatterPoint>();
-  public ObservableCollection<DataPoint> DataPtTemp { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> DataPtFeel { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> DataPtPrsr { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> DataPtGust { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> WindOwaBtvl { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> WindOwaPear { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> DataPtSunT { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> DataPtNowT { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> DataPtPopr { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> EnvtCaToronto { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> EnvtCaVaughan { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> EnvtCaMarkham { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> EnvtCaMissuga { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> EnvtCaTorIsld { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> OwaLoclTemp { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> OwaLoclFeel { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> OwaLoclPrsr { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> OwaLoclGust { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> ECaBtvlWind { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> ECaPearWind { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> OwaLoclSunT { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> OwaLoclNowT { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> OwaLoclPopr { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> ECaToroTemp { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> ECaVghnTemp { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> ECaMrkhTemp { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> ECaMissTemp { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> ECaTIslTemp { get; } = new ObservableCollection<DataPoint>();
 
   public PlotModel FuncModel { get; private set; } = new PlotModel { Title = "Function Srs", Background = OxyColor.FromUInt32(123456), LegendTitleColor = OxyColor.FromUInt32(123456) };
   public PlotModel ScatModel { get; private set; } = new PlotModel { Title = "Scatter Srs" };
