@@ -289,8 +289,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       OpnWeaIcoA.Add($"http://openweathermap.org/img/wn/{OCA.daily[i].weather[0].icon}@2x.png");
     }
 
-    const int id = 3;
-    await DoGen(id);
+    const int id = 2;
+    await SetMaxX(id);
     TimeMin = DateTime.Today.AddDays(-1).ToOADate(); // == DateTimeAxis.ToDouble(DateTime.Today.AddDays(-1));
     TimeMax = DateTime.Today.AddDays(id).ToOADate(); // DateTimeAxis.ToDouble(days == 5 ? UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Today.AddDays(days));
     var valueMax = _extrMax; // OCA.daily.Max(r => r.temp.max);
@@ -468,7 +468,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
   bool _busy;
   IRelayCommand? _cd; public IRelayCommand GetDaysComman_ => _cd ??= new RelayCommand(GetDays); void GetDays() { }
-  IRelayCommand? _gs; public IRelayCommand GetDaysCommand => _gs ??= new AsyncRelayCommand<object>(DoGen, (days) => !_busy); async Task DoGen(object? days_)
+  IRelayCommand? _gs; public IRelayCommand GetDaysCommand => _gs ??= new AsyncRelayCommand<object>(SetMaxX, (days) => !_busy); async Task SetMaxX(object? days_)
   {
     if (OCA is not null && int.TryParse(days_?.ToString(), out var days))
     {
