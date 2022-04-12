@@ -1,6 +1,4 @@
 ﻿#define Host_
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic.Devices;
 
 namespace OpenWeaWpfApp;
 
