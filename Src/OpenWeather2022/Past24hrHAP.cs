@@ -24,7 +24,7 @@ public class Past24hrHAP
         var i = 0;
         Write($"\n{cnt}:");
         foreach (var n in nodes) Write($" {i++}:'{n.InnerText.Replace("\n", "").Replace("\t", "").Replace("    ", " ").Replace("   ", " ").Replace("  ", " ").Trim()}' ");
-        
+
         if (nodes.Count == 1)
         {
           dateStr = nodes[0].InnerText.Trim();
@@ -42,13 +42,14 @@ public class Past24hrHAP
             if (c5.Count() > 1)
               e4.TempAir = double.Parse(c5[1].Trim(' ').Trim('\n').Trim(' ').Trim('\n').Trim('↑').Trim('↓').Trim('(').Trim(')').Replace("(", "").Trim());
             else
-              e4.TempAir = double.Parse(nodes[5].InnerText.Trim(' ').Trim('\n').Trim(' ').Trim('\n').Trim('↑').Trim('↓').Trim());
+              e4.TempAir = double.TryParse(nodes[5].InnerText.Trim(' ').Trim('\n').Trim(' ').Trim('\n').Trim('↑').Trim('↓').Trim(), out double t) ? t : 0;
+
 
             var c7 = nodes[7].InnerText.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             if (c7.Count() > 1)
               e4.Humidity = double.Parse(c7[1].Trim(' ').Trim('\n').Trim(' ').Trim('\n').Trim('↑').Trim('↓').Trim('(').Trim(')').Replace("(", "").Trim());
             else
-              e4.Humidity = double.Parse(nodes[7].InnerText);
+              e4.Humidity = double.TryParse(nodes[7].InnerText, out double a) ? a : 0;
 
             //var c9 = c[9].InnerText.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             //if (c9.Count() > 1)
@@ -56,7 +57,7 @@ public class Past24hrHAP
             //else
             //  e4.DewPoint = double.Parse(c[9].InnerText);
 
-            e4.Pressure = double.Parse(nodes[cnt - 8].InnerText);
+            e4.Pressure = double.TryParse(nodes[cnt - 8].InnerText, out double b) ? b : 0;
             e4.Visibility = double.TryParse(nodes[cnt - 4].InnerText, out double d) ? d : 0;
             if (cnt != 27 && !nodes[13].InnerText.Contains("*"))
               e4.Humidex = double.Parse(nodes[13].InnerText);
