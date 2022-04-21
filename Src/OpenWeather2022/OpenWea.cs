@@ -82,8 +82,9 @@ public class OpenWea
 #if NotSaveToFile
       var json = await response.Content.ReadAsStringAsync();
       WriteLine($":> {what}  =>  {url}  ==> {sw.ElapsedMilliseconds}ms  ==>  {json}");
-      await System.IO.File.WriteAllTextAsync($@"..\..\..\JsonResults\{city}-{xtra}-{what}-{DateTime.Now:yyMMdd·HHmmss}.{frmt}", json);
+      await File.WriteAllTextAsync($@"..\..\..\JsonResults\{city}-{xtra}-{what}-{DateTime.Now:yyMMdd·HHmmss}.{frmt}", json);
 #else
+#endif
       switch (what) //todo: https://docs.microsoft.com/en-us/aspnet/core/web-api/route-to-code?view=aspnetcore-6.; break ;
       {
         case OpenWeatherCd.Forecast16: var f16 = await response.Content.ReadFromJsonAsync<RootobjectForecast16>(); f16?.list.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.sunrise)}  {UnixToDt(x.sunset)}  {x}")); break;
@@ -93,7 +94,6 @@ public class OpenWea
         case OpenWeatherCd.Frc5Day3Hr: var d5h3 = await response.Content.ReadFromJsonAsync<RootobjectFrc5Day3Hr>(); return d5h3;          //WriteLine($":> {d5h3}");          d5h3?.list.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.dt):ddd HH}  {x.main.temp,6:N1}  {x.main.feels_like,6:N1}  {x.wind.speed,5:N0}  {x.weather[0].main,-22}  {x}"));
         default: throw new NotImplementedException("@@@@@@@@@@@@#############$$$$$$$$$$$$$");
       }
-#endif
 
       return oca;
     }
