@@ -295,7 +295,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     {
       WriteLine($"D53:  {r.dt_txt}    {UnixToDt(r.dt)}    {r}");
       OpnWeaIco3.Add($"http://openweathermap.org/img/wn/{r.weather[0].icon}@2x.png");
-      OpnWeaTip3.Add($"{UnixToDt(r.dt)} \n\n    {r}");
+      OpnWeaTip3.Add($"{UnixToDt(r.dt):MMM d  H:mm} \n\n    {r.weather[0].description}");
     });
 
     const int id = 2;
