@@ -286,6 +286,17 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
     for (var i = 0; i < OCA.daily.Length; i++) OpnWeaIcoA.Add($"http://openweathermap.org/img/wn/{OCA.daily[i].weather[0].icon}@2x.png");
 
+    for (int i = 0; i < UnixToDt(D53.list[0].dt).Hour / 3; i++)
+    {
+      OpnWeaIco3.Add($"http://openweathermap.org/img/wn/01n@2x.png");
+      OpnWeaTip3.Add($"{i}");
+    }
+    D53.list.ToList().ForEach(r =>
+    {
+      WriteLine($"D53:  {r.dt_txt}    {UnixToDt(r.dt)}    {r}");
+      OpnWeaIco3.Add($"http://openweathermap.org/img/wn/{r.weather[0].icon}@2x.png");
+      OpnWeaTip3.Add($"{UnixToDt(r.dt)} \n\n    {r}");
+    });
 
     const int id = 2;
     await SetMaxX(id);
@@ -450,6 +461,8 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   const float _kWind = 3.6f * _wk;
 
   ObservableCollection<string> _a = new(); public ObservableCollection<string> OpnWeaIcoA { get => _a; set => SetProperty(ref _a, value); }
+  ObservableCollection<string> _3 = new(); public ObservableCollection<string> OpnWeaIco3 { get => _3; set => SetProperty(ref _3, value); }
+  ObservableCollection<string> _4 = new(); public ObservableCollection<string> OpnWeaTip3 { get => _4; set => SetProperty(ref _4, value); }
   GridLength _iw0; public GridLength IconWidth0 { get => _iw0; set => SetProperty(ref _iw0, value); }
   GridLength _iw1; public GridLength IconWidth1 { get => _iw1; set => SetProperty(ref _iw1, value); }
   GridLength _iw2; public GridLength IconWidth2 { get => _iw2; set => SetProperty(ref _iw2, value); }
@@ -458,6 +471,48 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   GridLength _iw5; public GridLength IconWidth5 { get => _iw5; set => SetProperty(ref _iw5, value); }
   GridLength _iw6; public GridLength IconWidth6 { get => _iw6; set => SetProperty(ref _iw6, value); }
   GridLength _iw7; public GridLength IconWidth7 { get => _iw7; set => SetProperty(ref _iw7, value); }
+
+  GridLength _00; public GridLength IconWidt00 { get => _00; set => SetProperty(ref _00, value); }
+  GridLength _01; public GridLength IconWidt01 { get => _01; set => SetProperty(ref _01, value); }
+  GridLength _02; public GridLength IconWidt02 { get => _02; set => SetProperty(ref _02, value); }
+  GridLength _03; public GridLength IconWidt03 { get => _03; set => SetProperty(ref _03, value); }
+  GridLength _04; public GridLength IconWidt04 { get => _04; set => SetProperty(ref _04, value); }
+  GridLength _05; public GridLength IconWidt05 { get => _05; set => SetProperty(ref _05, value); }
+  GridLength _06; public GridLength IconWidt06 { get => _06; set => SetProperty(ref _06, value); }
+  GridLength _07; public GridLength IconWidt07 { get => _07; set => SetProperty(ref _07, value); }
+  GridLength _08; public GridLength IconWidt08 { get => _08; set => SetProperty(ref _08, value); }
+  GridLength _09; public GridLength IconWidt09 { get => _09; set => SetProperty(ref _09, value); }
+  GridLength _10; public GridLength IconWidt10 { get => _10; set => SetProperty(ref _10, value); }
+  GridLength _11; public GridLength IconWidt11 { get => _11; set => SetProperty(ref _11, value); }
+  GridLength _12; public GridLength IconWidt12 { get => _12; set => SetProperty(ref _12, value); }
+  GridLength _13; public GridLength IconWidt13 { get => _13; set => SetProperty(ref _13, value); }
+  GridLength _14; public GridLength IconWidt14 { get => _14; set => SetProperty(ref _14, value); }
+  GridLength _15; public GridLength IconWidt15 { get => _15; set => SetProperty(ref _15, value); }
+  GridLength _16; public GridLength IconWidt16 { get => _16; set => SetProperty(ref _16, value); }
+  GridLength _17; public GridLength IconWidt17 { get => _17; set => SetProperty(ref _17, value); }
+  GridLength _18; public GridLength IconWidt18 { get => _18; set => SetProperty(ref _18, value); }
+  GridLength _19; public GridLength IconWidt19 { get => _19; set => SetProperty(ref _19, value); }
+  GridLength _20; public GridLength IconWidt20 { get => _20; set => SetProperty(ref _20, value); }
+  GridLength _21; public GridLength IconWidt21 { get => _21; set => SetProperty(ref _21, value); }
+  GridLength _22; public GridLength IconWidt22 { get => _22; set => SetProperty(ref _22, value); }
+  GridLength _23; public GridLength IconWidt23 { get => _23; set => SetProperty(ref _23, value); }
+  GridLength _24; public GridLength IconWidt24 { get => _24; set => SetProperty(ref _24, value); }
+  GridLength _25; public GridLength IconWidt25 { get => _25; set => SetProperty(ref _25, value); }
+  GridLength _26; public GridLength IconWidt26 { get => _26; set => SetProperty(ref _26, value); }
+  GridLength _27; public GridLength IconWidt27 { get => _27; set => SetProperty(ref _27, value); }
+  GridLength _28; public GridLength IconWidt28 { get => _28; set => SetProperty(ref _28, value); }
+  GridLength _29; public GridLength IconWidt29 { get => _29; set => SetProperty(ref _29, value); }
+  GridLength _30; public GridLength IconWidt30 { get => _30; set => SetProperty(ref _30, value); }
+  GridLength _31; public GridLength IconWidt31 { get => _31; set => SetProperty(ref _31, value); }
+  GridLength _32; public GridLength IconWidt32 { get => _32; set => SetProperty(ref _32, value); }
+  GridLength _33; public GridLength IconWidt33 { get => _33; set => SetProperty(ref _33, value); }
+  GridLength _34; public GridLength IconWidt34 { get => _34; set => SetProperty(ref _34, value); }
+  GridLength _35; public GridLength IconWidt35 { get => _35; set => SetProperty(ref _35, value); }
+  GridLength _36; public GridLength IconWidt36 { get => _36; set => SetProperty(ref _36, value); }
+  GridLength _37; public GridLength IconWidt37 { get => _37; set => SetProperty(ref _37, value); }
+  GridLength _38; public GridLength IconWidt38 { get => _38; set => SetProperty(ref _38, value); }
+  GridLength _39; public GridLength IconWidt39 { get => _39; set => SetProperty(ref _39, value); }
+
   string _j = "http://openweathermap.org/img/wn/01d@2x.png"; public string OpnWeaIcom { get => _j; set => SetProperty(ref _j, value); }
   string _i = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconM { get => _i; set => SetProperty(ref _i, value); }
   string _k = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconV { get => _k; set => SetProperty(ref _k, value); }
