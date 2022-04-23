@@ -288,14 +288,14 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
     for (int i = 0; i < UnixToDt(D53.list[0].dt).Hour / 3; i++)
     {
-      OpnWeaIco3.Add($"http://openweathermap.org/img/wn/01n@2x.png");
+      OpnWeaIco3.Add($"");// http://openweathermap.org/img/wn/01n.png");
       OpnWeaTip3.Add($"{i}");
     }
     D53.list.ToList().ForEach(r =>
     {
-      WriteLine($"D53:  {r.dt_txt}    {UnixToDt(r.dt)}    {r}");
+      WriteLine($"D53:  {r.dt_txt}    {UnixToDt(r.dt)}    {UnixToDt(r.dt):MMM d  H:mm}     {r.weather[0].description,-26}       {r.main.temp_min} - {r.main.temp_max}°    pop {r.pop * 100:N0}      {r}");
       OpnWeaIco3.Add($"http://openweathermap.org/img/wn/{r.weather[0].icon}@2x.png");
-      OpnWeaTip3.Add($"{UnixToDt(r.dt):MMM d  H:mm} \n\n    {r.weather[0].description}");
+      OpnWeaTip3.Add($"{UnixToDt(r.dt):MMM d  H:mm} \n\n    {r.weather[0].description}   \n    {r.main.temp_min} - {r.main.temp_max}°    pop {r.pop*100:N0}" );
     });
 
     const int id = 2;

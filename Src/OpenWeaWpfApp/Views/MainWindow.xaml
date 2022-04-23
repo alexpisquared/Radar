@@ -132,14 +132,14 @@
           <ColumnDefinition Width="{Binding IconWidth7, FallbackValue='*'}" />
           <ColumnDefinition Width="60" />
         </Grid.ColumnDefinitions>
-        <Image Grid.Column="2" Source="{Binding OpnWeaIcoA[0]}" ToolTip="{Binding OpnWeaTip3[0]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
+        <!--<Image Grid.Column="2" Source="{Binding OpnWeaIcoA[0]}" ToolTip="{Binding OpnWeaTip3[0]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
         <Image Grid.Column="3" Source="{Binding OpnWeaIcoA[1]}" ToolTip="{Binding OpnWeaTip3[1]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
         <Image Grid.Column="4" Source="{Binding OpnWeaIcoA[2]}" ToolTip="{Binding OpnWeaTip3[2]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
         <Image Grid.Column="5" Source="{Binding OpnWeaIcoA[3]}" ToolTip="{Binding OpnWeaTip3[3]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
         <Image Grid.Column="6" Source="{Binding OpnWeaIcoA[4]}" ToolTip="{Binding OpnWeaTip3[4]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
         <Image Grid.Column="7" Source="{Binding OpnWeaIcoA[5]}" ToolTip="{Binding OpnWeaTip3[5]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
         <Image Grid.Column="8" Source="{Binding OpnWeaIcoA[6]}" ToolTip="{Binding OpnWeaTip3[6]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
-        <Image Grid.Column="9" Source="{Binding OpnWeaIcoA[7]}" ToolTip="{Binding OpnWeaTip3[7]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
+        <Image Grid.Column="9" Source="{Binding OpnWeaIcoA[7]}" ToolTip="{Binding OpnWeaTip3[7]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />-->
         <Grid  Grid.Column="2" Grid.Row="1" >
           <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -151,14 +151,14 @@
             <ColumnDefinition />
             <ColumnDefinition />
           </Grid.ColumnDefinitions>
-          <Image Grid.Column="0" Source="{Binding OpnWeaIco3[00]}" ToolTip="{Binding OpnWeaTip3[0]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />          
+          <Image Grid.Column="0" Source="{Binding OpnWeaIco3[00]}" ToolTip="{Binding OpnWeaTip3[0]}" d:Source="http://openweathermap.org/img/wn/01d@2x.png" />          
           <Image Grid.Column="1" Source="{Binding OpnWeaIco3[01]}" ToolTip="{Binding OpnWeaTip3[1]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
-          <Image Grid.Column="2" Source="{Binding OpnWeaIco3[02]}" ToolTip="{Binding OpnWeaTip3[2]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
-          <Image Grid.Column="3" Source="{Binding OpnWeaIco3[03]}" ToolTip="{Binding OpnWeaTip3[3]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
-          <Image Grid.Column="4" Source="{Binding OpnWeaIco3[04]}" ToolTip="{Binding OpnWeaTip3[4]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
-          <Image Grid.Column="5" Source="{Binding OpnWeaIco3[05]}" ToolTip="{Binding OpnWeaTip3[5]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
-          <Image Grid.Column="6" Source="{Binding OpnWeaIco3[06]}" ToolTip="{Binding OpnWeaTip3[6]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
-          <Image Grid.Column="7" Source="{Binding OpnWeaIco3[07]}" ToolTip="{Binding OpnWeaTip3[7]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
+          <Image Grid.Column="2" Source="{Binding OpnWeaIco3[02]}" ToolTip="{Binding OpnWeaTip3[2]}" d:Source="http://openweathermap.org/img/wn/03d@2x.png" />
+          <Image Grid.Column="3" Source="{Binding OpnWeaIco3[03]}" ToolTip="{Binding OpnWeaTip3[3]}" d:Source="http://openweathermap.org/img/wn/04d@2x.png" />
+          <Image Grid.Column="4" Source="{Binding OpnWeaIco3[04]}" ToolTip="{Binding OpnWeaTip3[4]}" d:Source="http://openweathermap.org/img/wn/09d@2x.png" />
+          <Image Grid.Column="5" Source="{Binding OpnWeaIco3[05]}" ToolTip="{Binding OpnWeaTip3[5]}" d:Source="http://openweathermap.org/img/wn/10d@2x.png" />
+          <Image Grid.Column="6" Source="{Binding OpnWeaIco3[06]}" ToolTip="{Binding OpnWeaTip3[6]}" d:Source="http://openweathermap.org/img/wn/11d@2x.png" />
+          <Image Grid.Column="7" Source="{Binding OpnWeaIco3[07]}" ToolTip="{Binding OpnWeaTip3[7]}" d:Source="http://openweathermap.org/img/wn/13d@2x.png" />
         </Grid>
         <Grid  Grid.Column="3" Grid.Row="1" Background="#10f0" >
           <Grid.ColumnDefinitions>
@@ -171,14 +171,14 @@
             <ColumnDefinition />
             <ColumnDefinition />
           </Grid.ColumnDefinitions>
-          <Image Grid.Column="0" Source="{Binding OpnWeaIco3[08]}" ToolTip="{Binding OpnWeaTip3[08]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
-          <Image Grid.Column="1" Source="{Binding OpnWeaIco3[09]}" ToolTip="{Binding OpnWeaTip3[08]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
-          <Image Grid.Column="2" Source="{Binding OpnWeaIco3[10]}" ToolTip="{Binding OpnWeaTip3[08]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
-          <Image Grid.Column="3" Source="{Binding OpnWeaIco3[11]}" ToolTip="{Binding OpnWeaTip3[08]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
-          <Image Grid.Column="4" Source="{Binding OpnWeaIco3[12]}" ToolTip="{Binding OpnWeaTip3[08]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
-          <Image Grid.Column="5" Source="{Binding OpnWeaIco3[13]}" ToolTip="{Binding OpnWeaTip3[08]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
-          <Image Grid.Column="6" Source="{Binding OpnWeaIco3[14]}" ToolTip="{Binding OpnWeaTip3[08]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
-          <Image Grid.Column="7" Source="{Binding OpnWeaIco3[15]}" ToolTip="{Binding OpnWeaTip3[08]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
+          <Image Grid.Column="0" Source="{Binding OpnWeaIco3[08]}" ToolTip="{Binding OpnWeaTip3[08]}" d:Source="http://openweathermap.org/img/wn/01n@2x.png" />
+          <Image Grid.Column="1" Source="{Binding OpnWeaIco3[09]}" ToolTip="{Binding OpnWeaTip3[08]}" d:Source="http://openweathermap.org/img/wn/02n@2x.png" />
+          <Image Grid.Column="2" Source="{Binding OpnWeaIco3[10]}" ToolTip="{Binding OpnWeaTip3[08]}" d:Source="http://openweathermap.org/img/wn/03n@2x.png" />
+          <Image Grid.Column="3" Source="{Binding OpnWeaIco3[11]}" ToolTip="{Binding OpnWeaTip3[08]}" d:Source="http://openweathermap.org/img/wn/04n@2x.png" />
+          <Image Grid.Column="4" Source="{Binding OpnWeaIco3[12]}" ToolTip="{Binding OpnWeaTip3[08]}" d:Source="http://openweathermap.org/img/wn/09n@2x.png" />
+          <Image Grid.Column="5" Source="{Binding OpnWeaIco3[13]}" ToolTip="{Binding OpnWeaTip3[08]}" d:Source="http://openweathermap.org/img/wn/10n@2x.png" />
+          <Image Grid.Column="6" Source="{Binding OpnWeaIco3[14]}" ToolTip="{Binding OpnWeaTip3[08]}" d:Source="http://openweathermap.org/img/wn/11n@2x.png" />
+          <Image Grid.Column="7" Source="{Binding OpnWeaIco3[15]}" ToolTip="{Binding OpnWeaTip3[08]}" d:Source="http://openweathermap.org/img/wn/13n@2x.png" />
         </Grid>
         <Grid  Grid.Column="4" Grid.Row="1" >
           <Grid.ColumnDefinitions>
