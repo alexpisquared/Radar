@@ -7,7 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\NoDataIndicator.png" />
+    <None Remove="NoDataIndicator.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.40" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\NoDataIndicator.png" />
+    <Resource Include="NoDataIndicator.png" />
   </ItemGroup>
 
 </Project>

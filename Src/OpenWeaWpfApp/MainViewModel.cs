@@ -1,9 +1,13 @@
-﻿namespace OpenWeaWpfApp;
+﻿#define ObsCol
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+
+namespace OpenWeaWpfApp;
 public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableValidator
 {
   readonly IConfigurationRoot _config;
   readonly OpenWea _opnwea;
-  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _yHi = 2, _yLo = 13;
+  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _yHi = 2, _yLo = 13, _maxIcons = 50;
   readonly WeatherxContext _dbx;
   double _extrMax = +20, _extrMin = -20;
   const string _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaughan = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582",
@@ -16,6 +20,12 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     _config = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
     _opnwea = openWea;
     _dbx = weatherxContext; // WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
+
+    for (int i = 0; i < _maxIcons; i++)
+    {
+      OpnWeaIco3.Add(new BitmapImage(new Uri("http://openweathermap.org/img/wn/01d.png")));
+      OpnWeaTip3.Add("Optimistic Init");
+    }
   }
 
   public async Task<bool> PopulateAsync(int days = 5)
@@ -286,17 +296,36 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
     for (var i = 0; i < OCA.daily.Length; i++) OpnWeaIcoA.Add($"http://openweathermap.org/img/wn/{OCA.daily[i].weather[0].icon}@2x.png");
 
-    for (int i = 0; i < UnixToDt(D53.list[0].dt).Hour / 3; i++)
+#if NoGo // XAML is noticing the missing array indexes:
+    OpnWeaIco3.Clear();
+    OpnWeaTip3.Clear();
+
+    for (var h3 = 0; h3 < UnixToDt(D53.list[0].dt).Hour / 3; h3++)
     {
-      OpnWeaIco3.Add($"");// http://openweathermap.org/img/wn/01n.png");
-      OpnWeaTip3.Add($"{i}");
+      OpnWeaIco3.Add(new BitmapImage(new Uri($"http://openweathermap.org/img/wn/01n.png")));
+      OpnWeaTip3.Add($"{h3}");
     }
     D53.list.ToList().ForEach(r =>
     {
       WriteLine($"D53:  {r.dt_txt}    {UnixToDt(r.dt)}    {UnixToDt(r.dt):MMM d  H:mm}     {r.weather[0].description,-26}       {r.main.temp_min} - {r.main.temp_max}°    pop {r.pop * 100:N0}      {r}");
-      OpnWeaIco3.Add($"http://openweathermap.org/img/wn/{r.weather[0].icon}@2x.png");
-      OpnWeaTip3.Add($"{UnixToDt(r.dt):MMM d  H:mm} \n\n    {r.weather[0].description}   \n    {r.main.temp_min} - {r.main.temp_max}°    pop {r.pop*100:N0}" );
+      OpnWeaIco3.Add(new BitmapImage(new Uri($"http://openweathermap.org/img/wn/{r.weather[0].icon}@2x.png")));
+      OpnWeaTip3.Add($"{UnixToDt(r.dt):MMM d  H:mm} \n\n    {r.weather[0].description}   \n    {r.main.temp_min} - {r.main.temp_max}°    pop {r.pop * 100:N0}");
     });
+#else
+    var h3 = 0; //todo: https://stackoverflow.com/questions/52921418/how-can-i-use-an-array-in-a-viewmodel
+    for (; h3 < UnixToDt(D53.list[0].dt).Hour / 3; h3++)
+    {
+      OpnWeaIco3[h3] = new BitmapImage(new Uri($"/NoDataIndicator.png", UriKind.Absolute));
+      OpnWeaTip3[h3] = ($"{h3}");
+    }
+    D53.list.ToList().ForEach(r =>
+    {
+      WriteLine($"D53:  {r.dt_txt}    {UnixToDt(r.dt)}    {UnixToDt(r.dt):MMM d  H:mm}     {r.weather[0].description,-26}       {r.main.temp_min} - {r.main.temp_max}°    pop {r.pop * 100:N0}      {r}");
+      OpnWeaIco3[h3] = new BitmapImage(new Uri($"http://openweathermap.org/img/wn/{r.weather[0].icon}@2x.png"));
+      OpnWeaTip3[h3] = ($"{UnixToDt(r.dt):MMM d  H:mm} \n\n    {r.weather[0].description}   \n    {r.main.temp_min} - {r.main.temp_max}°    pop {r.pop * 100:N0}");
+      h3++;
+    });
+#endif
 
     const int id = 2;
     await SetMaxX(id);
@@ -461,8 +490,16 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   const float _kWind = 3.6f * _wk;
 
   ObservableCollection<string> _a = new(); public ObservableCollection<string> OpnWeaIcoA { get => _a; set => SetProperty(ref _a, value); }
-  ObservableCollection<string> _3 = new(); public ObservableCollection<string> OpnWeaIco3 { get => _3; set => SetProperty(ref _3, value); }
+#if ObsCol
+  ObservableCollection<ImageSource> _3 = new(); public ObservableCollection<ImageSource> OpnWeaIco3 { get => _3; set => SetProperty(ref _3, value); }
   ObservableCollection<string> _4 = new(); public ObservableCollection<string> OpnWeaTip3 { get => _4; set => SetProperty(ref _4, value); }
+  //string[] _3 = new string[_maxIcons]; public string[] OpnWeaIco3 { get => _3; set => SetProperty(ref _3, value); }
+  //string[] _4 = new string[_maxIcons]; public string[] OpnWeaTip3 { get => _4; set => SetProperty(ref _4, value); }
+#else
+  Messages _m3 = new(); public Messages OpnWeaIco3 { get => _m3; set => SetProperty(ref _m3, value); }
+  Messages _m4 = new(); public Messages OpnWeaTip3 { get => _m4; set => SetProperty(ref _m4, value); }
+#endif
+
   GridLength _iw0; public GridLength IconWidth0 { get => _iw0; set => SetProperty(ref _iw0, value); }
   GridLength _iw1; public GridLength IconWidth1 { get => _iw1; set => SetProperty(ref _iw1, value); }
   GridLength _iw2; public GridLength IconWidth2 { get => _iw2; set => SetProperty(ref _iw2, value); }
@@ -551,6 +588,39 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
   double _wg; public double WindGustKmHr { get => _wg; set => SetProperty(ref _wg, value); }
 }
+
+
+/// <summary>
+/// todo: assigns but not refreshes.
+/// </summary>
+public class Messages : ObservableObject // https://stackoverflow.com/questions/52921418/how-can-i-use-an-array-in-a-viewmodel
+{
+  readonly IDictionary<int, string> _messages = new Dictionary<int, string>();
+
+  [IndexerName("Item")] //not exactly needed as this is the default
+  public string this[int index]
+  {
+    get
+    {
+      if (_messages.ContainsKey(index))
+        return _messages[index]; /////////////////////////todo: never gets called.
+
+      //Uncomment this if you want exceptions for bad indexes
+      //#if DEBUG
+      //          throw new IndexOutOfRangeException();
+      //#else
+      return "http://openweathermap.org/img/wn/02d@2x.png";
+      //#endif
+    }
+
+    set
+    {
+      _messages[index] = value;
+                                           OnPropertyChanged("Item[" + index + "]");
+    }
+  }
+}
+
 ///todo: https://oxyplot.readthedocs.io/en/latest/models/series/ScatterSeries.html
 ///https://docs.microsoft.com/en-us/answers/questions/22863/how-to-customize-charts-in-wpf-using-systemwindows.html
 ///https://docs.microsoft.com/en-us/answers/questions/10086/draw-chart-with-systemwindowscontrolsdatavisualiza.html

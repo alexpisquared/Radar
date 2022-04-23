@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="NoDataIndicator.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Android-Weather.ico" />
   </ItemGroup>
 
@@ -35,8 +39,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AsLink\" />
     <Folder Include="bin\Logs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\NoDataIndicator.png" />
   </ItemGroup>
 
 </Project>

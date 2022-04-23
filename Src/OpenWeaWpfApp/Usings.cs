@@ -26,3 +26,6 @@ global using XSD.CLS;
 global using static System.Diagnostics.Trace;
 global using static System.Media.SystemSounds;
 global using static OpenWeather2022.OpenWea;
+global using System.Runtime.CompilerServices;
+global using Microsoft.Toolkit.Mvvm.ComponentModel;
+
