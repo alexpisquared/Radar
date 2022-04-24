@@ -1,6 +1,4 @@
 ﻿#define ObsCol
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace OpenWeaWpfApp;
 public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableValidator
@@ -21,7 +19,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
     _opnwea = openWea;
     _dbx = weatherxContext; // WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
 
-    for (int i = 0; i < _maxIcons; i++)
+    for (var i = 0; i < _maxIcons; i++)
     {
       OpnWeaIco3.Add(new BitmapImage(new Uri("http://openweathermap.org/img/wn/01d.png")));
       OpnWeaTip3.Add("Optimistic Init");
@@ -312,17 +310,17 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
       OpnWeaTip3.Add($"{UnixToDt(r.dt):MMM d  H:mm} \n\n    {r.weather[0].description}   \n    {r.main.temp_min} - {r.main.temp_max}°    pop {r.pop * 100:N0}");
     });
 #else
-    var h3 = 0; //todo: https://stackoverflow.com/questions/52921418/how-can-i-use-an-array-in-a-viewmodel
+    var h3 = 0;
     for (; h3 < UnixToDt(D53.list[0].dt).Hour / 3; h3++)
     {
-      OpnWeaIco3[h3] = new BitmapImage(new Uri($"/NoDataIndicator.png", UriKind.Absolute));
+      OpnWeaIco3[h3] = new BitmapImage(new Uri($"http://openweathermap.org/img/wn/01n.png", UriKind.Absolute)); //nogo: OpnWeaIco3[h3] = new BitmapImage(new Uri($"/Views/NoDataIndicator.bmp", UriKind.Absolute));
       OpnWeaTip3[h3] = ($"{h3}");
     }
     D53.list.ToList().ForEach(r =>
     {
-      WriteLine($"D53:  {r.dt_txt}    {UnixToDt(r.dt)}    {UnixToDt(r.dt):MMM d  H:mm}     {r.weather[0].description,-26}       {r.main.temp_min} - {r.main.temp_max}°    pop {r.pop * 100:N0}      {r}");
+      WriteLine($"D53:  {r.dt_txt}    {UnixToDt(r.dt)}    {UnixToDt(r.dt):MMM dd  HH:mm}     {r.weather[0].description,-26}       {r.main.temp_min,6:N1} ÷ {r.main.temp_max,4:N1}°    pop{r.pop * 100,3:N0}%      {r}");
       OpnWeaIco3[h3] = new BitmapImage(new Uri($"http://openweathermap.org/img/wn/{r.weather[0].icon}@2x.png"));
-      OpnWeaTip3[h3] = ($"{UnixToDt(r.dt):MMM d  H:mm} \n\n    {r.weather[0].description}   \n    {r.main.temp_min} - {r.main.temp_max}°    pop {r.pop * 100:N0}");
+      OpnWeaTip3[h3] = ($"{UnixToDt(r.dt):MMM d  H:mm} \n\n    {r.weather[0].description}   \n    {r.main.temp:N1}°    pop {r.pop * 100:N0}%");
       h3++;
     });
 #endif
@@ -600,23 +598,14 @@ public class Messages : ObservableObject // https://stackoverflow.com/questions/
   [IndexerName("Item")] //not exactly needed as this is the default
   public string this[int index]
   {
-    get
-    {
-      if (_messages.ContainsKey(index))
-        return _messages[index]; /////////////////////////todo: never gets called.
-
-      //Uncomment this if you want exceptions for bad indexes
-      //#if DEBUG
-      //          throw new IndexOutOfRangeException();
-      //#else
-      return "http://openweathermap.org/img/wn/02d@2x.png";
-      //#endif
-    }
+    get => _messages.ContainsKey(index) ?
+        _messages[index] : /////////////////////////todo: never gets called.
+        "http://openweathermap.org/img/wn/02d@2x.png";
 
     set
     {
       _messages[index] = value;
-                                           OnPropertyChanged("Item[" + index + "]");
+      OnPropertyChanged("Item[" + index + "]");
     }
   }
 }

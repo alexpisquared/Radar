@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <None Remove="NoDataIndicator.png" />
+    <None Remove="Views\NoDataIndicator.bmp" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,6 +45,7 @@
 
   <ItemGroup>
     <Resource Include="Assets\NoDataIndicator.png" />
+    <Resource Include="Views\NoDataIndicator.bmp" />
   </ItemGroup>
 
 </Project>
