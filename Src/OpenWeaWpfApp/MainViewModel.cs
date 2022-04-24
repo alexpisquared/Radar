@@ -1,11 +1,11 @@
-﻿#define ObsCol
-
+﻿#define ObsCol // Go figure: ObsCol works, while array NOT! Just an interesting factoid.
 namespace OpenWeaWpfApp;
 public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableValidator
 {
   readonly IConfigurationRoot _config;
   readonly OpenWea _opnwea;
-  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _yHi = 2, _yLo = 13, _maxIcons = 50;
+  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _yHi = 2, _yLo = 13;
+  const int _maxIcons = 50;
   readonly WeatherxContext _dbx;
   double _extrMax = +20, _extrMin = -20;
   const string _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaughan = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582",
@@ -21,8 +21,13 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
     for (var i = 0; i < _maxIcons; i++)
     {
+#if ObsCol // must add for the binding to have something to hook on to for OpnWea[xx].
       OpnWeaIco3.Add(new BitmapImage(new Uri("http://openweathermap.org/img/wn/01d.png")));
       OpnWeaTip3.Add("Optimistic Init");
+#else
+      OpnWeaIco3[i]=(new BitmapImage(new Uri("http://openweathermap.org/img/wn/01d.png")));
+      OpnWeaTip3[i]=("Optimistic Init");
+#endif
     }
   }
 
@@ -491,11 +496,11 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 #if ObsCol
   ObservableCollection<ImageSource> _3 = new(); public ObservableCollection<ImageSource> OpnWeaIco3 { get => _3; set => SetProperty(ref _3, value); }
   ObservableCollection<string> _4 = new(); public ObservableCollection<string> OpnWeaTip3 { get => _4; set => SetProperty(ref _4, value); }
-  //string[] _3 = new string[_maxIcons]; public string[] OpnWeaIco3 { get => _3; set => SetProperty(ref _3, value); }
-  //string[] _4 = new string[_maxIcons]; public string[] OpnWeaTip3 { get => _4; set => SetProperty(ref _4, value); }
 #else
-  Messages _m3 = new(); public Messages OpnWeaIco3 { get => _m3; set => SetProperty(ref _m3, value); }
-  Messages _m4 = new(); public Messages OpnWeaTip3 { get => _m4; set => SetProperty(ref _m4, value); }
+  ImageSource[] _3 = new ImageSource[_maxIcons]; public ImageSource[] OpnWeaIco3 { get => _3; set => SetProperty(ref _3, value); }
+  string[] _4 = new string[_maxIcons]; public string[] OpnWeaTip3 { get => _4; set => SetProperty(ref _4, value); }
+  //Messages _m3 = new(); public Messages OpnWeaIco3 { get => _m3; set => SetProperty(ref _m3, value); }
+  //Messages _m4 = new(); public Messages OpnWeaTip3 { get => _m4; set => SetProperty(ref _m4, value); }
 #endif
 
   GridLength _iw0; public GridLength IconWidth0 { get => _iw0; set => SetProperty(ref _iw0, value); }
