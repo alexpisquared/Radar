@@ -31,7 +31,7 @@
       </Grid.RowDefinitions>
       <oxy:Plot Title="{Binding PlotTitle}" d:Title="LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ "  TitleColor="#bdf" Background="#222" x:Name="plotBR" SubtitleColor="Red" LegendTextColor="#eee" LegendTitleColor="Yellow" TextColor="#0f0" PlotAreaBorderColor="Transparent" Grid.RowSpan="2" Grid.ColumnSpan="3" >
         <oxy:Plot.Axes>
-          <oxy:DateTimeAxis Key="xAxis" TextColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Top" StringFormat="                  ddd" MajorStep="1" MinorStep="0.25" 
+          <oxy:DateTimeAxis Key="xAxis" TextColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Top" StringFormat="                  ddd d" MajorStep="1" MinorStep="0.25" 
                             MajorGridlineStyle="Solid" 
                             MajorGridlineColor="#000" 
                             MinorGridlineStyle="Solid" MinorGridlineColor="#333" 
