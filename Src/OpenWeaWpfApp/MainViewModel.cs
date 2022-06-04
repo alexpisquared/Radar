@@ -4,7 +4,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 {
   readonly IConfigurationRoot _config;
   readonly OpenWea _opnwea;
-  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _yHi = 2, _yLo = 13;
+  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _yHi = 2, _yLo = 23;
   const int _maxIcons = 50;
   readonly WeatherxContext _dbx;
   double _extrMax = +20, _extrMin = -20;
@@ -489,7 +489,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
 
   //ImageSource _i; public ImageSource WeaIcom { get => _i; set => SetProperty(ref _i, value); }
   //Uri _k = new("http://openweathermap.org/img/wn/04n@2x.png"); public Uri WIcon { get => _k; set => SetProperty(ref _k, value); }
-  const float _wk = 1f, _kprsr = .01f;
+  const float _wk = 10f, _kprsr = .01f;
   const float _kWind = 3.6f * _wk;
 
   ObservableCollection<string> _a = new(); public ObservableCollection<string> OpnWeaIcoA { get => _a; set => SetProperty(ref _a, value); }
