@@ -472,7 +472,7 @@ public class MainViewModel : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableVal
   public ObservableCollection<DataPoint> ECaMissTemp { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> ECaTIslTemp { get; } = new ObservableCollection<DataPoint>();
 
-  public PlotModel FuncModel { get; private set; } = new PlotModel { Title = "Function Srs", Background = OxyColor.FromUInt32(123456), LegendTitleColor = OxyColor.FromUInt32(123456) };
+  public PlotModel FuncModel { get; private set; } = new PlotModel { Title = "Function Srs", Background = OxyColor.FromUInt32(123456)/*, LegendTitleColor = OxyColor.FromUInt32(123456)*/ };
   public PlotModel ScatModel { get; private set; } = new PlotModel { Title = "Scatter Srs" };
 
   double _fn; public double TimeMin { get => _fn; set => SetProperty(ref _fn, value); }
