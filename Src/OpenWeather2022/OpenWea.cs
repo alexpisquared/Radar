@@ -99,7 +99,7 @@ public class OpenWea
     }
     catch (ArgumentNullException ex) { WriteLine($"▄▀▄▀▄▀ Keys are missing??? {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); throw; }
     catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); throw; }
-    finally { WriteLine($":> {what}  =>  {url}  ==> {sw.ElapsedMilliseconds}ms "); }
+    finally { WriteLine($"{DateTime.Now:yy.MM.dd HH:mm:ss.f} {what}  {url}  {sw.ElapsedMilliseconds}ms "); }
   }
 
   //  async Task<bool> GetIt(
