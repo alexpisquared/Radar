@@ -5,14 +5,16 @@ namespace DB.WeatherX.PwrTls;
 
 internal class Service0
 {
-  async Task UpdateDB(string connectionString)
+  async Task<bool> UpdateDB(string connectionString)
   {
     var now = DateTime.Now;
 
     WeatherxContextFactory dbf = new(connectionString);
     using WeatherxContext dbx = dbf.CreateDbContext();
 
-    var rv = dbx.PointReal.AnyAsync(d => d.SiteId == "");
+    var rv = await dbx.PointReal.AnyAsync(d => d.SiteId == "");
+
+    return rv;
   }
 }
 

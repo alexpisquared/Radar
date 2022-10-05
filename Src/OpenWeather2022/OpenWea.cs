@@ -43,7 +43,7 @@ public class OpenWea
       oca = (siteData?)new XmlSerializer(typeof(siteData)).Deserialize(new StringReader(xml));
 #endif
     }
-    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else throw; }
+    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} \n{ex.Message}  @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else throw; }
     finally { WriteLine($":> {url}  ==> {sw.ElapsedMilliseconds}ms "); }
 
     return oca;
