@@ -24,7 +24,7 @@ public class OpenWea
     return true;
   }
 
-  public async Task<siteData?> GetEnvtCa(string site = "s0000458"/*toronto pearson*/) //   "s0000785_e"/*toronto island*/        }; //         "s0000773_e",/*richmond hill*/   };       // May 2020: localized to the most informative (with extremums). ... https://dd.weather.gc.ca/citypage_weather/xml/siteList.xml
+  public static async Task<siteData?> GetEnvtCa(string site = "s0000458"/*toronto pearson*/) //   "s0000785_e"/*toronto island*/        }; //         "s0000773_e",/*richmond hill*/   };       // May 2020: localized to the most informative (with extremums). ... https://dd.weather.gc.ca/citypage_weather/xml/siteList.xml
   {
     //await Task.Delay(99);
     siteData? oca = default!;
@@ -35,7 +35,7 @@ public class OpenWea
       using var client = new HttpClient();
       var response = await client.GetAsync(url).ConfigureAwait(false);
       if (response == null || response.StatusCode == System.Net.HttpStatusCode.NotFound) return new siteData();
-      var xml = await response.Content.ReadAsStringAsync() ?? throw new ArgumentNullException($"@@@@@@@@@@@@@@@@@@@@@@");
+      var xml = await response.Content.ReadAsStringAsync() ?? throw new ArgumentNullException(nameof(site));
 
 #if NotSaveToFile
       await File.WriteAllTextAsync($@"..\..\..\JsonResults\EvntCa-{site}-{DateTime.Now:yyMMdd·HHmmss}.xml", xml);

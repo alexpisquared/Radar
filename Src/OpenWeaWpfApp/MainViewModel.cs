@@ -101,8 +101,8 @@ public class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.ObservableVali
 
     OwaLoclPrsr.Clear(); pea.OrderBy(r => r.TakenAt).ToList().ForEach(x => OwaLoclPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), 10 * x.Pressure - 1030)));
 
-    var sitedataMiss = await _opnwea.GetEnvtCa(_mississ);
-    var sitedataVghn = await _opnwea.GetEnvtCa(_vaughan);
+    var sitedataMiss = await GetEnvtCa(_mississ);
+    var sitedataVghn = await GetEnvtCa(_vaughan);
 
     if (_config["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
     {
@@ -110,11 +110,11 @@ public class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.ObservableVali
       await AddForeDataToDB_EnvtCa("vgn", sitedataVghn);
     }
 
-    RefillForeEnvtCa(ECaToroTemp, await _opnwea.GetEnvtCa(_toronto));
-    RefillForeEnvtCa(ECaTIslTemp, await _opnwea.GetEnvtCa(_torIsld));    //refill(ECaTIslTemp, await _opnwea.GetEnvtCa(_newmark));
+    RefillForeEnvtCa(ECaToroTemp, await GetEnvtCa(_toronto));
+    RefillForeEnvtCa(ECaTIslTemp, await GetEnvtCa(_torIsld));    //refill(ECaTIslTemp, await _opnwea.GetEnvtCa(_newmark));
     RefillForeEnvtCa(ECaMissTemp, sitedataMiss);
     RefillForeEnvtCa(ECaVghnTemp, sitedataVghn);
-    RefillForeEnvtCa(ECaMrkhTemp, await _opnwea.GetEnvtCa(_markham));
+    RefillForeEnvtCa(ECaMrkhTemp, await GetEnvtCa(_markham));
 
     ArgumentNullException.ThrowIfNull(sitedataMiss, $"@@@@@@@@@ {nameof(sitedataMiss)}");
     SubHeader += $"{sitedataMiss.currentConditions.wind.speed}\n";
