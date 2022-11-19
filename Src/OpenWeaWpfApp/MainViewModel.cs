@@ -1,10 +1,10 @@
 ﻿#define ObsCol // Go figure: ObsCol works, while array NOT! Just an interesting factoid.
 namespace OpenWeaWpfApp;
-public class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.ObservableValidator
+public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.ObservableValidator
 {
   readonly IConfigurationRoot _config;
   readonly OpenWea _opnwea;
-  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _yHi = 2, _yLo = 23;
+  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _yHi = 2, _yLo = 13;
   const int _maxIcons = 50;
   readonly WeatherxContext _dbx;
   double _extrMax = +20, _extrMin = -20;
@@ -580,16 +580,14 @@ public class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.ObservableVali
     await Task.Yield();// PopulateAsync((int?)days ?? 5);
   }
 
-  double _yMin = -28; public double YAxisMin { get => _yMin; set => SetProperty(ref _yMin, value); }
-  double _yMax = +12; public double YAxisMax { get => _yMax; set => SetProperty(ref _yMax, value); }
-  double _tMin = -08; public double NormTMin { get => _tMin; set => SetProperty(ref _tMin, value); }
-  double _tMax = +02; public double NormTMax { get => _tMax; set => SetProperty(ref _tMax, value); }
-  double _YMin = -01; public double YAxiXMin { get => _YMin; set => SetProperty(ref _YMin, value); }
-  double _YMax = -01; public double YAxiXMax { get => _YMax; set => SetProperty(ref _YMax, value); }
-
-  IInterpolationAlgorithm iA = InterpolationAlgorithms.CatmullRomSpline; public IInterpolationAlgorithm IA { get => iA; set => SetProperty(ref iA, value); } // the least vertical jumping beyond y value.
-
-  double _wg; public double WindGustKmHr { get => _wg; set => SetProperty(ref _wg, value); }
+  [ObservableProperty] double yAxisMin = -18;
+  [ObservableProperty] double yAxisMax = +12;
+  [ObservableProperty] double normTMin = -08;
+  [ObservableProperty] double normTMax = +02;
+  [ObservableProperty] double yAxiXMax = -01;
+  [ObservableProperty] double yAxiXMin = -1;
+  [ObservableProperty] IInterpolationAlgorithm iA = InterpolationAlgorithms.CatmullRomSpline; // the least vertical jumping beyond y value.
+  [ObservableProperty] double windGustKmHr;
 }
 
 
