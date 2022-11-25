@@ -4,26 +4,22 @@ namespace OpenWeather2022;
 
 public class Past24hrHAP
 {
-  public List<MeteoDataMy> GetIt(string url)
+  public async Task<List<MeteoDataMy>> GetIt(string url)
   {
-    List<MeteoDataMy> rv = new();
+    List<MeteoDataMy> mdm = new();
     string dateStr = default!;
 
-    var web = new HtmlWeb();
-    var doc = web.Load(url);
-
+    var doc = await new HtmlWeb().LoadFromWebAsync(url);
     foreach (var tr in doc.DocumentNode.SelectNodes("//table/tbody"))
     {
-      WriteLine($"\n============ tr.ChildNodes.Count {tr.ChildNodes.Count}:");
+      Write($"============ tr.ChildNodes.Count {tr.ChildNodes.Count}  from {url}:");
 
       foreach (var r in tr.ChildNodes.Where(n => n.ChildNodes.Any()))
       {
         var nodes = r.ChildNodes;
         var cnt = nodes.Count;
 
-        var i = 0;
-        Write($"\n{cnt}:");
-        foreach (var n in nodes) Write($" {i++}:'{n.InnerText.Replace("\n", "").Replace("\t", "").Replace("    ", " ").Replace("   ", " ").Replace("  ", " ").Trim()}' ");
+        //tmi: var i = 0; Write($"\n{cnt}:"); foreach (var n in nodes) Write($" {i++}:'{n.InnerText.Replace("\n", "").Replace("\t", "").Replace("    ", " ").Replace("   ", " ").Replace("  ", " ").Trim()}' ");
 
         if (nodes.Count == 1)
         {
@@ -74,7 +70,7 @@ public class Past24hrHAP
             }
 
             if (e4 != null && e4.TempAir != -999)
-              rv.Add(e4);
+              mdm.Add(e4);
           }
           catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else throw; }
         }
@@ -85,6 +81,6 @@ public class Past24hrHAP
 
     //`for (int i = 0; i < ecdList.Count; i++) Console.WriteLine("{0,2}) {1}", i, ecdList[i].ToString());
 
-    return rv;
+    return mdm;
   }
 }

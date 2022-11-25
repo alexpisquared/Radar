@@ -1,9 +1,9 @@
-﻿namespace OpenWeaWpfApp.Views;
+﻿
+namespace OpenWeaWpfApp;
 public partial class PocBin : Window
 {
   public PocBin()
   {
-    InitializeComponent();
     InitializeComponent();
     MouseLeftButtonDown += (s, e) => DragMove();
     KeyUp += async (s, e) =>
@@ -37,8 +37,10 @@ public partial class PocBin : Window
 
   async void OnLoadad(object sender, RoutedEventArgs e)
   {
-    await Task.Delay(1);
     Beep.Play();
+    await Task.Delay(1);
+
+
     _ = await ((MainViewModel)DataContext).PopulateAsync();  // only lines chart is drawn.
     Beep.Play();
   }

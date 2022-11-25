@@ -1,4 +1,5 @@
-﻿namespace OpenWeaWpfApp;
+﻿
+namespace OpenWeaWpfApp;
 
 public partial class MainWindow : Window
 {
@@ -64,4 +65,9 @@ public partial class MainWindow : Window
   }
 
   async void OnPoplte(object sender, RoutedEventArgs e) => _ = await ((MainViewModel)DataContext).PopulateAsync();  // only lines chart is drawn.
+
+    void MenuItem_Click(object sender, RoutedEventArgs e)
+    {
+      new PocBin().Show();
+  }
 }

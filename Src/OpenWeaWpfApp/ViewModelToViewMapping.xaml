@@ -3,4 +3,7 @@
   <DataTemplate DataType="{x:Type local:MainViewModel}">
     <local:MainWindow/>
   </DataTemplate>
+  <DataTemplate DataType="{x:Type local:MainViewModel}">
+    <local:PocBin/>
+  </DataTemplate>
 </ResourceDictionary>

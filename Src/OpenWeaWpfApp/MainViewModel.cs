@@ -1,4 +1,6 @@
 ﻿#define ObsCol // Go figure: ObsCol works, while array NOT! Just an interesting factoid.
+using OxyPlot.Legends;
+
 namespace OpenWeaWpfApp;
 public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.ObservableValidator
 {
@@ -22,7 +24,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     for (var i = 0; i < _maxIcons; i++)
     {
 #if ObsCol // must add for the binding to have something to hook on to for OpnWea[xx].
-      OpnWeaIco3.Add(new BitmapImage(new Uri("http://openweathermap.org/img/wn/01d.png")));
+      OpnWeaIco3.Add(new BitmapImage(new Uri("http://openweathermap.org/img/wn/01n.png")));
       OpnWeaTip3.Add("Optimistic Init");
 #else
       OpnWeaIco3[i]=(new BitmapImage(new Uri("http://openweathermap.org/img/wn/01d.png")));
@@ -36,11 +38,10 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     _busy = true;
     try
     {
-      Clear();
-
-      await PrevForecastFromDB();
-      await PopulateEnvtCanaAsync();
-      await PopulateScatModelAsync(days);
+      Clear();                              /**/ await Task.Delay(50);
+      await PrevForecastFromDB();           /**/ await Task.Delay(33);
+      await PopulateEnvtCanaAsync();        /**/ await Task.Delay(33);
+      await PopulateScatModelAsync(days);   /**/ await Task.Delay(33);
 
       Beep.Play();
     }
@@ -89,8 +90,8 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   async Task PopulateEnvtCanaAsync()
   {
     Past24hrHAP p24 = new();
-    var bvl = p24.GetIt(_urlPast24hrYKZ);
-    var pea = p24.GetIt(_urlPast24hrYYZ);
+    var bvl =await p24.GetIt(_urlPast24hrYKZ);
+    var pea =await p24.GetIt(_urlPast24hrYYZ);
 
     if (_config["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")         "StoreData": "No",
     {
@@ -325,7 +326,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     }
     D53.list.ToList().ForEach(r =>
     {
-      WriteLine($"D53:  {r.dt_txt}    {UnixToDt(r.dt)}    {UnixToDt(r.dt):MMM dd  HH:mm}     {r.weather[0].description,-26}       {r.main.temp_min,6:N1} ÷ {r.main.temp_max,4:N1}°    pop{r.pop * 100,3:N0}%      {r}");
+      //tmi: WriteLine($"/>D53:  {r.dt_txt}    {UnixToDt(r.dt)}    {UnixToDt(r.dt):MMM dd  HH:mm}     {r.weather[0].description,-26}       {r.main.temp_min,6:N1} ÷ {r.main.temp_max,4:N1}°    pop{r.pop * 100,3:N0}%      {r}");
       OpnWeaIco3[h3] = new BitmapImage(new Uri($"http://openweathermap.org/img/wn/{r.weather[0].icon}@2x.png"));
       OpnWeaTip3[h3] = ($"{UnixToDt(r.dt):MMM d  H:mm} \n\n    {r.weather[0].description}   \n    {r.main.temp:N1}°    pop {r.pop * 100:N0}%");
       h3++;
@@ -387,11 +388,26 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     OwaLoclSunT.Add(new DataPoint((UnixToDt(x.sunset).AddDays(-1).ToOADate()), valueMin));
     OCA.daily.ToList().ForEach(x =>
     {
-      OwaLoclSunT.Add(new DataPoint((UnixToDt(x.sunrise).ToOADate()), valueMin));
-      OwaLoclSunT.Add(new DataPoint((UnixToDt(x.sunrise).ToOADate()), valueMax));
-      OwaLoclSunT.Add(new DataPoint((UnixToDt(x.sunset).ToOADate()), valueMax));
-      OwaLoclSunT.Add(new DataPoint((UnixToDt(x.sunset).ToOADate()), valueMin));
+      OwaLoclSunT.Add(new DataPoint(UnixToDt(x.sunrise).ToOADate(), valueMin));
+      OwaLoclSunT.Add(new DataPoint(UnixToDt(x.sunrise).ToOADate(), valueMax));
+      OwaLoclSunT.Add(new DataPoint(UnixToDt(x.sunset).ToOADate(), valueMax));
+      OwaLoclSunT.Add(new DataPoint(UnixToDt(x.sunset).ToOADate(), valueMin));
     });
+
+
+    OwaLoclGus_.Clear();
+
+    var t0 = UnixToDt(x.sunrise).ToOADate();
+    var dh = 16 * Math.Cos(t0 * Math.PI * 2);
+
+    FunctionSeries__(Math.Cos, t0 - 1.3, t0 + 7.4, .0125);
+    void FunctionSeries__(Func<double, double> f, double x0, double x1, double dx)
+    {
+      for (double t = x0; t <= x1 + dx * 0.5; t += dx)
+        OwaLoclGus_.Add(new DataPoint(t, dh - 16 * f(t * Math.PI * 2)));
+    }
+
+    await Task.Delay(33);
 
     OCA.daily
       .Where(d => d.dt > D53.list.Max(d => d.dt))
@@ -463,6 +479,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   public ObservableCollection<DataPoint> OwaLoclFeel { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> OwaLoclPrsr { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> OwaLoclGust { get; } = new ObservableCollection<DataPoint>();
+  public ObservableCollection<DataPoint> OwaLoclGus_ { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> ECaBtvlWind { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> ECaPearWind { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> OwaLoclSunT { get; } = new ObservableCollection<DataPoint>();
@@ -474,11 +491,8 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   public ObservableCollection<DataPoint> ECaMissTemp { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> ECaTIslTemp { get; } = new ObservableCollection<DataPoint>();
 
-  //public PlotModel FuncModel { get; private set; } = new PlotModel { Title = "Function Srs", Background = OxyColor.FromUInt32(123456)/*, LegendTitleColor = OxyColor.FromUInt32(123456)*/ };
-  //public PlotModel ScatModel { get; private set; } = new PlotModel { Title = "Scatter Srs" };
-
-  double _fn; public double TimeMin { get => _fn; set => SetProperty(ref _fn, value); }
-  double _fm; public double TimeMax { get => _fm; set => SetProperty(ref _fm, value); }
+  [ObservableProperty] double timeMin = DateTime.Today.ToOADate();
+  [ObservableProperty] double timeMax = DateTime.Today.ToOADate() + 3;
   string _t = default!; public string PlotTitle { get => _t; set => SetProperty(ref _t, value); }
   string _c = default!; public string CurrentConditions { get => _c; set => SetProperty(ref _c, value); }
   string _r = default!; public string CurTempReal { get => _r; set => SetProperty(ref _r, value); }
@@ -581,6 +595,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
     await Task.Yield();// PopulateAsync((int?)days ?? 5);
   }
+
 
   [ObservableProperty] double yAxisMin = -18;
   [ObservableProperty] double yAxisMax = +12;
