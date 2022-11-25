@@ -80,6 +80,8 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       }
     }
 
+    WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
+
     (await _dbx.PointFore.Where(r => r.SiteId == _phc && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + .25 * (r.ForecastedFor - r.ForecastedAt).TotalHours, y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
     (await _dbx.PointFore.Where(r => r.SiteId == _vgn && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFVgn.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + .25 * (r.ForecastedFor - r.ForecastedAt).TotalHours, y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
     (await _dbx.PointFore.Where(r => r.SiteId == _mis && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFMis.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + .25 * (r.ForecastedFor - r.ForecastedAt).TotalHours, y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
@@ -472,8 +474,8 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   public ObservableCollection<DataPoint> ECaMissTemp { get; } = new ObservableCollection<DataPoint>();
   public ObservableCollection<DataPoint> ECaTIslTemp { get; } = new ObservableCollection<DataPoint>();
 
-  public PlotModel FuncModel { get; private set; } = new PlotModel { Title = "Function Srs", Background = OxyColor.FromUInt32(123456)/*, LegendTitleColor = OxyColor.FromUInt32(123456)*/ };
-  public PlotModel ScatModel { get; private set; } = new PlotModel { Title = "Scatter Srs" };
+  //public PlotModel FuncModel { get; private set; } = new PlotModel { Title = "Function Srs", Background = OxyColor.FromUInt32(123456)/*, LegendTitleColor = OxyColor.FromUInt32(123456)*/ };
+  //public PlotModel ScatModel { get; private set; } = new PlotModel { Title = "Scatter Srs" };
 
   double _fn; public double TimeMin { get => _fn; set => SetProperty(ref _fn, value); }
   double _fm; public double TimeMax { get => _fm; set => SetProperty(ref _fm, value); }

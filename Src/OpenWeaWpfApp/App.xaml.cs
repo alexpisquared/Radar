@@ -141,12 +141,12 @@ public partial class App : Application
     config["LogFolder"] = new[] { "D21-MJ0AWBEV", "RAZER1" }.Contains(Environment.MachineName) ? @"C:\g\Radar\Src\OpenWeaWpfApp\bin\Logs\OWA..log" : @"C:\Users\alexp\OneDrive\Public\Logs\..log";
     config["ServerList"] = @".\sqlexpress mtDEVsqldb,1625 mtUATsqldb mtPRDsqldb";
     config["SqlConStrSansSnI"] =   /**/  "Server={0};     Database={1};       persist security info=True;user id=IpmDevDbgUser;password=IpmDevDbgUser;MultipleActiveResultSets=True;App=EntityFramework;Connection Timeout=152";
-    config["SqlConStrSansSnD"] =   /**/  "Server={0};     Database={1};       Trusted_Connection=True;Connection Timeout=52";
-    config["SqlConStrBR"] =        /**/ $"Server={server};Database=BR;        Trusted_Connection=True;Connection Timeout=52";
-    config["SqlConStrVBCM"] =      /**/ $"Server={server};Database=VBCM;      Trusted_Connection=True;Connection Timeout=52";
-    config["SqlConStrAlpha"] =     /**/ $"Server={server};Database=Alpha;     Trusted_Connection=True;Connection Timeout=52";
-    config["SqlConStrBanking"] =   /**/ $"Server={server};Database=Banking;   Trusted_Connection=True;Connection Timeout=52";
-    config["SqlConStrInventory"] = /**/ $"Server={server};Database=Inventory; Trusted_Connection=True;Connection Timeout=52";
+    config["SqlConStrSansSnD"] =   /**/  "Server={0};     Database={1};       Trusted_Connection=True;Encrypt=False;Connection Timeout=52";
+    config["SqlConStrBR"] =        /**/ $"Server={server};Database=BR;        Trusted_Connection=True;Encrypt=False;Connection Timeout=52";
+    config["SqlConStrVBCM"] =      /**/ $"Server={server};Database=VBCM;      Trusted_Connection=True;Encrypt=False;Connection Timeout=52";
+    config["SqlConStrAlpha"] =     /**/ $"Server={server};Database=Alpha;     Trusted_Connection=True;Encrypt=False;Connection Timeout=52";
+    config["SqlConStrBanking"] =   /**/ $"Server={server};Database=Banking;   Trusted_Connection=True;Encrypt=False;Connection Timeout=52";
+    config["SqlConStrInventory"] = /**/ $"Server={server};Database=Inventory; Trusted_Connection=True;Encrypt=False;Connection Timeout=52";
 
 #if !true
       var appConfig = new AppConfig();
@@ -163,12 +163,12 @@ public partial class App : Application
       ""WhereAmI"":             ""{0}"",
       ""LogFolder"":            ""\\\\bbsfile01\\Public\\Dev\\AlexPi\\Misc\\Logs\\..log"",
       ""ServerList"":           "".\\sqlexpress mtDEVsqldb,1625 mtUATsqldb mtPRDsqldb"",
-      ""SqlConStrSansSnD"":     ""Server={{0}};Database={{1}};          Trusted_Connection=True;Connection Timeout=52"",
-      ""SqlConStrBR"":          ""Server={{server}};Database=BR;        Trusted_Connection=True;Connection Timeout=52"",
-      ""SqlConStrVBCM"":        ""Server={{server}};Database=VBCM;      Trusted_Connection=True;Connection Timeout=52"",
-      ""SqlConStrAlpha"":       ""Server={{server}};Database=Alpha;     Trusted_Connection=True;Connection Timeout=52"",
-      ""SqlConStrBanking"":     ""Server={{server}};Database=Banking;   Trusted_Connection=True;Connection Timeout=52"",
-      ""SqlConStrInventory"":   ""Server={{server}};Database=Inventory; Trusted_Connection=True;Connection Timeout=52"",
+      ""SqlConStrSansSnD"":     ""Server={{0}};Database={{1}};          Trusted_Connection=True;Encrypt=False;Connection Timeout=52"",
+      ""SqlConStrBR"":          ""Server={{server}};Database=BR;        Trusted_Connection=True;Encrypt=False;Connection Timeout=52"",
+      ""SqlConStrVBCM"":        ""Server={{server}};Database=VBCM;      Trusted_Connection=True;Encrypt=False;Connection Timeout=52"",
+      ""SqlConStrAlpha"":       ""Server={{server}};Database=Alpha;     Trusted_Connection=True;Encrypt=False;Connection Timeout=52"",
+      ""SqlConStrBanking"":     ""Server={{server}};Database=Banking;   Trusted_Connection=True;Encrypt=False;Connection Timeout=52"",
+      ""SqlConStrInventory"":   ""Server={{server}};Database=Inventory; Trusted_Connection=True;Encrypt=False;Connection Timeout=52"",
       ""AppSettings"": {{
         ""ServerList"":         "".\\sqlexpress mtDEVsqldb mtUATsqldb mtPRDsqldb"",
         ""KeyVaultURL"":        ""<moved to a safer place>"",

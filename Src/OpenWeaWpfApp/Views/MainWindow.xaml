@@ -30,6 +30,7 @@
         <RowDefinition Height="2*"/>
         <RowDefinition Height="1*"/>
       </Grid.RowDefinitions>
+      
       <oxy:Plot Title="{Binding PlotTitle}" d:Title="LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ "  TitleColor="#bdf" Background="#222" x:Name="plotBR" SubtitleColor="Red" TextColor="#0f0" PlotAreaBorderColor="Transparent" Grid.RowSpan="2" Grid.ColumnSpan="3" >
         <!--LegendTextColor="#eee" LegendTitleColor="Yellow"-->
         <oxy:Plot.Axes>
@@ -116,7 +117,7 @@
       <Image Margin="0,4,255,0"   Source="{Binding OpnWeaIcom,  FallbackValue=http://openweathermap.org/img/wn/01n@2x.png}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" Width="180" Height="180" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.RowSpan="2" Grid.Column="1" />
       <Image Margin="0,65,350,0"  Source="{Binding EnvtCaIconM, FallbackValue=http://openweathermap.org/img/wn/01n@2x.png}" d:Source="https://weather.gc.ca/weathericons/02.gif"   Width="90"  Height="90"  VerticalAlignment="Top" HorizontalAlignment="Right" RenderTransformOrigin="-0.2,0.551" Grid.Row="1" Grid.Column="1"/>
 
-      <Grid Height="120" Margin="0" Grid.Row="0" Grid.ColumnSpan="3" VerticalAlignment="Bottom">
+      <Grid Height="120" Margin="0" Grid.Row="0" Grid.ColumnSpan="3" VerticalAlignment="Top">
         <Grid.RowDefinitions>
           <RowDefinition/>
           <RowDefinition/>
