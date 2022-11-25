@@ -33,8 +33,6 @@ public partial class RadarTypeViewUserControl : UserControl
 
       chkIsPlaying.Content = $"_{UrlSuffix}      {gifurls.Count} files      {list.First().ImgTime:ddd HH:mm} ÷ {list.Last().ImgTime:ddd HH:mm}";
 
-      Beep.Play();
-
       //await Task.Delay(1000);
       //using var timer = new PeriodicTimer(TimeSpan.FromSeconds(_fpsPeriod));
       //await RunTimer(timer);

@@ -11,8 +11,6 @@ public partial class App : Application
 
   public App()
   {
-    Beep.Play();
-
     _host = Host.CreateDefaultBuilder()
       .AddViewModels()
       .ConfigureServices((hostContext, services) =>
@@ -29,7 +27,6 @@ public partial class App : Application
 
   public App()
   {
-    Beep.Play();
     var services = new ServiceCollection();
     _ = services.AddTransient<MainViewModel>();
     _ = services.AddSingleton<MainWindow>();

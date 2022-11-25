@@ -48,14 +48,12 @@ public partial class MainWindow : Window
     try
     {
       await Task.Delay(1);
-      //Beep.Play();
 
       SctrPtTPFVgn.TrackerFormatString += "{Tag}"; // Oxyplot ScatterPoint custom Label
       SctrPtTPFMis.TrackerFormatString += "{Tag}"; // Oxyplot ScatterPoint custom Label
       SctrPtTPFPhc.TrackerFormatString += "{Tag}"; // Oxyplot ScatterPoint custom Label
 
       _ = await ((MainViewModel)DataContext).PopulateAsync();  // only lines chart is drawn.
-      //Beep.Play();
     }
     catch (Exception ex)
     {

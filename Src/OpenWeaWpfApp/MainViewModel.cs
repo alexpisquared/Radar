@@ -1,13 +1,12 @@
 ﻿#define ObsCol // Go figure: ObsCol works, while array NOT! Just an interesting factoid.
-using OxyPlot.Legends;
-
 namespace OpenWeaWpfApp;
 public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.ObservableValidator
 {
   readonly IConfigurationRoot _config;
   readonly OpenWea _opnwea;
   readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _yHi = 2, _yLo = 13;
-  const int _maxIcons = 50;
+  bool _busy;
+  const int _maxIcons = 50, _timeToPaintMS = 88;
   readonly WeatherxContext _dbx;
   double _extrMax = +20, _extrMin = -20;
   const string _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaughan = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582",
@@ -32,29 +31,25 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 #endif
     }
   }
-
   public async Task<bool> PopulateAsync(int days = 5)
   {
     _busy = true;
     try
     {
-      Clear();                              /**/ await Task.Delay(50);
-      await PrevForecastFromDB();           /**/ await Task.Delay(33);
-      await PopulateEnvtCanaAsync();        /**/ await Task.Delay(33);
-      await PopulateScatModelAsync(days);   /**/ await Task.Delay(33);
+      Clear();                              /**/ await Task.Delay(_timeToPaintMS);
+      await PrevForecastFromDB();           /**/ await Task.Delay(_timeToPaintMS);
+      await PopulateEnvtCanaAsync();        /**/ await Task.Delay(_timeToPaintMS);
+      await PopulateScatModelAsync(days);   /**/ await Task.Delay(_timeToPaintMS);
 
       Beep.Play();
     }
     catch (Exception ex)
     {
       WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@");
-      if (Debugger.IsAttached) Debugger.Break(); else MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
+      if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
       return false;
     }
-    finally
-    {
-      _busy = false;
-    }
+    finally { _busy = false; }
 
     return true;
   }
@@ -77,21 +72,21 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       catch (Exception ex)
       {
         WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@");
-        if (Debugger.IsAttached) Debugger.Break(); else MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
+        if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
       }
     }
 
     WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
 
-    (await _dbx.PointFore.Where(r => r.SiteId == _phc && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + .25 * (r.ForecastedFor - r.ForecastedAt).TotalHours, y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
-    (await _dbx.PointFore.Where(r => r.SiteId == _vgn && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFVgn.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + .25 * (r.ForecastedFor - r.ForecastedAt).TotalHours, y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
-    (await _dbx.PointFore.Where(r => r.SiteId == _mis && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFMis.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + .25 * (r.ForecastedFor - r.ForecastedAt).TotalHours, y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
+    (await _dbx.PointFore.Where(r => r.SiteId == _phc && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
+    (await _dbx.PointFore.Where(r => r.SiteId == _vgn && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFVgn.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
+    (await _dbx.PointFore.Where(r => r.SiteId == _mis && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFMis.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
   }
   async Task PopulateEnvtCanaAsync()
   {
     Past24hrHAP p24 = new();
-    var bvl =await p24.GetIt(_urlPast24hrYKZ);
-    var pea =await p24.GetIt(_urlPast24hrYYZ);
+    var bvl = await p24.GetIt(_urlPast24hrYKZ);
+    var pea = await p24.GetIt(_urlPast24hrYYZ);
 
     if (_config["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")         "StoreData": "No",
     {
@@ -102,7 +97,9 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     RefillPast24(ECaVghnTemp, ECaPearWind, bvl);
     RefillPast24(ECaMissTemp, ECaBtvlWind, pea);
 
-    OwaLoclPrsr.Clear(); pea.OrderBy(r => r.TakenAt).ToList().ForEach(x => OwaLoclPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), 10 * x.Pressure - 1030)));
+    OwaLoclPrsr.Clear(); pea.OrderBy(r => r.TakenAt).ToList().ForEach(x => OwaLoclPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), (10 * x.Pressure) - 1030)));
+
+    await Task.Delay(_timeToPaintMS);
 
     var sitedataMiss = await GetEnvtCa(_mississ);
     var sitedataVghn = await GetEnvtCa(_vaughan);
@@ -119,11 +116,15 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     RefillForeEnvtCa(ECaVghnTemp, sitedataVghn);
     RefillForeEnvtCa(ECaMrkhTemp, await GetEnvtCa(_markham));
 
+    await Task.Delay(_timeToPaintMS);
+
     ArgumentNullException.ThrowIfNull(sitedataMiss, $"@@@@@@@@@ {nameof(sitedataMiss)}");
     SubHeader += $"{sitedataMiss.currentConditions.wind.speed}\n";
 
-    if (double.TryParse(sitedataMiss.almanac.temperature[0].Value, out var d)) { YAxiXMax = 200 + 10 * (YAxisMax = d + _yHi); _extrMax = d; }
-    if (double.TryParse(sitedataMiss.almanac.temperature[1].Value, out /**/d)) { YAxiXMin = 200 + 10 * (YAxisMin = Math.Floor(d / 10) * 10 - _yLo); _extrMin = d; }
+    if (double.TryParse(sitedataMiss.almanac.temperature[0].Value, out var d)) { YAxiXMax = 200 + (10 * (YAxisMax = d + _yHi)); _extrMax = d; }
+
+    if (double.TryParse(sitedataMiss.almanac.temperature[1].Value, out /**/d)) { YAxiXMin = 200 + (10 * (YAxisMin = (Math.Floor(d / 10) * 10) - _yLo)); _extrMin = d; }
+
     if (double.TryParse(sitedataMiss.almanac.temperature[2].Value, out d)) NormTMax = d;
     if (double.TryParse(sitedataMiss.almanac.temperature[3].Value, out d)) NormTMin = d;
 
@@ -156,7 +157,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
           d.MeasureId == measureId &&
           d.MeasureTime == f.TakenAt) == false)
       {
-        _dbx.PointReal.Add(new PointReal
+        _ = _dbx.PointReal.Add(new PointReal
         {
           SrcId = srcId,
           SiteId = siteId,
@@ -194,7 +195,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
           d.MeasureValue == val && // store only changes in recalculation results
           d.ForecastedFor == forecastedFor) == false)
       {
-        _dbx.PointFore.Add(new PointFore
+        _ = _dbx.PointFore.Add(new PointFore
         {
           SrcId = srcId,
           SiteId = siteId,
@@ -232,7 +233,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
           d.MeasureId == measureId &&
           d.ForecastedFor == forecastedFor) == false)
       {
-        _dbx.PointFore.Add(new PointFore
+        _ = _dbx.PointFore.Add(new PointFore
         {
           SrcId = srcId,
           SiteId = siteId,
@@ -322,13 +323,14 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     for (; h3 < UnixToDt(D53.list[0].dt).Hour / 3; h3++)
     {
       OpnWeaIco3[h3] = new BitmapImage(new Uri($"http://openweathermap.org/img/wn/01n.png", UriKind.Absolute)); //nogo: OpnWeaIco3[h3] = new BitmapImage(new Uri($"/Views/NoDataIndicator.bmp", UriKind.Absolute));
-      OpnWeaTip3[h3] = ($"{h3}");
+      OpnWeaTip3[h3] = $"{h3}";
     }
+
     D53.list.ToList().ForEach(r =>
     {
       //tmi: WriteLine($"/>D53:  {r.dt_txt}    {UnixToDt(r.dt)}    {UnixToDt(r.dt):MMM dd  HH:mm}     {r.weather[0].description,-26}       {r.main.temp_min,6:N1} ÷ {r.main.temp_max,4:N1}°    pop{r.pop * 100,3:N0}%      {r}");
       OpnWeaIco3[h3] = new BitmapImage(new Uri($"http://openweathermap.org/img/wn/{r.weather[0].icon}@2x.png"));
-      OpnWeaTip3[h3] = ($"{UnixToDt(r.dt):MMM d  H:mm} \n\n    {r.weather[0].description}   \n    {r.main.temp:N1}°    pop {r.pop * 100:N0}%");
+      OpnWeaTip3[h3] = $"{UnixToDt(r.dt):MMM d  H:mm} \n\n    {r.weather[0].description}   \n    {r.main.temp:N1}°    pop {r.pop * 100:N0}%";
       h3++;
     });
 #endif
@@ -359,10 +361,12 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       var ty = 0.20 * Math.Sin(rad + 90);
       var sx = .002 * Math.Cos(rad - 90);
       var sy = 0.20 * Math.Sin(rad - 90);
-      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)) + tx, ty + x.wind_speed * _kWind));
-      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)) + dx, dy + x.wind_speed * _kWind));
-      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)) + sx, sy + x.wind_speed * _kWind));
+      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)) + tx, ty + (x.wind_speed * _kWind)));
+      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)) + dx, dy + (x.wind_speed * _kWind)));
+      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)) + sx, sy + (x.wind_speed * _kWind)));
     });
+
+    await Task.Delay(_timeToPaintMS);
 
     D53.list.Where(d => d.dt > OCA.hourly.Max(d => d.dt)).ToList().ForEach(x =>
     {
@@ -377,15 +381,17 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       var dx = 0.1 * Math.Cos(rad);
       var dy = 1.0 * Math.Sin(rad);
       ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.speed * _kWind));
-      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + dx, dy + x.wind.speed * _kWind));
+      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + dx, dy + (x.wind.speed * _kWind)));
       ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.speed * _kWind));
     });
 
+    await Task.Delay(_timeToPaintMS);
+
     var x = OCA.daily.First();
-    OwaLoclSunT.Add(new DataPoint((UnixToDt(x.sunrise).AddDays(-1).ToOADate()), valueMin));
-    OwaLoclSunT.Add(new DataPoint((UnixToDt(x.sunrise).AddDays(-1).ToOADate()), valueMax));
-    OwaLoclSunT.Add(new DataPoint((UnixToDt(x.sunset).AddDays(-1).ToOADate()), valueMax));
-    OwaLoclSunT.Add(new DataPoint((UnixToDt(x.sunset).AddDays(-1).ToOADate()), valueMin));
+    OwaLoclSunT.Add(new DataPoint(UnixToDt(x.sunrise).AddDays(-1).ToOADate(), valueMin));
+    OwaLoclSunT.Add(new DataPoint(UnixToDt(x.sunrise).AddDays(-1).ToOADate(), valueMax));
+    OwaLoclSunT.Add(new DataPoint(UnixToDt(x.sunset).AddDays(-1).ToOADate(), valueMax));
+    OwaLoclSunT.Add(new DataPoint(UnixToDt(x.sunset).AddDays(-1).ToOADate(), valueMin));
     OCA.daily.ToList().ForEach(x =>
     {
       OwaLoclSunT.Add(new DataPoint(UnixToDt(x.sunrise).ToOADate(), valueMin));
@@ -394,6 +400,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       OwaLoclSunT.Add(new DataPoint(UnixToDt(x.sunset).ToOADate(), valueMin));
     });
 
+    await Task.Delay(_timeToPaintMS);
 
     OwaLoclGus_.Clear();
 
@@ -403,11 +410,11 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     FunctionSeries__(Math.Cos, t0 - 1.3, t0 + 7.4, .0125);
     void FunctionSeries__(Func<double, double> f, double x0, double x1, double dx)
     {
-      for (double t = x0; t <= x1 + dx * 0.5; t += dx)
-        OwaLoclGus_.Add(new DataPoint(t, dh - 16 * f(t * Math.PI * 2)));
+      for (var t = x0; t <= x1 + (dx * 0.5); t += dx)
+        OwaLoclGus_.Add(new DataPoint(t, dh - (16 * f(t * Math.PI * 2))));
     }
 
-    await Task.Delay(33);
+    await Task.Delay(_timeToPaintMS);
 
     OCA.daily
       .Where(d => d.dt > D53.list.Max(d => d.dt))
@@ -472,46 +479,45 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     });
   }
 
-  public ObservableCollection<ScatterPoint> SctrPtTPFVgn { get; } = new ObservableCollection<ScatterPoint>();
-  public ObservableCollection<ScatterPoint> SctrPtTPFPhc { get; } = new ObservableCollection<ScatterPoint>();
-  public ObservableCollection<ScatterPoint> SctrPtTPFMis { get; } = new ObservableCollection<ScatterPoint>();
-  public ObservableCollection<DataPoint> OwaLoclTemp { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> OwaLoclFeel { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> OwaLoclPrsr { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> OwaLoclGust { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> OwaLoclGus_ { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> ECaBtvlWind { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> ECaPearWind { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> OwaLoclSunT { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> OwaLoclNowT { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> OwaLoclPopr { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> ECaToroTemp { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> ECaVghnTemp { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> ECaMrkhTemp { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> ECaMissTemp { get; } = new ObservableCollection<DataPoint>();
-  public ObservableCollection<DataPoint> ECaTIslTemp { get; } = new ObservableCollection<DataPoint>();
-
-  [ObservableProperty] double timeMin = DateTime.Today.ToOADate();
+  [ObservableProperty] ObservableCollection<ScatterPoint> sctrPtTPFVgn = new();
+  [ObservableProperty] ObservableCollection<ScatterPoint> sctrPtTPFPhc = new();
+  [ObservableProperty] ObservableCollection<ScatterPoint> sctrPtTPFMis = new();
+  [ObservableProperty] ObservableCollection<DataPoint> owaLoclTemp = new();
+  [ObservableProperty] ObservableCollection<DataPoint> owaLoclFeel = new();
+  [ObservableProperty] ObservableCollection<DataPoint> owaLoclPrsr = new();
+  [ObservableProperty] ObservableCollection<DataPoint> owaLoclGust = new();
+  [ObservableProperty] ObservableCollection<DataPoint> owaLoclGus_ = new();
+  [ObservableProperty] ObservableCollection<DataPoint> eCaBtvlWind = new();
+  [ObservableProperty] ObservableCollection<DataPoint> eCaPearWind = new();
+  [ObservableProperty] ObservableCollection<DataPoint> owaLoclSunT = new();
+  [ObservableProperty] ObservableCollection<DataPoint> owaLoclNowT = new();
+  [ObservableProperty] ObservableCollection<DataPoint> owaLoclPopr = new();
+  [ObservableProperty] ObservableCollection<DataPoint> eCaToroTemp = new();
+  [ObservableProperty] ObservableCollection<DataPoint> eCaVghnTemp = new();
+  [ObservableProperty] ObservableCollection<DataPoint> eCaMrkhTemp = new();
+  [ObservableProperty] ObservableCollection<DataPoint> eCaMissTemp = new();
+  [ObservableProperty] ObservableCollection<DataPoint> eCaTIslTemp = new();
+  [ObservableProperty] double timeMin = DateTime.Today.ToOADate() - 1;
   [ObservableProperty] double timeMax = DateTime.Today.ToOADate() + 3;
-  string _t = default!; public string PlotTitle { get => _t; set => SetProperty(ref _t, value); }
-  string _c = default!; public string CurrentConditions { get => _c; set => SetProperty(ref _c, value); }
-  string _r = default!; public string CurTempReal { get => _r; set => SetProperty(ref _r, value); }
-  string _f = default!; public string CurTempFeel { get => _f; set => SetProperty(ref _f, value); }
-  string _w = default!; public string CurWindKmHr { get => _w; set => SetProperty(ref _w, value); }
-  int _b = default!; public int WindDirn { get => _b; set => SetProperty(ref _b, value); }
-  float _v = default!; public float WindVeloKmHr { get => _v; set => SetProperty(ref _v, value); }
-  RootobjectOneCallApi? _o = default!; public RootobjectOneCallApi? OCA { get => _o; set => SetProperty(ref _o, value); }
-  RootobjectFrc5Day3Hr? _y = default!; public RootobjectFrc5Day3Hr? D53 { get => _y; set => SetProperty(ref _y, value); }
+  [ObservableProperty] string plotTitle;
+  [ObservableProperty] string currentConditions;
+  [ObservableProperty] string curTempReal;
+  [ObservableProperty] string curTempFeel;
+  [ObservableProperty] string curWindKmHr;
+  [ObservableProperty] int windDirn;
+  [ObservableProperty] float windVeloKmHr;
+  [ObservableProperty] RootobjectOneCallApi? oCA = default!;
+  [ObservableProperty] RootobjectFrc5Day3Hr? d53 = default!;
 
   //ImageSource _i; public ImageSource WeaIcom { get => _i; set => SetProperty(ref _i, value); }
   //Uri _k = new("http://openweathermap.org/img/wn/04n@2x.png"); public Uri WIcon { get => _k; set => SetProperty(ref _k, value); }
   const float _wk = 10f, _kprsr = .01f;
   const float _kWind = 3.6f * _wk;
 
-  ObservableCollection<string> _a = new(); public ObservableCollection<string> OpnWeaIcoA { get => _a; set => SetProperty(ref _a, value); }
+  [ObservableProperty] ObservableCollection<string> opnWeaIcoA = new();
 #if ObsCol
-  ObservableCollection<ImageSource> _3 = new(); public ObservableCollection<ImageSource> OpnWeaIco3 { get => _3; set => SetProperty(ref _3, value); }
-  ObservableCollection<string> _4 = new(); public ObservableCollection<string> OpnWeaTip3 { get => _4; set => SetProperty(ref _4, value); }
+  [ObservableProperty] ObservableCollection<ImageSource> opnWeaIco3 = new();
+  [ObservableProperty] ObservableCollection<string> opnWeaTip3 = new();
 #else
   ImageSource[] _3 = new ImageSource[_maxIcons]; public ImageSource[] OpnWeaIco3 { get => _3; set => SetProperty(ref _3, value); }
   string[] _4 = new string[_maxIcons]; public string[] OpnWeaTip3 { get => _4; set => SetProperty(ref _4, value); }
@@ -519,63 +525,67 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   //Messages _m4 = new(); public Messages OpnWeaTip3 { get => _m4; set => SetProperty(ref _m4, value); }
 #endif
 
-  GridLength _iw0; public GridLength IconWidth0 { get => _iw0; set => SetProperty(ref _iw0, value); }
-  GridLength _iw1; public GridLength IconWidth1 { get => _iw1; set => SetProperty(ref _iw1, value); }
-  GridLength _iw2; public GridLength IconWidth2 { get => _iw2; set => SetProperty(ref _iw2, value); }
-  GridLength _iw3; public GridLength IconWidth3 { get => _iw3; set => SetProperty(ref _iw3, value); }
-  GridLength _iw4; public GridLength IconWidth4 { get => _iw4; set => SetProperty(ref _iw4, value); }
-  GridLength _iw5; public GridLength IconWidth5 { get => _iw5; set => SetProperty(ref _iw5, value); }
-  GridLength _iw6; public GridLength IconWidth6 { get => _iw6; set => SetProperty(ref _iw6, value); }
-  GridLength _iw7; public GridLength IconWidth7 { get => _iw7; set => SetProperty(ref _iw7, value); }
+  [ObservableProperty] GridLength iconWidth0;
+  [ObservableProperty] GridLength iconWidth1;
+  [ObservableProperty] GridLength iconWidth2;
+  [ObservableProperty] GridLength iconWidth3;
+  [ObservableProperty] GridLength iconWidth4;
+  [ObservableProperty] GridLength iconWidth5;
+  [ObservableProperty] GridLength iconWidth6;
+  [ObservableProperty] GridLength iconWidth7;
+  [ObservableProperty] GridLength iconWidt00;
+  [ObservableProperty] GridLength iconWidt01;
+  [ObservableProperty] GridLength iconWidt02;
+  [ObservableProperty] GridLength iconWidt03;
+  [ObservableProperty] GridLength iconWidt04;
+  [ObservableProperty] GridLength iconWidt05;
+  [ObservableProperty] GridLength iconWidt06;
+  [ObservableProperty] GridLength iconWidt07;
+  [ObservableProperty] GridLength iconWidt08;
+  [ObservableProperty] GridLength iconWidt09;
+  [ObservableProperty] GridLength iconWidt10;
+  [ObservableProperty] GridLength iconWidt11;
+  [ObservableProperty] GridLength iconWidt12;
+  [ObservableProperty] GridLength iconWidt13;
+  [ObservableProperty] GridLength iconWidt14;
+  [ObservableProperty] GridLength iconWidt15;
+  [ObservableProperty] GridLength iconWidt16;
+  [ObservableProperty] GridLength iconWidt17;
+  [ObservableProperty] GridLength iconWidt18;
+  [ObservableProperty] GridLength iconWidt19;
+  [ObservableProperty] GridLength iconWidt20;
+  [ObservableProperty] GridLength iconWidt21;
+  [ObservableProperty] GridLength iconWidt22;
+  [ObservableProperty] GridLength iconWidt23;
+  [ObservableProperty] GridLength iconWidt24;
+  [ObservableProperty] GridLength iconWidt25;
+  [ObservableProperty] GridLength iconWidt26;
+  [ObservableProperty] GridLength iconWidt27;
+  [ObservableProperty] GridLength iconWidt28;
+  [ObservableProperty] GridLength iconWidt29;
+  [ObservableProperty] GridLength iconWidt30;
+  [ObservableProperty] GridLength iconWidt31;
+  [ObservableProperty] GridLength iconWidt32;
+  [ObservableProperty] GridLength iconWidt33;
+  [ObservableProperty] GridLength iconWidt34;
+  [ObservableProperty] GridLength iconWidt35;
+  [ObservableProperty] GridLength iconWidt36;
+  [ObservableProperty] GridLength iconWidt37;
+  [ObservableProperty] GridLength iconWidt38;
+  [ObservableProperty] GridLength iconWidt39;
+  [ObservableProperty] string opnWeaIcom ="http://openweathermap.org/img/wn/01d@2x.png"; 
+  [ObservableProperty] string envtCaIconM ="https://weather.gc.ca/weathericons/05.gif"; 
+  [ObservableProperty] string envtCaIconV ="https://weather.gc.ca/weathericons/05.gif"; 
+  [ObservableProperty] string subHeader ="Loading..."; 
+  [ObservableProperty] double yAxisMin = -18;
+  [ObservableProperty] double yAxisMax = +12;
+  [ObservableProperty] double normTMin = -08;
+  [ObservableProperty] double normTMax = +02;
+  [ObservableProperty] double yAxiXMax = -01;
+  [ObservableProperty] double yAxiXMin = -1;
+  [ObservableProperty] double windGustKmHr;
+  [ObservableProperty] IInterpolationAlgorithm iA = InterpolationAlgorithms.CatmullRomSpline; // the least vertical jumping beyond y value.
 
-  GridLength _00; public GridLength IconWidt00 { get => _00; set => SetProperty(ref _00, value); }
-  GridLength _01; public GridLength IconWidt01 { get => _01; set => SetProperty(ref _01, value); }
-  GridLength _02; public GridLength IconWidt02 { get => _02; set => SetProperty(ref _02, value); }
-  GridLength _03; public GridLength IconWidt03 { get => _03; set => SetProperty(ref _03, value); }
-  GridLength _04; public GridLength IconWidt04 { get => _04; set => SetProperty(ref _04, value); }
-  GridLength _05; public GridLength IconWidt05 { get => _05; set => SetProperty(ref _05, value); }
-  GridLength _06; public GridLength IconWidt06 { get => _06; set => SetProperty(ref _06, value); }
-  GridLength _07; public GridLength IconWidt07 { get => _07; set => SetProperty(ref _07, value); }
-  GridLength _08; public GridLength IconWidt08 { get => _08; set => SetProperty(ref _08, value); }
-  GridLength _09; public GridLength IconWidt09 { get => _09; set => SetProperty(ref _09, value); }
-  GridLength _10; public GridLength IconWidt10 { get => _10; set => SetProperty(ref _10, value); }
-  GridLength _11; public GridLength IconWidt11 { get => _11; set => SetProperty(ref _11, value); }
-  GridLength _12; public GridLength IconWidt12 { get => _12; set => SetProperty(ref _12, value); }
-  GridLength _13; public GridLength IconWidt13 { get => _13; set => SetProperty(ref _13, value); }
-  GridLength _14; public GridLength IconWidt14 { get => _14; set => SetProperty(ref _14, value); }
-  GridLength _15; public GridLength IconWidt15 { get => _15; set => SetProperty(ref _15, value); }
-  GridLength _16; public GridLength IconWidt16 { get => _16; set => SetProperty(ref _16, value); }
-  GridLength _17; public GridLength IconWidt17 { get => _17; set => SetProperty(ref _17, value); }
-  GridLength _18; public GridLength IconWidt18 { get => _18; set => SetProperty(ref _18, value); }
-  GridLength _19; public GridLength IconWidt19 { get => _19; set => SetProperty(ref _19, value); }
-  GridLength _20; public GridLength IconWidt20 { get => _20; set => SetProperty(ref _20, value); }
-  GridLength _21; public GridLength IconWidt21 { get => _21; set => SetProperty(ref _21, value); }
-  GridLength _22; public GridLength IconWidt22 { get => _22; set => SetProperty(ref _22, value); }
-  GridLength _23; public GridLength IconWidt23 { get => _23; set => SetProperty(ref _23, value); }
-  GridLength _24; public GridLength IconWidt24 { get => _24; set => SetProperty(ref _24, value); }
-  GridLength _25; public GridLength IconWidt25 { get => _25; set => SetProperty(ref _25, value); }
-  GridLength _26; public GridLength IconWidt26 { get => _26; set => SetProperty(ref _26, value); }
-  GridLength _27; public GridLength IconWidt27 { get => _27; set => SetProperty(ref _27, value); }
-  GridLength _28; public GridLength IconWidt28 { get => _28; set => SetProperty(ref _28, value); }
-  GridLength _29; public GridLength IconWidt29 { get => _29; set => SetProperty(ref _29, value); }
-  GridLength _30; public GridLength IconWidt30 { get => _30; set => SetProperty(ref _30, value); }
-  GridLength _31; public GridLength IconWidt31 { get => _31; set => SetProperty(ref _31, value); }
-  GridLength _32; public GridLength IconWidt32 { get => _32; set => SetProperty(ref _32, value); }
-  GridLength _33; public GridLength IconWidt33 { get => _33; set => SetProperty(ref _33, value); }
-  GridLength _34; public GridLength IconWidt34 { get => _34; set => SetProperty(ref _34, value); }
-  GridLength _35; public GridLength IconWidt35 { get => _35; set => SetProperty(ref _35, value); }
-  GridLength _36; public GridLength IconWidt36 { get => _36; set => SetProperty(ref _36, value); }
-  GridLength _37; public GridLength IconWidt37 { get => _37; set => SetProperty(ref _37, value); }
-  GridLength _38; public GridLength IconWidt38 { get => _38; set => SetProperty(ref _38, value); }
-  GridLength _39; public GridLength IconWidt39 { get => _39; set => SetProperty(ref _39, value); }
-
-  string _j = "http://openweathermap.org/img/wn/01d@2x.png"; public string OpnWeaIcom { get => _j; set => SetProperty(ref _j, value); }
-  string _i = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconM { get => _i; set => SetProperty(ref _i, value); }
-  string _k = "https://weather.gc.ca/weathericons/05.gif"; public string EnvtCaIconV { get => _k; set => SetProperty(ref _k, value); }
-
-  string _s = "Loading..."; public string SubHeader { get => _s; set => SetProperty(ref _s, value); }
-
-  bool _busy;
   IRelayCommand? _cd; public IRelayCommand GetDaysComman_ => _cd ??= new RelayCommand(GetDays); void GetDays() { }
   IRelayCommand? _gs; public IRelayCommand GetDaysCommand => _gs ??= new AsyncRelayCommand<object>(SetMaxX, (days) => !_busy); async Task SetMaxX(object? days_)
   {
@@ -595,18 +605,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
     await Task.Yield();// PopulateAsync((int?)days ?? 5);
   }
-
-
-  [ObservableProperty] double yAxisMin = -18;
-  [ObservableProperty] double yAxisMax = +12;
-  [ObservableProperty] double normTMin = -08;
-  [ObservableProperty] double normTMax = +02;
-  [ObservableProperty] double yAxiXMax = -01;
-  [ObservableProperty] double yAxiXMin = -1;
-  [ObservableProperty] IInterpolationAlgorithm iA = InterpolationAlgorithms.CatmullRomSpline; // the least vertical jumping beyond y value.
-  [ObservableProperty] double windGustKmHr;
 }
-
 
 /// <summary>
 /// todo: assigns but not refreshes.

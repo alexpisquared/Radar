@@ -37,12 +37,10 @@ public partial class PocBin : Window
 
   async void OnLoadad(object sender, RoutedEventArgs e)
   {
-    Beep.Play();
     await Task.Delay(1);
 
 
     _ = await ((MainViewModel)DataContext).PopulateAsync();  // only lines chart is drawn.
-    Beep.Play();
   }
 
   async void OnPoplte(object sender, RoutedEventArgs e) => _ = await ((MainViewModel)DataContext).PopulateAsync();  // only lines chart is drawn.
