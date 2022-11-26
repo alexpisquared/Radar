@@ -14,6 +14,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     _urlPast24hrYYZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yyz", // Pearson
     _urlPast24hrYKZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=ykz"; // Buttonville
 
+
   public MainViewModel(WeatherxContext weatherxContext, OpenWea openWea)
   {
     _config = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
@@ -36,10 +37,10 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     _busy = true;
     try
     {
-      Clear();                              /**/ await Task.Delay(_timeToPaintMS);
-      await PrevForecastFromDB();           /**/ await Task.Delay(_timeToPaintMS);
-      await PopulateEnvtCanaAsync();        /**/ await Task.Delay(_timeToPaintMS);
-      await PopulateScatModelAsync(days);   /**/ await Task.Delay(_timeToPaintMS);
+      Clear();                              /**/            await Tick();
+      await PrevForecastFromDB();           /**/ await Tick();
+      await PopulateEnvtCanaAsync();        /**/ await Tick();
+      await PopulateScatModelAsync(days);   /**/ await Tick();
 
       Beep.Play();
     }
@@ -53,6 +54,8 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
     return true;
   }
+
+  static async Task Tick() { BprKernel32.TickFAF(); await Task.Delay(_timeToPaintMS); }
 
   async Task PrevForecastFromDB()
   {
@@ -99,7 +102,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
     OwaLoclPrsr.Clear(); pea.OrderBy(r => r.TakenAt).ToList().ForEach(x => OwaLoclPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), (10 * x.Pressure) - 1030)));
 
-    await Task.Delay(_timeToPaintMS);
+    await Tick();
 
     var sitedataMiss = await GetEnvtCa(_mississ);
     var sitedataVghn = await GetEnvtCa(_vaughan);
@@ -116,7 +119,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     RefillForeEnvtCa(ECaVghnTemp, sitedataVghn);
     RefillForeEnvtCa(ECaMrkhTemp, await GetEnvtCa(_markham));
 
-    await Task.Delay(_timeToPaintMS);
+    await Tick();
 
     ArgumentNullException.ThrowIfNull(sitedataMiss, $"@@@@@@@@@ {nameof(sitedataMiss)}");
     SubHeader += $"{sitedataMiss.currentConditions.wind.speed}\n";
@@ -366,7 +369,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)) + sx, sy + (x.wind_speed * _kWind)));
     });
 
-    await Task.Delay(_timeToPaintMS);
+    await Tick();
 
     D53.list.Where(d => d.dt > OCA.hourly.Max(d => d.dt)).ToList().ForEach(x =>
     {
@@ -385,7 +388,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.speed * _kWind));
     });
 
-    await Task.Delay(_timeToPaintMS);
+    await Tick();
 
     var x = OCA.daily.First();
     OwaLoclSunT.Add(new DataPoint(UnixToDt(x.sunrise).AddDays(-1).ToOADate(), valueMin));
@@ -400,7 +403,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       OwaLoclSunT.Add(new DataPoint(UnixToDt(x.sunset).ToOADate(), valueMin));
     });
 
-    await Task.Delay(_timeToPaintMS);
+    await Tick();
 
     OwaLoclGus_.Clear();
 
@@ -414,7 +417,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
         OwaLoclGus_.Add(new DataPoint(t, dh - (16 * f(t * Math.PI * 2))));
     }
 
-    await Task.Delay(_timeToPaintMS);
+    await Tick();
 
     OCA.daily
       .Where(d => d.dt > D53.list.Max(d => d.dt))
@@ -573,10 +576,10 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   [ObservableProperty] GridLength iconWidt37;
   [ObservableProperty] GridLength iconWidt38;
   [ObservableProperty] GridLength iconWidt39;
-  [ObservableProperty] string opnWeaIcom ="http://openweathermap.org/img/wn/01d@2x.png"; 
-  [ObservableProperty] string envtCaIconM ="https://weather.gc.ca/weathericons/05.gif"; 
-  [ObservableProperty] string envtCaIconV ="https://weather.gc.ca/weathericons/05.gif"; 
-  [ObservableProperty] string subHeader ="Loading..."; 
+  [ObservableProperty] string opnWeaIcom = "http://openweathermap.org/img/wn/01d@2x.png";
+  [ObservableProperty] string envtCaIconM = "https://weather.gc.ca/weathericons/05.gif";
+  [ObservableProperty] string envtCaIconV = "https://weather.gc.ca/weathericons/05.gif";
+  [ObservableProperty] string subHeader = "Loading...";
   [ObservableProperty] double yAxisMin = -18;
   [ObservableProperty] double yAxisMax = +12;
   [ObservableProperty] double normTMin = -08;
