@@ -1,9 +1,9 @@
 ﻿
 namespace OpenWeaWpfApp;
 
-public partial class MainWindow : Window
+public partial class MainPlotViewWin : Window
 {
-  public MainWindow()
+  public MainPlotViewWin()
   {
     InitializeComponent();
     MouseLeftButtonDown += (s, e) => DragMove();
@@ -11,7 +11,7 @@ public partial class MainWindow : Window
     {
       switch (e.Key)
       {
-        case Key.R: Hand.Play(); _ = await ((MainViewModel)DataContext).PopulateAsync(); goto case Key.I;
+        case Key.R: Hand.Play(); _ = await ((PlotViewModel)DataContext).PopulateAsync(); goto case Key.I;
         case Key.I: Beep.Play(); plotBR.InvalidatePlot(true); break;
         case Key.Escape: base.OnKeyUp(e); e.Handled = true; Close(); break;
         default: break;
@@ -48,12 +48,8 @@ public partial class MainWindow : Window
     try
     {
       await Task.Delay(1);
-
-      SctrPtTPFVgn.TrackerFormatString += "{Tag}"; // Oxyplot ScatterPoint custom Label
-      SctrPtTPFMis.TrackerFormatString += "{Tag}"; // Oxyplot ScatterPoint custom Label
-      SctrPtTPFPhc.TrackerFormatString += "{Tag}"; // Oxyplot ScatterPoint custom Label
-
-      _ = await ((MainViewModel)DataContext).PopulateAsync();  // only lines chart is drawn.
+            
+      _ = await ((PlotViewModel)DataContext).PopulateAsync();  // only lines chart is drawn.
     }
     catch (Exception ex)
     {
@@ -62,7 +58,7 @@ public partial class MainWindow : Window
     }
   }
 
-  async void OnPoplte(object sender, RoutedEventArgs e) => _ = await ((MainViewModel)DataContext).PopulateAsync();  // only lines chart is drawn.
+  async void OnPoplte(object sender, RoutedEventArgs e) => _ = await ((PlotViewModel)DataContext).PopulateAsync();  // only lines chart is drawn.
 
     void MenuItem_Click(object sender, RoutedEventArgs e)
     {

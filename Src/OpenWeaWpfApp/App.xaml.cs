@@ -29,14 +29,16 @@ public partial class App : Application
   {
     var services = new ServiceCollection();
     _ = services.AddTransient<MainViewModel>();
-    _ = services.AddSingleton<MainWindow>();
+    _ = services.AddTransient<PlotViewModel>();
+    _ = services.AddSingleton<MainPlotViewWin>();
+    _ = services.AddSingleton<MainPlotOldWindow>();
     _ = services.AddTransient<OpenWea>();
 
     _ = services.AddSingleton<IConfigurationRoot>(AutoInitConfigHardcoded());
     _ = services.AddSingleton<ILogger>(sp => SeriLogHelper.InitLoggerFactory( //todo: this allows to override by UserSettings entry: UserSettingsIPM.UserLogFolderFile ??= // if new - store in usersettings for next uses.    
       FSHelper.GetCreateSafeLogFolderAndFile(new[]  {
         sp.GetRequiredService<IConfigurationRoot>()["LogFolder"].Replace("..", $"{(Assembly.GetExecutingAssembly().GetName().Name??"Unkwn")[..5]}.{Environment.UserName[..3]}.."), // First, get from AppSettings.
-        @$"..\Logs\"  })).CreateLogger<MainWindow>());
+        @$"..\Logs\"  })).CreateLogger<MainPlotViewWin>());
 
     Dbx(services);
 
@@ -61,12 +63,15 @@ public partial class App : Application
 #if Host
     _host.Start();
     MainWindow = _host.Services.GetRequiredService<MainWindow>();                       // 1.050 ms!!!
+#elif !DEBUG
+    MainWindow = _serviceProvider.GetRequiredService<MainPlotViewWin>();                     //   400 ms
+    MainWindow.DataContext = _serviceProvider.GetRequiredService<PlotViewModel>();      //   700 ms
 #else
-    MainWindow = _serviceProvider.GetRequiredService<MainWindow>();                     //   400 ms
+    MainWindow = _serviceProvider.GetRequiredService<MainPlotOldWindow>();                     //   400 ms
     MainWindow.DataContext = _serviceProvider.GetRequiredService<MainViewModel>();      //   700 ms
 #endif
 
-    //the only way to populate PlotView: await ((MainViewModel)MainWindow.DataContext).PopulateAsync();
+    //the only way to populate PlotView: await ((MainViewModel)MainPlotOldWindow.DataContext).PopulateAsync();
 
     MainWindow.Show();
 #else // Release:
