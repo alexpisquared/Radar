@@ -341,7 +341,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     const int id = 2;
     await SetMaxX(id);
     TimeMin = DateTime.Today.AddDays(-1).ToOADate(); // == DateTimeAxis.ToDouble(DateTime.Today.AddDays(-1));
-    TimeMax = DateTime.Today.AddDays(id).ToOADate(); // DateTimeAxis.ToDouble(days == 5 ? UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Today.AddDays(days));
+    TimeMax = DateTime.Today.AddDays(id).ToOADate(); // DateTimeAxis.ToDouble(_days == 5 ? UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Today.AddDays(_days));
     var valueMax = _extrMax; // OCA.daily.Max(r => r.temp.max);
     var valueMin = _extrMin; // OCA.daily.Min(r => r.temp.min);
 
@@ -606,7 +606,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       IconWidth7 = 7 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
     }
 
-    await Task.Yield();// PopulateAsync((int?)days ?? 5);
+    await Task.Yield();// PopulateAllAsync((int?)_days ?? 5);
   }
 }
 

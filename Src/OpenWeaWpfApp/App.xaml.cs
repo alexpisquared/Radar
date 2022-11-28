@@ -71,7 +71,7 @@ public partial class App : Application
     MainWindow.DataContext = _serviceProvider.GetRequiredService<MainViewModel>();      //   700 ms
 #endif
 
-    //the only way to populate PlotView: await ((MainViewModel)MainPlotOldWindow.DataContext).PopulateAsync();
+    //the only way to populate PlotView: await ((MainViewModel)MainPlotOldWindow.DataContext).PopulateAllAsync();
 
     MainWindow.Show();
 #else // Release:
