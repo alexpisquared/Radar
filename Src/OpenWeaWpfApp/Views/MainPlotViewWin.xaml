@@ -9,7 +9,7 @@
   <WindowChrome.WindowChrome>
     <WindowChrome CaptionHeight="0" ResizeBorderThickness="10" />
   </WindowChrome.WindowChrome>
-  <Border CornerRadius="6" Padding="3" BorderBrush="#ccc" BorderThickness="1" >
+  <Border CornerRadius="6" Padding="3" BorderBrush="#ccc" BorderThickness="1" Background="#000" >
     <Grid>
       <Grid.Resources>
         <Color x:Key="Vgn">#08f</Color>
@@ -31,8 +31,7 @@
         <RowDefinition Height="1*"/>
       </Grid.RowDefinitions>
 
-      <oxy:PlotView Model="{Binding Model}" Background="#222" x:Name="plotBR" Grid.RowSpan="2" Grid.ColumnSpan="3" d:Title="LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ">
-      </oxy:PlotView>
+      <oxy:PlotView Model="{Binding Model}" Background="#222" x:Name="plotBR" Grid.RowSpan="2" Grid.ColumnSpan="3" />
 
       <Button IsDefault="True" Click="OnPoplte" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="1" />
 

@@ -1,13 +1,7 @@
 ﻿#define ObsCol // Go figure: ObsCol works, while array NOT! Just an interesting factoid.
-using System.ComponentModel;
-using OxyPlot.Legends;
-//using PropertyTools.DataAnnotations;
-//using WpfExamples;
-
-using HorizontalAlignment = OxyPlot.HorizontalAlignment;
+using System.Windows.Media.Animation;
 
 namespace OpenWeaWpfApp;
-
 public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.ObservableValidator
 {
   readonly IConfigurationRoot _config;
@@ -47,10 +41,13 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     _busy = true;
     try
     {
-      Clear();                              /**/            await Tick();
+      Clear();                              /**/ await Tick();
       await PrevForecastFromDB();           /**/ await Tick();
+      CreateModel(33);
       await PopulateEnvtCanaAsync();        /**/ await Tick();
       await PopulateScatModelAsync(days);   /**/ await Tick();
+      await PrevForecastFromDB();           /**/ await Tick();
+      CreateModel(33);
 
       Beep.Play();
     }
@@ -69,25 +66,14 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
   async Task PrevForecastFromDB()
   {
-    if (_config["StoreData"] != "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
+    if (_config["StoreData"] != "Yes")
       return;
 
     var now = DateTime.Now;
     var ytd = now.AddHours(-24);
     var dby = now.AddHours(-48);
 
-    if (Environment.UserDomainName != "RAZER1")
-    {
-      try
-      {
-        _dbx.EnsureCreated22();
-      }
-      catch (Exception ex)
-      {
-        WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@");
-        if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
-      }
-    }
+    if (Environment.UserDomainName != "RAZER1") try { _dbx.EnsureCreated22(); } catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
 
     WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
 
@@ -620,62 +606,61 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   }
 
   #region  OxyLegendsDemo //public class MainViewModel : Observable // https://raw.githubusercontent.com/oxyplot/oxyplot/develop/Source/Examples/WPF/WpfExamples/Examples/LegendsDemo/MainViewModel.cs
-  // [DisplayName("Position"), Category("Legend properties")]
-  [ObservableProperty] LegendPosition legendPosition; void OnLegendPositionChanged() => PropertiesChanged();
-  // [DisplayName("Placement")]
-  [ObservableProperty] LegendPlacement legendPlacement; void OnLegendPlacementChanged() => PropertiesChanged();
-  // [DisplayName("Orientation")]
-  [ObservableProperty] LegendOrientation legendOrientation; void OnLegendOrientationChanged() => PropertiesChanged();
-  // [DisplayName("ItemOrder")]
-  [ObservableProperty] LegendItemOrder legendItemOrder; void OnLegendItemOrderChanged() => PropertiesChanged();
-  // [DisplayName("ItemAlignment")]
-  [ObservableProperty] HorizontalAlignment legendItemAlignment = HorizontalAlignment.Left; void OnHorizontalAlignmentChanged() => PropertiesChanged();
-  // [DisplayName("SymbolPlacement")]
-  [ObservableProperty] LegendSymbolPlacement legendSymbolPlacement; void OnLegendSymbolPlacementChanged() => PropertiesChanged();
-  // [DisplayName("MaxWidth")/*, Optional*/]
-  [ObservableProperty] double legendMaxWidth = double.NaN; void OnLegendMaxWidthChanged() => PropertiesChanged();
-  // [DisplayName("MaxHeight")/*, Optional*/]
-  [ObservableProperty] double legendMaxHeight = double.NaN; void OnLegendMaxHeightChanged() => PropertiesChanged();
-  // [DisplayName("Curves")/*, Slidable(1, 32)*/]
-  [ObservableProperty] int numberOfSeries = 20; void OnNumberOfSeriesChanged() => PropertiesChanged();
 
-  [Browsable(false)]
-  [ObservableProperty] PlotModel model; void OnModelChanged() => PropertiesChanged();
+  [Browsable(false)][ObservableProperty] PlotModel model; void OnModelChanged() => PropertiesChanged();
 
-  void PropertiesChanged() => Model = CreateModel(NumberOfSeries);
+  void PropertiesChanged() => Model = CreateModel(11);
 
   PlotModel CreateModel(int n)
   {
-    var newModel = new PlotModel
-    {
-      Title = "LineSeries"
-    };
+    var newModel = new PlotModel { /*Title = "LineSeries"*/ };
 
-    var l = new Legend
+    newModel.Legends.Clear();
+    newModel.Legends.Add(new Legend
     {
-      LegendBorder = OxyColors.Black,
-      LegendBackground = OxyColor.FromAColor(200, OxyColors.White),
-      LegendPosition = LegendPosition,
-      LegendPlacement = LegendPlacement,
-      LegendOrientation = LegendOrientation,
-      LegendItemOrder = LegendItemOrder,
-      LegendItemAlignment = LegendItemAlignment,
-      LegendSymbolPlacement = LegendSymbolPlacement,
-      LegendMaxWidth = LegendMaxWidth,
-      LegendMaxHeight = LegendMaxHeight
-    };
+      LegendTextColor = OxyColors.White,
+      //LegendBorder = OxyColors.DarkBlue,
+      //LegendBackground = OxyColor.FromAColor(200, OxyColors.Black),
+      LegendPosition = LegendPosition.LeftMiddle,
+      LegendMargin = 10
+      //LegendPlacement = LegendPlacement,
+      //LegendOrientation = LegendOrientation,
+      //LegendItemOrder = LegendItemOrder,
+      //LegendItemAlignment = LegendItemAlignment,
+      //LegendSymbolPlacement = LegendSymbolPlacement,
+      //LegendMaxWidth = LegendMaxWidth,
+      //LegendMaxHeight = LegendMaxHeight
+    });
 
-    newModel.Legends.Add(l);
+    var Vgn = OxyColor.FromRgb(0x00, 0x80, 0xff);
+    var Mis = OxyColor.FromRgb(0x00, 0x80, 0x00);
+    var Phc = OxyColor.FromRgb(0xe0, 0x00, 0xe0);
+    var ccc = OxyColor.FromRgb(0xc0, 0xc0, 0xc0);
+    var eee = OxyColor.FromRgb(0xe0, 0xe0, 0xe0);
+    var ooo = OxyColor.FromRgb(0x00, 0x00, 0x00);
+    var _333 = OxyColor.FromRgb(0x30, 0x30, 0x30);
 
-    for (var i = 1; i <= n; i++)
-    {
-      var s = new LineSeries { Title = "Series " + i };
-      newModel.Series.Add(s);
-      for (double x = 0; x < 2 * Math.PI; x += 0.1)
-        s.Points.Add(new DataPoint(x, (Math.Sin(x * i) / i) + i));
-    }
+    var stringFormat = "                  ddd d";
+    newModel.Axes.Clear();
+    newModel.Axes.Add(new DateTimeAxis { Minimum = timeMin, Maximum = timeMax, MajorStep = 1, MinorStep = .25, TextColor = eee, TitleColor = eee, IsZoomEnabled = false, IsPanEnabled = false, StringFormat = stringFormat, MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Solid, MajorGridlineColor = ooo, MinorGridlineColor = _333, MinorTickSize = 4, TicklineColor = ccc, Position = AxisPosition.Top });
+    newModel.Axes.Add(new DateTimeAxis { Minimum = timeMin, Maximum = timeMax, MajorStep = 1, MinorStep = .25, TextColor = eee, TitleColor = eee, IsZoomEnabled = false, IsPanEnabled = false, StringFormat = stringFormat, Position = AxisPosition.Bottom });
+    newModel.Axes.Add(new LinearAxis { Minimum = YAxisMin, Maximum = YAxisMax, MajorStep = 010, MinorStep = 01, TextColor = eee, TitleColor = eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Left, MajorGridlineStyle = LineStyle.Solid, MajorGridlineColor = ooo, Key = "yAxisL", Title = "Temp [°C]", MinorTickSize = 4, TicklineColor = ccc });
+    newModel.Axes.Add(new LinearAxis { Minimum = YAxiXMin, Maximum = YAxiXMax, MajorStep = 100, MinorStep = 10, TextColor = eee, TitleColor = eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Right, MajorGridlineStyle = LineStyle.None, MajorGridlineColor = ooo, Key = "yAxisR", Title = "Wind k/h  PoP %" });
+
+
+    newModel.Series.Clear();
+    newModel.Series.Add(new ScatterSeries { Title = "ECa Vgn", MarkerType = MarkerType.Circle, ItemsSource = SctrPtTPFVgn, MarkerFill = OxyColors.Transparent, RenderInLegend = true, MarkerStroke = Vgn });
+    newModel.Series.Add(new ScatterSeries { Title = "ECa Mis", MarkerType = MarkerType.Circle, ItemsSource = SctrPtTPFMis, MarkerFill = OxyColors.Transparent, RenderInLegend = true, MarkerStroke = Mis });
+    newModel.Series.Add(new ScatterSeries { Title = "OWA Phc", MarkerType = MarkerType.Circle, ItemsSource = SctrPtTPFPhc, MarkerFill = OxyColors.Transparent, RenderInLegend = true, MarkerStroke = Phc, TrackerFormatString = "{}{0}&#xA;Time:   {2:HH:mm} &#xA;Temp:  {4:0.0}° " });
 
     return newModel;
+  }
+
+  internal void ClearPlot()
+  {
+    Model.Legends.Clear();
+    Model.Axes.Clear();
+    Model.Series.Clear();
   }
 
   #endregion

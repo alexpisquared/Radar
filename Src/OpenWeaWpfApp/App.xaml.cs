@@ -63,7 +63,7 @@ public partial class App : Application
 #if Host
     _host.Start();
     MainWindow = _host.Services.GetRequiredService<MainWindow>();                       // 1.050 ms!!!
-#elif !DEBUG
+#elif DEBUG
     MainWindow = _serviceProvider.GetRequiredService<MainPlotViewWin>();                     //   400 ms
     MainWindow.DataContext = _serviceProvider.GetRequiredService<PlotViewModel>();      //   700 ms
 #else

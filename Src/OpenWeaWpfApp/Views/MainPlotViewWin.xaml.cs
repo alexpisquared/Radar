@@ -11,8 +11,10 @@ public partial class MainPlotViewWin : Window
     {
       switch (e.Key)
       {
-        case Key.R: Hand.Play(); _ = await ((PlotViewModel)DataContext).PopulateAsync(); goto case Key.I;
+        case Key.C: Beep.Play(); ((PlotViewModel)DataContext).ClearPlot(); break;
         case Key.I: Beep.Play(); plotBR.InvalidatePlot(true); break;
+        case Key.J: Beep.Play(); plotBR.InvalidatePlot(false); break;
+        case Key.R: Hand.Play(); _ = await ((PlotViewModel)DataContext).PopulateAsync(); goto case Key.I;
         case Key.Escape: base.OnKeyUp(e); e.Handled = true; Close(); break;
         default: break;
       }
