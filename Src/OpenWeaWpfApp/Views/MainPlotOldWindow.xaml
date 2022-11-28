@@ -74,27 +74,27 @@
 
         <oxy:LineSeries    ItemsSource="{Binding OwaLoclGus_}" Color="#cc0" StrokeThickness="0.5" Title="owa G" YAxisKey="yAxisL" RenderInLegend="True" />
 
-        <oxy:LineSeries    ItemsSource="{Binding OwaLoclNowT}" Color="#aaa" StrokeThickness="1.0" Title="123" RenderInLegend="True" LineLegendPosition="Start" />
-        <oxy:AreaSeries    ItemsSource="{Binding OwaLoclSunT}" Color="#330" StrokeThickness="0.0" Title="123" RenderInLegend="True" LineLegendPosition="Start" />
+        <oxy:LineSeries    ItemsSource="{Binding OwaLoclNowT}" Color="#aaa" StrokeThickness="1.0" Title="123" />
+        <oxy:AreaSeries    ItemsSource="{Binding OwaLoclSunT}" Color="#330" StrokeThickness="0.0" Title="123" />
 
-        <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFVgn}" MarkerType="Circle" Title="ECa Vgn" MarkerStroke="{StaticResource Vgn}" MarkerFill="Transparent" x:Name="SctrPtTPFVgn" RenderInLegend="True" />
-        <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFMis}" MarkerType="Circle" Title="ECa Mis" MarkerStroke="{StaticResource Mis}" MarkerFill="Transparent" x:Name="SctrPtTPFMis" RenderInLegend="True" />
-        <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFPhc}" MarkerType="Circle" Title="OWA Phc" MarkerStroke="{StaticResource Phc}" MarkerFill="Transparent" x:Name="SctrPtTPFPhc" RenderInLegend="True" TrackerFormatString="{}{0}&#xA;Time:   {2:HH:mm} &#xA;Temp:  {4:0.0}° " />
+        <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFVgn}" MarkerType="Circle" Title="ECa Vgn" MarkerStroke="{StaticResource Vgn}" MarkerFill="Transparent" x:Name="SctrPtTPFVgn" />
+        <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFMis}" MarkerType="Circle" Title="ECa Mis" MarkerStroke="{StaticResource Mis}" MarkerFill="Transparent" x:Name="SctrPtTPFMis" />
+        <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFPhc}" MarkerType="Circle" Title="OWA Phc" MarkerStroke="{StaticResource Phc}" MarkerFill="Transparent" x:Name="SctrPtTPFPhc" TrackerFormatString="{}{0}&#xA;Time:   {2:HH:mm} &#xA;Temp:  {4:0.0}° " />
 
-        <oxy:LineSeries    ItemsSource="{Binding ECaToroTemp}" Color="{StaticResource b80}" StrokeThickness="5.0" Title="EC TO"  RenderInLegend="True" LineLegendPosition="Start" LineStyle="LongDash" />
-        <oxy:LineSeries    ItemsSource="{Binding ECaMissTemp}" Color="{StaticResource Mis}" StrokeThickness="3.0" Title="EC Mis" RenderInLegend="True" LineLegendPosition="Start" LineStyle="LongDashDotDot" />
-        <oxy:LineSeries    ItemsSource="{Binding ECaTIslTemp}" Color="{StaticResource d00}" StrokeThickness="1.0" Title="EC TI"  RenderInLegend="True" LineLegendPosition="Start" LineStyle="Dot" />
-        <oxy:LineSeries    ItemsSource="{Binding ECaVghnTemp}" Color="{StaticResource Vgn}" StrokeThickness="3.0" Title="EC VA"  RenderInLegend="True" LineLegendPosition="Start" LineStyle="Dash" />
-        <oxy:LineSeries    ItemsSource="{Binding ECaMrkhTemp}" Color="{StaticResource Vgn}" StrokeThickness="2.0" Title="EC MA"  RenderInLegend="True" LineLegendPosition="Start" LineStyle="Dash" InterpolationAlgorithm="{Binding IA}" />
+        <oxy:LineSeries    ItemsSource="{Binding ECaToroTemp}" Color="{StaticResource b80}" StrokeThickness="5.0" Title="EC TO"  LineStyle="LongDash" />
+        <oxy:LineSeries    ItemsSource="{Binding ECaMissTemp}" Color="{StaticResource Mis}" StrokeThickness="3.0" Title="EC Mis" LineStyle="LongDashDotDot" />
+        <oxy:LineSeries    ItemsSource="{Binding ECaTIslTemp}" Color="{StaticResource d00}" StrokeThickness="1.0" Title="EC TI"  LineStyle="Dot" />
+        <oxy:LineSeries    ItemsSource="{Binding ECaVghnTemp}" Color="{StaticResource Vgn}" StrokeThickness="3.0" Title="EC VA"  LineStyle="Dash" />
+        <oxy:LineSeries    ItemsSource="{Binding ECaMrkhTemp}" Color="{StaticResource Vgn}" StrokeThickness="2.0" Title="EC MA"  LineStyle="Dash" InterpolationAlgorithm="{Binding IA}" />
 
-        <oxy:LineSeries    ItemsSource="{Binding OwaLoclTemp}" Color="{StaticResource Phc}" StrokeThickness="1.5" Title="owa T"  RenderInLegend="True" LineLegendPosition="Start" InterpolationAlgorithm="{Binding IA}" />
-        <oxy:LineSeries    ItemsSource="{Binding OwaLoclFeel}" Color="{StaticResource Phc}" StrokeThickness="0.5" Title="owa F"  RenderInLegend="True" LineLegendPosition="Start" InterpolationAlgorithm="{Binding IA}" />
-        <oxy:LineSeries    ItemsSource="{Binding OwaLoclPrsr}" Color="{StaticResource Prsr}" StrokeThickness="1.0" Title="owa P" RenderInLegend="True" LineLegendPosition="Start" InterpolationAlgorithm="{Binding IA}" LineStyle="LongDashDotDot" />
+        <oxy:LineSeries    ItemsSource="{Binding OwaLoclTemp}" Color="{StaticResource Phc}" StrokeThickness="1.5" Title="owa T"  InterpolationAlgorithm="{Binding IA}" />
+        <oxy:LineSeries    ItemsSource="{Binding OwaLoclFeel}" Color="{StaticResource Phc}" StrokeThickness="0.5" Title="owa F"  InterpolationAlgorithm="{Binding IA}" />
+        <oxy:LineSeries    ItemsSource="{Binding OwaLoclPrsr}" Color="{StaticResource Prsr}" StrokeThickness="1.0" Title="owa P" InterpolationAlgorithm="{Binding IA}" LineStyle="LongDashDotDot" />
 
-        <oxy:AreaSeries    ItemsSource="{Binding ECaBtvlWind}" Color="{StaticResource Phc}" StrokeThickness="0.5" Title="Wind EC Owa" RenderInLegend="True" LineLegendPosition="Start" YAxisKey="yAxisR" Fill="#550f" />
-        <oxy:LineSeries    ItemsSource="{Binding ECaPearWind}" Color="{StaticResource Phc}" StrokeThickness="0.5" Title="Wind EC Pea" RenderInLegend="True" LineLegendPosition="Start" YAxisKey="yAxisR"  />
-        <oxy:AreaSeries    ItemsSource="{Binding OwaLoclPopr}" Color="{StaticResource PoPr}" StrokeThickness="0.0" Title="PoPr"       RenderInLegend="True" LineLegendPosition="Start" InterpolationAlgorithm="{Binding IA}" YAxisKey="yAxisR" />
-        <oxy:LineSeries    ItemsSource="{Binding OwaLoclGust}" Color="{StaticResource WDir}" StrokeThickness="0.5" Title="owa G"      RenderInLegend="True" LineLegendPosition="Start" InterpolationAlgorithm="{Binding IA}" YAxisKey="yAxisR" />
+        <oxy:AreaSeries    ItemsSource="{Binding ECaBtvlWind}" Color="{StaticResource Phc}" StrokeThickness="0.5" Title="Wind EC Owa" YAxisKey="yAxisR" Fill="#550f" />
+        <oxy:LineSeries    ItemsSource="{Binding ECaPearWind}" Color="{StaticResource Phc}" StrokeThickness="0.5" Title="Wind EC Pea" YAxisKey="yAxisR"  />
+        <oxy:AreaSeries    ItemsSource="{Binding OwaLoclPopr}" Color="{StaticResource PoPr}" StrokeThickness="0.0" Title="PoPr"       InterpolationAlgorithm="{Binding IA}" YAxisKey="yAxisR" />
+        <oxy:LineSeries    ItemsSource="{Binding OwaLoclGust}" Color="{StaticResource WDir}" StrokeThickness="0.5" Title="owa G"      InterpolationAlgorithm="{Binding IA}" YAxisKey="yAxisR" />
       </oxy:Plot>
 
       <Button IsDefault="True" Click="OnPoplte" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="1" />

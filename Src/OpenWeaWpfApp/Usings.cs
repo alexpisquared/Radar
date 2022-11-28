@@ -29,7 +29,7 @@ global using OxyPlot.Series;
 global using XSD.CLS;
 global using static System.Diagnostics.Trace;
 global using static System.Media.SystemSounds;
-global using static OpenWeather2022.OpenWea;
+//global using static OpenWeather2022.OpenWea;
 global using System.ComponentModel;
 global using OxyPlot.Legends;
 global using HorizontalAlignment = OxyPlot.HorizontalAlignment;

@@ -104,8 +104,8 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
     await Tick();
 
-    var sitedataMiss = await GetEnvtCa(_mississ);
-    var sitedataVghn = await GetEnvtCa(_vaughan);
+    var sitedataMiss = await OpenWea.GetEnvtCa(_mississ);
+    var sitedataVghn = await OpenWea.GetEnvtCa(_vaughan);
 
     if (_config["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
     {
@@ -113,11 +113,11 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       await AddForeDataToDB_EnvtCa("vgn", sitedataVghn);
     }
 
-    RefillForeEnvtCa(ECaToroTemp, await GetEnvtCa(_toronto));
-    RefillForeEnvtCa(ECaTIslTemp, await GetEnvtCa(_torIsld));    //refill(ECaTIslTemp, await _opnwea.GetEnvtCa(_newmark));
+    RefillForeEnvtCa(ECaToroTemp, await OpenWea.GetEnvtCa(_toronto));
+    RefillForeEnvtCa(ECaTIslTemp, await OpenWea.GetEnvtCa(_torIsld));    //refill(ECaTIslTemp, await _opnwea.GetEnvtCa(_newmark));
     RefillForeEnvtCa(ECaMissTemp, sitedataMiss);
     RefillForeEnvtCa(ECaVghnTemp, sitedataVghn);
-    RefillForeEnvtCa(ECaMrkhTemp, await GetEnvtCa(_markham));
+    RefillForeEnvtCa(ECaMrkhTemp, await OpenWea.GetEnvtCa(_markham));
 
     await Tick();
 
@@ -290,11 +290,11 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
   async Task PopulateScatModelAsync(int days = 5)
   {
-    OCA = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(OCA); // PHC107
-    D53 = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(D53); // PHC107
+    OCA = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWea.OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(OCA); // PHC107
+    D53 = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWea.OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(D53); // PHC107
 
     SubHeader += $"{OCA.current}";
-    PlotTitle = CurrentConditions = $"{UnixToDt(OCA.current.dt):HH:mm:ss}   {OCA.current.temp,5:N1}°   {OCA.current.feels_like,4:N0}°  {OCA.current.wind_speed * _kWind:N1}k/h";
+    PlotTitle = CurrentConditions = $"{OpenWea.UnixToDt(OCA.current.dt):HH:mm:ss}   {OCA.current.temp,5:N1}°   {OCA.current.feels_like,4:N0}°  {OCA.current.wind_speed * _kWind:N1}k/h";
     WindDirn = OCA.current.wind_deg;
     WindVeloKmHr = OCA.current.wind_speed * _kWind / _wk;
     WindGustKmHr = OCA.current.wind_gust * _kWind / _wk;
@@ -323,7 +323,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     });
 #else
     var h3 = 0;
-    for (; h3 < UnixToDt(D53.list[0].dt).Hour / 3; h3++)
+    for (; h3 < OpenWea.UnixToDt(D53.list[0].dt).Hour / 3; h3++)
     {
       OpnWeaIco3[h3] = new BitmapImage(new Uri($"http://openweathermap.org/img/wn/01n.png", UriKind.Absolute)); //nogo: OpnWeaIco3[h3] = new BitmapImage(new Uri($"/Views/NoDataIndicator.bmp", UriKind.Absolute));
       OpnWeaTip3[h3] = $"{h3}";
@@ -333,7 +333,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     {
       //tmi: WriteLine($"/>D53:  {r.dt_txt}    {UnixToDt(r.dt)}    {UnixToDt(r.dt):MMM dd  HH:mm}     {r.weather[0].description,-26}       {r.main.temp_min,6:N1} ÷ {r.main.temp_max,4:N1}°    pop{r.pop * 100,3:N0}%      {r}");
       OpnWeaIco3[h3] = new BitmapImage(new Uri($"http://openweathermap.org/img/wn/{r.weather[0].icon}@2x.png"));
-      OpnWeaTip3[h3] = $"{UnixToDt(r.dt):MMM d  H:mm} \n\n    {r.weather[0].description}   \n    {r.main.temp:N1}°    pop {r.pop * 100:N0}%";
+      OpnWeaTip3[h3] = $"{OpenWea.UnixToDt(r.dt):MMM d  H:mm} \n\n    {r.weather[0].description}   \n    {r.main.temp:N1}°    pop {r.pop * 100:N0}%";
       h3++;
     });
 #endif
@@ -351,11 +351,11 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     OCA.hourly.ToList().ForEach(x =>
     {
       //scaters.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.snow?._1h ?? 0, x.snow?._1h ?? 0, _d3c)); // either null or 0 so far.
-      OwaLoclTemp.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)), x.temp));
-      OwaLoclFeel.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)), x.feels_like));
-      OwaLoclPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)), x.pressure - 1030));
-      OwaLoclGust.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)), x.wind_gust * _kWind));
-      OwaLoclPopr.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)), x.pop * 100));
+      OwaLoclTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.temp));
+      OwaLoclFeel.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.feels_like));
+      OwaLoclPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pressure - 1030));
+      OwaLoclGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_gust * _kWind));
+      OwaLoclPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 100));
 
       var rad = Math.PI * x.wind_deg * 2 / 360;
       var dx = 0.10 * Math.Cos(rad);
@@ -364,9 +364,9 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       var ty = 0.20 * Math.Sin(rad + 90);
       var sx = .002 * Math.Cos(rad - 90);
       var sy = 0.20 * Math.Sin(rad - 90);
-      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)) + tx, ty + (x.wind_speed * _kWind)));
-      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)) + dx, dy + (x.wind_speed * _kWind)));
-      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(UnixToDt(x.dt)) + sx, sy + (x.wind_speed * _kWind)));
+      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + tx, ty + (x.wind_speed * _kWind)));
+      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + dx, dy + (x.wind_speed * _kWind)));
+      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + sx, sy + (x.wind_speed * _kWind)));
     });
 
     await Tick();
@@ -391,23 +391,23 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     await Tick();
 
     var x = OCA.daily.First();
-    OwaLoclSunT.Add(new DataPoint(UnixToDt(x.sunrise).AddDays(-1).ToOADate(), valueMin));
-    OwaLoclSunT.Add(new DataPoint(UnixToDt(x.sunrise).AddDays(-1).ToOADate(), valueMax));
-    OwaLoclSunT.Add(new DataPoint(UnixToDt(x.sunset).AddDays(-1).ToOADate(), valueMax));
-    OwaLoclSunT.Add(new DataPoint(UnixToDt(x.sunset).AddDays(-1).ToOADate(), valueMin));
+    OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).AddDays(-1).ToOADate(), valueMin));
+    OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).AddDays(-1).ToOADate(), valueMax));
+    OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).AddDays(-1).ToOADate(), valueMax));
+    OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).AddDays(-1).ToOADate(), valueMin));
     OCA.daily.ToList().ForEach(x =>
     {
-      OwaLoclSunT.Add(new DataPoint(UnixToDt(x.sunrise).ToOADate(), valueMin));
-      OwaLoclSunT.Add(new DataPoint(UnixToDt(x.sunrise).ToOADate(), valueMax));
-      OwaLoclSunT.Add(new DataPoint(UnixToDt(x.sunset).ToOADate(), valueMax));
-      OwaLoclSunT.Add(new DataPoint(UnixToDt(x.sunset).ToOADate(), valueMin));
+      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), valueMin));
+      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), valueMax));
+      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), valueMax));
+      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), valueMin));
     });
 
     await Tick();
 
     OwaLoclGus_.Clear();
 
-    var t0 = UnixToDt(x.sunrise).ToOADate();
+    var t0 = OpenWea.UnixToDt(x.sunrise).ToOADate();
     var dh = 16 * Math.Cos(t0 * Math.PI * 2);
 
     FunctionSeries__(Math.Cos, t0 - 1.3, t0 + 7.4, .0125);
