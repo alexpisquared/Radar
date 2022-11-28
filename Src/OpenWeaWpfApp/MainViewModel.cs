@@ -284,7 +284,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   {
     ArgumentNullException.ThrowIfNull(siteDt, $"@@@@@@@@@ {nameof(siteDt)}");
 
-    //points.Clear();
+    //points.ClearData();
     siteDt.hourlyForecastGroup.hourlyForecast.ToList().ForEach(x => points.Add(new DataPoint(DateTimeAxis.ToDouble(EnvtCaDate(x.dateTimeUTC).DateTime), double.Parse(x.temperature.Value))));
   }
 

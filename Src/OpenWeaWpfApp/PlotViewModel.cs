@@ -31,8 +31,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 #endif
     }
 
-    PropertiesChanged(); // from/for OxyLgendDemo
-
+    CreateModel("ctor");
   }
   public async Task<bool> PopulateAsync(int days = 5)
   {
@@ -41,11 +40,12 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     {
       BprKernel32.StartFAF();
 
-      Clear();
+      ClearData();
       await PrevForecastFromDB();           /**/ await Tick();
-      //CreateModel("Populate");
-      await PopulateEnvtCanaAsync();        /**/ await Tick();
-      await PopulateScatModelAsync(days);   /**/ await Tick();
+      //await PopulateEnvtCanaAsync();        /**/ await Tick();
+      //await PopulateScatModelAsync(days);
+
+      CreateModel("Populated");
 
       BprKernel32.FinishFAF();
     }
@@ -73,7 +73,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
     if (Environment.UserDomainName != "RAZER1") try { _dbx.EnsureCreated22(); } catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
 
-    WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
+    //WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
 
     (await _dbx.PointFore.Where(r => r.SiteId == _phc && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
     (await _dbx.PointFore.Where(r => r.SiteId == _vgn && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFVgn.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
@@ -85,7 +85,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     var bvl = await p24.GetIt(_urlPast24hrYKZ);
     var pea = await p24.GetIt(_urlPast24hrYYZ);
 
-    if (_config["StoreData"] == "Yes") 
+    if (_config["StoreData"] == "Yes")
     {
       await AddPastDataToDB_EnvtCa("bvl", bvl);
       await AddPastDataToDB_EnvtCa("pea", pea);
@@ -101,7 +101,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     var sitedataMiss = await OpenWea.GetEnvtCa(_mississ);
     var sitedataVghn = await OpenWea.GetEnvtCa(_vaughan);
 
-    if (_config["StoreData"] == "Yes") 
+    if (_config["StoreData"] == "Yes")
     {
       await AddForeDataToDB_EnvtCa("mis", sitedataMiss);
       await AddForeDataToDB_EnvtCa("vgn", sitedataVghn);
@@ -118,9 +118,9 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     ArgumentNullException.ThrowIfNull(sitedataMiss, $"@@@@@@@@@ {nameof(sitedataMiss)}");
     SubHeader += $"{sitedataMiss.currentConditions.wind.speed}\n";
 
-    if (double.TryParse(sitedataMiss.almanac.temperature[0].Value, out var d)) { YAxiXMax = 200 + (10 * (YAxisMax = d + _yHi)); _extrMax = d; }
+    if (double.TryParse(sitedataMiss.almanac.temperature[0].Value, out var d)) { YAxsRMax = 200 + (10 * (YAxisMax = d + _yHi)); _extrMax = d; }
 
-    if (double.TryParse(sitedataMiss.almanac.temperature[1].Value, out /**/d)) { YAxiXMin = 200 + (10 * (YAxisMin = (Math.Floor(d / 10) * 10) - _yLo)); _extrMin = d; }
+    if (double.TryParse(sitedataMiss.almanac.temperature[1].Value, out /**/d)) { YAxsRMin = 200 + (10 * (YAxisMin = (Math.Floor(d / 10) * 10) - _yLo)); _extrMin = d; }
 
     if (double.TryParse(sitedataMiss.almanac.temperature[2].Value, out d)) NormTMax = d;
     if (double.TryParse(sitedataMiss.almanac.temperature[3].Value, out d)) NormTMin = d;
@@ -435,7 +435,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     //});
   }
 
-  void Clear()
+  void ClearData()
   {
     PlotTitle =
     CurrentConditions = "";
@@ -577,8 +577,8 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   [ObservableProperty] double yAxisMax = +12;
   [ObservableProperty] double normTMin = -08;
   [ObservableProperty] double normTMax = +02;
-  [ObservableProperty] double yAxiXMax = -01;
-  [ObservableProperty] double yAxiXMin = -1;
+  [ObservableProperty] double yAxsRMax = +180;
+  [ObservableProperty] double yAxsRMin = -120;
   [ObservableProperty] double windGustKmHr;
   [ObservableProperty] IInterpolationAlgorithm iA = InterpolationAlgorithms.CatmullRomSpline; // the least vertical jumping beyond y value.
 
@@ -606,76 +606,76 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
   void PropertiesChanged() => Model = CreateModel("Prop Chgd");
 
-  PlotModel CreateModel(string n)
+  PlotModel CreateModel(string note)
   {
-    WriteLine($"::: {n}");
+    WriteLine($"::: {note}");
     var mdl = new PlotModel { /*Title = "LineSeries"*/ };
-
-    mdl.Legends.Clear();
-    mdl.Legends.Add(new Legend
+    try
     {
-      LegendTextColor = OxyColors.White,
-      //LegendBorder = OxyColors.DarkBlue,
-      //LegendBackground = OxyColor.FromAColor(200, OxyColors.Black),
-      LegendPosition = LegendPosition.LeftMiddle,
-      LegendMargin = 10
-      //LegendPlacement = LegendPlacement,
-      //LegendOrientation = LegendOrientation,
-      //LegendItemOrder = LegendItemOrder,
-      //LegendItemAlignment = LegendItemAlignment,
-      //LegendSymbolPlacement = LegendSymbolPlacement,
-      //LegendMaxWidth = LegendMaxWidth,
-      //LegendMaxHeight = LegendMaxHeight
-    });
+      //mdl.Legends.Clear();
+      mdl.Legends.Add(new Legend
+      {
+        LegendTextColor = OxyColors.White,
+        //LegendBorder = OxyColors.DarkBlue,
+        //LegendBackground = OxyColor.FromAColor(200, OxyColors.Black),
+        LegendPosition = LegendPosition.LeftMiddle,
+        LegendMargin = 10
+        //LegendPlacement = LegendPlacement,
+        //LegendOrientation = LegendOrientation,
+        //LegendItemOrder = LegendItemOrder,
+        //LegendItemAlignment = LegendItemAlignment,
+        //LegendSymbolPlacement = LegendSymbolPlacement,
+        //LegendMaxWidth = LegendMaxWidth,
+        //LegendMaxHeight = LegendMaxHeight
+      });
 
-    var _Vgn = OxyColor.FromRgb(0x00, 0x80, 0xff);
-    var _Mis = OxyColor.FromRgb(0x00, 0x80, 0x00);
-    var _Phc = OxyColor.FromRgb(0xe0, 0x00, 0xe0);
-    var _ccc = OxyColor.FromRgb(0xc0, 0xc0, 0xc0);
-    var _eee = OxyColor.FromRgb(0xe0, 0xe0, 0xe0);
-    var _ooo = OxyColor.FromRgb(0x00, 0x00, 0x00);
-    var _333 = OxyColor.FromRgb(0x30, 0x30, 0x30);
-    
-    var _cc0 = OxyColor.FromRgb(0x30, 0x30, 0x30);
-    var _aaa = OxyColor.FromRgb(0x30, 0x30, 0x30);
-    var _330 = OxyColor.FromRgb(0x30, 0x30, 0x30);
-    var _b80 = OxyColor.FromRgb(0x30, 0x30, 0x30);
-    var _d00 = OxyColor.FromRgb(0x30, 0x30, 0x30);
-    var _Prsr = OxyColor.FromRgb(0x30, 0x30, 0x30);
-    var _PoPr = OxyColor.FromRgb(0x30, 0x30, 0x30);
-    var _WDir = OxyColor.FromRgb(0x30, 0x30, 0x30);
-    var _550f = OxyColor.FromArgb(0x50, 0x50, 0x00, 0xff);
+      var _Vgn = OxyColor.FromRgb(0x00, 0x80, 0xff);
+      var _Mis = OxyColor.FromRgb(0x00, 0x80, 0x00);
+      var _Phc = OxyColor.FromRgb(0xe0, 0x00, 0xe0);
+      var _ccc = OxyColor.FromRgb(0xc0, 0xc0, 0xc0);
+      var _eee = OxyColor.FromRgb(0xe0, 0xe0, 0xe0);
+      var _ooo = OxyColor.FromRgb(0x00, 0x00, 0x00);
+      var _333 = OxyColor.FromRgb(0x30, 0x30, 0x30);
+      var _cc0 = OxyColor.FromRgb(0xc0, 0xc0, 0x00);
+      var _aaa = OxyColor.FromRgb(0xa0, 0xa0, 0xa0);
+      var _330 = OxyColor.FromRgb(0x30, 0x30, 0x00);
+      var _b80 = OxyColor.FromRgb(0xb0, 0x80, 0x00);
+      var _d00 = OxyColor.FromRgb(0xd0, 0x00, 0x00);
+      var _Prs = OxyColor.FromRgb(0xb0, 0xb0, 0x00);
+      var _PoP = OxyColor.FromRgb(0x00, 0x40, 0xf0);
+      var _wnd = OxyColor.FromRgb(0x80, 0x80, 0x80);
+      var _550f = OxyColor.FromArgb(0x50, 0x50, 0x00, 0xff);
+      var stringFormat = "                  ddd d";
 
-    var stringFormat = "                  ddd d";
-    mdl.Axes.Clear();
-    mdl.Axes.Add(new DateTimeAxis { Minimum = timeMin, Maximum = timeMax, MajorStep = 1, MinorStep = .25, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, StringFormat = stringFormat, MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Solid, MajorGridlineColor = _ooo, MinorGridlineColor = _333, MinorTickSize = 4, TicklineColor = _ccc, Position = AxisPosition.Top });
-    mdl.Axes.Add(new DateTimeAxis { Minimum = timeMin, Maximum = timeMax, MajorStep = 1, MinorStep = .25, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, StringFormat = stringFormat, Position = AxisPosition.Bottom });
-    mdl.Axes.Add(new LinearAxis { Minimum = YAxisMin, Maximum = YAxisMax, MajorStep = 010, MinorStep = 01, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Left, MajorGridlineStyle = LineStyle.Solid, MajorGridlineColor = _ooo, Key = "yAxisL", Title = "Temp [°C]", MinorTickSize = 4, TicklineColor = _ccc });
-    mdl.Axes.Add(new LinearAxis { Minimum = YAxiXMin, Maximum = YAxiXMax, MajorStep = 100, MinorStep = 10, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Right, MajorGridlineStyle = LineStyle.None, MajorGridlineColor = _ooo, Key = "yAxisR", Title = "Wind k/h  PoP %" });
+      //mdl.Axes.Clear();
+      mdl.Axes.Add(new DateTimeAxis { Minimum = timeMin, Maximum = timeMax, MajorStep = 1, MinorStep = .25, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, StringFormat = stringFormat, MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Solid, MajorGridlineColor = _ooo, MinorGridlineColor = _333, MinorTickSize = 4, TicklineColor = _ccc, Position = AxisPosition.Top });
+      mdl.Axes.Add(new DateTimeAxis { Minimum = timeMin, Maximum = timeMax, MajorStep = 1, MinorStep = .25, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, StringFormat = stringFormat, Position = AxisPosition.Bottom });
+      mdl.Axes.Add(new LinearAxis { Minimum = YAxisMin, Maximum = YAxisMax, MajorStep = 010, MinorStep = 01, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Left, MajorGridlineStyle = LineStyle.Solid, MajorGridlineColor = _ooo, Key = "yAxisL", Title = "Temp [°C]", MinorTickSize = 4, TicklineColor = _ccc });
+      mdl.Axes.Add(new LinearAxis { Minimum = YAxsRMin, Maximum = YAxsRMax, MajorStep = 100, MinorStep = 10, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Right, MajorGridlineStyle = LineStyle.None, MajorGridlineColor = _ooo, Key = "yAxisR", Title = "Wind k/h  PoP %" });
 
+      //mdl.Series.Clear();
+      mdl.Series.Add(new AreaSeries { ItemsSource = OwaLoclSunT, Color = _330, StrokeThickness = 0.0, Title = "SunRS" });
+      mdl.Series.Add(new AreaSeries { ItemsSource = ECaBtvlWind, Color = _Phc, StrokeThickness = 0.5, Title = "Wind EC Owa", YAxisKey = "yAxisR", Fill = _550f });
+      mdl.Series.Add(new AreaSeries { ItemsSource = OwaLoclPopr, Color = _PoP, StrokeThickness = 0.0, Title = "PoPr", InterpolationAlgorithm = IA, YAxisKey = "yAxisR" });
 
-    mdl.Series.Clear();
-    mdl.Series.Add(new AreaSeries { ItemsSource=OwaLoclSunT, Color=_330, StrokeThickness=0.0, Title="123" });
-    mdl.Series.Add(new AreaSeries { ItemsSource=ECaBtvlWind, Color=_Phc, StrokeThickness=0.5, Title="Wind EC Owa",  YAxisKey="yAxisR", Fill=_550f });
-    mdl.Series.Add(new AreaSeries { ItemsSource=OwaLoclPopr, Color=_PoPr,StrokeThickness=0.0, Title="PoPr"       , InterpolationAlgorithm=IA, YAxisKey="yAxisR" });
+      mdl.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFVgn, MarkerFill = OxyColors.Transparent, Title = "ECa _Vgn", MarkerType = MarkerType.Circle, MarkerStroke = _Vgn });
+      mdl.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFMis, MarkerFill = OxyColors.Transparent, Title = "ECa _Mis", MarkerType = MarkerType.Circle, MarkerStroke = _Mis });
+      mdl.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFPhc, MarkerFill = OxyColors.Transparent, Title = "OWA _Phc", MarkerType = MarkerType.Circle, MarkerStroke = _Phc, TrackerFormatString = "{}{0}&#xA;Time:   {2:HH:mm} &#xA;Temp:  {4:0.0}° " });
 
-    mdl.Series.Add(new ScatterSeries { Title = "ECa _Vgn", MarkerType = MarkerType.Circle, ItemsSource = SctrPtTPFVgn, MarkerFill = OxyColors.Transparent, MarkerStroke = _Vgn });
-    mdl.Series.Add(new ScatterSeries { Title = "ECa _Mis", MarkerType = MarkerType.Circle, ItemsSource = SctrPtTPFMis, MarkerFill = OxyColors.Transparent, MarkerStroke = _Mis });
-    mdl.Series.Add(new ScatterSeries { Title = "OWA _Phc", MarkerType = MarkerType.Circle, ItemsSource = SctrPtTPFPhc, MarkerFill = OxyColors.Transparent, MarkerStroke = _Phc, TrackerFormatString = "{}{0}&#xA;Time:   {2:HH:mm} &#xA;Temp:  {4:0.0}° " });
-    
-    mdl.Series.Add(new LineSeries { ItemsSource=OwaLoclGus_, Color=_cc0, StrokeThickness=0.5, Title="owa G", YAxisKey="yAxisL" });
-    mdl.Series.Add(new LineSeries { ItemsSource=OwaLoclNowT, Color=_aaa, StrokeThickness=1.0, Title="123" });
-    mdl.Series.Add(new LineSeries { ItemsSource=ECaToroTemp, Color=_b80, StrokeThickness=5.0, Title="EC TO" , LineStyle=LineStyle.LongDash  });
-    mdl.Series.Add(new LineSeries { ItemsSource=ECaMissTemp, Color=_Mis, StrokeThickness=3.0, Title="EC _Mis", LineStyle=LineStyle.LongDashDotDot  });
-    mdl.Series.Add(new LineSeries { ItemsSource=ECaTIslTemp, Color=_d00, StrokeThickness=1.0, Title="EC TI" , LineStyle=LineStyle.Dot  });
-    mdl.Series.Add(new LineSeries { ItemsSource=ECaVghnTemp, Color=_Vgn, StrokeThickness=3.0, Title="EC VA" , LineStyle=LineStyle.Dash  });
-    mdl.Series.Add(new LineSeries { ItemsSource=ECaMrkhTemp, Color=_Vgn, StrokeThickness=2.0, Title="EC MA" , LineStyle=LineStyle.Dash , InterpolationAlgorithm=IA });
-    mdl.Series.Add(new LineSeries { ItemsSource=OwaLoclTemp, Color=_Phc, StrokeThickness=1.5, Title="owa T" , InterpolationAlgorithm=IA  });
-    mdl.Series.Add(new LineSeries { ItemsSource=OwaLoclFeel, Color=_Phc, StrokeThickness=0.5, Title="owa F" , InterpolationAlgorithm=IA  });
-    mdl.Series.Add(new LineSeries { ItemsSource=OwaLoclPrsr, Color=_Prsr,StrokeThickness=1.0, Title="owa P" , InterpolationAlgorithm=IA , LineStyle=LineStyle.LongDashDotDot });
-    mdl.Series.Add(new LineSeries { ItemsSource=ECaPearWind, Color=_Phc, StrokeThickness=0.5, Title="Wind EC Pea",  YAxisKey="yAxisR"  });
-    mdl.Series.Add(new LineSeries { ItemsSource=OwaLoclGust, Color=_WDir,StrokeThickness=0.5, Title="owa G"      , InterpolationAlgorithm=IA, YAxisKey="yAxisR" });
-     
+      mdl.Series.Add(new LineSeries { ItemsSource = OwaLoclGus_, Color = _cc0, StrokeThickness = 0.5, Title = "SunRS", YAxisKey = "yAxisL" });
+      mdl.Series.Add(new LineSeries { ItemsSource = OwaLoclNowT, Color = _aaa, StrokeThickness = 1.0, Title = "owa T" });
+      mdl.Series.Add(new LineSeries { ItemsSource = ECaToroTemp, Color = _b80, StrokeThickness = 5.0, Title = "EC TO T", LineStyle = LineStyle.LongDash });
+      mdl.Series.Add(new LineSeries { ItemsSource = ECaMissTemp, Color = _Mis, StrokeThickness = 3.0, Title = "EC Mi T", LineStyle = LineStyle.LongDashDotDot });
+      mdl.Series.Add(new LineSeries { ItemsSource = ECaTIslTemp, Color = _d00, StrokeThickness = 1.0, Title = "EC TI T", LineStyle = LineStyle.Dot });
+      mdl.Series.Add(new LineSeries { ItemsSource = ECaVghnTemp, Color = _Vgn, StrokeThickness = 3.0, Title = "EC VA T", LineStyle = LineStyle.Dash });
+      mdl.Series.Add(new LineSeries { ItemsSource = ECaMrkhTemp, Color = _Vgn, StrokeThickness = 2.0, Title = "EC MA T", LineStyle = LineStyle.Dash, InterpolationAlgorithm = IA });
+      mdl.Series.Add(new LineSeries { ItemsSource = OwaLoclTemp, Color = _Phc, StrokeThickness = 1.5, Title = "owa Temp", InterpolationAlgorithm = IA });
+      mdl.Series.Add(new LineSeries { ItemsSource = OwaLoclFeel, Color = _Phc, StrokeThickness = 0.5, Title = "owa Feel", InterpolationAlgorithm = IA });
+      mdl.Series.Add(new LineSeries { ItemsSource = OwaLoclPrsr, Color = _Prs, StrokeThickness = 1.0, Title = "owa Prsr", InterpolationAlgorithm = IA, LineStyle = LineStyle.LongDashDotDot });
+      mdl.Series.Add(new LineSeries { ItemsSource = ECaPearWind, Color = _Phc, StrokeThickness = 0.5, Title = "Wind EC Pea", YAxisKey = "yAxisR" });
+      mdl.Series.Add(new LineSeries { ItemsSource = OwaLoclGust, Color = _wnd, StrokeThickness = 0.5, Title = "owa Gust", InterpolationAlgorithm = IA, YAxisKey = "yAxisR" });
+    }
+    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
 
     return mdl;
   }
@@ -686,4 +686,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     Model.Axes.Clear();
     Model.Series.Clear();
   }
+
+  [RelayCommand] void Invalidate(object updateData) { BprKernel32.Tick(); Model?.InvalidatePlot(updateData?.ToString() == "true"); }
+  [RelayCommand] void CreateMdl(object note) { BprKernel32.Tick(); CreateModel(note?.ToString() ?? "000"); }
 }

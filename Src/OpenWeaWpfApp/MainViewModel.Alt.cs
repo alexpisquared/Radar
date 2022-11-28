@@ -6,12 +6,12 @@
 /*
   async Task PopulateScatModelAsync_TogetherWithPlotView()
   {
-    DataPtGust.Clear();
-    DataPtWind.Clear();
-    DataPtTemp.Clear();
-    DataPtFeel.Clear();
-    DataPtFeel.Clear();
-    DataPtSunT.Clear();
+    DataPtGust.ClearData();
+    DataPtWind.ClearData();
+    DataPtTemp.ClearData();
+    DataPtFeel.ClearData();
+    DataPtFeel.ClearData();
+    DataPtSunT.ClearData();
 
     var oca = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(oca); // PHC107
     var d53 = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(d53); // PHC107

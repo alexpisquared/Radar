@@ -72,7 +72,7 @@
           </ControlTemplate>
         </oxy:Plot.DefaultTrackerTemplate>-->
 
-        <oxy:LineSeries    ItemsSource="{Binding OwaLoclGus_}" Color="#cc0" StrokeThickness="0.5" Title="owa G" YAxisKey="yAxisL" RenderInLegend="True" />
+        <oxy:LineSeries    ItemsSource="{Binding OwaLoclGus_}" Color="#cc0" StrokeThickness="0.5" Title="owa G" YAxisKey="yAxisL" />
 
         <oxy:LineSeries    ItemsSource="{Binding OwaLoclNowT}" Color="#aaa" StrokeThickness="1.0" Title="123" />
         <oxy:AreaSeries    ItemsSource="{Binding OwaLoclSunT}" Color="#330" StrokeThickness="0.0" Title="123" />
