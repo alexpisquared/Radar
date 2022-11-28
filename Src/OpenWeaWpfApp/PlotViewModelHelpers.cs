@@ -6,7 +6,7 @@ internal     static async Task AddForeDataToDB_EnvtCa(WeatherxContext _dbx, stri
         ArgumentNullException.ThrowIfNull(siteFore, $"@@@@@@@@@ {nameof(siteFore)}");
         var now = DateTime.Now;
 
-        //var connectionString = _config.GetConnectionString("Exprs");
+        //var connectionString = _cfg.GetConnectionString("Exprs");
         //WeatherxContextFactory dbf = new(connectionString);
         //using WeatherxContext _dbx = dbf.CreateDbContext();
 
@@ -45,7 +45,7 @@ internal     static async Task AddForeDataToDB_OpnWea(WeatherxContext _dbx, stri
         ArgumentNullException.ThrowIfNull(siteFore, $"@@@@@@@@@ {nameof(siteFore)}");
         var now = DateTime.Now;
 
-        //var connectionString = _config.GetConnectionString("Exprs");
+        //var connectionString = _cfg.GetConnectionString("Exprs");
         //WeatherxContextFactory dbf = new(connectionString);
         //using WeatherxContext _dbx = dbf.CreateDbContext();
 
@@ -83,7 +83,7 @@ internal     static async Task AddForeDataToDB_OpnWea(WeatherxContext _dbx, stri
         ArgumentNullException.ThrowIfNull(sitePast, $"@@@@@@@@@ {nameof(sitePast)}");
         var now = DateTime.Now;
 
-        //var connectionString = _config.GetConnectionString("Exprs");
+        //var connectionString = _cfg.GetConnectionString("Exprs");
         //WeatherxContextFactory dbf = new(connectionString);
         //using WeatherxContext _dbx = dbf.CreateDbContext();
 

@@ -148,7 +148,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     ArgumentNullException.ThrowIfNull(sitePast, $"@@@@@@@@@ {nameof(sitePast)}");
     var now = DateTime.Now;
 
-    //var connectionString = _config.GetConnectionString("Exprs");
+    //var connectionString = _cfg.GetConnectionString("Exprs");
     //WeatherxContextFactory dbf = new(connectionString);
     //using WeatherxContext _dbx = dbf.CreateDbContext();
 
@@ -180,7 +180,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     ArgumentNullException.ThrowIfNull(siteFore, $"@@@@@@@@@ {nameof(siteFore)}");
     var now = DateTime.Now;
 
-    //var connectionString = _config.GetConnectionString("Exprs");
+    //var connectionString = _cfg.GetConnectionString("Exprs");
     //WeatherxContextFactory dbf = new(connectionString);
     //using WeatherxContext _dbx = dbf.CreateDbContext();
 
@@ -219,7 +219,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     ArgumentNullException.ThrowIfNull(siteFore, $"@@@@@@@@@ {nameof(siteFore)}");
     var now = DateTime.Now;
 
-    //var connectionString = _config.GetConnectionString("Exprs");
+    //var connectionString = _cfg.GetConnectionString("Exprs");
     //WeatherxContextFactory dbf = new(connectionString);
     //using WeatherxContext _dbx = dbf.CreateDbContext();
 
@@ -345,7 +345,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     var valueMax = _extrMax; // OCA.daily.Max(r => r.temp.max);
     var valueMin = _extrMin; // OCA.daily.Min(r => r.temp.min);
 
-    if (_config["StoreData"] == "Yes") //if (_config["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
+    if (_config["StoreData"] == "Yes") //if (_cfg["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
       await AddForeDataToDB_OpnWea("phc", OCA);
 
     OCA.hourly.ToList().ForEach(x =>

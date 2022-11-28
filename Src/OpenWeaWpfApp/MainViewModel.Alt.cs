@@ -13,8 +13,8 @@
     DataPtFeel.ClearData();
     DataPtSunT.ClearData();
 
-    var oca = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(oca); // PHC107
-    var d53 = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(d53); // PHC107
+    var oca = await _opnwea.GetIt(_cfg["AppSecrets:MagicNumber"], OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(oca); // PHC107
+    var d53 = await _opnwea.GetIt(_cfg["AppSecrets:MagicNumber"], OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(d53); // PHC107
 
     var scaters = new ScatterSeries { MarkerType = MarkerType.Triangle, MarkerSize = 11 };
     var lsDaily = new LineSeries { Color = OxyColor.FromRgb(255, 00, 00), BrokenLineStyle = LineStyle.Solid, StrokeThickness = 1 };
@@ -157,8 +157,8 @@
   }
   async Task PopulateOpenWeathAsync()
   {
-    var occ = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.OneCallApi, 43.8374229, -79.4961442) as RootobjectOneCallApi; // PHC107
-    var oct = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWeatherCd.OneCallApi, 43.7181557, -79.5181414) as RootobjectOneCallApi; // 400x401
+    var occ = await _opnwea.GetIt(_cfg["AppSecrets:MagicNumber"], OpenWeatherCd.OneCallApi, 43.8374229, -79.4961442) as RootobjectOneCallApi; // PHC107
+    var oct = await _opnwea.GetIt(_cfg["AppSecrets:MagicNumber"], OpenWeatherCd.OneCallApi, 43.7181557, -79.5181414) as RootobjectOneCallApi; // 400x401
 
     CopyOpenWeaToDataPtLists(occ, DataPtTempC, DataPtFeelC);
     CopyOpenWeaToDataPtLists(oct, DataPtTempT, DataPtFeelT);
