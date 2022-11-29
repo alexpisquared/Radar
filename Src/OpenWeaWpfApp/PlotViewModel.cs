@@ -102,17 +102,14 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     _busy = true;
     try
     {
-      BprKernel32.StartFAF();
-
-      SubHeader += $"*** {_dbx.Database.GetConnectionString()} ***\n"; // 480ms
+      //BprKernel32.StartFAF();
+      //SubHeader += $"*** {_dbx.Database.GetConnectionString()} ***\n"; // 480ms
 
       PrevForecastFromDb();
       PopulateEnvtCana();
       PopulateScatModel();
-
-      SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  EOPopAll ============================================\n";
-
-      BprKernel32.Finish();
+         
+      //BprKernel32.Finish();
     }
     catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
     finally { _busy = false; }
@@ -143,10 +140,6 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._markham); /*                                                                               */ return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._markham, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
     _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._mississ); if (_store) await PlotViewModelHelpers.AddForeDataToDB_EnvtCa(_dbx, Cnst._mis, dta); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._mississ, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
     _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._vaughan); if (_store) await PlotViewModelHelpers.AddForeDataToDB_EnvtCa(_dbx, Cnst._vgn, dta); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._vaughan, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
-
-    //_ = await Task.Run(PlotViewModelHelpers.GetFore24hrFromEC).ContinueWith(async _ => { await DrawFore24hrEC(_.Result.sitedata, _.Result.sitedataVghn); }, TaskScheduler.FromCurrentSynchronizationContext());
-
-    Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Populated: Envt CA  \t3\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin}  {YAxsRMax} \t  + plot invalidated \n";
   }
   [RelayCommand]
   void PopulateScatModel()
@@ -235,8 +228,6 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
       Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Populated: Scat Model \t 4 \t\t\t  + plot invalidated  \n";
     }, TaskScheduler.FromCurrentSynchronizationContext());
-
-    Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Populated: Scat Model \t 3 \t\t\t  + plot invalidated  \n";
 
     BprKernel32.ClickFAF();
   }
@@ -552,8 +543,8 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   [ObservableProperty] double yAxisMax = +12; partial void OnYAxisMaxChanged(double value) => ReCreateAxises("Y max");
   [ObservableProperty] double normTMin = -08;
   [ObservableProperty] double normTMax = +02;
-  [ObservableProperty] double yAxsRMax = +180;
-  [ObservableProperty] double yAxsRMin = -120;
+  [ObservableProperty] double yAxsRMax = +180; partial void OnYAxsRMaxChanged(double value) => ReCreateAxises("Y max R");
+  [ObservableProperty] double yAxsRMin = -120; partial void OnYAxsRMinChanged(double value) => ReCreateAxises("Y min R");
   [ObservableProperty] double windGustKmHr;
   [ObservableProperty] IInterpolationAlgorithm iA = InterpolationAlgorithms.CatmullRomSpline; // the least vertical jumping beyond y value.
   #endregion
