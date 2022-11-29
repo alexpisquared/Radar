@@ -154,7 +154,14 @@ internal static class PlotViewModelHelpers
           });
     }
 
-    internal static async Task<(siteData? sitedataMiss, siteData? sitedataVghn)> GetFore24hrFromEC()
+  internal static async Task<(List<MeteoDataMy> bvl, List<MeteoDataMy> pea)> GetPast24hrFromEC()
+  {
+    Past24hrHAP p24 = new();
+    var pea = await p24.GetIt(Cnst._urlPast24hrYYZ);
+    var bvl = await p24.GetIt(Cnst._urlPast24hrYKZ);
+    return (bvl, pea);
+  }
+  internal static async Task<(siteData? sitedataMiss, siteData? sitedataVghn)> GetFore24hrFromEC()
     {
         var sitedataMiss = await OpenWea.GetEnvtCa(Cnst._mississ);
         var sitedataVghn = await OpenWea.GetEnvtCa(Cnst._vaughan);
@@ -162,13 +169,6 @@ internal static class PlotViewModelHelpers
         return (sitedataMiss, sitedataVghn);
     }
 
-    internal static async Task<(List<MeteoDataMy> bvl, List<MeteoDataMy> pea)> GetPast24hrFromEC()
-    {
-        Past24hrHAP p24 = new();
-        var pea = await p24.GetIt(Cnst._urlPast24hrYYZ);
-        var bvl = await p24.GetIt(Cnst._urlPast24hrYKZ);
-        return (bvl, pea);
-    }
-    internal static async Task<siteData?> GetFore24hrFromEC(string site) => await OpenWea.GetEnvtCa(site);
     internal static async Task<List<MeteoDataMy>> GetPast24hrFromEC(string url) => await new Past24hrHAP().GetIt(url);
+    internal static async Task<siteData?> GetFore24hrFromEC(string site) => await OpenWea.GetEnvtCa(site);
 }

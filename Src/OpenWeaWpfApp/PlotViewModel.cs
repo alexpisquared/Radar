@@ -133,15 +133,80 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   {
     BprKernel32.ClickFAF();
 
-    await Task.Run(async () => { var lst = await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._urlPast24hrYYZ); if (_cfg["StoreData"] == "Yes") await PlotViewModelHelpers.AddPastDataToDB_EnvtCa(_dbx, Cnst.pea, lst); return lst; }).ContinueWith(_ => { DrawPast24hrEC(Cnst.pea, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
-    await Task.Run(async () => { var lst = await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._urlPast24hrYKZ); if (_cfg["StoreData"] == "Yes") await PlotViewModelHelpers.AddPastDataToDB_EnvtCa(_dbx, Cnst.bvl, lst); return lst; }).ContinueWith(_ => { DrawPast24hrEC(Cnst.bvl, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+    var store = _cfg["StoreData"] == "Yes";
 
-    //_ = await Task.Run(PlotViewModelHelpers.GetPast24hrFromEC).ContinueWith(async _ => { await DrawPast24hrEC(_.Result.bvl, _.Result.pea); }, TaskScheduler.FromCurrentSynchronizationContext());
+    await Task.Run(async () => { var lst = await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._urlPast24hrYYZ); if (store) await PlotViewModelHelpers.AddPastDataToDB_EnvtCa(_dbx, Cnst.pea, lst); return lst; }).ContinueWith(_ => { DrawPast24hrEC(Cnst.pea, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+    await Task.Run(async () => { var lst = await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._urlPast24hrYKZ); if (store) await PlotViewModelHelpers.AddPastDataToDB_EnvtCa(_dbx, Cnst.bvl, lst); return lst; }).ContinueWith(_ => { DrawPast24hrEC(Cnst.bvl, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
 
-    _ = await Task.Run(PlotViewModelHelpers.GetFore24hrFromEC).ContinueWith(async _ => { await DrawFore24hrEC(_.Result.sitedataMiss, _.Result.sitedataVghn); }, TaskScheduler.FromCurrentSynchronizationContext());
+    await Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._toronto); /*                                                                               */ return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._toronto, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+    await Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._torIsld); /*                                                                               */ return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._torIsld, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+    await Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._markham); /*                                                                               */ return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._markham, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+    await Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._mississ); if (store) await PlotViewModelHelpers.AddForeDataToDB_EnvtCa(_dbx, Cnst._mis, dta); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._mississ, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+    await Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._vaughan); if (store) await PlotViewModelHelpers.AddForeDataToDB_EnvtCa(_dbx, Cnst._vgn, dta); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._vaughan, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+
+    //_ = await Task.Run(PlotViewModelHelpers.GetFore24hrFromEC).ContinueWith(async _ => { await DrawFore24hrEC(_.Result.sitedata, _.Result.sitedataVghn); }, TaskScheduler.FromCurrentSynchronizationContext());
 
     Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Populated: Envt CA  \t3\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin}  {YAxsRMax} \t  + plot invalidated \n";
   }
+  void DrawPast24hrEC(string site, List<MeteoDataMy> lst)
+  {
+    try
+    {
+      switch (site)
+      {
+        case Cnst.pea: PlotViewModelHelpers.RefillPast24(ECaMissTemp, ECaBtvlWind, lst, _wk); break;
+        case Cnst.bvl: PlotViewModelHelpers.RefillPast24(ECaVghnTemp, ECaPearWind, lst, _wk); break;
+        default: break;
+      }
+
+      //todo: OwaLoclPrsr.Clear();    dta.OrderBy(r => r.TakenAt).ToList().ForEach(x => OwaLoclPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), (10 * x.Pressure) - 1030)));
+
+      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Past       Envt CA  \t{site}\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin}  {YAxsRMax} \t  + plot invalidated \t Past 24hr\n";    //await TickRepaintDelay();
+    }
+    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
+  }
+  void DrawFore24hrEC(string site, siteData? sitedata)
+  {
+    try
+    {
+      switch (site)
+      {
+        case Cnst._toronto: PlotViewModelHelpers.RefillForeEnvtCa(ECaToroTemp, sitedata); break;
+        case Cnst._torIsld: PlotViewModelHelpers.RefillForeEnvtCa(ECaTIslTemp, sitedata); break;
+        case Cnst._mississ: PlotViewModelHelpers.RefillForeEnvtCa(ECaMissTemp, sitedata); GetImprtandDatFromPearson(sitedata); break;
+        case Cnst._vaughan: PlotViewModelHelpers.RefillForeEnvtCa(ECaVghnTemp, sitedata); break;
+        case Cnst._markham: PlotViewModelHelpers.RefillForeEnvtCa(ECaMrkhTemp, sitedata); break;
+        default: break;
+      }
+
+      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Forecast   Envt CA  \t{site.Substring(4, 3)}\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin}  {YAxsRMax} \t  + plot invalidated \t Fore 24hr\n";
+    }
+    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
+  }
+
+  void GetImprtandDatFromPearson(siteData? sitedata)
+  {
+    ArgumentNullException.ThrowIfNull(sitedata, $"@@@@@@@@@ {nameof(sitedata)}");
+
+    if (double.TryParse(sitedata.almanac.temperature[0].Value, out var exmx)) { YAxsRMax = 200 + (10 * (YAxisMax = exmx + _yHi)); _extrMax = exmx; }
+
+    if (double.TryParse(sitedata.almanac.temperature[1].Value, out var exmn)) { YAxsRMin = 200 + (10 * (YAxisMin = (Math.Floor(exmn / 10) * 10) - _yLo)); _extrMin = exmn; }
+
+    if (double.TryParse(sitedata.almanac.temperature[2].Value, out var nrmx)) NormTMax = nrmx;
+    if (double.TryParse(sitedata.almanac.temperature[3].Value, out var nrmn)) NormTMin = nrmn;
+
+    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), _extrMax));
+    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), _extrMax));
+    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMax));
+    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMax));
+    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMin));
+    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMin));
+    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), _extrMin));
+    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), _extrMin));
+
+    EnvtCaIconM = $"https://weather.gc.ca/weathericons/{sitedata?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
+  }
+
   [RelayCommand]
   async Task PopulateScatModelAsync()
   {
@@ -251,70 +316,6 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
         await _dbx.PointFore.Where(r => r.SiteId == Cnst._mis && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync());
     }
     catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
-  }
-
-  void DrawPast24hrEC(string site, List<MeteoDataMy> lst)
-  {
-    try
-    {
-      switch (site)
-      {
-        case Cnst.pea: PlotViewModelHelpers.RefillPast24(ECaMissTemp, ECaBtvlWind, lst, _wk); break;
-        case Cnst.bvl: PlotViewModelHelpers.RefillPast24(ECaVghnTemp, ECaPearWind, lst, _wk); break;
-        default: break;
-      }
-
-      //todo: OwaLoclPrsr.Clear();    lst.OrderBy(r => r.TakenAt).ToList().ForEach(x => OwaLoclPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), (10 * x.Pressure) - 1030)));
-
-      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Populated: Envt CA  \t1\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin}  {YAxsRMax} \t  + plot invalidated \t Past 24hr\n";    //await TickRepaintDelay();
-    }
-    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
-  }
-  async Task DrawFore24hrEC(siteData? sitedataMiss, siteData? sitedataVghn)
-  {
-    try
-    {
-      if (_cfg["StoreData"] == "Yes")
-      {
-        await PlotViewModelHelpers.AddForeDataToDB_EnvtCa(_dbx, "mis", sitedataMiss);
-        await PlotViewModelHelpers.AddForeDataToDB_EnvtCa(_dbx, "vgn", sitedataVghn);
-      }
-
-      PlotViewModelHelpers.RefillForeEnvtCa(ECaToroTemp, await OpenWea.GetEnvtCa(Cnst._toronto));
-      PlotViewModelHelpers.RefillForeEnvtCa(ECaTIslTemp, await OpenWea.GetEnvtCa(Cnst._torIsld));    //refill(ECaTIslTemp, await _opnwea.GetEnvtCa(_newmark));
-      PlotViewModelHelpers.RefillForeEnvtCa(ECaMissTemp, sitedataMiss);
-      PlotViewModelHelpers.RefillForeEnvtCa(ECaVghnTemp, sitedataVghn);
-      PlotViewModelHelpers.RefillForeEnvtCa(ECaMrkhTemp, await OpenWea.GetEnvtCa(Cnst._markham));
-
-      await TickRepaintDelay();
-
-      ArgumentNullException.ThrowIfNull(sitedataMiss, $"@@@@@@@@@ {nameof(sitedataMiss)}");
-      //SubHeader+= $"   wind {mis.currentConditions.wind.speed}\n";
-
-      if (double.TryParse(sitedataMiss.almanac.temperature[0].Value, out var d)) { YAxsRMax = 200 + (10 * (YAxisMax = d + _yHi)); _extrMax = d; }
-
-      if (double.TryParse(sitedataMiss.almanac.temperature[1].Value, out /**/d)) { YAxsRMin = 200 + (10 * (YAxisMin = (Math.Floor(d / 10) * 10) - _yLo)); _extrMin = d; }
-
-      if (double.TryParse(sitedataMiss.almanac.temperature[2].Value, out d)) NormTMax = d;
-      if (double.TryParse(sitedataMiss.almanac.temperature[3].Value, out d)) NormTMin = d;
-
-      OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), _extrMax));
-      OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), _extrMax));
-      OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMax));
-      OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMax));
-      OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMin));
-      OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMin));
-      OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), _extrMin));
-      OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), _extrMin));
-
-      EnvtCaIconM = $"https://weather.gc.ca/weathericons/{sitedataMiss?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
-      EnvtCaIconV = $"https://weather.gc.ca/weathericons/{sitedataVghn?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
-
-      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Populated: Envt CA  \t2\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin}  {YAxsRMax} \t  + plot invalidated \t Fore 24hr\n";
-
-      BprKernel32.ClickFAF();
-    }
-    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
   }
 
   void DrawD53(RootobjectFrc5Day3Hr D53)
