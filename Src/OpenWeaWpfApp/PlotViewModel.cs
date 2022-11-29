@@ -117,8 +117,8 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   [RelayCommand]
   void PrevForecastFromDb()
   {
-    if (!_store)
-      return;
+    BprKernel32.ClickFAF();
+    //if (!_store)      return;
 
     _ = Task.Run(GetPastForecastFromDB).ContinueWith(_ =>
     {
@@ -126,6 +126,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       _.Result.b.ForEach(r => SctrPtTPFVgn.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
       _.Result.c.ForEach(r => SctrPtTPFMis.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
       Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Populated: From DB \t\t\t\t\t  + plot invalidated \n";
+      BprKernel32.TickFAF();
     }, TaskScheduler.FromCurrentSynchronizationContext());
   }
   [RelayCommand]
@@ -234,7 +235,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
   async Task<(List<PointFore> a, List<PointFore> b, List<PointFore> c)> GetPastForecastFromDB()
   {
-    await Task.Delay(5000);
+    //await Task.Delay(5000);
     try
     {
       var now = DateTime.Now;
