@@ -3,7 +3,7 @@ namespace OpenWeaWpfApp;
 public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.ObservableValidator
 {
   #region fields
-  readonly DateTime now= DateTime.Now;
+  readonly DateTime now = DateTime.Now;
   readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _yHi = 2, _yLo = 13;
   readonly IConfigurationRoot _cfg;
   readonly WeatherxContext _dbx;
@@ -13,10 +13,10 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   double _extrMax = +20, _extrMin = -20;
   const string _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaughan = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582", _phc = "phc", _vgn = "vgn", _mis = "mis";
   readonly OxyColor _550f = OxyColor.FromArgb(0x50, 0x50, 0x00, 0xff),
-   _ooo = OxyColor.FromRgb(0x00, 0x00, 0x00),
-   _330 = OxyColor.FromRgb(0x30, 0x30, 0x00),
    _111 = OxyColor.FromRgb(0x10, 0x10, 0x10),
-   _333 = OxyColor.FromRgb(0x30, 0x30, 0x30),
+   _222 = OxyColor.FromRgb(0x20, 0x20, 0x20),
+   _330 = OxyColor.FromRgb(0x30, 0x30, 0x00),
+   _333 = OxyColor.FromRgb(0x40, 0x40, 0x40),
    _aaa = OxyColor.FromRgb(0xa0, 0xa0, 0xa0),
    _cc0 = OxyColor.FromRgb(0xc0, 0xc0, 0x00),
    _ccc = OxyColor.FromRgb(0xc0, 0xc0, 0xc0),
@@ -34,25 +34,24 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   //Uri _k = new("http://openweathermap.org/img/wn/04n@2x.png"); public Uri WIcon { get => _k; set => SetProperty(ref _k, value); }
   const float _wk = 10f;
   const float _kWind = 3.6f * _wk;
-
-  ObservableCollection<ScatterPoint> SctrPtTPFVgn = new();
-  ObservableCollection<ScatterPoint> SctrPtTPFPhc = new();
-  ObservableCollection<ScatterPoint> SctrPtTPFMis = new();
-  ObservableCollection<DataPoint> OwaLoclTemp = new();
-  ObservableCollection<DataPoint> OwaLoclFeel = new();
-  ObservableCollection<DataPoint> OwaLoclPrsr = new();
-  ObservableCollection<DataPoint> OwaLoclGust = new();
-  ObservableCollection<DataPoint> SunSinusoid = new();
-  ObservableCollection<DataPoint> ECaBtvlWind = new();
-  ObservableCollection<DataPoint> ECaPearWind = new();
-  ObservableCollection<DataPoint> OwaLoclSunT = new();
-  ObservableCollection<DataPoint> OwaLoclNowT = new();
-  ObservableCollection<DataPoint> OwaLoclPopr = new();
-  ObservableCollection<DataPoint> ECaToroTemp = new();
-  ObservableCollection<DataPoint> ECaVghnTemp = new();
-  ObservableCollection<DataPoint> ECaMrkhTemp = new();
-  ObservableCollection<DataPoint> ECaMissTemp = new();
-  ObservableCollection<DataPoint> ECaTIslTemp = new();
+  readonly ObservableCollection<ScatterPoint> SctrPtTPFVgn = new();
+  readonly ObservableCollection<ScatterPoint> SctrPtTPFPhc = new();
+  readonly ObservableCollection<ScatterPoint> SctrPtTPFMis = new();
+  readonly ObservableCollection<DataPoint> OwaLoclTemp = new();
+  readonly ObservableCollection<DataPoint> OwaLoclFeel = new();
+  readonly ObservableCollection<DataPoint> OwaLoclPrsr = new();
+  readonly ObservableCollection<DataPoint> OwaLoclGust = new();
+  readonly ObservableCollection<DataPoint> SunSinusoid = new();
+  readonly ObservableCollection<DataPoint> ECaBtvlWind = new();
+  readonly ObservableCollection<DataPoint> ECaPearWind = new();
+  readonly ObservableCollection<DataPoint> OwaLoclSunT = new();
+  readonly ObservableCollection<DataPoint> OwaLoclNowT = new();
+  readonly ObservableCollection<DataPoint> OwaLoclPopr = new();
+  readonly ObservableCollection<DataPoint> ECaToroTemp = new();
+  readonly ObservableCollection<DataPoint> ECaVghnTemp = new();
+  readonly ObservableCollection<DataPoint> ECaMrkhTemp = new();
+  readonly ObservableCollection<DataPoint> ECaMissTemp = new();
+  readonly ObservableCollection<DataPoint> ECaTIslTemp = new();
   [ObservableProperty] double timeMin = DateTime.Today.ToOADate() - 1; partial void OnTimeMinChanged(double value) => ReCreateAxises("T min");
   [ObservableProperty] double timeMax = DateTime.Today.ToOADate() + 2; partial void OnTimeMaxChanged(double value) => ReCreateAxises("T max");
   [ObservableProperty] string plotTitle = "";
@@ -106,6 +105,8 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       await PopulateEnvtCanaAsync();
       await PopulateScatModelAsync();
 
+      SubHeader += $"{(DateTime.Now - now).TotalSeconds,5:N1}  EOPopAll\n";
+
       BprKernel32.Finish();
     }
     catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); return false; }
@@ -125,29 +126,31 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     var ytd = now.AddHours(-24);
     var dby = now.AddHours(-48);
 
-    if (Environment.UserDomainName != "RAZER1") try { _dbx.EnsureCreated22(); } catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
-
+    //if (Environment.UserDomainName != "RAZER1") try { _dbx.EnsureCreated22(); } catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
     //WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
 
     (await _dbx.PointFore.Where(r => r.SiteId == _phc && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
     (await _dbx.PointFore.Where(r => r.SiteId == _vgn && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFVgn.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
     (await _dbx.PointFore.Where(r => r.SiteId == _mis && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFMis.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
 
-    Model.InvalidatePlot(true);
-    SubHeader += $"{(DateTime.Now-now).TotalSeconds,5:N1}  Populated: From DB \t\t\t\t\t  +   plot invalidated \n";
+    //_ = Task.Run(async () => await _dbx.PointFore.Where(r => r.SiteId == _phc && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ContinueWith(_ => _.Result.ForEach(r => SctrPtTPFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h"))), TaskScheduler.FromCurrentSynchronizationContext());
+    //_ = Task.Run(async () => await _dbx.PointFore.Where(r => r.SiteId == _vgn && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ContinueWith(_ => _.Result.ForEach(r => SctrPtTPFVgn.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h"))), TaskScheduler.FromCurrentSynchronizationContext());
+    //_ = Task.Run(async () => await _dbx.PointFore.Where(r => r.SiteId == _mis && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ContinueWith(_ => _.Result.ForEach(r => SctrPtTPFMis.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h"))), TaskScheduler.FromCurrentSynchronizationContext());
+
+    Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - now).TotalSeconds,5:N1}  Populated: From DB \t\t\t\t\t  + plot invalidated \n";
   }
   [RelayCommand]
   async Task PopulateEnvtCanaAsync()
   {
     BprKernel32.ClickFAF();
 
-    await Task.Run(PlotViewModelHelpers.GetPast24hrFromEC).ContinueWith(async _ =>
+    _ = await Task.Run(PlotViewModelHelpers.GetPast24hrFromEC).ContinueWith(async _ =>
     {
       var (bvl, pea) = _.Result;
       await DrawPast24hrEC(bvl, pea);
     }, TaskScheduler.FromCurrentSynchronizationContext());
 
-    await Task.Run(PlotViewModelHelpers.GetFore24hrFromEC).ContinueWith(async _ =>
+    _ = await Task.Run(PlotViewModelHelpers.GetFore24hrFromEC).ContinueWith(async _ =>
     {
       var (sitedataMiss, sitedataVghn) = _.Result;
       //await Task.Delay(3333);
@@ -159,7 +162,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   {
     BprKernel32.ClickFAF();
 
-    await Task.Run<object>(async () => await _opnwea.GetIt(_cfg["AppSecrets:MagicNumber"] ?? throw new ArgumentNullException(nameof(_cfg)), OpenWea.OpenWeatherCd.OneCallApi)).ContinueWith(async _ =>
+    _ = await Task.Run<object>(async () => await _opnwea.GetIt(_cfg["AppSecrets:MagicNumber"] ?? throw new ArgumentNullException(nameof(_cfg)), OpenWea.OpenWeatherCd.OneCallApi) ?? throw new ArgumentNullException(nameof(_cfg))).ContinueWith(async _ =>
     {
       var OCA = _.Result as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(OCA); // PHC107
 
@@ -202,7 +205,6 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
       await TickRepaintDelay();
 
-
       var valueMax = _extrMax; // OCA.daily.Max(r => r.temp.max);
       var valueMin = _extrMin; // OCA.daily.Min(r => r.temp.min);
 
@@ -225,7 +227,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       SubHeader += $"{(DateTime.Now - now).TotalSeconds,5:N1}  Populated: Scat Model \t 1 \t\t\t  + plot invalidated  \n";
 
       var D53 = await _opnwea.GetIt(_cfg["AppSecrets:MagicNumber"] ?? throw new ArgumentNullException(nameof(_cfg)), OpenWea.OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(D53); // PHC107
-                                                                                                                                                                                                                        
+
       DrawD53(D53);
       DrawBothWhenReady(OCA, D53);
 
@@ -425,19 +427,19 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
 
     Model.InvalidatePlot(true);
-    SubHeader += $"{(DateTime.Now - now).TotalSeconds,5:N1}  Model re-freshed\t▓  {note,-26}  \t\t  +  plot invalidated \n";
+    SubHeader += $"{(DateTime.Now - now).TotalSeconds,5:N1}  Model re-freshed\t▓  {note,-26}  \t\t  + plot invalidated \n";
   }
   void ReCreateAxises(string note)
   {
     var dddD = "                  ddd d";
     Model.Axes.Clear();
-    Model.Axes.Add(new DateTimeAxis { Minimum = timeMin, Maximum = timeMax, MajorStep = 1, MinorStep = .250, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, StringFormat = dddD, MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Solid, MajorGridlineColor = _ooo, MinorGridlineColor = _333, MinorTickSize = 4, TicklineColor = _ccc, Position = AxisPosition.Top });
+    Model.Axes.Add(new DateTimeAxis { Minimum = timeMin, Maximum = timeMax, MajorStep = 1, MinorStep = .250, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, StringFormat = dddD, MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Solid, MajorGridlineColor = _333, MinorGridlineColor = _222, MinorTickSize = 4, TicklineColor = _ccc, Position = AxisPosition.Top });
     //Model.Axes.Add(new DateTimeAxis { Minimum = timeMin, Maximum = timeMax, MajorStep = 1, MinorStep = .250, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, StringFormat = dddD, Position = AxisPosition.Bottom });
-    Model.Axes.Add(new LinearAxis { Minimum = YAxisMin, Maximum = YAxisMax, MajorStep = 010, MinorStep = 01, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Left, MajorGridlineStyle = LineStyle.Solid, MajorGridlineColor = _ooo, Key = "yAxisL", Title = "Temp [°C]", MinorTickSize = 4, TicklineColor = _ccc });
-    Model.Axes.Add(new LinearAxis { Minimum = YAxsRMin, Maximum = YAxsRMax, MajorStep = 100, MinorStep = 10, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Right, MajorGridlineStyle = LineStyle.None, MajorGridlineColor = _ooo, Key = "yAxisR", Title = "Wind k/h  PoP %" });
+    Model.Axes.Add(new LinearAxis { Minimum = YAxisMin, Maximum = YAxisMax, MajorStep = 010, MinorStep = 01, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Left, MajorGridlineStyle = LineStyle.Solid, MajorGridlineColor = _222, Key = "yAxisL", Title = "Temp [°C]", MinorTickSize = 4, TicklineColor = _ccc });
+    Model.Axes.Add(new LinearAxis { Minimum = YAxsRMin, Maximum = YAxsRMax, MajorStep = 100, MinorStep = 10, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Right, MajorGridlineStyle = LineStyle.None, MajorGridlineColor = _222, Key = "yAxisR", Title = "Wind k/h  PoP %" });
 
     Model.InvalidatePlot(true);
-    SubHeader += $"{(DateTime.Now - now).TotalSeconds,5:N1}  Axiss re-adjustd\t■  {note,-26}  \t\t  +  plot invalidated \n";
+    SubHeader += $"{(DateTime.Now - now).TotalSeconds,5:N1}  Axiss re-adjustd\t■  {note,-26}  \t\t  + plot invalidated \n";
   }
 
   internal void ClearPlot()

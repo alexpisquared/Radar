@@ -31,7 +31,7 @@
         <RowDefinition Height="1*"/>
       </Grid.RowDefinitions>
 
-      <oxy:PlotView Model="{Binding Model}" Background="#222" x:Name="plotBR" Grid.RowSpan="2" Grid.ColumnSpan="3" />
+      <oxy:PlotView Model="{Binding Model}" Background="#111" x:Name="plotBR" Grid.RowSpan="2" Grid.ColumnSpan="3" />
 
       <Button IsDefault="True" Click="OnPoplte" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="1" />
 
