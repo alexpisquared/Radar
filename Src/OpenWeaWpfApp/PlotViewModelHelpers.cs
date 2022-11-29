@@ -3,8 +3,8 @@
   public const string _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaughan = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582", _phc = "phc", _vgn = "vgn", _mis = "mis",
     pea = "pea",
     bvl = "bvl",
-  _urlPast24hrYYZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yyz", // Pearson                                                                                        
-  _urlPast24hrYKZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=ykz"; // Buttonville
+  _Past24YYZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yyz", // Pearson                                                                                        
+  _Past24YKZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=ykz"; // Buttonville
 }
 internal static class PlotViewModelHelpers
 {
@@ -184,8 +184,8 @@ internal static class PlotViewModelHelpers
   internal static async Task<(List<MeteoDataMy> bvl, List<MeteoDataMy> pea)> GetPast24hrFromEC()
   {
     Past24hrHAP p24 = new();
-    var pea = await p24.GetIt(Cnst._urlPast24hrYYZ);
-    var bvl = await p24.GetIt(Cnst._urlPast24hrYKZ);
+    var pea = await p24.GetIt(Cnst._Past24YYZ);
+    var bvl = await p24.GetIt(Cnst._Past24YKZ);
     return (bvl, pea);
   }
   internal static async Task<(siteData? sitedataMiss, siteData? sitedataVghn)> GetFore24hrFromEC()

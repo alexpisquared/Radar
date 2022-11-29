@@ -1,5 +1,4 @@
 ﻿#define ObsCol // Go figure: ObsCol works, while array NOT! Just an interesting factoid.
-
 namespace OpenWeaWpfApp;
 public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.ObservableValidator
 {
@@ -9,6 +8,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   readonly IConfigurationRoot _cfg;
   readonly WeatherxContext _dbx;
   readonly OpenWea _opnwea;
+  private readonly DbxHelper _dbh;
   private readonly bool _store;
   bool _busy;
   const int _maxIcons = 50, _timeToPaintMS = 88;
@@ -74,13 +74,13 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 #endif
   #endregion
 
-  public PlotViewModel(WeatherxContext weatherxContext, OpenWea openWea)
+  public PlotViewModel(WeatherxContext weatherxContext, OpenWea openWea, DbxHelper dbh)
   {
     _cfg = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
     _dbx = weatherxContext; // WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
+    _dbh = dbh;
     _opnwea = openWea;
-
-    _store = _cfg["StoreData"] == "Yes";
+    _store = false; //333:   _cfg["StoreData"] == "Yes";
 
     for (var i = 0; i < _maxIcons; i++)
     {
@@ -108,7 +108,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       PrevForecastFromDb();
       PopulateEnvtCana();
       PopulateScatModel();
-         
+
       //BprKernel32.Finish();
     }
     catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
@@ -118,7 +118,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   void PrevForecastFromDb()
   {
     BprKernel32.ClickFAF();
-    //if (!_store)      return;
+    //333: if (!_store) return;
 
     _ = Task.Run(GetPastForecastFromDB).ContinueWith(_ =>
     {
@@ -134,13 +134,13 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   {
     BprKernel32.ClickFAF();
 
-    _ = Task.Run(async () => { var lst = await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._urlPast24hrYYZ); if (_store) await PlotViewModelHelpers.AddPastDataToDB_EnvtCa(_dbx, Cnst.pea, lst); return lst; }).ContinueWith(_ => { DrawPast24hrEC(Cnst.pea, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
-    _ = Task.Run(async () => { var lst = await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._urlPast24hrYKZ); if (_store) await PlotViewModelHelpers.AddPastDataToDB_EnvtCa(_dbx, Cnst.bvl, lst); return lst; }).ContinueWith(_ => { DrawPast24hrEC(Cnst.bvl, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
-    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._toronto); /*                                                                               */ return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._toronto, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
-    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._torIsld); /*                                                                               */ return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._torIsld, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
-    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._markham); /*                                                                               */ return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._markham, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
-    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._mississ); if (_store) await PlotViewModelHelpers.AddForeDataToDB_EnvtCa(_dbx, Cnst._mis, dta); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._mississ, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
-    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._vaughan); if (_store) await PlotViewModelHelpers.AddForeDataToDB_EnvtCa(_dbx, Cnst._vgn, dta); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._vaughan, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => { var lst = await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24YYZ); if (_store) await PlotViewModelHelpers.AddPastDataToDB_EnvtCa(_dbh.WeatherxContext, Cnst.pea, lst); return lst; }).ContinueWith(_ => { DrawPast24hrEC(Cnst.pea, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => { var lst = await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24YKZ); if (_store) await PlotViewModelHelpers.AddPastDataToDB_EnvtCa(_dbh.WeatherxContext, Cnst.bvl, lst); return lst; }).ContinueWith(_ => { DrawPast24hrEC(Cnst.bvl, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._toronto); /*                                                                                                */ return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._toronto, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._torIsld); /*                                                                                                */ return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._torIsld, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._markham); /*                                                                                                */ return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._markham, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._mississ); if (_store) await PlotViewModelHelpers.AddForeDataToDB_EnvtCa(_dbh.WeatherxContext, Cnst._mis, dta); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._mississ, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._vaughan); if (_store) await PlotViewModelHelpers.AddForeDataToDB_EnvtCa(_dbh.WeatherxContext, Cnst._vgn, dta); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._vaughan, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
   }
   [RelayCommand]
   void PopulateScatModel()
@@ -165,7 +165,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       for (var i = 0; i < OCA.daily.Length; i++) OpnWeaIcoA.Add($"http://openweathermap.org/img/wn/{OCA.daily[i].weather[0].icon}@2x.png");
 
       if (_store)
-        await PlotViewModelHelpers.AddForeDataToDB_OpnWea(_dbx, "phc", OCA);
+        await PlotViewModelHelpers.AddForeDataToDB_OpnWea(_dbh.WeatherxContext, "phc", OCA);
 
       OCA.hourly.ToList().ForEach(x =>
       {
@@ -235,7 +235,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
   async Task<(List<PointFore> a, List<PointFore> b, List<PointFore> c)> GetPastForecastFromDB()
   {
-    await Task.Delay(10_000); //hack: //todo: fix the db synch one day.
+    //await Task.Delay(10_000); //hack: //todo: fix the db synch one day.
     try
     {
       var now = DateTime.Now;
@@ -245,9 +245,11 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       //if (Environment.UserDomainName != "RAZER1") try { _dbx.EnsureCreated22(); } catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
       //WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
 
-      var a = await _dbx.PointFore.Where(r => r.SiteId == Cnst._phc && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
-      var b = await _dbx.PointFore.Where(r => r.SiteId == Cnst._vgn && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
-      var c = await _dbx.PointFore.Where(r => r.SiteId == Cnst._mis && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
+      var dbx = _dbh.WeatherxContext;
+
+      var a = await dbx.PointFore.Where(r => r.SiteId == Cnst._phc && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
+      var b = await dbx.PointFore.Where(r => r.SiteId == Cnst._vgn && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
+      var c = await dbx.PointFore.Where(r => r.SiteId == Cnst._mis && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
 
       return (a, b, c);
     }

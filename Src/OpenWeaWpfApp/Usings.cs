@@ -33,4 +33,5 @@ global using static System.Media.SystemSounds;
 global using System.ComponentModel;
 global using OxyPlot.Legends;
 global using HorizontalAlignment = OxyPlot.HorizontalAlignment;
+global using OpenWeaWpfApp.Helpers;
 

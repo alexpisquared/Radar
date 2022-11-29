@@ -1,7 +1,5 @@
 ﻿#define Host_
-
 namespace OpenWeaWpfApp;
-
 public partial class App : Application
 {
   string _audit = "Default!!";
@@ -33,6 +31,7 @@ public partial class App : Application
     _ = services.AddSingleton<MainPlotViewWin>();
     _ = services.AddSingleton<MainPlotOldWindow>();
     _ = services.AddTransient<OpenWea>();
+    _ = services.AddTransient<DbxHelper>();
 
     _ = services.AddSingleton<IConfigurationRoot>(AutoInitConfigHardcoded());
     _ = services.AddSingleton<ILogger>(sp => SeriLogHelper.InitLoggerFactory( //todo: this allows to override by UserSettings entry: UserSettingsIPM.UserLogFolderFile ??= // if new - _store in usersettings for next uses.    
@@ -110,13 +109,13 @@ public partial class App : Application
       //    var cf2 = _serviceProvider?.GetRequiredService<IConfigurationRoot>();
       //#endif
 
-      optionsBuilder.UseSqlServer(cfg.GetConnectionString("Exprs") ?? throw new ArgumentNullException(nameof(services), "cfg.GetConnectionString('Exprs')"));
+      _ = optionsBuilder.UseSqlServer(cfg.GetConnectionString("Exprs") ?? throw new ArgumentNullException(nameof(services), "cfg.GetConnectionString('Exprs')"));
     }
     catch (Exception ex)
     {
       _serviceProvider.GetRequiredService<ILogger>().LogError(ex, _audit);
       Clipboard.SetText(ex.Message);
-      MessageBox.Show(ex.Message, "Exception - Clipboarded");
+      _ = MessageBox.Show(ex.Message, "Exception - Clipboarded");
     }
   });
   void SafeAudit()
