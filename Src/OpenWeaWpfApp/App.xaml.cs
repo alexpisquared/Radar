@@ -37,8 +37,8 @@ public partial class App : Application
     _ = services.AddSingleton<IConfigurationRoot>(AutoInitConfigHardcoded());
     _ = services.AddSingleton<ILogger>(sp => SeriLogHelper.InitLoggerFactory( //todo: this allows to override by UserSettings entry: UserSettingsIPM.UserLogFolderFile ??= // if new - store in usersettings for next uses.    
       FSHelper.GetCreateSafeLogFolderAndFile(new[]  {
-        sp.GetRequiredService<IConfigurationRoot>()["LogFolder"].Replace("..", $"{(Assembly.GetExecutingAssembly().GetName().Name??"Unkwn")[..5]}.{Environment.UserName[..3]}.."), // First, get from AppSettings.
-        @$"..\Logs\"  })).CreateLogger<MainPlotViewWin>());
+        sp.GetRequiredService<IConfigurationRoot>()["LogFolder"]??@"..\Logs\".Replace("..", $"{(Assembly.GetExecutingAssembly().GetName().Name??"Unkwn")[..5]}.{Environment.UserName[..3]}.."), // First, get from AppSettings.
+        @"..\Logs\"  })).CreateLogger<MainPlotViewWin>());
 
     Dbx(services);
 

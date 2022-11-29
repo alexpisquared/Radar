@@ -2,7 +2,7 @@
 namespace OpenWeaWpfApp;
 public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.ObservableValidator
 {
-  readonly IConfigurationRoot _config;
+  readonly IConfigurationRoot _cfg;
   readonly OpenWea _opnwea;
   readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _yHi = 2, _yLo = 13;
   bool _busy;
@@ -17,7 +17,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
   public MainViewModel(WeatherxContext weatherxContext, OpenWea openWea)
   {
-    _config = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
+    _cfg = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
     _opnwea = openWea;
     _dbx = weatherxContext; // WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
 
@@ -59,7 +59,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
   async Task PrevForecastFromDB()
   {
-    if (_config["StoreData"] != "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
+    if (_cfg["StoreData"] != "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
       return;
 
     var now = DateTime.Now;
@@ -91,7 +91,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     var bvl = await p24.GetIt(_urlPast24hrYKZ);
     var pea = await p24.GetIt(_urlPast24hrYYZ);
 
-    if (_config["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")         "StoreData": "No",
+    if (_cfg["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")         "StoreData": "No",
     {
       await AddPastDataToDB_EnvtCa("bvl", bvl);
       await AddPastDataToDB_EnvtCa("pea", pea);
@@ -107,7 +107,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     var sitedataMiss = await OpenWea.GetEnvtCa(_mississ);
     var sitedataVghn = await OpenWea.GetEnvtCa(_vaughan);
 
-    if (_config["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
+    if (_cfg["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
     {
       await AddForeDataToDB_EnvtCa("mis", sitedataMiss);
       await AddForeDataToDB_EnvtCa("vgn", sitedataVghn);
@@ -290,8 +290,8 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
   async Task PopulateScatModelAsync(int days = 5)
   {
-    OCA = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWea.OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(OCA); // PHC107
-    D53 = await _opnwea.GetIt(_config["AppSecrets:MagicNumber"], OpenWea.OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(D53); // PHC107
+    OCA = await _opnwea.GetIt(_cfg["AppSecrets:MagicNumber"] ?? throw new ArgumentNullException(nameof(_cfg)), OpenWea.OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(OCA); // PHC107
+    D53 = await _opnwea.GetIt(_cfg["AppSecrets:MagicNumber"] ?? throw new ArgumentNullException(nameof(_cfg)), OpenWea.OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(D53); // PHC107
 
     SubHeader += $"{OCA.current}";
     PlotTitle = CurrentConditions = $"{OpenWea.UnixToDt(OCA.current.dt):HH:mm:ss}   {OCA.current.temp,5:N1}°   {OCA.current.feels_like,4:N0}°  {OCA.current.wind_speed * _kWind:N1}k/h";
@@ -345,7 +345,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     var valueMax = _extrMax; // OCA.daily.Max(r => r.temp.max);
     var valueMin = _extrMin; // OCA.daily.Min(r => r.temp.min);
 
-    if (_config["StoreData"] == "Yes") //if (_cfg["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
+    if (_cfg["StoreData"] == "Yes") //if (_cfg["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
       await AddForeDataToDB_OpnWea("phc", OCA);
 
     OCA.hourly.ToList().ForEach(x =>
@@ -502,11 +502,11 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   [ObservableProperty] ObservableCollection<DataPoint> eCaTIslTemp = new();
   [ObservableProperty] double timeMin = DateTime.Today.ToOADate() - 1;
   [ObservableProperty] double timeMax = DateTime.Today.ToOADate() + 3;
-  [ObservableProperty] string plotTitle;
-  [ObservableProperty] string currentConditions;
-  [ObservableProperty] string curTempReal;
-  [ObservableProperty] string curTempFeel;
-  [ObservableProperty] string curWindKmHr;
+  [ObservableProperty] string plotTitle = "°";
+  [ObservableProperty] string currentConditions = "°";
+  [ObservableProperty] string curTempReal = "°";
+  [ObservableProperty] string curTempFeel = "°";
+  [ObservableProperty] string curWindKmHr = "°";
   [ObservableProperty] int windDirn;
   [ObservableProperty] float windVeloKmHr;
   [ObservableProperty] RootobjectOneCallApi? oCA = default!;

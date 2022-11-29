@@ -7,13 +7,10 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   readonly IConfigurationRoot _cfg;
   readonly WeatherxContext _dbx;
   readonly OpenWea _opnwea;
-  readonly int _days = 5; bool _busy;
+  bool _busy;
   const int _maxIcons = 50, _timeToPaintMS = 88;
   double _extrMax = +20, _extrMin = -20;
-  const string _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaughan = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582",
-    _phc = "phc", _vgn = "vgn", _mis = "mis",
-    _urlPast24hrYYZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yyz", // Pearson
-    _urlPast24hrYKZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=ykz"; // Buttonville
+  const string _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaughan = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582", _phc = "phc", _vgn = "vgn", _mis = "mis";
   readonly OxyColor _550f = OxyColor.FromArgb(0x50, 0x50, 0x00, 0xff),
    _ooo = OxyColor.FromRgb(0x00, 0x00, 0x00),
    _330 = OxyColor.FromRgb(0x30, 0x30, 0x00),
@@ -34,38 +31,36 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
   //ImageSource _i; public ImageSource WeaIcom { get => _i; set => SetProperty(ref _i, value); }
   //Uri _k = new("http://openweathermap.org/img/wn/04n@2x.png"); public Uri WIcon { get => _k; set => SetProperty(ref _k, value); }
-  const float _wk = 10f, _kprsr = .01f;
+  const float _wk = 10f;
   const float _kWind = 3.6f * _wk;
 
-  [ObservableProperty] ObservableCollection<ScatterPoint> sctrPtTPFVgn = new();
-  [ObservableProperty] ObservableCollection<ScatterPoint> sctrPtTPFPhc = new();
-  [ObservableProperty] ObservableCollection<ScatterPoint> sctrPtTPFMis = new();
-  [ObservableProperty] ObservableCollection<DataPoint> owaLoclTemp = new();
-  [ObservableProperty] ObservableCollection<DataPoint> owaLoclFeel = new();
-  [ObservableProperty] ObservableCollection<DataPoint> owaLoclPrsr = new();
-  [ObservableProperty] ObservableCollection<DataPoint> owaLoclGust = new();
-  [ObservableProperty] ObservableCollection<DataPoint> owaLoclGus_ = new();
-  [ObservableProperty] ObservableCollection<DataPoint> eCaBtvlWind = new();
-  [ObservableProperty] ObservableCollection<DataPoint> eCaPearWind = new();
-  [ObservableProperty] ObservableCollection<DataPoint> owaLoclSunT = new();
-  [ObservableProperty] ObservableCollection<DataPoint> owaLoclNowT = new();
-  [ObservableProperty] ObservableCollection<DataPoint> owaLoclPopr = new();
-  [ObservableProperty] ObservableCollection<DataPoint> eCaToroTemp = new();
-  [ObservableProperty] ObservableCollection<DataPoint> eCaVghnTemp = new();
-  [ObservableProperty] ObservableCollection<DataPoint> eCaMrkhTemp = new();
-  [ObservableProperty] ObservableCollection<DataPoint> eCaMissTemp = new();
-  [ObservableProperty] ObservableCollection<DataPoint> eCaTIslTemp = new();
-  [ObservableProperty] double timeMin = DateTime.Today.ToOADate() - 1; partial void OnTimeMinChanged(double value) => ReCreateAxises();
-  [ObservableProperty] double timeMax = DateTime.Today.ToOADate() + 3; partial void OnTimeMaxChanged(double value) => ReCreateAxises();
-  [ObservableProperty] string plotTitle;
-  [ObservableProperty] string currentConditions;
-  [ObservableProperty] string curTempReal;
-  [ObservableProperty] string curTempFeel;
-  [ObservableProperty] string curWindKmHr;
+  ObservableCollection<ScatterPoint> SctrPtTPFVgn = new();
+  ObservableCollection<ScatterPoint> SctrPtTPFPhc = new();
+  ObservableCollection<ScatterPoint> SctrPtTPFMis = new();
+  ObservableCollection<DataPoint> OwaLoclTemp = new();
+  ObservableCollection<DataPoint> OwaLoclFeel = new();
+  ObservableCollection<DataPoint> OwaLoclPrsr = new();
+  ObservableCollection<DataPoint> OwaLoclGust = new();
+  ObservableCollection<DataPoint> SunSinusoid = new();
+  ObservableCollection<DataPoint> ECaBtvlWind = new();
+  ObservableCollection<DataPoint> ECaPearWind = new();
+  ObservableCollection<DataPoint> OwaLoclSunT = new();
+  ObservableCollection<DataPoint> OwaLoclNowT = new();
+  ObservableCollection<DataPoint> OwaLoclPopr = new();
+  ObservableCollection<DataPoint> ECaToroTemp = new();
+  ObservableCollection<DataPoint> ECaVghnTemp = new();
+  ObservableCollection<DataPoint> ECaMrkhTemp = new();
+  ObservableCollection<DataPoint> ECaMissTemp = new();
+  ObservableCollection<DataPoint> ECaTIslTemp = new();
+  [ObservableProperty] double timeMin = DateTime.Today.ToOADate() - 1; partial void OnTimeMinChanged(double value) => ReCreateAxises("T min");
+  [ObservableProperty] double timeMax = DateTime.Today.ToOADate() + 3; partial void OnTimeMaxChanged(double value) => ReCreateAxises("T max");
+  [ObservableProperty] string plotTitle ="";
+  [ObservableProperty] string currentConditions ="";
+  [ObservableProperty] string curTempReal ="";
+  [ObservableProperty] string curTempFeel ="";
+  [ObservableProperty] string curWindKmHr ="";
   [ObservableProperty] int windDirn;
   [ObservableProperty] float windVeloKmHr;
-  //[ObservableProperty] RootobjectOneCallApi? oCA = default!;
-  //[ObservableProperty] RootobjectFrc5Day3Hr? d53 = default!;
   [ObservableProperty] ObservableCollection<string> opnWeaIcoA = new();
 #if ObsCol
   [ObservableProperty] ObservableCollection<ImageSource> opnWeaIco3 = new();
@@ -95,7 +90,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 #endif
     }
 
-    CreateModel("ctor");
+    RefreshModel("ctor");
   }
 
   [RelayCommand]
@@ -116,7 +111,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     OwaLoclFeel.Clear();
     OwaLoclPrsr.Clear();
     OwaLoclGust.Clear();
-    OwaLoclGus_.Clear();
+    SunSinusoid.Clear();
     ECaBtvlWind.Clear();
     ECaPearWind.Clear();
     OwaLoclSunT.Clear();
@@ -139,11 +134,9 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     {
       BprKernel32.StartFAF();
 
-      //await PrevForecastFromDbAsync();
+      await PrevForecastFromDbAsync();
       await PopulateEnvtCanaAsync();
-      //await PopulateScatModelAsync(_days);
-
-      //CreateModel("Populated");
+      await PopulateScatModelAsync();
 
       BprKernel32.Finish();
     }
@@ -339,7 +332,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
         OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), valueMin));
       });
 
-      OwaLoclGus_.Clear();
+      SunSinusoid.Clear();
 
       var t0 = OpenWea.UnixToDt(x.sunrise).ToOADate();
       var dh = 16 * Math.Cos(t0 * Math.PI * 2);
@@ -348,7 +341,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       void FunctionSeries__(Func<double, double> f, double x0, double x1, double dx)
       {
         for (var t = x0; t <= x1 + (dx * 0.5); t += dx)
-          OwaLoclGus_.Add(new DataPoint(t, dh - (16 * f(t * Math.PI * 2))));
+          SunSinusoid.Add(new DataPoint(t, dh - (16 * f(t * Math.PI * 2))));
       }
 
       OCA.daily
@@ -392,26 +385,26 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       OpnWeaTip3.Add($"{UnixToDt(r.dt):MMM d  H:mm} \n\n    {r.weather[0].description}   \n    {r.main.temp_min} - {r.main.temp_max}°    pop {r.pop * 100:N0}");
     });
 #else
-    var h3 = 0;
-    for (; h3 < OpenWea.UnixToDt(D53.list[0].dt).Hour / 3; h3++)
-    {
-      OpnWeaIco3[h3] = new BitmapImage(new Uri($"http://openweathermap.org/img/wn/01n.png", UriKind.Absolute)); //nogo: OpnWeaIco3[h3] = new BitmapImage(new Uri($"/Views/NoDataIndicator.bmp", UriKind.Absolute));
-      OpnWeaTip3[h3] = $"{h3}";
-    }
+      var h3 = 0;
+      for (; h3 < OpenWea.UnixToDt(D53.list[0].dt).Hour / 3; h3++)
+      {
+        OpnWeaIco3[h3] = new BitmapImage(new Uri($"http://openweathermap.org/img/wn/01n.png", UriKind.Absolute)); //nogo: OpnWeaIco3[h3] = new BitmapImage(new Uri($"/Views/NoDataIndicator.bmp", UriKind.Absolute));
+        OpnWeaTip3[h3] = $"{h3}";
+      }
 
-    D53.list.ToList().ForEach(r =>
-    {
-      //tmi: WriteLine($"});D53:  {r.dt_txt}    {UnixToDt(r.dt)}    {UnixToDt(r.dt):MMM dd  HH:mm}     {r.weather[0].description,-26}       {r.main.temp_min,6:N1} ÷ {r.main.temp_max,4:N1}°    pop{r.pop * 100,3:N0}%      {r}");
-      OpnWeaIco3[h3] = new BitmapImage(new Uri($"http://openweathermap.org/img/wn/{r.weather[0].icon}@2x.png"));
-      OpnWeaTip3[h3] = $"{OpenWea.UnixToDt(r.dt):MMM d  H:mm} \n\n    {r.weather[0].description}   \n    {r.main.temp:N1}°    pop {r.pop * 100:N0}%";
-      h3++;
-    });
+      D53.list.ToList().ForEach(r =>
+      {
+        //tmi: WriteLine($"});D53:  {r.dt_txt}    {UnixToDt(r.dt)}    {UnixToDt(r.dt):MMM dd  HH:mm}     {r.weather[0].description,-26}       {r.main.temp_min,6:N1} ÷ {r.main.temp_max,4:N1}°    pop{r.pop * 100,3:N0}%      {r}");
+        OpnWeaIco3[h3] = new BitmapImage(new Uri($"http://openweathermap.org/img/wn/{r.weather[0].icon}@2x.png"));
+        OpnWeaTip3[h3] = $"{OpenWea.UnixToDt(r.dt):MMM d  H:mm} \n\n    {r.weather[0].description}   \n    {r.main.temp:N1}°    pop {r.pop * 100:N0}%";
+        h3++;
+      });
 #endif
 
-    const int id = 2;
-    await SetMaxX(id);
-    TimeMin = DateTime.Today.AddDays(-1).ToOADate(); // == DateTimeAxis.ToDouble(DateTime.Today.AddDays(-1));
-    TimeMax = DateTime.Today.AddDays(id).ToOADate(); // DateTimeAxis.ToDouble(_days == 5 ? UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Today.AddDays(_days));
+      const int id = 2;
+      await SetMaxX(id);
+      TimeMin = DateTime.Today.AddDays(-1).ToOADate(); // == DateTimeAxis.ToDouble(DateTime.Today.AddDays(-1));
+      TimeMax = DateTime.Today.AddDays(id).ToOADate(); // DateTimeAxis.ToDouble(_days == 5 ? UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Today.AddDays(_days));
 
     }, TaskScheduler.FromCurrentSynchronizationContext());
 
@@ -421,28 +414,6 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   }
 
   static async Task TickRepaintDelay() { BprKernel32.TickFAF(); await Task.Delay(_timeToPaintMS); }
-  void CopyOpenWeaToOwaLoclLists(RootobjectOneCallApi? ocv, ObservableCollection<DataPoint> pointsTemp, ObservableCollection<DataPoint> pointsFeel)
-  {
-    ArgumentNullException.ThrowIfNull(ocv);
-
-    ocv.hourly.ToList().ForEach(x =>
-    {
-      pointsTemp.Add(new(x.dt, x.temp));
-      pointsFeel.Add(new(x.dt, x.feels_like));
-    });
-
-    ocv.daily.Where(d => d.dt > ocv.hourly.Max(d => d.dt)).ToList().ForEach(x =>
-    {
-      pointsTemp.Add(new(x.dt + _m, x.temp.morn));
-      pointsTemp.Add(new(x.dt + _d, x.temp.day));
-      pointsTemp.Add(new(x.dt + _e, x.temp.eve));
-      pointsTemp.Add(new(x.dt + _n, x.temp.night));
-      pointsFeel.Add(new(x.dt + _m, x.feels_like.morn));
-      pointsFeel.Add(new(x.dt + _d, x.feels_like.day));
-      pointsFeel.Add(new(x.dt + _e, x.feels_like.eve));
-      pointsFeel.Add(new(x.dt + _n, x.feels_like.night));
-    });
-  }
   IRelayCommand? _cd; public IRelayCommand GetDaysComman_ => _cd ??= new RelayCommand(GetDays); void GetDays() { }
   IRelayCommand? _gs; public IRelayCommand GetDaysCommand => _gs ??= new AsyncRelayCommand<object>(SetMaxX, (days) => !_busy); async Task SetMaxX(object? days_)
   {
@@ -463,9 +434,9 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     await Task.Yield();// PopulateAllAsync((int?)_days ?? 5);
   }
 
-  [Browsable(false)][ObservableProperty] PlotModel model = new() { Title = "Plot Title", TextColor = OxyColors.OrangeRed }; //void OnModelChanged() => PropertiesChanged();  void PropertiesChanged() => Model = CreateModel("Prop Chgd");
+  [Browsable(false)][ObservableProperty] PlotModel model = new() { Title = "Plot Title", TextColor = OxyColors.OrangeRed }; //void OnModelChanged() => PropertiesChanged();  void PropertiesChanged() => Model = RefreshModel("Prop Chgd");
 
-  void CreateModel(string note)
+  void RefreshModel(string note)
   {
     WriteLine($"::: {note}");
     //Model = new PlotModel(); // { Title = note, TextColor = OxyColors.OrangeRed };
@@ -474,13 +445,13 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       Model.Legends.Clear();
       Model.Legends.Add(new Legend { LegendTextColor = OxyColors.LightGray, LegendPosition = LegendPosition.LeftMiddle, LegendMargin = 10, LegendBackground = _111 });
 
-      ReCreateAxises();
+      ReCreateAxises(note);
 
       Model.Series.Clear();
       Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclSunT, Color = _330, StrokeThickness = 0.0, Title = "SunRS" });
       Model.Series.Add(new AreaSeries { ItemsSource = ECaBtvlWind, Color = _Phc, StrokeThickness = 0.5, Title = "Wind EC Owa", YAxisKey = "yAxisR", Fill = _550f });
       Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclPopr, Color = _PoP, StrokeThickness = 0.0, Title = "PoPr", InterpolationAlgorithm = IA, YAxisKey = "yAxisR" });
-      Model.Series.Add(new LineSeries { ItemsSource = OwaLoclGus_, Color = _cc0, StrokeThickness = 0.5, Title = "SunRS", YAxisKey = "yAxisL" });
+      Model.Series.Add(new LineSeries { ItemsSource = SunSinusoid, Color = _cc0, StrokeThickness = 0.5, Title = "SunRS", YAxisKey = "yAxisL" });
       Model.Series.Add(new LineSeries { ItemsSource = OwaLoclNowT, Color = _aaa, StrokeThickness = 1.0, Title = "owa T" });
       Model.Series.Add(new LineSeries { ItemsSource = ECaToroTemp, Color = _b80, StrokeThickness = 5.0, Title = "EC TO T", LineStyle = LineStyle.LongDash });
       Model.Series.Add(new LineSeries { ItemsSource = ECaMissTemp, Color = _Mis, StrokeThickness = 3.0, Title = "EC Mi T", LineStyle = LineStyle.LongDashDotDot });
@@ -499,10 +470,10 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
 
     Model.InvalidatePlot(true);
-    SubHeader += $"Model [re]-CREATED! ■\t \t\t\t  + plot invalidated \t {note} \n";
+    SubHeader += $"Model re-freshed\t▓  {note,-26}  \t+  plot invalidated \n";
   }
 
-  void ReCreateAxises()
+  void ReCreateAxises(string note)
   {
     var dddD = "                  ddd d";
     Model.Axes.Clear();
@@ -512,7 +483,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     Model.Axes.Add(new LinearAxis { Minimum = YAxsRMin, Maximum = YAxsRMax, MajorStep = 100, MinorStep = 10, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Right, MajorGridlineStyle = LineStyle.None, MajorGridlineColor = _ooo, Key = "yAxisR", Title = "Wind k/h  PoP %" });
 
     Model.InvalidatePlot(true);
-    SubHeader += $"Model [re]-CREATED! ■\t {YAxisMin} - {YAxisMax}    {YAxsRMin} - {YAxsRMax} \t  + plot invalidated  \n";
+    SubHeader += $"Axiss re-adjustd\t■  {note,-26}  \t+  plot invalidated \n";
   }
 
   internal void ClearPlot()
@@ -523,7 +494,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   }
 
   [RelayCommand] void Invalidate(object updateData) { BprKernel32.Tick(); Model.InvalidatePlot(updateData?.ToString() == "true"); }
-  [RelayCommand] void CreateMdl(object note) { BprKernel32.Tick(); CreateModel(note?.ToString() ?? "000"); }
+  [RelayCommand] void CreateMdl(object note) { BprKernel32.Tick(); RefreshModel(note?.ToString() ?? "000"); }
 
   #region icons
   [ObservableProperty] GridLength iconWidth0;
@@ -578,8 +549,8 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   [ObservableProperty] string envtCaIconM = "https://weather.gc.ca/weathericons/05.gif";
   [ObservableProperty] string envtCaIconV = "https://weather.gc.ca/weathericons/05.gif";
   [ObservableProperty] string subHeader = "";
-  [ObservableProperty] double yAxisMin = -18; partial void OnYAxisMinChanged(double value) => ReCreateAxises();
-  [ObservableProperty] double yAxisMax = +12; partial void OnYAxisMaxChanged(double value) => ReCreateAxises();
+  [ObservableProperty] double yAxisMin = -18; partial void OnYAxisMinChanged(double value) => ReCreateAxises("Y min");
+  [ObservableProperty] double yAxisMax = +12; partial void OnYAxisMaxChanged(double value) => ReCreateAxises("Y max");
   [ObservableProperty] double normTMin = -08;
   [ObservableProperty] double normTMax = +02;
   [ObservableProperty] double yAxsRMax = +180;
