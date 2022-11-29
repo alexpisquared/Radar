@@ -13,9 +13,9 @@ public partial class MainPlotViewWin : Window
         case Key.C: Beep.Play(); ((PlotViewModel)DataContext).ClearPlot(); break;
         case Key.I: Beep.Play(); plotBR.InvalidatePlot(true); break;
         case Key.J: Beep.Play(); plotBR.InvalidatePlot(false); break;
-        case Key.R: Hand.Play(); _ = await ((PlotViewModel)DataContext).PopulateAllAsync(); goto case Key.I;
+        case Key.R: Hand.Play(); ((PlotViewModel)DataContext).PopulateAll(); goto case Key.I;
         case Key.Escape: base.OnKeyUp(e); e.Handled = true; Close(); break;
-        default: break;
+        default: await Task.Delay(333); break;
       }
     };
 
@@ -48,7 +48,7 @@ public partial class MainPlotViewWin : Window
     {
       await Task.Delay(1);
 
-      _ = await ((PlotViewModel)DataContext).PopulateAllAsync();  // only lines chart is drawn.
+      ((PlotViewModel)DataContext).PopulateAll();  // only lines chart is drawn.
     }
     catch (Exception ex)
     {
@@ -57,6 +57,6 @@ public partial class MainPlotViewWin : Window
     }
   }
   void OnClose(object sender, RoutedEventArgs e) => Close();
-  async void OnPoplte(object sender, RoutedEventArgs e) => _ = await ((PlotViewModel)DataContext).PopulateAllAsync();  // only lines chart is drawn.
+  void OnPoplte(object sender, RoutedEventArgs e) =>  ((PlotViewModel)DataContext).PopulateAll();  // only lines chart is drawn.
   void OnShowPocBin(object sender, RoutedEventArgs e) => new PocBin().Show();
 }

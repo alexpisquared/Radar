@@ -35,7 +35,7 @@ public partial class App : Application
     _ = services.AddTransient<OpenWea>();
 
     _ = services.AddSingleton<IConfigurationRoot>(AutoInitConfigHardcoded());
-    _ = services.AddSingleton<ILogger>(sp => SeriLogHelper.InitLoggerFactory( //todo: this allows to override by UserSettings entry: UserSettingsIPM.UserLogFolderFile ??= // if new - store in usersettings for next uses.    
+    _ = services.AddSingleton<ILogger>(sp => SeriLogHelper.InitLoggerFactory( //todo: this allows to override by UserSettings entry: UserSettingsIPM.UserLogFolderFile ??= // if new - _store in usersettings for next uses.    
       FSHelper.GetCreateSafeLogFolderAndFile(new[]  {
         sp.GetRequiredService<IConfigurationRoot>()["LogFolder"]??@"..\Logs\".Replace("..", $"{(Assembly.GetExecutingAssembly().GetName().Name??"Unkwn")[..5]}.{Environment.UserName[..3]}.."), // First, get from AppSettings.
         @"..\Logs\"  })).CreateLogger<MainPlotViewWin>());
@@ -71,7 +71,7 @@ public partial class App : Application
     MainWindow.DataContext = _serviceProvider.GetRequiredService<MainViewModel>();      //   700 ms
 #endif
 
-    //the only way to populate PlotView: await ((MainViewModel)MainPlotOldWindow.DataContext).PopulateAllAsync();
+    //the only way to populate PlotView: await ((MainViewModel)MainPlotOldWindow.DataContext).PopulateAll();
 
     MainWindow.Show();
 #else // Release:

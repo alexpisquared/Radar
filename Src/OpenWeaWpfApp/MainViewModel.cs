@@ -195,7 +195,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
           d.SrcId == srcId &&
           d.SiteId == siteId &&
           d.MeasureId == measureId &&
-          d.MeasureValue == val && // store only changes in recalculation results
+          d.MeasureValue == val && // _store only changes in recalculation results
           d.ForecastedFor == forecastedFor) == false)
       {
         _ = _dbx.PointFore.Add(new PointFore
@@ -232,7 +232,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       if (await _dbx.PointFore.AnyAsync(d =>
           d.SrcId == srcId &&
           d.SiteId == siteId &&
-          d.MeasureValue == f.temp && // store only changes in recalculation results
+          d.MeasureValue == f.temp && // _store only changes in recalculation results
           d.MeasureId == measureId &&
           d.ForecastedFor == forecastedFor) == false)
       {
@@ -606,7 +606,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       IconWidth7 = 7 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
     }
 
-    await Task.Yield();// PopulateAllAsync((int?)_days ?? 5);
+    await Task.Yield();// PopulateAll((int?)_days ?? 5);
   }
 }
 
