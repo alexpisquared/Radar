@@ -80,7 +80,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     _dbx = weatherxContext; // WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
     _opnwea = openWea;
 
-    _store = false; // _cfg["StoreData"] == "Yes";
+    _store = _cfg["StoreData"] == "Yes";
 
     for (var i = 0; i < _maxIcons; i++)
     {
@@ -111,7 +111,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
          
       //BprKernel32.Finish();
     }
-    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
+    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
     finally { _busy = false; }
   }
   [RelayCommand]
@@ -235,14 +235,14 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
   async Task<(List<PointFore> a, List<PointFore> b, List<PointFore> c)> GetPastForecastFromDB()
   {
-    //await Task.Delay(5000);
+    await Task.Delay(10_000); //hack: //todo: fix the db synch one day.
     try
     {
       var now = DateTime.Now;
       var ytd = now.AddHours(-24);
       var dby = now.AddHours(-48);
 
-      //if (Environment.UserDomainName != "RAZER1") try { _dbx.EnsureCreated22(); } catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
+      //if (Environment.UserDomainName != "RAZER1") try { _dbx.EnsureCreated22(); } catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
       //WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
 
       var a = await _dbx.PointFore.Where(r => r.SiteId == Cnst._phc && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
@@ -251,7 +251,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
       return (a, b, c);
     }
-    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
+    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
   }
   void GetImprtandDatFromPearson(siteData? sitedata)
   {
@@ -291,7 +291,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
       Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Past       Envt CA  \t{site}\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin}  {YAxsRMax} \t  + plot invalidated \t Past 24hr\n";    //await TickRepaintDelay();
     }
-    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
+    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
   }
   void DrawFore24hrEC(string site, siteData? sitedata)
   {
@@ -309,7 +309,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
       Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Forecast   Envt CA  \t{site.Substring(4, 3)}\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin}  {YAxsRMax} \t  + plot invalidated \t Fore 24hr\n";
     }
-    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
+    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
   }
   void DrawD53(RootobjectFrc5Day3Hr D53)
   {
@@ -426,7 +426,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFMis, MarkerFill = OxyColors.Transparent, Title = "ECa _Mis", MarkerType = MarkerType.Circle, MarkerStroke = _Mis });
       Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFPhc, MarkerFill = OxyColors.Transparent, Title = "OWA _Phc", MarkerType = MarkerType.Circle, MarkerStroke = _Phc, TrackerFormatString = "{}{0}&#xA;Time:   {2:HH:mm} &#xA;Temp:  {4:0.0}° " });
     }
-    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
+    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
 
     Model.InvalidatePlot(true);
     SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Model re-freshed\t▓  {note,-26}  \t\t  + plot invalidated \n";
