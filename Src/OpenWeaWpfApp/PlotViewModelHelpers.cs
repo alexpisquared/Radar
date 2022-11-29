@@ -151,7 +151,7 @@ _urlPast24hrYKZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yk
       });
   }
 
-  internal static async Task<(siteData sitedataMiss, siteData sitedataVghn)> GetFore24hrFromEC()
+  internal static async Task<(siteData? sitedataMiss, siteData? sitedataVghn)> GetFore24hrFromEC()
   {
     var sitedataMiss = await OpenWea.GetEnvtCa(_mississ);
     var sitedataVghn = await OpenWea.GetEnvtCa(_vaughan);
