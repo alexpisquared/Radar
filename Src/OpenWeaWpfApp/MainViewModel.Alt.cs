@@ -26,7 +26,7 @@
     var valueMax = oca.daily.Max(r => r.temp.max);
 
     var gridColor = OxyColor.FromRgb(22, 22, 22);
-    ScatModel.Title = $"{OpenWea.UnixToDt(oca.current.dt):ddd HH:mm}  {oca.current.temp:N1}°  {oca.current.feels_like:N0}°  {oca.current.wind_deg}";
+    ScatModel.Title = $"{OpenWea.UnixToDt(oca.current.dt):GetPastForecastFromDB HH:mm}  {oca.current.temp:N1}°  {oca.current.feels_like:N0}°  {oca.current.wind_deg}";
     ScatModel.Axes.Add(new LinearAxis
     {
       Position = AxisPosition.Left,
@@ -47,7 +47,7 @@
       IsZoomEnabled = false,
       IsPanEnabled = false,
       MajorGridlineStyle = LineStyle.Solid,
-      StringFormat = "ddd H",
+      StringFormat = "GetPastForecastFromDB H",
       TextColor = OxyColors.Red
     });
     ScatModel.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.Rainbow(1000), TextColor = OxyColors.WhiteSmoke });
