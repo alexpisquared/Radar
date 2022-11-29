@@ -299,7 +299,7 @@
 
       <TextBlock Text="{Binding SubHeader}" d:Text="SubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeader" HorizontalAlignment="Left" Foreground="#ff0" Margin="5" VerticalAlignment="Bottom" Grid.RowSpan="3" Grid.ColumnSpan="3" />
 
-      <Menu Margin="0,10,15,0" FontStyle="Oblique" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent" Foreground="#ddd" Grid.Column="0" Grid.ColumnSpan="3">
+      <Menu Margin="0,10,15,0" FontStyle="Oblique" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent" Foreground="#dd0" Grid.Column="0" Grid.ColumnSpan="3">
         <MenuItem   Header="_Populate All"      Command="{Binding PopulateAllCommand}"          ToolTip="Populate ALL"  />
         <MenuItem   Header="Populate from _DB"  Command="{Binding PrevForecastFromDbCommand}"   ToolTip="Populate from DB"  />
         <MenuItem   Header="Populate from _EC"  Command="{Binding PopulateEnvtCanaCommand}"     ToolTip="Populate from Env Ca"  />

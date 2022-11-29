@@ -1,115 +1,119 @@
-﻿using OpenWeaWpfApp;
-internal static class PlotViewModelHelpers
+﻿internal static class PlotViewModelHelpers
 {
-internal     static async Task AddForeDataToDB_EnvtCa(WeatherxContext _dbx, string siteId, siteData? siteFore, string srcId = "eca", string measureId = "tar")
+  const string _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaughan = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582",
+_phc = "phc", _vgn = "vgn", _mis = "mis",
+_urlPast24hrYYZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yyz", // Pearson
+_urlPast24hrYKZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=ykz"; // Buttonville
+
+  internal static async Task AddForeDataToDB_EnvtCa(WeatherxContext _dbx, string siteId, siteData? siteFore, string srcId = "eca", string measureId = "tar")
+  {
+    ArgumentNullException.ThrowIfNull(siteFore, $"@@@@@@@@@ {nameof(siteFore)}");
+    var now = DateTime.Now;
+
+    //var connectionString = _cfg.GetConnectionString("Exprs");
+    //WeatherxContextFactory dbf = new(connectionString);
+    //using WeatherxContext _dbx = dbf.CreateDbContext();
+
+    var forecastedAt = EnvtCaDate(siteFore.currentConditions.dateTime[1]);
+
+    foreach (var f in siteFore.hourlyForecastGroup.hourlyForecast.ToList()) //siteFore.hourlyForecastGroup.hourlyForecast.ToList().ForEach(async f =>
     {
-        ArgumentNullException.ThrowIfNull(siteFore, $"@@@@@@@@@ {nameof(siteFore)}");
-        var now = DateTime.Now;
+      var forecastedFor = EnvtCaDate(f.dateTimeUTC);
+      var val = double.Parse(f.temperature.Value);
 
-        //var connectionString = _cfg.GetConnectionString("Exprs");
-        //WeatherxContextFactory dbf = new(connectionString);
-        //using WeatherxContext _dbx = dbf.CreateDbContext();
-
-        var forecastedAt = EnvtCaDate(siteFore.currentConditions.dateTime[1]);
-
-        foreach (var f in siteFore.hourlyForecastGroup.hourlyForecast.ToList()) //siteFore.hourlyForecastGroup.hourlyForecast.ToList().ForEach(async f =>
+      if (await _dbx.PointFore.AnyAsync(d =>
+          d.SrcId == srcId &&
+          d.SiteId == siteId &&
+          d.MeasureId == measureId &&
+          d.MeasureValue == val && // store only changes in recalculation results
+          d.ForecastedFor == forecastedFor) == false)
+      {
+        _ = _dbx.PointFore.Add(new PointFore
         {
-            var forecastedFor = EnvtCaDate(f.dateTimeUTC);
-            var val = double.Parse(f.temperature.Value);
+          SrcId = srcId,
+          SiteId = siteId,
+          MeasureId = measureId,
+          MeasureValue = val,
+          ForecastedFor = forecastedFor,
+          ForecastedAt = forecastedAt,
+          Note64 = "[early runs]",
+          CreatedAt = now
+        });
+      }
+    };
 
-            if (await _dbx.PointFore.AnyAsync(d =>
-                d.SrcId == srcId &&
-                d.SiteId == siteId &&
-                d.MeasureId == measureId &&
-                d.MeasureValue == val && // store only changes in recalculation results
-                d.ForecastedFor == forecastedFor) == false)
-            {
-                _ = _dbx.PointFore.Add(new PointFore
-                {
-                    SrcId = srcId,
-                    SiteId = siteId,
-                    MeasureId = measureId,
-                    MeasureValue = val,
-                    ForecastedFor = forecastedFor,
-                    ForecastedAt = forecastedAt,
-                    Note64 = "[early runs]",
-                    CreatedAt = now
-                });
-            }
-        };
+    WriteLine($"PP{await _dbx.SaveChangesAsync()}");
+  }
+  internal static async Task AddForeDataToDB_OpnWea(WeatherxContext _dbx, string siteId, RootobjectOneCallApi? siteFore, string srcId = "owa", string measureId = "tar")
+  {
+    ArgumentNullException.ThrowIfNull(siteFore, $"@@@@@@@@@ {nameof(siteFore)}");
+    var now = DateTime.Now;
 
-        WriteLine($"PP{await _dbx.SaveChangesAsync()}");
-    }
-internal     static async Task AddForeDataToDB_OpnWea(WeatherxContext _dbx, string siteId, RootobjectOneCallApi? siteFore, string srcId = "owa", string measureId = "tar")
+    //var connectionString = _cfg.GetConnectionString("Exprs");
+    //WeatherxContextFactory dbf = new(connectionString);
+    //using WeatherxContext _dbx = dbf.CreateDbContext();
+
+    var forecastedAt = OpenWea.UnixToDt(siteFore.current.dt);
+
+    foreach (var f in siteFore.hourly.ToList()) //siteFore.hourlyForecastGroup.hourlyForecast.ToList().ForEach(async f =>
     {
-        ArgumentNullException.ThrowIfNull(siteFore, $"@@@@@@@@@ {nameof(siteFore)}");
-        var now = DateTime.Now;
+      var forecastedFor = OpenWea.UnixToDt(f.dt);
 
-        //var connectionString = _cfg.GetConnectionString("Exprs");
-        //WeatherxContextFactory dbf = new(connectionString);
-        //using WeatherxContext _dbx = dbf.CreateDbContext();
-
-        var forecastedAt = OpenWea.UnixToDt(siteFore.current.dt);
-
-        foreach (var f in siteFore.hourly.ToList()) //siteFore.hourlyForecastGroup.hourlyForecast.ToList().ForEach(async f =>
+      if (await _dbx.PointFore.AnyAsync(d =>
+          d.SrcId == srcId &&
+          d.SiteId == siteId &&
+          d.MeasureValue == f.temp && // store only changes in recalculation results
+          d.MeasureId == measureId &&
+          d.ForecastedFor == forecastedFor) == false)
+      {
+        _ = _dbx.PointFore.Add(new PointFore
         {
-            var forecastedFor = OpenWea.UnixToDt(f.dt);
+          SrcId = srcId,
+          SiteId = siteId,
+          MeasureId = measureId,
+          MeasureValue = f.temp,
+          ForecastedFor = forecastedFor,
+          ForecastedAt = forecastedAt,
+          Note64 = "[early runs]",
+          CreatedAt = now
+        });
+      }
+    };
 
-            if (await _dbx.PointFore.AnyAsync(d =>
-                d.SrcId == srcId &&
-                d.SiteId == siteId &&
-                d.MeasureValue == f.temp && // store only changes in recalculation results
-                d.MeasureId == measureId &&
-                d.ForecastedFor == forecastedFor) == false)
-            {
-                _ = _dbx.PointFore.Add(new PointFore
-                {
-                    SrcId = srcId,
-                    SiteId = siteId,
-                    MeasureId = measureId,
-                    MeasureValue = f.temp,
-                    ForecastedFor = forecastedFor,
-                    ForecastedAt = forecastedAt,
-                    Note64 = "[early runs]",
-                    CreatedAt = now
-                });
-            }
-        };
-
-        WriteLine($"PP{await _dbx.SaveChangesAsync()}");
-    }
+    WriteLine($"PP{await _dbx.SaveChangesAsync()}");
+  }
   internal static async Task AddPastDataToDB_EnvtCa(WeatherxContext _dbx, string siteId, List<MeteoDataMy> sitePast, string srcId = "eca", string measureId = "tar")
+  {
+    ArgumentNullException.ThrowIfNull(sitePast, $"@@@@@@@@@ {nameof(sitePast)}");
+    var now = DateTime.Now;
+
+    //var connectionString = _cfg.GetConnectionString("Exprs");
+    //WeatherxContextFactory dbf = new(connectionString);
+    //using WeatherxContext _dbx = dbf.CreateDbContext();
+
+    foreach (var f in sitePast) //sitePast.hourlyPastcastGroup.hourlyPastcast.ToList().ForEach(async f =>
     {
-        ArgumentNullException.ThrowIfNull(sitePast, $"@@@@@@@@@ {nameof(sitePast)}");
-        var now = DateTime.Now;
-
-        //var connectionString = _cfg.GetConnectionString("Exprs");
-        //WeatherxContextFactory dbf = new(connectionString);
-        //using WeatherxContext _dbx = dbf.CreateDbContext();
-
-        foreach (var f in sitePast) //sitePast.hourlyPastcastGroup.hourlyPastcast.ToList().ForEach(async f =>
+      if (await _dbx.PointReal.AnyAsync(d =>
+          d.SrcId == srcId &&
+          d.SiteId == siteId &&
+          d.MeasureId == measureId &&
+          d.MeasureTime == f.TakenAt) == false)
+      {
+        _ = _dbx.PointReal.Add(new PointReal
         {
-            if (await _dbx.PointReal.AnyAsync(d =>
-                d.SrcId == srcId &&
-                d.SiteId == siteId &&
-                d.MeasureId == measureId &&
-                d.MeasureTime == f.TakenAt) == false)
-            {
-                _ = _dbx.PointReal.Add(new PointReal
-                {
-                    SrcId = srcId,
-                    SiteId = siteId,
-                    MeasureId = measureId,
-                    MeasureValue = f.TempAir,
-                    MeasureTime = f.TakenAt,
-                    Note64 = "[early runs]",
-                    CreatedAt = now
-                });
-            }
-        };
+          SrcId = srcId,
+          SiteId = siteId,
+          MeasureId = measureId,
+          MeasureValue = f.TempAir,
+          MeasureTime = f.TakenAt,
+          Note64 = "[early runs]",
+          CreatedAt = now
+        });
+      }
+    };
 
-        WriteLine($"PP{await _dbx.SaveChangesAsync()}");
-    }
+    WriteLine($"PP{await _dbx.SaveChangesAsync()}");
+  }
 
   internal static DateTimeOffset EnvtCaDate(string yyyyMMddHHmm)
   {
@@ -145,5 +149,20 @@ internal     static async Task AddForeDataToDB_OpnWea(WeatherxContext _dbx, stri
         temps.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), x.TempAir));
         winds.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), x.WindKmH * _wk));
       });
+  }
+
+  internal static async Task<(siteData sitedataMiss, siteData sitedataVghn)> GetFore24hrFromEC()
+  {
+    var sitedataMiss = await OpenWea.GetEnvtCa(_mississ);
+    var sitedataVghn = await OpenWea.GetEnvtCa(_vaughan);
+
+    return (sitedataMiss, sitedataVghn);
+  }
+  internal static async Task<(List<MeteoDataMy> bvl, List<MeteoDataMy> pea)> GetPast24hrFromEC()
+  {
+    Past24hrHAP p24 = new();
+    var bvl = await p24.GetIt(_urlPast24hrYYZ);
+    var pea = await p24.GetIt(_urlPast24hrYKZ);
+    return (bvl, pea);
   }
 }
