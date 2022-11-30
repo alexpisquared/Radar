@@ -9,7 +9,7 @@
   <WindowChrome.WindowChrome>
     <WindowChrome CaptionHeight="0" ResizeBorderThickness="10" />
   </WindowChrome.WindowChrome>
-  <Border CornerRadius="6" Padding="3" BorderBrush="#ccc" BorderThickness="1" Background="#000" >
+  <Border CornerRadius="8" Padding="3" BorderBrush="#555" BorderThickness="1" Background="#000" >
     <Grid>
       <Grid.Resources>
         <Color x:Key="Vgn">#08f</Color>

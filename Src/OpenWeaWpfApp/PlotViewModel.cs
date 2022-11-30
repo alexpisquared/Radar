@@ -8,9 +8,8 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   readonly IConfigurationRoot _cfg;
   readonly WeatherxContext _dbx;
   readonly OpenWea _opnwea;
-  private readonly DbxHelper _dbh;
-  private readonly bool _store;
-  bool _busy;
+  readonly DbxHelper _dbh;
+  readonly bool _store;
   const int _maxIcons = 50, _timeToPaintMS = 88;
   double _extrMax = +20, _extrMin = -20;
   readonly OxyColor _550f = OxyColor.FromArgb(0x50, 0x50, 0x00, 0xff),
@@ -80,7 +79,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     _dbx = weatherxContext; // WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
     _dbh = dbh;
     _opnwea = openWea;
-    _store = false; //333:   _cfg["StoreData"] == "Yes";
+    _store = _cfg["StoreData"] == "Yes";
 
     for (var i = 0; i < _maxIcons; i++)
     {
@@ -93,66 +92,63 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 #endif
     }
 
-    RefreshModel("ctor");
+    ModelClearAdd("ctor");
   }
 
   [RelayCommand]
-  public void PopulateAll()
+  public void PopulateAll(object? obj)
   {
-    _busy = true;
+    if (obj is null) BprKernel32.StartFAF();
     try
     {
-      //BprKernel32.StartFAF();
       //SubHeader += $"*** {_dbx.Database.GetConnectionString()} ***\n"; // 480ms
+      PrevForecastFromDb(obj);
+      PopulateEnvtCana(obj);
+      PopulateScatModel(obj);
 
-      PrevForecastFromDb();
-      PopulateEnvtCana();
-      PopulateScatModel();
-
-      //BprKernel32.Finish();
+      if (obj is null) BprKernel32.Finish();
     }
     catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
-    finally { _busy = false; }
   }
   [RelayCommand]
-  void PrevForecastFromDb()
+  void PrevForecastFromDb(object? obj)
   {
-    BprKernel32.ClickFAF();
-    //333: if (!_store) return;
+    if (obj is null) BprKernel32.ClickFAF();
+    if (!_store) return;
 
     _ = Task.Run(GetPastForecastFromDB).ContinueWith(_ =>
     {
       _.Result.a.ForEach(r => SctrPtTPFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
       _.Result.b.ForEach(r => SctrPtTPFVgn.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
       _.Result.c.ForEach(r => SctrPtTPFMis.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
-      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Populated: From DB \t\t\t\t\t  + plot invalidated \n";
+      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Populated: From DB \t\t\t\t\t   \n";
       BprKernel32.TickFAF();
     }, TaskScheduler.FromCurrentSynchronizationContext());
   }
   [RelayCommand]
-  void PopulateEnvtCana()
+  void PopulateEnvtCana(object? obj)
   {
-    BprKernel32.ClickFAF();
+    if (obj is null) BprKernel32.ClickFAF();
 
-    _ = Task.Run(async () => { var lst = await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24YYZ); if (_store) await PlotViewModelHelpers.AddPastDataToDB_EnvtCa(_dbh.WeatherxContext, Cnst.pea, lst); return lst; }).ContinueWith(_ => { DrawPast24hrEC(Cnst.pea, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
-    _ = Task.Run(async () => { var lst = await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24YKZ); if (_store) await PlotViewModelHelpers.AddPastDataToDB_EnvtCa(_dbh.WeatherxContext, Cnst.bvl, lst); return lst; }).ContinueWith(_ => { DrawPast24hrEC(Cnst.bvl, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
-    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._toronto); /*                                                                                                */ return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._toronto, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
-    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._torIsld); /*                                                                                                */ return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._torIsld, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
-    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._markham); /*                                                                                                */ return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._markham, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
-    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._mississ); if (_store) await PlotViewModelHelpers.AddForeDataToDB_EnvtCa(_dbh.WeatherxContext, Cnst._mis, dta); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._mississ, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
-    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._vaughan); if (_store) await PlotViewModelHelpers.AddForeDataToDB_EnvtCa(_dbh.WeatherxContext, Cnst._vgn, dta); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._vaughan, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => { var lst = await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24YYZ); return lst; }).ContinueWith(_ => { DrawPast24hrEC(Cnst.pearson, _.Result); _pastPea = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => { var lst = await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24YKZ); return lst; }).ContinueWith(_ => { DrawPast24hrEC(Cnst.batnvil, _.Result); _pastBvl = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._mississ); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._mississ, _.Result); _foreMis = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._vaughan); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._vaughan, _.Result); _foreVgn = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._toronto); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._toronto, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._torIsld); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._torIsld, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._markham); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._markham, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
   }
   [RelayCommand]
-  void PopulateScatModel()
+  void PopulateScatModel(object? obj)
   {
-    BprKernel32.ClickFAF();
+    if (obj is null) BprKernel32.ClickFAF();
 
     _ = Task.Run<object>(async () => await _opnwea.GetIt(_cfg["AppSecrets:MagicNumber"] ?? throw new ArgumentNullException(nameof(_cfg)), OpenWea.OpenWeatherCd.OneCallApi) ?? throw new ArgumentNullException(nameof(_cfg))).ContinueWith(async _ =>
     {
-      var OCA = _.Result as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(OCA); // PHC107
+      OCA = _.Result as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(OCA); // PHC107
 
       //SubHeader += $"{(DateTime.Now-_now).TotalSeconds,5:N1}  {OCA.current}";
-      PlotTitle = CurrentConditions = $"{OpenWea.UnixToDt(OCA.current.dt):HH:mm:ss}   {OCA.current.temp,5:N1}°   {OCA.current.feels_like,4:N0}°  {OCA.current.wind_speed * _kWind:N1}k/h";
+      Model.Title = CurrentConditions = $"OWA taken at {OpenWea.UnixToDt(OCA.current.dt):HH:mm:ss}   {OCA.current.temp,5:N1}°   {OCA.current.feels_like,4:N0}°  {OCA.current.wind_speed * _kWind:N1}k/h";
       WindDirn = OCA.current.wind_deg;
       WindVeloKmHr = OCA.current.wind_speed * _kWind / _wk;
       WindGustKmHr = OCA.current.wind_gust * _kWind / _wk;
@@ -164,8 +160,6 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
       for (var i = 0; i < OCA.daily.Length; i++) OpnWeaIcoA.Add($"http://openweathermap.org/img/wn/{OCA.daily[i].weather[0].icon}@2x.png");
 
-      if (_store)
-        await PlotViewModelHelpers.AddForeDataToDB_OpnWea(_dbh.WeatherxContext, "phc", OCA);
 
       OCA.hourly.ToList().ForEach(x =>
       {
@@ -188,8 +182,6 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
         ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + sx, sy + (x.wind_speed * _kWind)));
       });
 
-      await TickRepaintDelay();
-
       var valueMax = _extrMax; // OCA.daily.Max(r => r.temp.max);
       var valueMin = _extrMin; // OCA.daily.Min(r => r.temp.min);
 
@@ -208,8 +200,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
       DrawSunSinosoid(day0);
 
-      Model.InvalidatePlot(true);
-      SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Populated: Scat Model \t 1 \t\t\t  + plot invalidated  \n";
+      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Scat Model \t OCA \t 1 \t\t\t    \n";
 
       var D53 = await _opnwea.GetIt(_cfg["AppSecrets:MagicNumber"] ?? throw new ArgumentNullException(nameof(_cfg)), OpenWea.OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(D53); // PHC107
       if (D53 != null)
@@ -219,23 +210,19 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
           DrawBothWhenReady(OCA, D53);
       }
 
-      const int id = 2;
-      await GetDays(id);
-      //TimeMin = DateTime.Today.AddDays(-1).ToOADate(); // == DateTimeAxis.ToDouble(DateTime.Today.AddDays(-1));
-      //TimeMax = DateTime.Today.AddDays(id).ToOADate(); // DateTimeAxis.ToDouble(_days == 5 ? UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Today.AddDays(_days));
+      await GetDays(2);
 
-      Model.InvalidatePlot(true);
-      SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Populated: Scat Model \t 2 \t\t\t  + plot invalidated  \n";
 
-      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Populated: Scat Model \t 4 \t\t\t  + plot invalidated  \n";
+
+      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Scat Model \t D53 \t 2 \t\t\t    \n";
+
+      await StoreToDbIf(25_000);
+
     }, TaskScheduler.FromCurrentSynchronizationContext());
-
-    BprKernel32.ClickFAF();
   }
 
   async Task<(List<PointFore> a, List<PointFore> b, List<PointFore> c)> GetPastForecastFromDB()
   {
-    //await Task.Delay(10_000); //hack: //todo: fix the db synch one day.
     try
     {
       var now = DateTime.Now;
@@ -277,6 +264,27 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
     EnvtCaIconM = $"https://weather.gc.ca/weathericons/{sitedata?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
   }
+  async Task<bool> StoreToDbIf(int delayMs)
+  {
+    if (!_store) return false;
+
+    await Task.Delay(delayMs); //hack: //todo: fix the db synch one day.
+
+    try
+    {
+      await PlotViewModelHelpers.AddPast24hrToDB_EnvtCa(_dbh.WeatherxContext, Cnst.pearson, _pastPea);
+      await PlotViewModelHelpers.AddPast24hrToDB_EnvtCa(_dbh.WeatherxContext, Cnst.batnvil, _pastBvl);
+      await PlotViewModelHelpers.AddForecastToDB_EnvtCa(_dbh.WeatherxContext, Cnst._mis, _foreVgn);
+      await PlotViewModelHelpers.AddForecastToDB_EnvtCa(_dbh.WeatherxContext, Cnst._vgn, _foreMis);
+      await PlotViewModelHelpers.AddForecastToDB_OpnWea(_dbh.WeatherxContext, Cnst._phc, OCA);
+
+      BprKernel32.FinishFAF();
+      SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  All stored to DB! \n";
+
+      return true;
+    }
+    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
+  }
 
   void DrawPast24hrEC(string site, List<MeteoDataMy> lst)
   {
@@ -284,14 +292,14 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     {
       switch (site)
       {
-        case Cnst.pea: PlotViewModelHelpers.RefillPast24(ECaMissTemp, ECaBtvlWind, lst, _wk); break;
-        case Cnst.bvl: PlotViewModelHelpers.RefillPast24(ECaVghnTemp, ECaPearWind, lst, _wk); break;
+        case Cnst.pearson: PlotViewModelHelpers.RefillPast24(ECaMissTemp, ECaBtvlWind, lst, _wk); break;
+        case Cnst.batnvil: PlotViewModelHelpers.RefillPast24(ECaVghnTemp, ECaPearWind, lst, _wk); break;
         default: break;
       }
 
       //todo: OwaLoclPrsr.Clear();    dta.OrderBy(r => r.TakenAt).ToList().ForEach(x => OwaLoclPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), (10 * x.Pressure) - 1030)));
 
-      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Past       Envt CA  \t{site}\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin}  {YAxsRMax} \t  + plot invalidated \t Past 24hr\n";    //await TickRepaintDelay();
+      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Past       Envt CA  \t{site}\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin}  {YAxsRMax} \t   \n";    //await TickRepaintDelay();
     }
     catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
   }
@@ -309,7 +317,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
         default: break;
       }
 
-      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Forecast   Envt CA  \t{site.Substring(4, 3)}\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin}  {YAxsRMax} \t  + plot invalidated \t Fore 24hr\n";
+      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}      Fore   Envt CA  \t{site.Substring(4, 3)}\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin}  {YAxsRMax} \t   \n";
     }
     catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
   }
@@ -375,29 +383,10 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     });
   }
   static async Task TickRepaintDelay() { BprKernel32.TickFAF(); await Task.Delay(_timeToPaintMS); }
-  [RelayCommand]
-  async Task GetDays(object? days_)
-  {
-    if (/*OCA is not null && */int.TryParse(days_?.ToString(), out var days))
-    {
-      TimeMax = DateTimeAxis.ToDouble(DateTime.Today.AddDays(days));
 
-      IconWidth0 = 0 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
-      IconWidth1 = 1 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
-      IconWidth2 = 2 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
-      IconWidth3 = 3 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
-      IconWidth4 = 4 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
-      IconWidth5 = 5 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
-      IconWidth6 = 6 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
-      IconWidth7 = 7 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
-    }
+  [Browsable(false)][ObservableProperty] PlotModel model = new() { TextColor = OxyColors.Cyan }; //void OnModelChanged() => PropertiesChanged();  void PropertiesChanged() => Model = ModelClearAdd("Prop Chgd");
 
-    await Task.Yield();// PopulateAll((int?)_days ?? 5);
-  }
-
-  [Browsable(false)][ObservableProperty] PlotModel model = new() { Title = "Plot Title", TextColor = OxyColors.OrangeRed }; //void OnModelChanged() => PropertiesChanged();  void PropertiesChanged() => Model = RefreshModel("Prop Chgd");
-
-  void RefreshModel(string note)
+  void ModelClearAdd(string note)
   {
     WriteLine($"::: {note}");
     //Model = new PlotModel(); // { Title = note, TextColor = OxyColors.OrangeRed };
@@ -406,7 +395,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       Model.Legends.Clear();
       Model.Legends.Add(new Legend { LegendTextColor = OxyColors.LightGray, LegendPosition = LegendPosition.LeftMiddle, LegendMargin = 10, LegendBackground = _111 });
 
-      ReCreateAxises(note);
+      ReCreateAxises(note); // throws without
 
       Model.Series.Clear();
       Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclSunT, Color = _330, StrokeThickness = 0.0, Title = "SunRS" });
@@ -430,8 +419,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     }
     catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
 
-    Model.InvalidatePlot(true);
-    SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Model re-freshed\t▓  {note,-26}  \t\t  + plot invalidated \n";
+    Model.InvalidatePlot(true); //SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Model re-freshed\t▓  {note,-26}  \t\t   \n";
   }
   void ReCreateAxises(string note)
   {
@@ -442,8 +430,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     Model.Axes.Add(new LinearAxis { Minimum = YAxisMin, Maximum = YAxisMax, MajorStep = 010, MinorStep = 01, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Left, MajorGridlineStyle = LineStyle.Solid, MajorGridlineColor = _222, Key = "yAxisL", Title = "Temp [°C]", MinorTickSize = 4, TicklineColor = _ccc });
     Model.Axes.Add(new LinearAxis { Minimum = YAxsRMin, Maximum = YAxsRMax, MajorStep = 100, MinorStep = 10, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Right, MajorGridlineStyle = LineStyle.None, MajorGridlineColor = _222, Key = "yAxisR", Title = "Wind k/h  PoP %" });
 
-    Model.InvalidatePlot(true);
-    SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Axiss re-adjustd\t■  {note,-26}  \t\t  + plot invalidated \n";
+    Model.InvalidatePlot(true); //SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Axiss re-adjustd\t■  {note,-26}  \t\t   \n";
   }
   internal void ClearPlot()
   {
@@ -452,13 +439,14 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     Model.Series.Clear();
   }
 
+  [RelayCommand] void Invalidate(object updateData) { BprKernel32.Tick(); Model.InvalidatePlot(updateData?.ToString() == "true"); }
+  [RelayCommand] void CreateMdl(object note) { BprKernel32.Tick(); ModelClearAdd(note?.ToString() ?? "000"); }
   [RelayCommand]
   void ClearData()
   {
     BprKernel32.ClickFAF();
 
-    PlotTitle =
-    CurrentConditions = "";
+    Model.Title = CurrentConditions = "";
     WindDirn = 0;
     WindVeloKmHr = 0;
     OpnWeaIcom = "http://openweathermap.org/img/wn/01n@2x.png";
@@ -483,11 +471,28 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     ECaTIslTemp.Clear();
 
     Model.InvalidatePlot(true);
-    SubHeader = "Data cleared \t\t\t\t\t  + plot invalidated \n";
+    SubHeader = "Data cleared \t\t\t\t\t   \n";
+  }
+  [RelayCommand]
+  async Task GetDays(object? days_)
+  {
+    if (/*OCA is not null && */int.TryParse(days_?.ToString(), out var days))
+    {
+      TimeMax = DateTimeAxis.ToDouble(DateTime.Today.AddDays(days));
+
+      IconWidth0 = 0 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+      IconWidth1 = 1 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+      IconWidth2 = 2 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+      IconWidth3 = 3 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+      IconWidth4 = 4 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+      IconWidth5 = 5 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+      IconWidth6 = 6 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+      IconWidth7 = 7 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+    }
+
+    await Task.Yield();// PopulateAll((int?)_days ?? 5);
   }
 
-  [RelayCommand] void Invalidate(object updateData) { BprKernel32.Tick(); Model.InvalidatePlot(updateData?.ToString() == "true"); }
-  [RelayCommand] void CreateMdl(object note) { BprKernel32.Tick(); RefreshModel(note?.ToString() ?? "000"); }
 
   #region icons
   [ObservableProperty] GridLength iconWidth0;
@@ -542,13 +547,18 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   [ObservableProperty] string envtCaIconM = "https://weather.gc.ca/weathericons/05.gif";
   [ObservableProperty] string envtCaIconV = "https://weather.gc.ca/weathericons/05.gif";
   [ObservableProperty] string subHeader = "";
-  [ObservableProperty] double yAxisMin = -18; partial void OnYAxisMinChanged(double value) => ReCreateAxises("Y min");
-  [ObservableProperty] double yAxisMax = +12; partial void OnYAxisMaxChanged(double value) => ReCreateAxises("Y max");
   [ObservableProperty] double normTMin = -08;
   [ObservableProperty] double normTMax = +02;
+  [ObservableProperty] double yAxisMin = -18; partial void OnYAxisMinChanged(double value) => ReCreateAxises("Y min");
+  [ObservableProperty] double yAxisMax = +12; partial void OnYAxisMaxChanged(double value) => ReCreateAxises("Y max");
   [ObservableProperty] double yAxsRMax = +180; partial void OnYAxsRMaxChanged(double value) => ReCreateAxises("Y max R");
   [ObservableProperty] double yAxsRMin = -120; partial void OnYAxsRMinChanged(double value) => ReCreateAxises("Y min R");
   [ObservableProperty] double windGustKmHr;
   [ObservableProperty] IInterpolationAlgorithm iA = InterpolationAlgorithms.CatmullRomSpline; // the least vertical jumping beyond y value.
+
+  RootobjectOneCallApi? OCA;
+  siteData? _foreVgn, _foreMis;
+  List<MeteoDataMy>? _pastPea, _pastBvl;
   #endregion
+
 }

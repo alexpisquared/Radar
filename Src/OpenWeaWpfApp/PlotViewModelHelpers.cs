@@ -1,14 +1,14 @@
 ﻿internal static class Cnst
 {
   public const string _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaughan = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582", _phc = "phc", _vgn = "vgn", _mis = "mis",
-    pea = "pea",
-    bvl = "bvl",
+    pearson = "pea",
+    batnvil = "bvl",
   _Past24YYZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yyz", // Pearson                                                                                        
   _Past24YKZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=ykz"; // Buttonville
 }
 internal static class PlotViewModelHelpers
 {
-  internal static async Task AddForeDataToDB_EnvtCa(WeatherxContext _dbx, string siteId, siteData? siteFore, string srcId = "eca", string measureId = "tar")
+  internal static async Task AddForecastToDB_EnvtCa(WeatherxContext _dbx, string siteId, siteData? siteFore, string srcId = "eca", string measureId = "tar")
   {
     for (int i = 0; i < 10; i++)
     {
@@ -56,7 +56,7 @@ internal static class PlotViewModelHelpers
       catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
     }
   }
-  internal static async Task AddForeDataToDB_OpnWea(WeatherxContext _dbx, string siteId, RootobjectOneCallApi? siteFore, string srcId = "owa", string measureId = "tar")
+  internal static async Task AddForecastToDB_OpnWea(WeatherxContext _dbx, string siteId, RootobjectOneCallApi? siteFore, string srcId = "owa", string measureId = "tar")
   {
     for (int i = 0; i < 10; i++)
     {
@@ -103,8 +103,10 @@ internal static class PlotViewModelHelpers
       catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
     }
   }
-  internal static async Task AddPastDataToDB_EnvtCa(WeatherxContext _dbx, string siteId, List<MeteoDataMy> sitePast, string srcId = "eca", string measureId = "tar")
+  internal static async Task AddPast24hrToDB_EnvtCa(WeatherxContext _dbx, string siteId, List<MeteoDataMy>? sitePast, string srcId = "eca", string measureId = "tar")
   {
+    ArgumentNullException.ThrowIfNull(sitePast, $"@@@@@@@@@ {nameof(sitePast)}");
+
     for (int i = 0; i < 10; i++)
     {
       try
