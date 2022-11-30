@@ -33,7 +33,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   //ImageSource _i; public ImageSource WeaIcom { get => _i; set => SetProperty(ref _i, value); }
   //Uri _k = new("http://openweathermap.org/img/wn/04n@2x.png"); public Uri WIcon { get => _k; set => SetProperty(ref _k, value); }
   const float _wk = 10f;
-  const float _kWind = 3.6f * _wk;
+  const float _ms2kh = 3.6f * _wk;
   readonly ObservableCollection<ScatterPoint> SctrPtTPFVgn = new();
   readonly ObservableCollection<ScatterPoint> SctrPtTPFPhc = new();
   readonly ObservableCollection<ScatterPoint> SctrPtTPFMis = new();
@@ -148,10 +148,10 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       OCA = _.Result as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(OCA); // PHC107
 
       //SubHeader += $"{(DateTime.Now-_now).TotalSeconds,5:N1}  {OCA.current}";
-      Model.Title = CurrentConditions = $"OWA taken at {OpenWea.UnixToDt(OCA.current.dt):HH:mm:ss}   {OCA.current.temp,5:N1}°   {OCA.current.feels_like,4:N0}°  {OCA.current.wind_speed * _kWind:N1}k/h";
+      Model.Title = CurrentConditions = $"OWA taken at {OpenWea.UnixToDt(OCA.current.dt):HH:mm}   {OCA.current.temp,5:N1}°   {OCA.current.feels_like,4:N0}°  {OCA.current.wind_speed * _ms2kh / _wk:N1}k/h";
       WindDirn = OCA.current.wind_deg;
-      WindVeloKmHr = OCA.current.wind_speed * _kWind / _wk;
-      WindGustKmHr = OCA.current.wind_gust * _kWind / _wk;
+      WindVeloKmHr = OCA.current.wind_speed * _ms2kh / _wk;
+      WindGustKmHr = OCA.current.wind_gust * _ms2kh / _wk;
       CurTempReal = $"{OCA.current.temp:+#.#;-#.#;0}°";
       CurTempFeel = $"{OCA.current.feels_like:+#;-#;0}°";
       CurWindKmHr = $"{WindVeloKmHr:N1}";
@@ -167,7 +167,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
         OwaLoclTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.temp));
         OwaLoclFeel.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.feels_like));
         OwaLoclPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pressure - 1030));
-        OwaLoclGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_gust * _kWind));
+        OwaLoclGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_gust * _ms2kh));
         OwaLoclPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 100));
 
         var rad = Math.PI * x.wind_deg * 2 / 360;
@@ -177,9 +177,9 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
         var ty = 0.20 * Math.Sin(rad + 90);
         var sx = .002 * Math.Cos(rad - 90);
         var sy = 0.20 * Math.Sin(rad - 90);
-        ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + tx, ty + (x.wind_speed * _kWind)));
-        ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + dx, dy + (x.wind_speed * _kWind)));
-        ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + sx, sy + (x.wind_speed * _kWind)));
+        ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + tx, ty + (x.wind_speed * _ms2kh)));
+        ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + dx, dy + (x.wind_speed * _ms2kh)));
+        ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + sx, sy + (x.wind_speed * _ms2kh)));
       });
 
       var valueMax = _extrMax; // OCA.daily.Max(r => r.temp.max);
@@ -359,15 +359,15 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       OwaLoclTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.main.temp));
       OwaLoclFeel.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.main.feels_like));
       OwaLoclPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.main.pressure - 1030));
-      OwaLoclGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.gust * _kWind));
+      OwaLoclGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.gust * _ms2kh));
       OwaLoclPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 100));
 
       var rad = Math.PI * x.wind.deg * 2 / 360;
       var dx = 0.1 * Math.Cos(rad);
       var dy = 1.0 * Math.Sin(rad);
-      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.speed * _kWind));
-      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + dx, dy + (x.wind.speed * _kWind)));
-      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.speed * _kWind));
+      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.speed * _ms2kh));
+      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + dx, dy + (x.wind.speed * _ms2kh)));
+      ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.speed * _ms2kh));
     });
 
     OCA.daily.Where(d => d.dt > D53.list.Max(d => d.dt)).ToList().ForEach(x =>
@@ -378,13 +378,13 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       OwaLoclTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _n)), x.temp.night));
 
       OwaLoclPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pressure - 1030));
-      OwaLoclGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_gust * _kWind));
+      OwaLoclGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_gust * _ms2kh));
       OwaLoclPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 100));
     });
   }
   static async Task TickRepaintDelay() { BprKernel32.TickFAF(); await Task.Delay(_timeToPaintMS); }
 
-  [Browsable(false)][ObservableProperty] PlotModel model = new() { TextColor = OxyColors.Cyan }; //void OnModelChanged() => PropertiesChanged();  void PropertiesChanged() => Model = ModelClearAdd("Prop Chgd");
+  [Browsable(false)][ObservableProperty] PlotModel model = new() { TextColor = OxyColors.Magenta }; //void OnModelChanged() => PropertiesChanged();  void PropertiesChanged() => Model = ModelClearAdd("Prop Chgd");
 
   void ModelClearAdd(string note)
   {
