@@ -341,9 +341,9 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     const int id = 2;
     await SetMaxX(id);
     TimeMin = DateTime.Today.AddDays(-1).ToOADate(); // == DateTimeAxis.ToDouble(DateTime.Today.AddDays(-1));
-    TimeMax = DateTime.Today.AddDays(id).ToOADate(); // DateTimeAxis.ToDouble(_days == 5 ? UnixToDt(OCA.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Today.AddDays(_days));
-    var valueMax = _extrMax; // OCA.daily.Max(r => r.temp.max);
-    var valueMin = _extrMin; // OCA.daily.Min(r => r.temp.min);
+    TimeMax = DateTime.Today.AddDays(id).ToOADate(); // DateTimeAxis.ToDouble(_days == 5 ? UnixToDt(oca.daily.Max(d => d.dt) + 12 * 3600) : DateTime.Today.AddDays(_days));
+    var valueMax = _extrMax; // oca.daily.Max(r => r.temp.max);
+    var valueMin = _extrMin; // oca.daily.Min(r => r.temp.min);
 
     if (_cfg["StoreData"] == "Yes") //if (_cfg["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
       await AddForeDataToDB_OpnWea("phc", OCA);
@@ -433,7 +433,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
         OwaLoclPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 100));
       });
 
-    //OCA.daily.ToList().ForEach(x =>
+    //oca.daily.ToList().ForEach(x =>
     //{
     //  SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), size: 3, y: x.temp.morn));
     //  SctrPtTFFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _d)), size: 5, y: x.temp.day));

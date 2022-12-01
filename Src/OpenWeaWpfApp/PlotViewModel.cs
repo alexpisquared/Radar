@@ -1,6 +1,6 @@
 ﻿#define ObsCol // Go figure: ObsCol works, while array NOT! Just an interesting factoid.
 namespace OpenWeaWpfApp;
-public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.ObservableValidator
+public partial class PlotViewModel : ObservableValidator
 {
   #region fields
   readonly DateTime _now = DateTime.Now;
@@ -10,7 +10,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   readonly OpenWea _opnwea;
   readonly DbxHelper _dbh;
   readonly bool _store;
-  const int _maxIcons = 50, _timeToPaintMS = 88;
+  const int _maxIcons = 50;
   double _extrMax = +20, _extrMin = -20;
   readonly OxyColor _550f = OxyColor.FromArgb(0x50, 0x50, 0x00, 0xff),
    _111 = OxyColor.FromRgb(0x10, 0x10, 0x10),
@@ -103,7 +103,6 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     {
       //SubHeader += $"*** {_dbx.Database.GetConnectionString()} ***\n"; // 480ms
       PrevForecastFromDb(obj);
-      PopulateEnvtCana(obj);
       PopulateScatModel(obj);
 
       if (obj is null) BprKernel32.Finish();
@@ -126,7 +125,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     }, TaskScheduler.FromCurrentSynchronizationContext());
   }
   [RelayCommand]
-  void PopulateEnvtCana(object? obj)
+  void PopulateScatModel(object? obj)
   {
     if (obj is null) BprKernel32.ClickFAF();
 
@@ -137,31 +136,26 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._toronto); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._toronto, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
     _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._torIsld); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._torIsld, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
     _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._markham); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._markham, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
-  }
-  [RelayCommand]
-  void PopulateScatModel(object? obj)
-  {
-    if (obj is null) BprKernel32.ClickFAF();
 
-    _ = Task.Run<object>(async () => await _opnwea.GetIt(_cfg["AppSecrets:MagicNumber"] ?? throw new ArgumentNullException(nameof(_cfg)), OpenWea.OpenWeatherCd.OneCallApi) ?? throw new ArgumentNullException(nameof(_cfg))).ContinueWith(async _ =>
+    _ = Task.Run<object>(async () => await _opnwea.GetIt(_cfg["AppSecrets:MagicNumber"] ?? throw new ArgumentNullException(nameof(obj)), OpenWea.OpenWeatherCd.OneCallApi) ?? throw new ArgumentNullException(nameof(obj))).ContinueWith(async _ =>
     {
-      OCA = _.Result as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(OCA); // PHC107
+      oca = _.Result as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(oca); // PHC107
 
-      //SubHeader += $"{(DateTime.Now-_now).TotalSeconds,5:N1}  {OCA.current}";
-      Model.Title = CurrentConditions = $"OWA taken at {OpenWea.UnixToDt(OCA.current.dt):HH:mm}   {OCA.current.temp,5:N1}°   {OCA.current.feels_like,4:N0}°  {OCA.current.wind_speed * _ms2kh / _wk:N1}k/h";
-      WindDirn = OCA.current.wind_deg;
-      WindVeloKmHr = OCA.current.wind_speed * _ms2kh / _wk;
-      WindGustKmHr = OCA.current.wind_gust * _ms2kh / _wk;
-      CurTempReal = $"{OCA.current.temp:+#.#;-#.#;0}°";
-      CurTempFeel = $"{OCA.current.feels_like:+#;-#;0}°";
+      //SubHeader += $"{(DateTime.Now-_now).TotalSeconds,5:N1}  {oca.current}";
+      Model.Title = CurrentConditions = $"OWA taken at {OpenWea.UnixToDt(oca.current.dt):HH:mm}   {oca.current.temp,5:N1}°   {oca.current.feels_like,4:N0}°  {oca.current.wind_speed * _ms2kh / _wk:N1}k/h                                                                                                                                                    ";
+      WindDirn = oca.current.wind_deg;
+      WindVeloKmHr = oca.current.wind_speed * _ms2kh / _wk;
+      WindGustKmHr = oca.current.wind_gust * _ms2kh / _wk;
+      CurTempReal = $"{oca.current.temp:+#.#;-#.#;0}°";
+      CurTempFeel = $"{oca.current.feels_like:+#;-#;0}°";
       CurWindKmHr = $"{WindVeloKmHr:N1}";
 
-      OpnWeaIcom = $"http://openweathermap.org/img/wn/{OCA.current.weather.First().icon}@2x.png";
+      OpnWeaIcom = $"http://openweathermap.org/img/wn/{oca.current.weather.First().icon}@2x.png";
 
-      for (var i = 0; i < OCA.daily.Length; i++) OpnWeaIcoA.Add($"http://openweathermap.org/img/wn/{OCA.daily[i].weather[0].icon}@2x.png");
+      for (var i = 0; i < oca.daily.Length; i++) OpnWeaIcoA.Add($"http://openweathermap.org/img/wn/{oca.daily[i].weather[0].icon}@2x.png");
 
 
-      OCA.hourly.ToList().ForEach(x =>
+      oca.hourly.ToList().ForEach(x =>
       {
         //scaters.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(day0.dt)), day0.snow?._1h ?? 0, day0.snow?._1h ?? 0, _d3c)); // either null or 0 so far.
         OwaLoclTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.temp));
@@ -182,41 +176,34 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
         ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + sx, sy + (x.wind_speed * _ms2kh)));
       });
 
-      var valueMax = _extrMax; // OCA.daily.Max(r => r.temp.max);
-      var valueMin = _extrMin; // OCA.daily.Min(r => r.temp.min);
-
-      var day0 = OCA.daily.First();
-      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), valueMin));
-      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), valueMax));
-      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), valueMax));
-      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), valueMin));
-      OCA.daily.ToList().ForEach(x =>
+      var day0 = oca.daily.First();
+      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), -50));
+      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), +50));
+      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), +50));
+      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), -50));
+      oca.daily.ToList().ForEach(x =>
       {
-        OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), valueMin));
-        OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), valueMax));
-        OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), valueMax));
-        OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), valueMin));
+        OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), -50));
+        OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), +50));
+        OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), +50));
+        OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), -50));
       });
 
       DrawSunSinosoid(day0);
 
-      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Scat Model \t OCA \t 1 \t\t\t    \n";
-
-      var D53 = await _opnwea.GetIt(_cfg["AppSecrets:MagicNumber"] ?? throw new ArgumentNullException(nameof(_cfg)), OpenWea.OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(D53); // PHC107
-      if (D53 != null)
+      var d53 = await _opnwea.GetIt(_cfg["AppSecrets:MagicNumber"] ?? throw new ArgumentNullException(nameof(obj)), OpenWea.OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(d53); // PHC107
+      if (d53 != null)
       {
-        DrawD53(D53);
-        if (OCA != null)
-          DrawBothWhenReady(OCA, D53);
+        DrawD53(d53);
+        if (oca != null)
+          DrawBothWhenReady(oca, d53);
       }
 
       await GetDays(2);
 
+      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  OWA  \n";
 
-
-      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Scat Model \t D53 \t 2 \t\t\t    \n";
-
-      await StoreToDbIf(25_000);
+      await DelayedStoreToDbIf(50_000);
 
     }, TaskScheduler.FromCurrentSynchronizationContext());
   }
@@ -264,7 +251,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
     EnvtCaIconM = $"https://weather.gc.ca/weathericons/{sitedata?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
   }
-  async Task<bool> StoreToDbIf(int delayMs)
+  async Task<bool> DelayedStoreToDbIf(int delayMs)
   {
     if (!_store) return false;
 
@@ -276,7 +263,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       await PlotViewModelHelpers.AddPast24hrToDB_EnvtCa(_dbh.WeatherxContext, Cnst.batnvil, _pastBvl);
       await PlotViewModelHelpers.AddForecastToDB_EnvtCa(_dbh.WeatherxContext, Cnst._mis, _foreVgn);
       await PlotViewModelHelpers.AddForecastToDB_EnvtCa(_dbh.WeatherxContext, Cnst._vgn, _foreMis);
-      await PlotViewModelHelpers.AddForecastToDB_OpnWea(_dbh.WeatherxContext, Cnst._phc, OCA);
+      await PlotViewModelHelpers.AddForecastToDB_OpnWea(_dbh.WeatherxContext, Cnst._phc, oca);
 
       BprKernel32.FinishFAF();
       SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  All stored to DB! \n";
@@ -299,7 +286,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
       //todo: OwaLoclPrsr.Clear();    dta.OrderBy(r => r.TakenAt).ToList().ForEach(x => OwaLoclPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), (10 * x.Pressure) - 1030)));
 
-      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Past       Envt CA  \t{site}\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin}  {YAxsRMax} \t   \n";    //await TickRepaintDelay();
+      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Envt CA  Past       \t{site}\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin,-4}  {YAxsRMax} \t   \n";    //await TickRepaintDelay();
     }
     catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
   }
@@ -317,7 +304,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
         default: break;
       }
 
-      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}      Fore   Envt CA  \t{site.Substring(4, 3)}\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin}  {YAxsRMax} \t   \n";
+      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Envt CA      Fore   \t{site.Substring(4, 3)}\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin,-4}  {YAxsRMax} \t   \n";
     }
     catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
   }
@@ -331,7 +318,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
     D53.list.ToList().ForEach(r =>
     {
-      //tmi: WriteLine($"});D53:  {r.dt_txt}    {UnixToDt(r.dt)}    {UnixToDt(r.dt):MMM dd  HH:mm}     {r.weather[0].description,-26}       {r.main.temp_min,6:N1} ÷ {r.main.temp_max,4:N1}°    pop{r.pop * 100,3:N0}%      {r}");
+      //tmi: WriteLine($"});d53:  {r.dt_txt}    {UnixToDt(r.dt)}    {UnixToDt(r.dt):MMM dd  HH:mm}     {r.weather[0].description,-26}       {r.main.temp_min,6:N1} ÷ {r.main.temp_max,4:N1}°    pop{r.pop * 100,3:N0}%      {r}");
       OpnWeaIco3[h3] = new BitmapImage(new Uri($"http://openweathermap.org/img/wn/{r.weather[0].icon}@2x.png"));
       OpnWeaTip3[h3] = $"{OpenWea.UnixToDt(r.dt):MMM d  H:mm} \n\n    {r.weather[0].description}   \n    {r.main.temp:N1}°    pop {r.pop * 100:N0}%";
       h3++;
@@ -382,7 +369,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       OwaLoclPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 100));
     });
   }
-  static async Task TickRepaintDelay() { BprKernel32.TickFAF(); await Task.Delay(_timeToPaintMS); }
+  //static async Task TickRepaintDelay() { BprKernel32.TickFAF(); await Task.Delay(_timeToPaintMS); }
 
   [Browsable(false)][ObservableProperty] PlotModel model = new() { TextColor = OxyColors.Magenta }; //void OnModelChanged() => PropertiesChanged();  void PropertiesChanged() => Model = ModelClearAdd("Prop Chgd");
 
@@ -426,7 +413,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     var dddD = "                  ddd d";
     Model.Axes.Clear();
     Model.Axes.Add(new DateTimeAxis { Minimum = timeMin, Maximum = timeMax, MajorStep = 1, MinorStep = .250, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, StringFormat = dddD, MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Solid, MajorGridlineColor = _333, MinorGridlineColor = _222, MinorTickSize = 4, TicklineColor = _ccc, Position = AxisPosition.Top });
-    //Model.Axes.Add(new DateTimeAxis { Minimum = timeMin, Maximum = timeMax, MajorStep = 1, MinorStep = .250, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, StringFormat = dddD, Position = AxisPosition.Bottom });
+    Model.Axes.Add(new DateTimeAxis { Minimum = timeMin, Maximum = timeMax, MajorStep = 1, MinorStep = .250, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, StringFormat = dddD, Position = AxisPosition.Bottom });
     Model.Axes.Add(new LinearAxis { Minimum = YAxisMin, Maximum = YAxisMax, MajorStep = 010, MinorStep = 01, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Left, MajorGridlineStyle = LineStyle.Solid, MajorGridlineColor = _222, Key = "yAxisL", Title = "Temp [°C]", MinorTickSize = 4, TicklineColor = _ccc });
     Model.Axes.Add(new LinearAxis { Minimum = YAxsRMin, Maximum = YAxsRMax, MajorStep = 100, MinorStep = 10, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Right, MajorGridlineStyle = LineStyle.None, MajorGridlineColor = _222, Key = "yAxisR", Title = "Wind k/h  PoP %" });
 
@@ -474,9 +461,9 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     SubHeader = "Data cleared \t\t\t\t\t   \n";
   }
   [RelayCommand]
-  async Task GetDays(object? days_)
+  async Task GetDays(object? daysAhead)
   {
-    if (/*OCA is not null && */int.TryParse(days_?.ToString(), out var days))
+    if (int.TryParse(daysAhead?.ToString(), out var days))
     {
       TimeMax = DateTimeAxis.ToDouble(DateTime.Today.AddDays(days));
 
@@ -490,7 +477,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       IconWidth7 = 7 < days ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
     }
 
-    await Task.Yield();// PopulateAll((int?)_days ?? 5);
+    await Task.Delay(333); // ..Command.IsRunning demo.
   }
 
 
@@ -556,7 +543,7 @@ public partial class PlotViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   [ObservableProperty] double windGustKmHr;
   [ObservableProperty] IInterpolationAlgorithm iA = InterpolationAlgorithms.CatmullRomSpline; // the least vertical jumping beyond y value.
 
-  RootobjectOneCallApi? OCA;
+  RootobjectOneCallApi? oca;
   siteData? _foreVgn, _foreMis;
   List<MeteoDataMy>? _pastPea, _pastBvl;
   #endregion
