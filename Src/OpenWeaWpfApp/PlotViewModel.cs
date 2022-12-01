@@ -480,7 +480,6 @@ public partial class PlotViewModel : ObservableValidator
     await Task.Delay(333); // ..Command.IsRunning demo.
   }
 
-
   #region icons
   [ObservableProperty] GridLength iconWidth0;
   [ObservableProperty] GridLength iconWidth1;
@@ -547,5 +546,4 @@ public partial class PlotViewModel : ObservableValidator
   siteData? _foreVgn, _foreMis;
   List<MeteoDataMy>? _pastPea, _pastBvl;
   #endregion
-
 }
