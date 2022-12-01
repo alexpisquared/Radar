@@ -101,7 +101,7 @@ public partial class PlotViewModel : ObservableValidator
     if (obj is null) BprKernel32.StartFAF();
     try
     {
-      //SubHeader += $"*** {_dbx.Database.GetConnectionString()} ***\n"; // 480ms
+      //SmartAdd($"*** {_dbx.Database.GetConnectionString()} ***\n"); // 480ms
       PrevForecastFromDb(obj);
       PopulateScatModel(obj);
 
@@ -120,7 +120,7 @@ public partial class PlotViewModel : ObservableValidator
       _.Result.a.ForEach(r => SctrPtTPFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
       _.Result.b.ForEach(r => SctrPtTPFVgn.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
       _.Result.c.ForEach(r => SctrPtTPFMis.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
-      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Populated: From DB \t\t\t\t\t   \n";
+      Model.InvalidatePlot(true); SmartAdd($"{(DateTime.Now - _now).TotalSeconds,6:N1}\t  Populated: From DB \t\t\t\t\t   \n");
       BprKernel32.TickFAF();
     }, TaskScheduler.FromCurrentSynchronizationContext());
   }
@@ -141,7 +141,7 @@ public partial class PlotViewModel : ObservableValidator
     {
       oca = _.Result as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(oca); // PHC107
 
-      //SubHeader += $"{(DateTime.Now-_now).TotalSeconds,5:N1}  {oca.current}";
+      //SmartAdd($"{(DateTime.Now-_now).TotalSeconds,5:N1}  {oca.current}";
       Model.Title = CurrentConditions = $"OWA taken at {OpenWea.UnixToDt(oca.current.dt):HH:mm}   {oca.current.temp,5:N1}°   {oca.current.feels_like,4:N0}°  {oca.current.wind_speed * _ms2kh / _wk:N1}k/h                                                                                                                                                    ";
       WindDirn = oca.current.wind_deg;
       WindVeloKmHr = oca.current.wind_speed * _ms2kh / _wk;
@@ -201,7 +201,7 @@ public partial class PlotViewModel : ObservableValidator
 
       await GetDays(2);
 
-      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  OWA  \n";
+      Model.InvalidatePlot(true); SmartAdd($"{(DateTime.Now - _now).TotalSeconds,6:N1}\t  OWA  \n");
 
       await DelayedStoreToDbIf(50_000);
 
@@ -210,6 +210,12 @@ public partial class PlotViewModel : ObservableValidator
 
   async Task<(List<PointFore> a, List<PointFore> b, List<PointFore> c)> GetPastForecastFromDB()
   {
+    while (_isDbBusy)
+    {
+      BprKernel32.Warn(); // not quite a full solution
+    }
+
+    _isDbBusy = true;
     try
     {
       var now = DateTime.Now;
@@ -228,6 +234,7 @@ public partial class PlotViewModel : ObservableValidator
       return (a, b, c);
     }
     catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
+    finally { _isDbBusy = false; }
   }
   void GetImprtandDatFromPearson(siteData? sitedata)
   {
@@ -266,7 +273,7 @@ public partial class PlotViewModel : ObservableValidator
       await PlotViewModelHelpers.AddForecastToDB_OpnWea(_dbh.WeatherxContext, Cnst._phc, oca);
 
       BprKernel32.FinishFAF();
-      SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  All stored to DB! \n";
+      SmartAdd($"{(DateTime.Now - _now).TotalSeconds,6:N1}\t  All stored to DB! \n");
 
       return true;
     }
@@ -286,7 +293,7 @@ public partial class PlotViewModel : ObservableValidator
 
       //todo: OwaLoclPrsr.Clear();    dta.OrderBy(r => r.TakenAt).ToList().ForEach(x => OwaLoclPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), (10 * x.Pressure) - 1030)));
 
-      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Envt CA  Past       \t{site}\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin,-4}  {YAxsRMax} \t   \n";    //await TickRepaintDelay();
+      Model.InvalidatePlot(true); SmartAdd($"{(DateTime.Now - _now).TotalSeconds,6:N1}\t  Envt CA  Past       \t{site}\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin,-4}  {YAxsRMax} \t   \n");    //await TickRepaintDelay();
     }
     catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
   }
@@ -304,7 +311,7 @@ public partial class PlotViewModel : ObservableValidator
         default: break;
       }
 
-      Model.InvalidatePlot(true); SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Envt CA      Fore   \t{site.Substring(4, 3)}\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin,-4}  {YAxsRMax} \t   \n";
+      Model.InvalidatePlot(true); SmartAdd($"{(DateTime.Now - _now).TotalSeconds,6:N1}\t  Envt CA      Fore   \t{site.Substring(4, 3)}\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin,-4}  {YAxsRMax} \t   \n");
     }
     catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
   }
@@ -406,7 +413,7 @@ public partial class PlotViewModel : ObservableValidator
     }
     catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
 
-    Model.InvalidatePlot(true); //SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Model re-freshed\t▓  {note,-26}  \t\t   \n";
+    Model.InvalidatePlot(true); //SmartAdd($"{(DateTime.Now - _now).TotalSeconds,6:N1}\t  Model re-freshed\t▓  {note,-26}  \t\t   \n";
   }
   void ReCreateAxises(string note)
   {
@@ -417,8 +424,19 @@ public partial class PlotViewModel : ObservableValidator
     Model.Axes.Add(new LinearAxis { Minimum = YAxisMin, Maximum = YAxisMax, MajorStep = 010, MinorStep = 01, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Left, MajorGridlineStyle = LineStyle.Solid, MajorGridlineColor = _222, Key = "yAxisL", Title = "Temp [°C]", MinorTickSize = 4, TicklineColor = _ccc });
     Model.Axes.Add(new LinearAxis { Minimum = YAxsRMin, Maximum = YAxsRMax, MajorStep = 100, MinorStep = 10, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Right, MajorGridlineStyle = LineStyle.None, MajorGridlineColor = _222, Key = "yAxisR", Title = "Wind k/h  PoP %" });
 
-    Model.InvalidatePlot(true); //SubHeader += $"{(DateTime.Now - _now).TotalSeconds,5:N1}  Axiss re-adjustd\t■  {note,-26}  \t\t   \n";
+    Model.InvalidatePlot(true);
+    SmartAdd($"{(DateTime.Now - _now).TotalSeconds,6:N1}\t  Axiss re-adjustd\t■  {note,-26}  \n");
   }
+
+  void SmartAdd(string note)
+  {
+    SubHeader += note;
+    var len = SubHeader.Length;
+    var max = 260;
+    if (len > max)
+      SubHeader = $"   ...\t  {SubHeader.Substring(len - max, max)}";
+  }
+
   internal void ClearPlot()
   {
     Model.Legends.Clear();
@@ -545,5 +563,6 @@ public partial class PlotViewModel : ObservableValidator
   RootobjectOneCallApi? oca;
   siteData? _foreVgn, _foreMis;
   List<MeteoDataMy>? _pastPea, _pastBvl;
+  private bool _isDbBusy;
   #endregion
 }

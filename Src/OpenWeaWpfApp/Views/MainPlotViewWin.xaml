@@ -298,7 +298,7 @@
         <Image Grid.Column="41" Source="{Binding OpnWeaIco3[39]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
       </Grid>-->
 
-      <TextBlock Text="{Binding SubHeader}" d:Text="SubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeader" HorizontalAlignment="Left" Foreground="#ff0" Margin="5" VerticalAlignment="Bottom" Grid.RowSpan="3" Grid.ColumnSpan="3" />
+      <TextBlock Text="{Binding SubHeader}" HorizontalAlignment="Left" Foreground="#888" Margin="70 15" VerticalAlignment="Bottom" Grid.RowSpan="3" Grid.ColumnSpan="3" d:Text="SubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeader" />
 
       <Menu Margin="0,0,8,0" FontStyle="Oblique" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent" Foreground="#dd0" Grid.Column="0" Grid.ColumnSpan="3">
         <MenuItem   Header="C_lear Data"        Command="{Binding ClearDataCommand}"            ToolTip="Clear Data" Height="33" />
@@ -336,10 +336,7 @@
       <Views:RadarTypeViewUserControl Margin="0 0 62 26" UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="Snow.gif"    StartPlaying="1" Grid.RowSpan="2" Grid.Column="2" Opacity=".8" VerticalAlignment="Bottom"/>
 
       <Viewbox>
-        <TextBlock 
-          Visibility="{Binding GetDaysCommand.IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}" 
-          Text="{Binding GetDaysCommand.IsRunning}" 
-                   d:Text="12312" Foreground="Magenta" />
+        <TextBlock Visibility="{Binding GetDaysCommand.IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}" Text="Loading..." Foreground="Magenta" />
       </Viewbox>
 
     </Grid>
