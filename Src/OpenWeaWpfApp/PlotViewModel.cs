@@ -4,7 +4,7 @@ public partial class PlotViewModel : ObservableValidator
 {
   #region fields
   readonly DateTime _now = DateTime.Now;
-  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _yHi = 2, _yLo = 13, _vOffsetWas200 = 300;
+  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _yHi = 2, _yLo = 3, _vOffsetWas200 = 300;
   readonly IConfigurationRoot _cfg;
   readonly WeatherxContext _dbx;
   readonly OpenWea _opnwea;
@@ -177,16 +177,16 @@ public partial class PlotViewModel : ObservableValidator
       });
 
       var day0 = oca.daily.First();
-      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), -50));
-      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), +50));
-      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), +50));
-      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), -50));
+      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), -000));
+      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), +500));
+      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), +500));
+      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), -000));
       oca.daily.ToList().ForEach(x =>
       {
-        OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), -50));
-        OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), +50));
-        OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), +50));
-        OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), -50));
+        OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), -000));
+        OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), +500));
+        OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), +500));
+        OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), -000));
       });
 
       DrawSunSinosoid(day0);
@@ -392,7 +392,7 @@ public partial class PlotViewModel : ObservableValidator
       ReCreateAxises(note); // throws without
 
       Model.Series.Clear();
-      Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclSunT, Color = _330, StrokeThickness = 0.0, Title = "SunRS" });
+      Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclSunT, Color = _330, StrokeThickness = 0.0, Title = "SunRS", YAxisKey = "yAxisR" });
       Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclPopr, Color = _PoP, StrokeThickness = 0.0, Title = "PoPr", InterpolationAlgorithm = IA, YAxisKey = "yAxisR" });
       Model.Series.Add(new AreaSeries { ItemsSource = ECaBtvlWind, Color = _Phc, StrokeThickness = 0.5, Title = "Wind Btv", YAxisKey = "yAxisR", Fill = _550f });
       Model.Series.Add(new LineSeries { ItemsSource = ECaPearWind, Color = _Phc, StrokeThickness = 0.5, Title = "Wind Pea", YAxisKey = "yAxisR" });
@@ -427,7 +427,6 @@ public partial class PlotViewModel : ObservableValidator
     Model.InvalidatePlot(true);
     SmartAdd($"{(DateTime.Now - _now).TotalSeconds,6:N1}\t  Axiss re-adjustd\t■  {note,-26}  \n");
   }
-
   void SmartAdd(string note)
   {
     SubHeader += note;
@@ -436,7 +435,6 @@ public partial class PlotViewModel : ObservableValidator
     if (len > max)
       SubHeader = $"   ...\t  {SubHeader.Substring(len - max, max)}";
   }
-
   internal void ClearPlot()
   {
     Model.Legends.Clear();

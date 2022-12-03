@@ -304,7 +304,7 @@
         <MenuItem   Header="C_lear Data"        Command="{Binding ClearDataCommand}"            ToolTip="Clear Data" Height="33" />
         <Separator />
         <MenuItem   Header="_Populate All"      Command="{Binding PopulateAllCommand}"          ToolTip="Populate ALL"  />
-        <MenuItem   Header="From _DB"           Command="{Binding PrevForecastFromDbCommand}"   ToolTip="Populate from DB"  />
+        <MenuItem   Header="_From DB"            Command="{Binding PrevForecastFromDbCommand}"   ToolTip="Populate from DB"  />
         <MenuItem   Header="From _Web"          Command="{Binding PopulateScatModelCommand}"    ToolTip="Populate from Scat Model"  />
         <Separator />
         <MenuItem   Header="Refresh _Mdl"       Command="{Binding CreateMdlCommand}"  CommandParameter="Cmnd"  ToolTip="Updates all data sources since set to true"  />
