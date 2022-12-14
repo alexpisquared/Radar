@@ -13,7 +13,7 @@ global using System.Windows.Input;
 global using System.Windows.Media;
 global using System.Windows.Media.Imaging;
 global using System.Windows.Threading;
-global using CI.Standard.Lib.Helpers;
+global using StandardLib.Helpers;
 global using CommunityToolkit.Mvvm.ComponentModel;
 global using CommunityToolkit.Mvvm.Input;
 global using DB.WeatherX.PwrTls.Models;

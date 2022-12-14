@@ -23,7 +23,7 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
       </Grid.Resources>
       <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="6*"/>
+        <ColumnDefinition Width="8*"/>
         <ColumnDefinition Width="10"/>
         <ColumnDefinition Width="1*"/>
       </Grid.ColumnDefinitions>
@@ -333,7 +333,7 @@
       </Menu>
 
       <GridSplitter Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" FocusVisualStyle="{x:Null}"/>
-      <Views:RadarTypeViewUserControl Margin="0 0 62 26" UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="Snow.gif"    StartPlaying="1" Grid.RowSpan="2" Grid.Column="2" Opacity=".8" VerticalAlignment="Bottom"/>
+      <Views:RadarTypeViewUserControl Margin="0 0 62 42" UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="Snow.gif"    StartPlaying="1" Grid.RowSpan="2" Grid.Column="2" Opacity=".8" VerticalAlignment="Bottom"/>
 
       <Viewbox>
         <TextBlock Visibility="{Binding GetDaysCommand.IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}" Text="Loading..." Foreground="Magenta" />

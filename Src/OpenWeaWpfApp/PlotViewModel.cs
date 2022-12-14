@@ -4,7 +4,7 @@ public partial class PlotViewModel : ObservableValidator
 {
   #region fields
   readonly DateTime _now = DateTime.Now;
-  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _yHi = 2, _yLo = 3, _vOffsetWas200 = 300;
+  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _yHi = 2, _yLo = 10, _vOffsetWas200 = 300;
   readonly IConfigurationRoot _cfg;
   readonly WeatherxContext _dbx;
   readonly OpenWea _opnwea;
