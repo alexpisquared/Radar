@@ -59,7 +59,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
   async Task PrevForecastFromDB()
   {
-    if (_cfg["StoreData"] != "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
+    if (_cfg["StoreData"] != "Yes") //if (Environment.MachineName != "LR6WB43X")
       return;
 
     var now = DateTime.Now;
@@ -91,7 +91,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     var bvl = await p24.GetIt(_urlPast24hrYKZ);
     var pea = await p24.GetIt(_urlPast24hrYYZ);
 
-    if (_cfg["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")         "StoreData": "No",
+    if (_cfg["StoreData"] == "Yes") //if (Environment.MachineName != "LR6WB43X")         "StoreData": "No",
     {
       await AddPastDataToDB_EnvtCa("bvl", bvl);
       await AddPastDataToDB_EnvtCa("pea", pea);
@@ -107,7 +107,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     var sitedataMiss = await OpenWea.GetEnvtCa(_mississ);
     var sitedataVghn = await OpenWea.GetEnvtCa(_vaughan);
 
-    if (_cfg["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
+    if (_cfg["StoreData"] == "Yes") //if (Environment.MachineName != "LR6WB43X")
     {
       await AddForeDataToDB_EnvtCa("mis", sitedataMiss);
       await AddForeDataToDB_EnvtCa("vgn", sitedataVghn);
@@ -345,7 +345,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     var valueMax = _extrMax; // oca.daily.Max(r => r.temp.max);
     var valueMin = _extrMin; // oca.daily.Min(r => r.temp.min);
 
-    if (_cfg["StoreData"] == "Yes") //if (_cfg["StoreData"] == "Yes") //if (Environment.MachineName != "D21-MJ0AWBEV")
+    if (_cfg["StoreData"] == "Yes") //if (_cfg["StoreData"] == "Yes") //if (Environment.MachineName != "LR6WB43X")
       await AddForeDataToDB_OpnWea("phc", OCA);
 
     OCA.hourly.ToList().ForEach(x =>

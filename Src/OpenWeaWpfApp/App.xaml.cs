@@ -139,7 +139,7 @@ public partial class App : Application
       .Build();
 
     config["WhereAmI"] = "Mem";
-    config["LogFolder"] = new[] { "D21-MJ0AWBEV", "RAZER1" }.Contains(Environment.MachineName) ? @"C:\g\Radar\Src\OpenWeaWpfApp\bin\Logs\OWA..log" : @"C:\Users\alexp\OneDrive\Public\Logs\..log";
+    config["LogFolder"] = new[] { "LR6WB43X", "RAZER1" }.Contains(Environment.MachineName) ? @"C:\g\Radar\Src\OpenWeaWpfApp\bin\Logs\OWA..log" : @"C:\Users\alexp\OneDrive\Public\Logs\..log";
     config["ServerList"] = @".\sqlexpress mtDEVsqldb,1625 mtUATsqldb mtPRDsqldb";
     config["SqlConStrSansSnI"] =   /**/  "Server={0};     Database={1};       persist security info=True;user id=IpmDevDbgUser;password=IpmDevDbgUser;MultipleActiveResultSets=True;App=EntityFramework;Connection Timeout=152";
     config["SqlConStrSansSnD"] =   /**/  "Server={0};     Database={1};       Trusted_Connection=True;Encrypt=False;Connection Timeout=52";
