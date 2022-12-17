@@ -1,4 +1,6 @@
-﻿internal static class Cnst
+﻿using AmbienceLib;
+
+internal static class Cnst
 {
   public const string _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaughan = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582", _phc = "phc", _vgn = "vgn", _mis = "mis",
     pearson = "pea",
@@ -8,6 +10,8 @@
 }
 internal static class PlotViewModelHelpers
 {
+  static Bpr bpr = new Bpr();
+
   internal static async Task AddForecastToDB_EnvtCa(WeatherxContext _dbx, string siteId, siteData? siteFore, string srcId = "eca", string measureId = "tar")
   {
     for (int i = 0; i < 10; i++)
@@ -52,7 +56,7 @@ internal static class PlotViewModelHelpers
         WriteLine($"■■ {await _dbx.SaveChangesAsync()} rows saved ■■");
         return;
       }
-      catch (InvalidOperationException ex) { WriteLine($"WARN: F{i,3} {ex.Message}"); await Task.Delay(1000); BprKernel32.WarnFaF(); }
+      catch (InvalidOperationException ex) { WriteLine($"WARN: F{i,3} {ex.Message}"); await Task.Delay(1000); bpr.Warn(); }
       catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
     }
   }
@@ -99,7 +103,7 @@ internal static class PlotViewModelHelpers
         WriteLine($"■■ {await _dbx.SaveChangesAsync()} rows saved ■■");
         return;
       }
-      catch (InvalidOperationException ex) { WriteLine($"WARN: O{i,3} {ex.Message}"); await Task.Delay(1000); BprKernel32.WarnFaF(); }
+      catch (InvalidOperationException ex) { WriteLine($"WARN: O{i,3} {ex.Message}"); await Task.Delay(1000); bpr.Warn(); }
       catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
     }
   }
@@ -142,7 +146,7 @@ internal static class PlotViewModelHelpers
         WriteLine($"■■ {await _dbx.SaveChangesAsync()} rows saved ■■");
         return;
       }
-      catch (InvalidOperationException ex) { WriteLine($"WARN: P{i,3} {ex.Message}"); await Task.Delay(1000); BprKernel32.WarnFaF(); }
+      catch (InvalidOperationException ex) { WriteLine($"WARN: P{i,3} {ex.Message}"); await Task.Delay(1000); bpr.Warn(); }
       catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
     }
   }

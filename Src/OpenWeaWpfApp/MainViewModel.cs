@@ -1,4 +1,6 @@
 ﻿#define ObsCol // Go figure: ObsCol works, while array NOT! Just an interesting factoid.
+using AmbienceLib;
+
 namespace OpenWeaWpfApp;
 public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.ObservableValidator
 {
@@ -8,6 +10,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   bool _busy;
   const int _maxIcons = 50, _timeToPaintMS = 88;
   readonly WeatherxContext _dbx;
+  static readonly Bpr bpr = new();
   double _extrMax = +20, _extrMin = -20;
   const string _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaughan = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582",
     _phc = "phc", _vgn = "vgn", _mis = "mis",
@@ -17,7 +20,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
   public MainViewModel(WeatherxContext weatherxContext, OpenWea openWea)
   {
-    _cfg = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
+    _cfg = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets min usersecrets 
     _opnwea = openWea;
     _dbx = weatherxContext; // WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
 
@@ -55,7 +58,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     return true;
   }
 
-  static async Task Tick() { BprKernel32.TickFAF(); await Task.Delay(_timeToPaintMS); }
+  static async Task Tick() { bpr.Tick(); await Task.Delay(_timeToPaintMS); }
 
   async Task PrevForecastFromDB()
   {
@@ -79,7 +82,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       }
     }
 
-    WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
+    //WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
 
     (await _dbx.PointFore.Where(r => r.SiteId == _phc && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
     (await _dbx.PointFore.Where(r => r.SiteId == _vgn && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync()).ForEach(r => SctrPtTPFVgn.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));

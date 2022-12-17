@@ -1,10 +1,13 @@
 ﻿#define ObsCol // Go figure: ObsCol works, while array NOT! Just an interesting factoid.
+using AmbienceLib;
+
 namespace OpenWeaWpfApp;
 public partial class PlotViewModel : ObservableValidator
 {
   #region fields
   readonly DateTime _now = DateTime.Now;
-  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _yHi = 2, _yLo = 10, _vOffsetWas200 = 300;
+  readonly Bpr bpr = new Bpr();
+  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _vOffsetWas200 = 300, _yHi = 2, _yLo = 0; // 0 works for winter
   readonly IConfigurationRoot _cfg;
   readonly WeatherxContext _dbx;
   readonly OpenWea _opnwea;
@@ -14,9 +17,9 @@ public partial class PlotViewModel : ObservableValidator
   double _extrMax = +20, _extrMin = -20;
   readonly OxyColor _550f = OxyColor.FromArgb(0x50, 0x50, 0x00, 0xff),
    _111 = OxyColor.FromRgb(0x10, 0x10, 0x10),
-   _222 = OxyColor.FromRgb(0x20, 0x20, 0x20),
+   _mng = OxyColor.FromRgb(0x20, 0x20, 0x20),
    _330 = OxyColor.FromRgb(0x30, 0x30, 0x00),
-   _333 = OxyColor.FromRgb(0x40, 0x40, 0x40),
+   _mjg = OxyColor.FromRgb(0x40, 0x40, 0x40),
    _aaa = OxyColor.FromRgb(0xa0, 0xa0, 0xa0),
    _cc0 = OxyColor.FromRgb(0xc0, 0xc0, 0x00),
    _ccc = OxyColor.FromRgb(0xc0, 0xc0, 0xc0),
@@ -98,21 +101,21 @@ public partial class PlotViewModel : ObservableValidator
   [RelayCommand]
   public void PopulateAll(object? obj)
   {
-    if (obj is null) BprKernel32.StartFAF();
+    if (obj is null) bpr.Start();
     try
     {
       //SmartAdd($"*** {_dbx.Database.GetConnectionString()} ***\n"); // 480ms
       PrevForecastFromDb(obj);
       PopulateScatModel(obj);
 
-      if (obj is null) BprKernel32.Finish();
+      if (obj is null) bpr.Finish();
     }
     catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
   }
   [RelayCommand]
   void PrevForecastFromDb(object? obj)
   {
-    if (obj is null) BprKernel32.ClickFAF();
+    if (obj is null) bpr.Click();
     if (!_store) return;
 
     _ = Task.Run(GetPastForecastFromDB).ContinueWith(_ =>
@@ -121,13 +124,13 @@ public partial class PlotViewModel : ObservableValidator
       _.Result.b.ForEach(r => SctrPtTPFVgn.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
       _.Result.c.ForEach(r => SctrPtTPFMis.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
       Model.InvalidatePlot(true); SmartAdd($"{(DateTime.Now - _now).TotalSeconds,6:N1}\t  Populated: From DB \t\t\t\t\t   \n");
-      BprKernel32.TickFAF();
+      bpr.Tick();
     }, TaskScheduler.FromCurrentSynchronizationContext());
   }
   [RelayCommand]
   void PopulateScatModel(object? obj)
   {
-    if (obj is null) BprKernel32.ClickFAF();
+    if (obj is null) bpr.Click();
 
     _ = Task.Run(async () => { var lst = await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24YYZ); return lst; }).ContinueWith(_ => { DrawPast24hrEC(Cnst.pearson, _.Result); _pastPea = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
     _ = Task.Run(async () => { var lst = await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24YKZ); return lst; }).ContinueWith(_ => { DrawPast24hrEC(Cnst.batnvil, _.Result); _pastBvl = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
@@ -212,7 +215,7 @@ public partial class PlotViewModel : ObservableValidator
   {
     while (_isDbBusy)
     {
-      BprKernel32.Warn(); // not quite a full solution
+      bpr.Warn(); // not quite a full solution
     }
 
     _isDbBusy = true;
@@ -272,7 +275,7 @@ public partial class PlotViewModel : ObservableValidator
       await PlotViewModelHelpers.AddForecastToDB_EnvtCa(_dbh.WeatherxContext, Cnst._vgn, _foreMis);
       await PlotViewModelHelpers.AddForecastToDB_OpnWea(_dbh.WeatherxContext, Cnst._phc, oca);
 
-      BprKernel32.FinishFAF();
+      bpr.Finish();
       SmartAdd($"{(DateTime.Now - _now).TotalSeconds,6:N1}\t  All stored to DB! \n");
 
       return true;
@@ -376,7 +379,7 @@ public partial class PlotViewModel : ObservableValidator
       OwaLoclPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 100));
     });
   }
-  //static async Task TickRepaintDelay() { BprKernel32.TickFAF(); await Task.Delay(_timeToPaintMS); }
+  //static async Task TickRepaintDelay() { bpr.Tick(); await Task.Delay(_timeToPaintMS); }
 
   [Browsable(false)][ObservableProperty] PlotModel model = new() { TextColor = OxyColors.Magenta }; //void OnModelChanged() => PropertiesChanged();  void PropertiesChanged() => Model = ModelClearAdd("Prop Chgd");
 
@@ -419,10 +422,10 @@ public partial class PlotViewModel : ObservableValidator
   {
     var dddD = "                  ddd d";
     Model.Axes.Clear();
-    Model.Axes.Add(new DateTimeAxis { Minimum = timeMin, Maximum = timeMax, MajorStep = 1, MinorStep = .250, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, StringFormat = dddD, MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Solid, MajorGridlineColor = _333, MinorGridlineColor = _222, MinorTickSize = 4, TicklineColor = _ccc, Position = AxisPosition.Top });
+    Model.Axes.Add(new DateTimeAxis { Minimum = timeMin, Maximum = timeMax, MajorStep = 1, MinorStep = .250, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, StringFormat = dddD, MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Solid, MajorGridlineColor = _mjg, MinorGridlineColor = _mng, MinorTickSize = 4, TicklineColor = _ccc, Position = AxisPosition.Top });
     Model.Axes.Add(new DateTimeAxis { Minimum = timeMin, Maximum = timeMax, MajorStep = 1, MinorStep = .250, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, StringFormat = dddD, Position = AxisPosition.Bottom });
-    Model.Axes.Add(new LinearAxis { Minimum = YAxisMin, Maximum = YAxisMax, MajorStep = 010, MinorStep = 01, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Left, MajorGridlineStyle = LineStyle.Solid, MajorGridlineColor = _222, Key = "yAxisL", Title = "Temp [°C]", MinorTickSize = 4, TicklineColor = _ccc });
-    Model.Axes.Add(new LinearAxis { Minimum = YAxsRMin, Maximum = YAxsRMax, MajorStep = 100, MinorStep = 10, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Right, MajorGridlineStyle = LineStyle.None, MajorGridlineColor = _222, Key = "yAxisR", Title = "Wind k/h  PoP %" });
+    Model.Axes.Add(new LinearAxis { Minimum = YAxisMin, Maximum = YAxisMax, MajorStep = 010, MinorStep = 01, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Left, MajorGridlineStyle = LineStyle.Solid, MajorGridlineColor = _mjg, Key = "yAxisL", Title = "Temp [°C]", MinorTickSize = 4, TicklineColor = _ccc });
+    Model.Axes.Add(new LinearAxis { Minimum = YAxsRMin, Maximum = YAxsRMax, MajorStep = 100, MinorStep = 10, TextColor = _eee, TitleColor = _eee, IsZoomEnabled = false, IsPanEnabled = false, Position = AxisPosition.Right, MajorGridlineStyle = LineStyle.None, MajorGridlineColor = _mng, Key = "yAxisR", Title = "Wind k/h  PoP %" });
 
     Model.InvalidatePlot(true);
     SmartAdd($"{(DateTime.Now - _now).TotalSeconds,6:N1}\t  Axiss re-adjustd\t■  {note,-26}  \n");
@@ -442,12 +445,12 @@ public partial class PlotViewModel : ObservableValidator
     Model.Series.Clear();
   }
 
-  [RelayCommand] void Invalidate(object updateData) { BprKernel32.Tick(); Model.InvalidatePlot(updateData?.ToString() == "true"); }
-  [RelayCommand] void CreateMdl(object note) { BprKernel32.Tick(); ModelClearAdd(note?.ToString() ?? "000"); }
+  [RelayCommand] void Invalidate(object updateData) { bpr.Tick(); Model.InvalidatePlot(updateData?.ToString() == "true"); }
+  [RelayCommand] void CreateMdl(object note) { bpr.Tick(); ModelClearAdd(note?.ToString() ?? "000"); }
   [RelayCommand]
   void ClearData()
   {
-    BprKernel32.ClickFAF();
+    bpr.Click();
 
     Model.Title = CurrentConditions = "";
     WindDirn = 0;
