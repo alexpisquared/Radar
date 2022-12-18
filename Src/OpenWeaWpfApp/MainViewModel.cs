@@ -49,7 +49,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     }
     catch (Exception ex)
     {
-      WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@");
+      WriteLine($"■─■─■ {ex.Message} \n\t {ex} ■─■─■");
       if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
       return false;
     }
@@ -77,7 +77,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       }
       catch (Exception ex)
       {
-        WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@");
+        WriteLine($"■─■─■ {ex.Message} \n\t {ex} ■─■─■");
         if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
       }
     }
@@ -259,7 +259,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   static DateTimeOffset EnvtCaDate(string yyyyMMddHHmm)
   {
     if (!DateTime.TryParseExact(yyyyMMddHHmm, new string[] { "yyyyMMddHHmm", "yyyyMMddHHmmss" }, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out var utc)) //var lcl = DateTime.ParseExact(yyyyMMddHHmm, "yyyyMMddHHmm", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal).ToLocalTime(); //tu: UTC to Local time.
-      throw new ArgumentOutOfRangeException(nameof(yyyyMMddHHmm), yyyyMMddHHmm, "@@@@@@@@ Can you imagine?!?!?!");
+      throw new ArgumentOutOfRangeException(nameof(yyyyMMddHHmm), yyyyMMddHHmm, "■─■─■ Can you imagine?!?!?!");
 
     return utc.ToLocalTime(); //tu: UTC to Local time.
   }

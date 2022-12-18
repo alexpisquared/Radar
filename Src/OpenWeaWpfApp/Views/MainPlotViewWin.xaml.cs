@@ -52,7 +52,7 @@ public partial class MainPlotViewWin : Window
     }
     catch (Exception ex)
     {
-      WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@");
+      WriteLine($"■─■─■ {ex.Message} \n\t {ex} ■─■─■");
       if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
     }
   }

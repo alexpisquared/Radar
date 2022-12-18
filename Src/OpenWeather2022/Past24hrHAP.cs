@@ -72,7 +72,7 @@ public class Past24hrHAP
             if (e4 != null && e4.TempAir != -999)
               mdm.Add(e4);
           }
-          catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else throw; }
+          catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} \n\t {ex} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else throw; }
         }
       }
     }

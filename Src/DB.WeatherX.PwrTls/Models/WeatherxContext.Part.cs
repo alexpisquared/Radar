@@ -12,7 +12,7 @@ public partial class WeatherxContext
     }
     catch (Exception ex)
     {
-      Trace.WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@");
+      Trace.WriteLine($"■─■─■ {ex.Message} \n\t {ex} ■─■─■");
       if (Debugger.IsAttached) Debugger.Break(); else throw;
     }
   }

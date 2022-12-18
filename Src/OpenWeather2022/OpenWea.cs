@@ -43,7 +43,7 @@ public class OpenWea
       oca = (siteData?)new XmlSerializer(typeof(siteData)).Deserialize(new StringReader(xml));
 #endif
     }
-    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} \n{ex.Message}  @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); else throw; }
+    catch (Exception ex) { WriteLine($"■─■═■  {sw.Elapsed.TotalSeconds:N1}s  {url}  {ex.Message}  ■═■─■"); if (Debugger.IsAttached) Debugger.Break(); else throw; }
     finally { WriteLine($":> {url}  ==> {sw.ElapsedMilliseconds}ms "); }
 
     return oca;
@@ -97,8 +97,8 @@ public class OpenWea
 
       return oca;
     }
-    catch (ArgumentNullException ex) { WriteLine($"▄▀▄▀▄▀ Keys are missing??? {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); throw; }
-    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); throw; }
+    catch (ArgumentNullException ex) { WriteLine($"▄▀▄▀▄▀ Keys are missing??? {ex.Message} \n\t {ex} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); throw; }
+    catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} \n\t {ex} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); throw; }
     finally { WriteLine($"{DateTime.Now:yy.MM.dd HH:mm:ss.f} {what}  {url}  {sw.ElapsedMilliseconds}ms "); }
   }
 
@@ -153,7 +153,7 @@ public class OpenWea
   //      WriteLine($"*** {what} ==> {sw.ElapsedMilliseconds}ms");
   //      return url != null;
   //    }
-  //    catch (Exception ex) { WriteLine($"@@@@@@@@ {ex.Message} \n\t {ex} @@@@@@@@@@"); if (Debugger.IsAttached) Debugger.Break(); throw; }
+  //    catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} \n\t {ex} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); throw; }
   //  }
 
   public static DateTime UnixToDt(double unixTimeStamp) => new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(unixTimeStamp).ToLocalTime();  // Unix timestamp is seconds past epoch
