@@ -6,10 +6,10 @@ public partial class PlotViewModel : ObservableValidator
 {
   #region fields
   readonly DateTime _now = DateTime.Now;
-  readonly Bpr bpr = new Bpr();
+  readonly Bpr bpr = new();
   readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _vOffsetWas200 = 300, _yHi = 2, _yLo = 0; // 0 works for winter
   readonly IConfigurationRoot _cfg;
-  readonly WeatherxContext _dbx;
+  //readonly WeatherxContext _dbx;
   readonly OpenWea _opnwea;
   readonly DbxHelper _dbh;
   readonly bool _store;
@@ -76,10 +76,10 @@ public partial class PlotViewModel : ObservableValidator
 #endif
   #endregion
 
-  public PlotViewModel(WeatherxContext weatherxContext, OpenWea openWea, DbxHelper dbh)
+  public PlotViewModel(/*WeatherxContext weatherxContext,*/ OpenWea openWea, DbxHelper dbh)
   {
     _cfg = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
-    _dbx = weatherxContext; // WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
+    //_dbx = weatherxContext; // WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
     _dbh = dbh;
     _opnwea = openWea;
     _store = _cfg["StoreData"] == "Yes";
@@ -157,7 +157,6 @@ public partial class PlotViewModel : ObservableValidator
 
       for (var i = 0; i < oca.daily.Length; i++) OpnWeaIcoA.Add($"http://openweathermap.org/img/wn/{oca.daily[i].weather[0].icon}@2x.png");
 
-
       oca.hourly.ToList().ForEach(x =>
       {
         //scaters.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(day0.dt)), day0.snow?._1h ?? 0, day0.snow?._1h ?? 0, _d3c)); // either null or 0 so far.
@@ -215,7 +214,7 @@ public partial class PlotViewModel : ObservableValidator
   {
     while (_isDbBusy)
     {
-      bpr.Warn(); // not quite a full solution
+      await bpr.WarnAsync(); // not quite a full solution
     }
 
     _isDbBusy = true;

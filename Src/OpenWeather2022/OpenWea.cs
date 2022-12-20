@@ -26,7 +26,6 @@ public class OpenWea
 
   public static async Task<siteData?> GetEnvtCa(string site = "s0000458"/*toronto pearson*/) //   "s0000785_e"/*toronto island*/        }; //         "s0000773_e",/*richmond hill*/   };       // May 2020: localized to the most informative (with extremums). ... https://dd.weather.gc.ca/citypage_weather/xml/siteList.xml
   {
-    //await Task.Delay(99);
     siteData? oca = default!;
     var sw = Stopwatch.StartNew();
     var url = $"https://dd.weather.gc.ca/citypage_weather/xml/ON/{site}_e.xml";
@@ -43,8 +42,8 @@ public class OpenWea
       oca = (siteData?)new XmlSerializer(typeof(siteData)).Deserialize(new StringReader(xml));
 #endif
     }
-    catch (Exception ex) { WriteLine($"■─■═■  {sw.Elapsed.TotalSeconds:N1}s  {url}  {ex.Message}  ■═■─■"); if (Debugger.IsAttached) Debugger.Break(); else throw; }
-    finally { WriteLine($":> {url}  ==> {sw.ElapsedMilliseconds}ms "); }
+    catch (Exception ex) { WriteLine($"■─■═■  {sw.Elapsed.TotalSeconds:N1}s  {url}  {ex.Message}  ■═■─■"); if (Debugger.IsAttached) Debugger.Break(); else { /*System.Windows.Clipboard.SetText(url);*/ throw; } }
+    finally         /**/ { WriteLine($"+++++  {sw.Elapsed.TotalSeconds:N1}s  {url}  Success."); }
 
     return oca;
   }
