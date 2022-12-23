@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardLib", "..\..\AAV.Sh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmbienceLib", "..\..\AAV.Shared\Src\Net.CI\Ambience\AmbienceLib.csproj", "{9A8256CB-6D6B-4308-9DED-E9C74D407BFA}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfUserControlLib", "..\..\AAV.Shared\Src\Net.CI\WpfUserControlLib\WpfUserControlLib.csproj", "{906C4A5B-C851-4254-9A2F-F6F6EE3F08BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,18 @@ Global
 		{9A8256CB-6D6B-4308-9DED-E9C74D407BFA}.Release|x64.Build.0 = Release|x64
 		{9A8256CB-6D6B-4308-9DED-E9C74D407BFA}.Release|x86.ActiveCfg = Release|Any CPU
 		{9A8256CB-6D6B-4308-9DED-E9C74D407BFA}.Release|x86.Build.0 = Release|Any CPU
+		{906C4A5B-C851-4254-9A2F-F6F6EE3F08BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{906C4A5B-C851-4254-9A2F-F6F6EE3F08BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{906C4A5B-C851-4254-9A2F-F6F6EE3F08BA}.Debug|x64.ActiveCfg = Debug|x64
+		{906C4A5B-C851-4254-9A2F-F6F6EE3F08BA}.Debug|x64.Build.0 = Debug|x64
+		{906C4A5B-C851-4254-9A2F-F6F6EE3F08BA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{906C4A5B-C851-4254-9A2F-F6F6EE3F08BA}.Debug|x86.Build.0 = Debug|Any CPU
+		{906C4A5B-C851-4254-9A2F-F6F6EE3F08BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{906C4A5B-C851-4254-9A2F-F6F6EE3F08BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{906C4A5B-C851-4254-9A2F-F6F6EE3F08BA}.Release|x64.ActiveCfg = Release|x64
+		{906C4A5B-C851-4254-9A2F-F6F6EE3F08BA}.Release|x64.Build.0 = Release|x64
+		{906C4A5B-C851-4254-9A2F-F6F6EE3F08BA}.Release|x86.ActiveCfg = Release|Any CPU
+		{906C4A5B-C851-4254-9A2F-F6F6EE3F08BA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

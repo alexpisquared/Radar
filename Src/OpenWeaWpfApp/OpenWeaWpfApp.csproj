@@ -37,6 +37,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\AAV.Shared\Src\Net.CI\Ambience\AmbienceLib.csproj" />
     <ProjectReference Include="..\..\..\AAV.Shared\Src\Net.CI\StandardLib\StandardLib.csproj" />
+    <ProjectReference Include="..\..\..\AAV.Shared\Src\Net.CI\WpfUserControlLib\WpfUserControlLib.csproj" />
     <ProjectReference Include="..\DB.WeatherX.PwrTls\DB.WeatherX.PwrTls.csproj" />
     <ProjectReference Include="..\OpenWeather2022\OpenWeather2022.csproj" />
     <ProjectReference Include="..\Radar22.Lib\Radar22.Lib.csproj" />

@@ -34,4 +34,4 @@ global using System.ComponentModel;
 global using OxyPlot.Legends;
 global using HorizontalAlignment = OxyPlot.HorizontalAlignment;
 global using OpenWeaWpfApp.Helpers;
-
+global using WpfUserControlLib.Base;

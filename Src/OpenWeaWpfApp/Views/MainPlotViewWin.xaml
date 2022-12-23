@@ -1,11 +1,11 @@
-﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Class="OpenWeaWpfApp.MainPlotViewWin" mc:Ignorable="d"
-        xmlns:Views="clr-namespace:xEnvtCanRadar.Views;assembly=Radar22.Lib" 
-        xmlns:vms="clr-namespace:OpenWeaWpfApp" d:DataContext="{d:DesignInstance Type={x:Type vms:PlotViewModel}}"
-        xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
-        xmlns:ox_="http://oxyplot.org/wpf/contrib"
-        xmlns:oxo="http://oxyplot.org/wpf"
-        Title="MainPlotViewWin" Height="500" Width="1800" Background="Transparent" WindowState="Maximized" AllowsTransparency="True" WindowStyle="None" ResizeMode="CanResizeWithGrip"
-        Loaded="OnLoadad" >
+﻿<lnk:WindowBase xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Class="OpenWeaWpfApp.MainPlotViewWin" mc:Ignorable="d"
+                xmlns:lnk="clr-namespace:WpfUserControlLib.Base;assembly=WpfUserControlLib" 
+                xmlns:Views="clr-namespace:xEnvtCanRadar.Views;assembly=Radar22.Lib" 
+                xmlns:vms="clr-namespace:OpenWeaWpfApp" d:DataContext="{d:DesignInstance Type={x:Type vms:PlotViewModel}}"
+                xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
+                xmlns:ox_="http://oxyplot.org/wpf/contrib"
+                xmlns:oxo="http://oxyplot.org/wpf"
+                Title="MainPlotViewWin" Height="500" Width="1800" Background="Transparent" AllowsTransparency="True" WindowStyle="None" Loaded="OnLoadad" >
   <WindowChrome.WindowChrome>
     <WindowChrome CaptionHeight="0" ResizeBorderThickness="10" />
   </WindowChrome.WindowChrome>
@@ -341,4 +341,4 @@
 
     </Grid>
   </Border>
-</Window>
+</lnk:WindowBase>
