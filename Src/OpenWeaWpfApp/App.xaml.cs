@@ -34,10 +34,10 @@ public partial class App : Application
     _ = services.AddTransient<DbxHelper>();
 
     _ = services.AddSingleton<IConfigurationRoot>(AutoInitConfigHardcoded());
-    _ = services.AddSingleton<ILogger>(sp => SeriLogHelper.InitLoggerFactory( //todo: this allows to override by UserSettings entry: UserSettingsIPM.UserLogFolderFile ??= // if new - _store in usersettings for next uses.    
-      FSHelper.GetCreateSafeLogFolderAndFile(new[]  {
-        sp.GetRequiredService<IConfigurationRoot>()["LogFolder"]??@"..\Logs\".Replace("..", $"{(Assembly.GetExecutingAssembly().GetName().Name??"Unkwn")[..5]}.{Environment.UserName[..3]}.."), // First, get from AppSettings.
-        @"..\Logs\"  })).CreateLogger<MainPlotViewWin>());
+
+    _ = services.AddSingleton<ILogger>(sp => SeriLogHelper.InitLoggerFactory(
+      folder: FSHelper.GetCreateSafeLogFolderAndFile(@$"C:\Temp\Logs\{Assembly.GetExecutingAssembly().GetName().Name![..5]}.{VersionHelper.Env()}.{Environment.UserName[..3]}..log"),
+      levels: "+Info").CreateLogger<MainPlotViewWin>());
 
     Dbx(services);
 
@@ -139,7 +139,7 @@ public partial class App : Application
       .Build();
 
     config["WhereAmI"] = "Mem";
-    config["LogFolder"] = new[] { "LR6WB43X", "RAZER1" }.Contains(Environment.MachineName) ? @"C:\g\Radar\Src\OpenWeaWpfApp\bin\Logs\OWA..log" : @"C:\Users\alexp\OneDrive\Public\Logs\..log";
+    config["LogFolder"] = @"C:\temp\Logs\OWA..log"; 
     config["ServerList"] = @".\sqlexpress mtDEVsqldb,1625 mtUATsqldb mtPRDsqldb";
     config["SqlConStrSansSnI"] =   /**/  "Server={0};     Database={1};       persist security info=True;user id=IpmDevDbgUser;password=IpmDevDbgUser;MultipleActiveResultSets=True;App=EntityFramework;Connection Timeout=152";
     config["SqlConStrSansSnD"] =   /**/  "Server={0};     Database={1};       Trusted_Connection=True;Encrypt=False;Connection Timeout=52";

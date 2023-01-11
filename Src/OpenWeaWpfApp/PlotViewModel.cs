@@ -12,6 +12,7 @@ public partial class PlotViewModel : ObservableValidator
   //readonly WeatherxContext _dbx;
   readonly OpenWea _opnwea;
   readonly DbxHelper _dbh;
+  private readonly ILogger _lgr;
   readonly bool _store;
   const int _maxIcons = 50;
   double _extrMax = +20, _extrMin = -20;
@@ -76,11 +77,12 @@ public partial class PlotViewModel : ObservableValidator
 #endif
   #endregion
 
-  public PlotViewModel(/*WeatherxContext weatherxContext,*/ OpenWea openWea, DbxHelper dbh)
+  public PlotViewModel(/*WeatherxContext weatherxContext,*/ OpenWea openWea, DbxHelper dbh, ILogger lgr)
   {
     _cfg = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
     //_dbx = weatherxContext; // WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
     _dbh = dbh;
+    this._lgr = lgr;
     _opnwea = openWea;
     _store = _cfg["StoreData"] == "Yes";
 
@@ -96,6 +98,7 @@ public partial class PlotViewModel : ObservableValidator
     }
 
     ModelClearAdd("ctor");
+    _lgr.LogInformation("▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀ EOCtor");
   }
 
   [RelayCommand]
