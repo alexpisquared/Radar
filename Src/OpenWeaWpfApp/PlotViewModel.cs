@@ -277,7 +277,9 @@ public partial class PlotViewModel : ObservableValidator
       await PlotViewModelHelpers.AddForecastToDB_EnvtCa(_dbh.WeatherxContext, Cnst._vgn, _foreMis);
       await PlotViewModelHelpers.AddForecastToDB_OpnWea(_dbh.WeatherxContext, Cnst._phc, oca);
 
-      bpr.Finish();
+      SpeechSynth _synth = new(_cfg["AppSecrets:MagicSpeech"] ?? "Check cfg", true, CC.EnusAriaNeural.Voice);
+      await _synth.SpeakProsodyAsync("All stored to DB.");
+
       SmartAdd($"{(DateTime.Now - _now).TotalSeconds,6:N1}\t  All stored to DB! \n");
 
       return true;
