@@ -18,7 +18,6 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     _urlPast24hrYYZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yyz", // Pearson
     _urlPast24hrYKZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=ykz"; // Buttonville
 
-
   public MainViewModel(WeatherxContext weatherxContext, OpenWea openWea, ILogger lgr)
   {
     _cfg = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets min usersecrets 
@@ -297,7 +296,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
   async Task PopulateScatModelAsync(int days = 5)
   {
-    var mgk = _cfg["AppSecrets:MagicWeather"] ?? throw new ArgumentNullException(nameof(_cfg));
+    var mgk = _cfg["AppSecrets:MagicWeather"] ?? throw new ArgumentNullException(nameof(days), nameof(_cfg));
     OCA = await _opnwea.GetIt(mgk, OpenWea.OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(OCA); // PHC107
     D53 = await _opnwea.GetIt(mgk, OpenWea.OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(D53); // PHC107
 
@@ -628,15 +627,8 @@ public class Messages : ObservableObject // https://stackoverflow.com/questions/
   [IndexerName("Item")] //not exactly needed as this is the default
   public string this[int index]
   {
-    get => _messages.ContainsKey(index) ?
-        _messages[index] : /////////////////////////todo: never gets called.
-        "http://openweathermap.org/img/wn/02d@2x.png";
-
-    set
-    {
-      _messages[index] = value;
-      OnPropertyChanged("Item[" + index + "]");
-    }
+    get => _messages.TryGetValue(index, out var value) ? value : "http://openweathermap.org/img/wn/02d@2x.png";      /////////////////////////todo: never gets called.
+    set { _messages[index] = value; OnPropertyChanged("Item[" + index + "]"); }
   }
 }
 

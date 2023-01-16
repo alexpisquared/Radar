@@ -135,21 +135,20 @@ public partial class PlotViewModel : ObservableValidator
   {
     if (obj is null) bpr.Click();
 
-    _ = Task.Run(async () => { var lst = await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24YYZ); return lst; }).ContinueWith(_ => { DrawPast24hrEC(Cnst.pearson, _.Result); _pastPea = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
-    _ = Task.Run(async () => { var lst = await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24YKZ); return lst; }).ContinueWith(_ => { DrawPast24hrEC(Cnst.batnvil, _.Result); _pastBvl = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
-     _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._mississ); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._mississ, _.Result); _foreMis = _.Result;         Model.Title += $"Miss \tat {(_foreMis?.currentConditions)?.dateTime[1].hour.Value}:{(_foreMis?.currentConditions)?.dateTime[1].minute}   {float.Parse(_foreMis?.currentConditions?.temperature?.Value??"-999F"),5:+##.#;-##.#;0}°   {float.Parse( _foreMis?.currentConditions?.windChill?.Value ?? _foreMis?.currentConditions?.temperature?.Value ?? "-999"),4:+##;-##;0}° {_foreMis?.currentConditions?.wind?.speed?.Value,5:N1}{(_foreMis?.currentConditions?.wind)?.speed.units} \n";    }, TaskScheduler.FromCurrentSynchronizationContext());
-
-    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._vaughan); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._vaughan, _.Result); _foreVgn = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
-    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._toronto); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._toronto, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
-    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._torIsld); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._torIsld, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
-    _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._markham); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._markham, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24YYZ)).ContinueWith(_ => { DrawPast24hrEC(Cnst.pearson, _.Result); _pastPea = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24YKZ)).ContinueWith(_ => { DrawPast24hrEC(Cnst.batnvil, _.Result); _pastBvl = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._mississ)).ContinueWith(_ => { DrawFore24hrEC(Cnst._mississ, _.Result); _foreMis = _.Result; Model.Title += $"Miss \tat {(_foreMis?.currentConditions)?.dateTime[1].hour.Value}:{(_foreMis?.currentConditions)?.dateTime[1].minute}   {float.Parse(_foreMis?.currentConditions?.temperature?.Value ?? "-999F"),5:+##.#;-##.#;0}°   {float.Parse(_foreMis?.currentConditions?.windChill?.Value ?? _foreMis?.currentConditions?.temperature?.Value ?? "-999"),4:+##;-##;0}° {_foreMis?.currentConditions?.wind?.speed?.Value,5:N1} {(_foreMis?.currentConditions?.wind)?.speed.units} \n"; }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._vaughan)).ContinueWith(_ => { DrawFore24hrEC(Cnst._vaughan, _.Result); _foreVgn = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._toronto)).ContinueWith(_ => { DrawFore24hrEC(Cnst._toronto, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._torIsld)).ContinueWith(_ => { DrawFore24hrEC(Cnst._torIsld, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._markham)).ContinueWith(_ => { DrawFore24hrEC(Cnst._markham, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
 
     _ = Task.Run<object>(async () => await _opnwea.GetIt(_cfg["AppSecrets:MagicWeather"] ?? throw new ArgumentNullException(nameof(obj)), OpenWea.OpenWeatherCd.OneCallApi) ?? throw new ArgumentNullException(nameof(obj))).ContinueWith(async _ =>
     {
       oca = _.Result as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(oca); // PHC107
 
       //SmartAdd($"{(DateTime.Now-_now).TotalSeconds,5:N1}  {oca.current}";
-     Model.Title /*= CurrentConditions*/ += $"OWA \tat {OpenWea.UnixToDt(oca.current.dt):HH:mm}   {oca.current.temp,5:+##.#;-##.#;0}°   {oca.current.feels_like,4:+##;-##;0}° {oca.current.wind_speed * _ms2kh / _wk,5:N1}k/h                                                                                                                                                                                                        \n";
+      Model.Title /*= CurrentConditions*/ += $"OWA \tat {OpenWea.UnixToDt(oca.current.dt):HH:mm}   {oca.current.temp,5:+##.#;-##.#;0}°   {oca.current.feels_like,4:+##;-##;0}° {oca.current.wind_speed * _ms2kh / _wk,5:N1} k/h                                                                                                                                                                                                        \n";
       WindDirn = oca.current.wind_deg;
       WindVeloKmHr = oca.current.wind_speed * _ms2kh / _wk;
       WindGustKmHr = oca.current.wind_gust * _ms2kh / _wk;
@@ -279,7 +278,7 @@ public partial class PlotViewModel : ObservableValidator
       await PlotViewModelHelpers.AddForecastToDB_OpnWea(_dbh.WeatherxContext, Cnst._phc, oca);
 
       SpeechSynth _synth = new(_cfg["AppSecrets:MagicSpeech"] ?? "Check cfg", true, CC.EnusAriaNeural.Voice);
-      await _synth.SpeakProsodyAsync("All stored to DB.");
+      _synth.SpeakProsodyFAF("All stored to DB.");
 
       SmartAdd($"{(DateTime.Now - _now).TotalSeconds,6:N1}\t  All stored to DB! \n");
 
