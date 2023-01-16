@@ -143,7 +143,7 @@ public partial class PlotViewModel : ObservableValidator
     _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._torIsld); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._torIsld, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
     _ = Task.Run(async () => { var dta = await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._markham); return dta; }).ContinueWith(_ => { DrawFore24hrEC(Cnst._markham, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
 
-    _ = Task.Run<object>(async () => await _opnwea.GetIt(_cfg["AppSecrets:MagicNumber"] ?? throw new ArgumentNullException(nameof(obj)), OpenWea.OpenWeatherCd.OneCallApi) ?? throw new ArgumentNullException(nameof(obj))).ContinueWith(async _ =>
+    _ = Task.Run<object>(async () => await _opnwea.GetIt(_cfg["AppSecrets:MagicWeather"] ?? throw new ArgumentNullException(nameof(obj)), OpenWea.OpenWeatherCd.OneCallApi) ?? throw new ArgumentNullException(nameof(obj))).ContinueWith(async _ =>
     {
       oca = _.Result as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(oca); // PHC107
 
@@ -196,7 +196,7 @@ public partial class PlotViewModel : ObservableValidator
 
       DrawSunSinosoid(day0);
 
-      var d53 = await _opnwea.GetIt(_cfg["AppSecrets:MagicNumber"] ?? throw new ArgumentNullException(nameof(obj)), OpenWea.OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(d53); // PHC107
+      var d53 = await _opnwea.GetIt(_cfg["AppSecrets:MagicWeather"] ?? throw new ArgumentNullException(nameof(obj)), OpenWea.OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(d53); // PHC107
       if (d53 != null)
       {
         DrawD53(d53);
