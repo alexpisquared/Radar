@@ -297,7 +297,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 
   async Task PopulateScatModelAsync(int days = 5)
   {
-    var mgk = _cfg["AppSecrets:MagicNumber"] ?? throw new ArgumentNullException(nameof(_cfg));
+    var mgk = _cfg["AppSecrets:MagicWeather"] ?? throw new ArgumentNullException(nameof(_cfg));
     OCA = await _opnwea.GetIt(mgk, OpenWea.OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(OCA); // PHC107
     D53 = await _opnwea.GetIt(mgk, OpenWea.OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(D53); // PHC107
 
