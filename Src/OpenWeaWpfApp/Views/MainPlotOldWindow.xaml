@@ -24,7 +24,7 @@
           <Setter Property="IsLegendVisible"    Value="True" />
           <Setter Property="LegendOrientation"  Value="Vertical" />
           <Setter Property="LegendPosition"     Value="TopCenter" />
-          <Setter Property="LegendTextColor"    Value="{StaticResource Phc}" />
+          <Setter Property="LegendTextColor"    Value="{StaticResource WDir}" />
         </Style>
       </Grid.Resources>
       <Grid.ColumnDefinitions>
