@@ -5,7 +5,7 @@
                 xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
                 xmlns:ox_="http://oxyplot.org/wpf/contrib"
                 xmlns:oxo="http://oxyplot.org/wpf"
-                Title="MainPlotViewWin" Height="500" Width="1800" Background="Transparent" AllowsTransparency="True" WindowStyle="None" Loaded="OnLoadad" >
+                Title="MainPlotViewWin" Height="500" Width="1800" Background="Transparent" AllowsTransparency="True" WindowStyle="None" Loaded="OnLoadad" Activated="OnActivated" Deactivated="OnDeActivtd">
   <WindowChrome.WindowChrome>
     <WindowChrome CaptionHeight="0" ResizeBorderThickness="10" />
   </WindowChrome.WindowChrome>
@@ -331,7 +331,7 @@
       </Menu>
 
       <GridSplitter Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" FocusVisualStyle="{x:Null}"/>
-      <Views:RadarTypeViewUserControl Margin="0 0 62 42" UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="Snow.gif"    StartPlaying="1" Grid.RowSpan="2" Grid.Column="2" Opacity=".8" VerticalAlignment="Bottom"/>
+      <Views:RadarTypeViewUserControl Margin="0 0 62 42" UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="Snow.gif"    StartPlaying="1" Grid.RowSpan="2" Grid.Column="2" Opacity=".8" VerticalAlignment="Bottom" x:Name="radar1" />
 
       <Viewbox>
         <TextBlock Visibility="{Binding GetDaysCommand.IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}" Text="Loading..." Foreground="#555" />

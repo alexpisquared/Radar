@@ -41,4 +41,6 @@ public partial class MainPlotViewWin : WindowBase
 
   void OnPoplte(object sender, RoutedEventArgs e) =>  ((PlotViewModel)DataContext).PopulateAll(null);  // only lines chart is drawn.
   void OnShowPocBin(object sender, RoutedEventArgs e) => new PocBin().Show();
+  void OnActivated(object sender, EventArgs e) { radar1.IsPlaying = true; }
+  void OnDeActivtd(object sender, EventArgs e) { radar1.IsPlaying = false; }
 }
