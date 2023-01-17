@@ -16,23 +16,25 @@ public partial class PlotViewModel : ObservableValidator
   readonly bool _store;
   const int _maxIcons = 50;
   double _extrMax = +20, _extrMin = -20;
-  readonly OxyColor _550f = OxyColor.FromArgb(0x50, 0x50, 0x00, 0xff),
-   _111 = OxyColor.FromRgb(0x10, 0x10, 0x10),
-   _mng = OxyColor.FromRgb(0x20, 0x20, 0x20),
-   _330 = OxyColor.FromRgb(0x30, 0x30, 0x00),
-   _mjg = OxyColor.FromRgb(0x40, 0x40, 0x40),
-   _aaa = OxyColor.FromRgb(0xa0, 0xa0, 0xa0),
-   _cc0 = OxyColor.FromRgb(0xc0, 0xc0, 0x00),
-   _ccc = OxyColor.FromRgb(0xc0, 0xc0, 0xc0),
-   _eee = OxyColor.FromRgb(0xe0, 0xe0, 0xe0),
-   _b80 = OxyColor.FromRgb(0xb0, 0x80, 0x00),
-   _d00 = OxyColor.FromRgb(0xd0, 0x00, 0x00),
-   _Vgn = OxyColor.FromRgb(0x00, 0x80, 0xff),
-   _Mis = OxyColor.FromRgb(0x00, 0x80, 0x00),
-   _Phc = OxyColor.FromRgb(0xe0, 0x00, 0xe0),
-   _Prs = OxyColor.FromRgb(0xb0, 0xb0, 0x00),
-   _PoP = OxyColor.FromRgb(0x00, 0x40, 0xf0),
-   _wnd = OxyColor.FromRgb(0x80, 0x80, 0x80);
+  readonly OxyColor 
+          _111 = OxyColor.FromRgb(0x10, 0x10, 0x10),
+          _mng = OxyColor.FromRgb(0x20, 0x20, 0x20),
+          _330 = OxyColor.FromRgb(0x30, 0x30, 0x00),
+          _mjg = OxyColor.FromRgb(0x40, 0x40, 0x40),
+          _aaa = OxyColor.FromRgb(0xa0, 0xa0, 0xa0),
+          _cc0 = OxyColor.FromRgb(0xc0, 0xc0, 0x00),
+          _ccc = OxyColor.FromRgb(0xc0, 0xc0, 0xc0),
+          _eee = OxyColor.FromRgb(0xe0, 0xe0, 0xe0),
+          _b80 = OxyColor.FromRgb(0xb0, 0x80, 0x00),
+          _d00 = OxyColor.FromRgb(0xd0, 0x00, 0x00),
+          _Vgn = OxyColor.FromRgb(0x00, 0x80, 0xff),
+          _Mis = OxyColor.FromRgb(0x00, 0x80, 0x00),
+          _Phc = OxyColor.FromRgb(0xe0, 0x00, 0xe0),
+          _Prs = OxyColor.FromRgb(0xb0, 0xb0, 0x00),
+          _PoP = OxyColor.FromRgb(0x00, 0x40, 0xf0),
+          _wnd = OxyColor.FromRgb(0x00, 0xff, 0x80),
+   _wnD = OxyColor.FromArgb(0x20, 0x00, 0xff, 0x80),
+   _qqq = OxyColor.FromArgb(0x50, 0x00, 0xff, 0x80)        ;
 
   //ImageSource _i; public ImageSource WeaIcom { get => _i; set => SetProperty(ref _i, value); }
   //Uri _k = new("http://openweathermap.org/img/wn/04n@2x.png"); public Uri WIcon { get => _k; set => SetProperty(ref _k, value); }
@@ -49,7 +51,7 @@ public partial class PlotViewModel : ObservableValidator
   readonly ObservableCollection<DataPoint> ECaBtvlWind = new();
   readonly ObservableCollection<DataPoint> ECaPearWind = new();
   readonly ObservableCollection<DataPoint> OwaLoclSunT = new();
-  readonly ObservableCollection<DataPoint> OwaLoclNowT = new();
+  readonly ObservableCollection<DataPoint> OwaTempExtr = new();
   readonly ObservableCollection<DataPoint> OwaLoclPopr = new();
   readonly ObservableCollection<DataPoint> ECaToroTemp = new();
   readonly ObservableCollection<DataPoint> ECaVghnTemp = new();
@@ -252,14 +254,14 @@ public partial class PlotViewModel : ObservableValidator
     if (double.TryParse(sitedata.almanac.temperature[2].Value, out var nrmx)) NormTMax = nrmx;
     if (double.TryParse(sitedata.almanac.temperature[3].Value, out var nrmn)) NormTMin = nrmn;
 
-    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), _extrMax));
-    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), _extrMax));
-    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMax));
-    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMax));
-    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMin));
-    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMin));
-    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), _extrMin));
-    OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), _extrMin));
+    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), _extrMax));
+    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), _extrMax));
+    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMax));
+    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMax));
+    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMin));
+    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMin));
+    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), _extrMin));
+    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), _extrMin));
 
     EnvtCaIconM = $"https://weather.gc.ca/weathericons/{sitedata?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
   }
@@ -399,17 +401,17 @@ public partial class PlotViewModel : ObservableValidator
       ReCreateAxises(note); // throws without
 
       Model.Series.Clear();
-      Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclSunT, Color = _330, StrokeThickness = 0.0, Title = "SunRS", YAxisKey = "yAxisR" });
-      Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclPopr, Color = _PoP, StrokeThickness = 0.0, Title = "PoPr", InterpolationAlgorithm = IA, YAxisKey = "yAxisR" });
-      Model.Series.Add(new AreaSeries { ItemsSource = ECaBtvlWind, Color = _Phc, StrokeThickness = 0.5, Title = "Wind Btv", YAxisKey = "yAxisR", Fill = _550f });
-      Model.Series.Add(new LineSeries { ItemsSource = ECaPearWind, Color = _Phc, StrokeThickness = 0.5, Title = "Wind Pea", YAxisKey = "yAxisR" });
-      Model.Series.Add(new LineSeries { ItemsSource = SunSinusoid, Color = _cc0, StrokeThickness = 0.5, Title = "SunRS", YAxisKey = "yAxisL" });
-      Model.Series.Add(new LineSeries { ItemsSource = OwaLoclNowT, Color = _aaa, StrokeThickness = 1.0, Title = "owa T" });
-      Model.Series.Add(new LineSeries { ItemsSource = ECaToroTemp, Color = _b80, StrokeThickness = 5.0, Title = "EC TO T", LineStyle = LineStyle.LongDash });
-      Model.Series.Add(new LineSeries { ItemsSource = ECaMissTemp, Color = _Mis, StrokeThickness = 3.0, Title = "EC Mi T", LineStyle = LineStyle.LongDashDotDot });
-      Model.Series.Add(new LineSeries { ItemsSource = ECaTIslTemp, Color = _d00, StrokeThickness = 1.0, Title = "EC TI T", LineStyle = LineStyle.Dot });
-      Model.Series.Add(new LineSeries { ItemsSource = ECaVghnTemp, Color = _Vgn, StrokeThickness = 3.0, Title = "EC VA T", LineStyle = LineStyle.Dash });
-      Model.Series.Add(new LineSeries { ItemsSource = ECaMrkhTemp, Color = _Vgn, StrokeThickness = 2.0, Title = "EC MA T", LineStyle = LineStyle.Dash, InterpolationAlgorithm = IA });
+      Model.Series.Add(new LineSeries { ItemsSource = ECaToroTemp, Color = _b80, StrokeThickness = 5.0, Title = "ec TO T", LineStyle = LineStyle.LongDash });
+      Model.Series.Add(new LineSeries { ItemsSource = ECaMissTemp, Color = _Mis, StrokeThickness = 3.0, Title = "ec Mi T", LineStyle = LineStyle.LongDashDotDot });
+      Model.Series.Add(new LineSeries { ItemsSource = ECaTIslTemp, Color = _d00, StrokeThickness = 1.0, Title = "ec TI T", LineStyle = LineStyle.Dot });
+      Model.Series.Add(new LineSeries { ItemsSource = ECaVghnTemp, Color = _Vgn, StrokeThickness = 3.0, Title = "ec VA T", LineStyle = LineStyle.Dash });
+      Model.Series.Add(new LineSeries { ItemsSource = ECaMrkhTemp, Color = _Vgn, StrokeThickness = 2.0, Title = "ec MA T", LineStyle = LineStyle.Dash, InterpolationAlgorithm = IA });
+      Model.Series.Add(new AreaSeries { ItemsSource = ECaBtvlWind, Color = _wnd, StrokeThickness = 0.5, Title = "ec Wind Btv", YAxisKey = "yAxisR", Fill = _wnD });
+      Model.Series.Add(new LineSeries { ItemsSource = ECaPearWind, Color = _wnd, StrokeThickness = 0.5, Title = "ec Wind Pea", YAxisKey = "yAxisR" });
+      Model.Series.Add(new LineSeries { ItemsSource = SunSinusoid, Color = _cc0, StrokeThickness = 0.5, Title = "SunRS Sin", YAxisKey = "yAxisL" });
+      Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclSunT, Color = _330, StrokeThickness = 0.0, Title = "SunRS Sqr", YAxisKey = "yAxisR" });
+      Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclPopr, Color = _PoP, StrokeThickness = 0.0, Title = "owa PoPr", InterpolationAlgorithm = IA, YAxisKey = "yAxisR" });
+      Model.Series.Add(new LineSeries { ItemsSource = OwaTempExtr, Color = _aaa, StrokeThickness = 1.0, Title = "owa Extr" });
       Model.Series.Add(new LineSeries { ItemsSource = OwaLoclTemp, Color = _Phc, StrokeThickness = 1.5, Title = "owa Temp", InterpolationAlgorithm = IA });
       Model.Series.Add(new LineSeries { ItemsSource = OwaLoclFeel, Color = _Phc, StrokeThickness = 0.5, Title = "owa Feel", InterpolationAlgorithm = IA });
       Model.Series.Add(new LineSeries { ItemsSource = OwaLoclPrsr, Color = _Prs, StrokeThickness = 1.0, Title = "owa Prsr", InterpolationAlgorithm = IA, LineStyle = LineStyle.LongDashDotDot });
@@ -472,7 +474,7 @@ public partial class PlotViewModel : ObservableValidator
     ECaBtvlWind.Clear();
     ECaPearWind.Clear();
     OwaLoclSunT.Clear();
-    OwaLoclNowT.Clear();
+    OwaTempExtr.Clear();
     OwaLoclPopr.Clear();
     ECaToroTemp.Clear();
     ECaVghnTemp.Clear();
