@@ -100,8 +100,8 @@ public partial class PlotViewModel : ObservableValidator
     }
 
     ModelClearAdd("ctor");
-    _lgr.LogInformation("▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀ EOCtor");
-  }
+    _lgr.Log(LogLevel.Trace, "PlotViewModel() EOCtor");
+}
 
   [RelayCommand]
   public void PopulateAll(object? obj)

@@ -1,26 +1,8 @@
-﻿#define Host_
-namespace OpenWeaWpfApp;
+﻿namespace OpenWeaWpfApp;
 public partial class App : Application
 {
   string _audit = "Default!!";
 
-#if Host
-  readonly IHost _host;
-
-  public App()
-  {
-    _host = Host.CreateDefaultBuilder()
-      .AddViewModels()
-      .ConfigureServices((hostContext, services) =>
-      {
-        _ = services.AddSingleton(s => new MainWindow()        {          DataContext = s.GetRequiredService<MainViewModel>()        });
-        _ = services.AddTransient<OpenWea>();
-
-        Dbx(services);
-      })
-      .Build();
-  }
-#else
   readonly IServiceProvider _serviceProvider;
 
   public App()
@@ -36,16 +18,13 @@ public partial class App : Application
     _ = services.AddSingleton<IConfigurationRoot>(AutoInitConfigHardcoded());
 
     _ = services.AddSingleton<ILogger>(sp => SeriLogHelper.InitLoggerFactory(
-      folder: FSHelper.GetCreateSafeLogFolderAndFile(@$"C:\Temp\Logs\{Assembly.GetExecutingAssembly().GetName().Name![..5]}.{VersionHelper.Env()}.{Environment.UserName[..3]}..log"),
-      levels: "+Info").CreateLogger<MainPlotViewWin>());
+      folder: FSHelper.GetCreateSafeLogFolderAndFile(@$"C:\Temp\Logs\{Assembly.GetExecutingAssembly().GetName().Name![..5]}.{Environment.UserName[..3]}..log"),
+      levels: "+Verbose -Info +Warning +Error +ErNT -11mb -Infi").CreateLogger<MainPlotViewWin>());
 
     Dbx(services);
 
-    // need logging (ap: mar-12)
-
     _serviceProvider = services.BuildServiceProvider();
   }
-#endif
 
   protected override async void OnStartup(StartupEventArgs e)
   {
@@ -53,24 +32,15 @@ public partial class App : Application
     EventManager.RegisterClassHandler(typeof(TextBox), TextBox.GotFocusEvent, new RoutedEventHandler((s, re) => { (s as TextBox ?? new TextBox()).SelectAll(); }));
     ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
 
-    SafeAudit();
+        _audit = VersionHelper.DevDbgAudit(_serviceProvider.GetRequiredService<IConfigurationRoot>());
 
-    _serviceProvider.GetRequiredService<ILogger>().LogInformation($"║       ██  OnStrt  {_audit}");
+        _serviceProvider.GetRequiredService<ILogger>().LogInformation($"OnStrt  {_audit}");
 
 #if !ParseToClasses
-
-#if Host
-    _host.Start();
-    MainWindow = _host.Services.GetRequiredService<MainWindow>();                       // 1.050 ms!!!
-#elif !OLD
-    MainWindow = _serviceProvider.GetRequiredService<MainPlotViewWin>();                     //   400 ms
+    MainWindow = _serviceProvider.GetRequiredService<MainPlotViewWin>();                //   400 ms
     MainWindow.DataContext = _serviceProvider.GetRequiredService<PlotViewModel>();      //   700 ms
-#else
-    MainWindow = _serviceProvider.GetRequiredService<MainPlotOldWindow>();                     //   400 ms
-    MainWindow.DataContext = _serviceProvider.GetRequiredService<MainViewModel>();      //   700 ms
-#endif
 
-    //the only way to populate PlotView: await ((MainViewModel)MainPlotOldWindow.DataContext).PopulateAll();
+    await Task.Yield(); //the only way to populate PlotView: await ((MainViewModel)MainPlotOldWindow.DataContext).PopulateAll();
 
     MainWindow.Show();
 #else // Release:
@@ -86,7 +56,6 @@ public partial class App : Application
 #endif
 
     base.OnStartup(e);
-    await Task.Yield();
   }
   protected override void OnExit(ExitEventArgs e)
   {
@@ -100,14 +69,7 @@ public partial class App : Application
     try
     {
       var cfg = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets         
-
-      //todo:
-      //#if Host
-      //    //_host.Start();
-      //    var cf2 = _host.Services?.GetRequiredService<IConfigurationRoot>();
-      //#else
-      //    var cf2 = _serviceProvider?.GetRequiredService<IConfigurationRoot>();
-      //#endif
+      //r cfg = _serviceProvider?.GetRequiredService<IConfigurationRoot>();
 
       _ = optionsBuilder.UseSqlServer(cfg.GetConnectionString("Exprs") ?? throw new ArgumentNullException(nameof(services), "cfg.GetConnectionString('Exprs')"));
     }
@@ -118,19 +80,6 @@ public partial class App : Application
       _ = MessageBox.Show(ex.Message, "Exception - Clipboarded");
     }
   });
-  void SafeAudit()
-  {
-    try
-    {
-      var cfg = _serviceProvider.GetRequiredService<IConfigurationRoot>();
-
-      _audit = VersionHelper.DevDbgAudit(cfg, $"wai:{cfg["WhereAmI"]}");
-    }
-    catch (Exception ex)
-    {
-      _serviceProvider.GetRequiredService<ILogger>().LogError(ex, _audit);
-    }
-  }
   public static IConfigurationRoot AutoInitConfigHardcoded(string defaultValues = _defaultAppSetValues, bool enforceCreation = false)
   {
     var server = Environment.MachineName == "RAZER1" ? @".\SqlExpress" : "mtDEVsqldb,1625";

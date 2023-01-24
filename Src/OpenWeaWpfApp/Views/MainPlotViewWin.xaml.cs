@@ -1,7 +1,7 @@
 ﻿namespace OpenWeaWpfApp;
 public partial class MainPlotViewWin : WindowBase
 {
-  public MainPlotViewWin()
+  public MainPlotViewWin(ILogger logger) : base(logger)
   {
     InitializeComponent();
     //MouseLeftButtonDown += (s, e) => DragMove();
