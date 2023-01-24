@@ -20,6 +20,8 @@ public partial class MainPlotViewWin : WindowBase
 
     Topmost = Debugger.IsAttached;
 
+    KeepOpenReason = null; // nothing to hold on to.
+
     Title = $"OpenWeaWpfApp - {string.Join(',', Environment.GetCommandLineArgs())}";
   }
 
