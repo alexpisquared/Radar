@@ -4,7 +4,7 @@ public partial class MainPlotViewWin : WindowBase
   public MainPlotViewWin(ILogger logger) : base(logger)
   {
     InitializeComponent();
-    //MouseLeftButtonDown += (s, e) => DragMove();
+
     KeyUp += async (s, e) =>
     {
       switch (e.Key)
@@ -13,7 +13,6 @@ public partial class MainPlotViewWin : WindowBase
         case Key.I: Beep.Play(); plotBR.InvalidatePlot(true); break;
         case Key.J: Beep.Play(); plotBR.InvalidatePlot(false); break;
         case Key.R: Hand.Play(); ((PlotViewModel)DataContext).PopulateAll(null); goto case Key.I;
-        //case Key.Escape: base.OnKeyUp(e); e.Handled = true; Close(); break;
         default: await Task.Delay(333); break;
       }
     };
@@ -29,9 +28,8 @@ public partial class MainPlotViewWin : WindowBase
   {
     try
     {
-      await Task.Delay(1);
-
       ((PlotViewModel)DataContext).PopulateAll("Silent");  // only lines chart is drawn.
+      await Task.Delay(1);
     }
     catch (Exception ex)
     {
@@ -40,7 +38,6 @@ public partial class MainPlotViewWin : WindowBase
     }
   }
   void OnClose(object sender, RoutedEventArgs e) => Close();
-
   void OnPoplte(object sender, RoutedEventArgs e) =>  ((PlotViewModel)DataContext).PopulateAll(null);  // only lines chart is drawn.
   void OnShowPocBin(object sender, RoutedEventArgs e) => new PocBin().Show();
   void OnActivated(object sender, EventArgs e) { radar1.IsPlaying = true; }
