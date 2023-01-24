@@ -19,7 +19,7 @@ public partial class App : Application
 
     _ = services.AddSingleton<ILogger>(sp => SeriLogHelper.InitLoggerFactory(
       folder: FSHelper.GetCreateSafeLogFolderAndFile(@$"C:\Temp\Logs\{Assembly.GetExecutingAssembly().GetName().Name![..5]}.{Environment.UserName[..3]}..log"),
-      levels: "+Verbose -Info +Warning +Error +ErNT -11mb -Infi").CreateLogger<MainPlotViewWin>());
+      levels: "-Verbose -Info +Warning -Error -ErNT -11mb -Infi").CreateLogger<MainPlotViewWin>());
 
     Dbx(services);
 
