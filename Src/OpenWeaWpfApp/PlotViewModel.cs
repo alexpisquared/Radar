@@ -9,14 +9,16 @@ public partial class PlotViewModel : ObservableValidator
   readonly Bpr bpr = new();
   readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _vOffsetWas200 = 300, _yHi = 2, _yLo = 0; // 0 works for winter
   readonly IConfigurationRoot _cfg;
+
   //readonly WeatherxContext _dbx;
   readonly OpenWea _opnwea;
   readonly DbxHelper _dbh;
-  private readonly ILogger _lgr;
+  readonly ILogger _lgr;
+  readonly SpeechSynth _synth;
   readonly bool _store;
   const int _maxIcons = 50;
   double _extrMax = +20, _extrMin = -20;
-  readonly OxyColor 
+  readonly OxyColor
           _111 = OxyColor.FromRgb(0x10, 0x10, 0x10),
           _mng = OxyColor.FromRgb(0x20, 0x20, 0x20),
           _330 = OxyColor.FromRgb(0x30, 0x30, 0x00),
@@ -34,7 +36,7 @@ public partial class PlotViewModel : ObservableValidator
           _PoP = OxyColor.FromRgb(0x00, 0x40, 0xf0),
           _wnd = OxyColor.FromRgb(0x00, 0xff, 0x80),
    _wnD = OxyColor.FromArgb(0x20, 0x00, 0xff, 0x80),
-   _qqq = OxyColor.FromArgb(0x50, 0x00, 0xff, 0x80)        ;
+   _qqq = OxyColor.FromArgb(0x50, 0x00, 0xff, 0x80);
 
   //ImageSource _i; public ImageSource WeaIcom { get => _i; set => SetProperty(ref _i, value); }
   //Uri _k = new("http://openweathermap.org/img/wn/04n@2x.png"); public Uri WIcon { get => _k; set => SetProperty(ref _k, value); }
@@ -79,12 +81,13 @@ public partial class PlotViewModel : ObservableValidator
 #endif
   #endregion
 
-  public PlotViewModel(/*WeatherxContext weatherxContext,*/ OpenWea openWea, DbxHelper dbh, ILogger lgr)
+  public PlotViewModel(/*WeatherxContext weatherxContext,*/ OpenWea openWea, DbxHelper dbh, ILogger lgr, SpeechSynth synth)
   {
     _cfg = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
     //_dbx = weatherxContext; // WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
     _dbh = dbh;
-    this._lgr = lgr;
+    _lgr = lgr;
+    _synth = synth;
     _opnwea = openWea;
     _store = _cfg["StoreData"] == "Yes";
 
@@ -101,7 +104,9 @@ public partial class PlotViewModel : ObservableValidator
 
     ModelClearAdd("ctor");
     _lgr.Log(LogLevel.Trace, "PlotViewModel() EOCtor");
-}
+
+    _synth.SpeakProsodyFAF("Test");
+  }
 
   [RelayCommand]
   public void PopulateAll(object? obj)
@@ -150,7 +155,7 @@ public partial class PlotViewModel : ObservableValidator
       oca = _.Result as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(oca); // PHC107
 
       //SmartAdd($"{(DateTime.Now-_now).TotalSeconds,5:N1}  {oca.current}";
-      Model.Title /*= CurrentConditions*/ = $"OWA at {OpenWea.UnixToDt(oca.current.dt):HH:mm}   {oca.current.temp,5:+##.#;-##.#;0}°   {oca.current.feels_like,4:+##;-##;0}° {oca.current.wind_speed * _ms2kh / _wk,5:N1} k/h   \t" +Model.Title;
+      Model.Title /*= CurrentConditions*/ = $"OWA at {OpenWea.UnixToDt(oca.current.dt):HH:mm}   {oca.current.temp,5:+##.#;-##.#;0}°   {oca.current.feels_like,4:+##;-##;0}° {oca.current.wind_speed * _ms2kh / _wk,5:N1} k/h   \t" + Model.Title;
       WindDirn = oca.current.wind_deg;
       WindVeloKmHr = oca.current.wind_speed * _ms2kh / _wk;
       WindGustKmHr = oca.current.wind_gust * _ms2kh / _wk;
@@ -243,6 +248,7 @@ public partial class PlotViewModel : ObservableValidator
     catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
     finally { _isDbBusy = false; }
   }
+
   void GetImprtandDatFromPearson(siteData? sitedata)
   {
     ArgumentNullException.ThrowIfNull(sitedata, $"@@@@@@@@@ {nameof(sitedata)}");
@@ -265,6 +271,7 @@ public partial class PlotViewModel : ObservableValidator
 
     EnvtCaIconM = $"https://weather.gc.ca/weathericons/{sitedata?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
   }
+
   async Task<bool> DelayedStoreToDbIf(int delayMs)
   {
     if (!_store) return false;
@@ -279,7 +286,6 @@ public partial class PlotViewModel : ObservableValidator
       await PlotViewModelHelpers.AddForecastToDB_EnvtCa(_dbh.WeatherxContext, Cnst._vgn, _foreMis);
       await PlotViewModelHelpers.AddForecastToDB_OpnWea(_dbh.WeatherxContext, Cnst._phc, oca);
 
-      SpeechSynth _synth = new(_cfg["AppSecrets:MagicSpeech"] ?? "Check cfg", true, CC.EnusAriaNeural.Voice);
       _synth.SpeakProsodyFAF("All stored to DB.");
 
       SmartAdd($"{(DateTime.Now - _now).TotalSeconds,6:N1}\t  All stored to DB! \n");
@@ -306,6 +312,7 @@ public partial class PlotViewModel : ObservableValidator
     }
     catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
   }
+
   void DrawFore24hrEC(string site, siteData? sitedata)
   {
     try
@@ -324,6 +331,7 @@ public partial class PlotViewModel : ObservableValidator
     }
     catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
   }
+
   void DrawD53(RootobjectFrc5Day3Hr D53)
   {
     var h3 = 0; for (; h3 < OpenWea.UnixToDt(D53.list[0].dt).Hour / 3; h3++)
@@ -340,6 +348,7 @@ public partial class PlotViewModel : ObservableValidator
       h3++;
     });
   }
+
   void DrawSunSinosoid(Daily x)
   {
     SunSinusoid.Clear();
@@ -354,6 +363,7 @@ public partial class PlotViewModel : ObservableValidator
         SunSinusoid.Add(new DataPoint(t, dh - (16 * f(t * Math.PI * 2))));
     }
   }
+
   void DrawBothWhenReady(RootobjectOneCallApi OCA, RootobjectFrc5Day3Hr D53)
   {
     D53.list.Where(d => d.dt > OCA.hourly.Max(d => d.dt)).ToList().ForEach(x =>
@@ -424,6 +434,7 @@ public partial class PlotViewModel : ObservableValidator
 
     Model.InvalidatePlot(true); //SmartAdd($"{(DateTime.Now - _now).TotalSeconds,6:N1}\t  Model re-freshed\t▓  {note,-26}  \t\t   \n";
   }
+
   void ReCreateAxises(string note)
   {
     var dddD = "                  ddd d";
@@ -436,6 +447,7 @@ public partial class PlotViewModel : ObservableValidator
     Model.InvalidatePlot(true);
     SmartAdd($"{(DateTime.Now - _now).TotalSeconds,6:N1}\t  Axiss re-adjustd\t■  {note,-26}  \n");
   }
+
   void SmartAdd(string note)
   {
     SubHeader += note;
@@ -570,6 +582,6 @@ public partial class PlotViewModel : ObservableValidator
   RootobjectOneCallApi? oca;
   siteData? _foreVgn, _foreMis;
   List<MeteoDataMy>? _pastPea, _pastBvl;
-  private bool _isDbBusy;
+  bool _isDbBusy;
   #endregion
 }

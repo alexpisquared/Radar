@@ -1,4 +1,7 @@
-﻿namespace OpenWeaWpfApp;
+﻿using AmbienceLib;
+using StandardContractsLib;
+
+namespace OpenWeaWpfApp;
 public partial class App : Application
 {
   string _audit = "Default!!";
@@ -21,6 +24,8 @@ public partial class App : Application
       folder: FSHelper.GetCreateSafeLogFolderAndFile(@$"C:\Temp\Logs\{Assembly.GetExecutingAssembly().GetName().Name![..5]}.{Environment.UserName[..3]}..log"),
       levels: "-Verbose -Info +Warning -Error -ErNT -11mb -Infi").CreateLogger<MainPlotViewWin>());
 
+    _ = services.AddSingleton<SpeechSynth>(sp => SpeechSynth.Factory(sp.GetRequiredService<IConfigurationRoot>()["AppSecrets:MagicSpeech"] ?? throw new ArgumentNullException("########")));
+
     Dbx(services);
 
     _serviceProvider = services.BuildServiceProvider();
@@ -32,9 +37,9 @@ public partial class App : Application
     EventManager.RegisterClassHandler(typeof(TextBox), TextBox.GotFocusEvent, new RoutedEventHandler((s, re) => { (s as TextBox ?? new TextBox()).SelectAll(); }));
     ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
 
-        _audit = VersionHelper.DevDbgAudit(_serviceProvider.GetRequiredService<IConfigurationRoot>());
+    _audit = VersionHelper.DevDbgAudit(_serviceProvider.GetRequiredService<IConfigurationRoot>());
 
-        _serviceProvider.GetRequiredService<ILogger>().LogInformation($"OnStrt  {_audit}");
+    _serviceProvider.GetRequiredService<ILogger>().LogInformation($"OnStrt  {_audit}");
 
 #if !ParseToClasses
     MainWindow = _serviceProvider.GetRequiredService<MainPlotViewWin>();                //   400 ms
@@ -87,8 +92,11 @@ public partial class App : Application
       .AddInMemoryCollection()
       .Build();
 
-    config["WhereAmI"] = "Mem";
-    config["LogFolder"] = @"C:\temp\Logs\OWA..log"; 
+    var us = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
+
+    config["WhereAmI"] = "HrCd";
+    config["AppSecrets:MagicSpeech"] = us["AppSecrets:MagicSpeech"];
+    config["LogFolder"] = @"C:\temp\Logs\OWA..log";
     config["ServerList"] = @".\sqlexpress mtDEVsqldb,1625 mtUATsqldb mtPRDsqldb";
     config["SqlConStrSansSnI"] =   /**/  "Server={0};     Database={1};       persist security info=True;user id=IpmDevDbgUser;password=IpmDevDbgUser;MultipleActiveResultSets=True;App=EntityFramework;Connection Timeout=152";
     config["SqlConStrSansSnD"] =   /**/  "Server={0};     Database={1};       Trusted_Connection=True;Encrypt=False;Connection Timeout=52";

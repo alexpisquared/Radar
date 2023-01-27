@@ -1,7 +1,10 @@
-﻿namespace xEnvtCanRadar;
+﻿using AmbienceLib;
+
+namespace xEnvtCanRadar;
 
 public partial class MainWindow : Window
 {
+  readonly Bpr bpr = new();
   public MainWindow()
   {
     InitializeComponent();
@@ -10,9 +13,9 @@ public partial class MainWindow : Window
     {
       switch (e.Key)
       {
-        case Key.F1: Hand.Play(); await Task.Yield(); break;
-        //case Key.R: Hand.Play(); _ = await ((MainViewModel)DataContext).PopulateAsync(); goto case Key.I;
-        //case Key.I: Beep.Play(); plotBR.InvalidatePlot(true); break;
+        case Key.F1: bpr.Error(); await Task.Yield(); break;
+        //case Key.R: bpr.Error(); _ = await ((MainViewModel)DataContext).PopulateAsync(); goto case Key.I;
+        //case Key.I: bpr.Error(); plotBR.InvalidatePlot(true); break;
         case Key.Escape: base.OnKeyUp(e); e.Handled = true; Close(); break;
         default: break;
       }

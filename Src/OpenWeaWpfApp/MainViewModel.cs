@@ -7,6 +7,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
   readonly IConfigurationRoot _cfg;
   readonly OpenWea _opnwea;
   private readonly ILogger _lgr;
+  private readonly SpeechSynth _synth;
   readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _yHi = 2, _yLo = 13;
   bool _busy;
   const int _maxIcons = 50, _timeToPaintMS = 88;
@@ -18,10 +19,11 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     _urlPast24hrYYZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yyz", // Pearson
     _urlPast24hrYKZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=ykz"; // Buttonville
 
-  public MainViewModel(WeatherxContext weatherxContext, OpenWea openWea, ILogger lgr)
+  public MainViewModel(WeatherxContext weatherxContext, OpenWea openWea, ILogger lgr, SpeechSynth synth)
   {
     _cfg = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets min usersecrets 
     _lgr = lgr;
+    this._synth = synth;
     _opnwea = openWea;
     _dbx = weatherxContext; // WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
 
@@ -48,7 +50,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       await PopulateEnvtCanaAsync();        /**/ await Tick();
       await PopulateScatModelAsync(days);   /**/ await Tick();
 
-      Beep.Play();
+      _synth.SpeakProsodyFAF("All stored to DB.");
     }
     catch (Exception ex)
     {

@@ -1,7 +1,10 @@
-﻿namespace xEnvtCanRadar.Views;
+﻿using AmbienceLib;
+
+namespace xEnvtCanRadar.Views;
 
 public partial class SiteViewUserControl : UserControl
 {
+  readonly Bpr bpr = new();
   public SiteViewUserControl()
   {
     InitializeComponent();
@@ -18,9 +21,9 @@ public partial class SiteViewUserControl : UserControl
         lbx.Items.Add(new Logic.RI { GifUrl = $"{RootUrl}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile)});
       }
 
-      Beep.Play();
+      bpr.Tick();
     }
-    catch (Exception ex) { Hand.Play(); MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
+    catch (Exception ex) { bpr.Error(); MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
   }
 
   DateTimeOffset getTime(string item) => DateTimeOffset.Now;

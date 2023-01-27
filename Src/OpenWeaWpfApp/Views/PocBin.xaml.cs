@@ -1,7 +1,10 @@
 ﻿
+using AmbienceLib;
+
 namespace OpenWeaWpfApp;
 public partial class PocBin : Window
 {
+  readonly Bpr bpr = new();
   public PocBin()
   {
     InitializeComponent();
@@ -10,8 +13,8 @@ public partial class PocBin : Window
     {
       switch (e.Key)
       {
-        case Key.R: Hand.Play(); _ = await ((MainViewModel)DataContext).PopulateAsync(); goto case Key.I;
-        case Key.I: Beep.Play(); plotTR.InvalidatePlot(true); plotBR.InvalidatePlot(true); break;
+        case Key.R: bpr.Error(); _ = await ((MainViewModel)DataContext).PopulateAsync(); goto case Key.I;
+        case Key.I: bpr.Error(); plotTR.InvalidatePlot(true); plotBR.InvalidatePlot(true); break;
         case Key.Escape: base.OnKeyUp(e); e.Handled = true; Close(); break;
         default: break;
       }
