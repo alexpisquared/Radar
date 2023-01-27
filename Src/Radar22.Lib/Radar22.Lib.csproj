@@ -11,6 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\AAV.Shared\Src\Net.CI\Ambience\AmbienceLib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="WKR_roads.gif" />
   </ItemGroup>
 

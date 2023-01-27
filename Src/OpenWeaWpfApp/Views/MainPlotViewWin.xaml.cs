@@ -1,6 +1,10 @@
-﻿namespace OpenWeaWpfApp;
+﻿using AmbienceLib;
+
+namespace OpenWeaWpfApp;
 public partial class MainPlotViewWin : WindowBase
 {
+  readonly Bpr bpr = new();
+
   public MainPlotViewWin(ILogger logger) : base(logger)
   {
     InitializeComponent();
@@ -9,9 +13,9 @@ public partial class MainPlotViewWin : WindowBase
     {
       switch (e.Key)
       {
-        case Key.C: Beep.Play(); ((PlotViewModel)DataContext).ClearPlot(); break;
-        case Key.I: Beep.Play(); plotBR.InvalidatePlot(true); break;
-        case Key.J: Beep.Play(); plotBR.InvalidatePlot(false); break;
+        case Key.C: bpr.Error(); ((PlotViewModel)DataContext).ClearPlot(); break;
+        case Key.I: bpr.Error(); plotBR.InvalidatePlot(true); break;
+        case Key.J: bpr.Error(); plotBR.InvalidatePlot(false); break;
         case Key.R: Hand.Play(); ((PlotViewModel)DataContext).PopulateAll(null); goto case Key.I;
         default: await Task.Delay(333); break;
       }
