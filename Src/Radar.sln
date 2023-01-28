@@ -27,8 +27,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebScrap", "..\..\..\C\Lgc\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebScrap", "..\..\ScSv\Src\AlexPi.Scr\WebScrap\WebScrap.csproj", "{AB4E4F2F-8C20-424A-8966-7DD4AE0613B7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpeechSynthLib", "..\..\AAV.Shared\Src\Net6.0\SpeechSynthLib\SpeechSynthLib.csproj", "{ADEDB23E-97DC-4CB0-9BD4-F280AA76E312}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpTimeMonitor", "UpTimeMonitor\UpTimeMonitor.csproj", "{DD1AFCA5-4D7B-4F5C-8C3E-90A9663BC092}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventLogLib", "EventLogLib\EventLogLib.csproj", "{23946C40-7FDD-48C0-A1B2-DD3391048C8C}"
@@ -40,6 +38,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Radar22", "Radar22\Radar22.csproj", "{AA9F5057-6094-4F4C-80EF-5A036CD19A68}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Radar22.Lib", "Radar22.Lib\Radar22.Lib.csproj", "{B712593B-45B5-4B39-B87D-C470733749C3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmbienceLib", "..\..\AAV.Shared\Src\Net.CI\Ambience\AmbienceLib.csproj", "{7E3592C5-59CF-4F12-925D-C7898BA75194}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -183,18 +183,6 @@ Global
 		{AB4E4F2F-8C20-424A-8966-7DD4AE0613B7}.Release|x64.Build.0 = Release|Any CPU
 		{AB4E4F2F-8C20-424A-8966-7DD4AE0613B7}.Release|x86.ActiveCfg = Release|Any CPU
 		{AB4E4F2F-8C20-424A-8966-7DD4AE0613B7}.Release|x86.Build.0 = Release|Any CPU
-		{ADEDB23E-97DC-4CB0-9BD4-F280AA76E312}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ADEDB23E-97DC-4CB0-9BD4-F280AA76E312}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ADEDB23E-97DC-4CB0-9BD4-F280AA76E312}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{ADEDB23E-97DC-4CB0-9BD4-F280AA76E312}.Debug|x64.Build.0 = Debug|Any CPU
-		{ADEDB23E-97DC-4CB0-9BD4-F280AA76E312}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{ADEDB23E-97DC-4CB0-9BD4-F280AA76E312}.Debug|x86.Build.0 = Debug|Any CPU
-		{ADEDB23E-97DC-4CB0-9BD4-F280AA76E312}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ADEDB23E-97DC-4CB0-9BD4-F280AA76E312}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ADEDB23E-97DC-4CB0-9BD4-F280AA76E312}.Release|x64.ActiveCfg = Release|Any CPU
-		{ADEDB23E-97DC-4CB0-9BD4-F280AA76E312}.Release|x64.Build.0 = Release|Any CPU
-		{ADEDB23E-97DC-4CB0-9BD4-F280AA76E312}.Release|x86.ActiveCfg = Release|Any CPU
-		{ADEDB23E-97DC-4CB0-9BD4-F280AA76E312}.Release|x86.Build.0 = Release|Any CPU
 		{DD1AFCA5-4D7B-4F5C-8C3E-90A9663BC092}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DD1AFCA5-4D7B-4F5C-8C3E-90A9663BC092}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD1AFCA5-4D7B-4F5C-8C3E-90A9663BC092}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -267,6 +255,18 @@ Global
 		{B712593B-45B5-4B39-B87D-C470733749C3}.Release|x64.Build.0 = Release|Any CPU
 		{B712593B-45B5-4B39-B87D-C470733749C3}.Release|x86.ActiveCfg = Release|Any CPU
 		{B712593B-45B5-4B39-B87D-C470733749C3}.Release|x86.Build.0 = Release|Any CPU
+		{7E3592C5-59CF-4F12-925D-C7898BA75194}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E3592C5-59CF-4F12-925D-C7898BA75194}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E3592C5-59CF-4F12-925D-C7898BA75194}.Debug|x64.ActiveCfg = Debug|x64
+		{7E3592C5-59CF-4F12-925D-C7898BA75194}.Debug|x64.Build.0 = Debug|x64
+		{7E3592C5-59CF-4F12-925D-C7898BA75194}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7E3592C5-59CF-4F12-925D-C7898BA75194}.Debug|x86.Build.0 = Debug|Any CPU
+		{7E3592C5-59CF-4F12-925D-C7898BA75194}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E3592C5-59CF-4F12-925D-C7898BA75194}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E3592C5-59CF-4F12-925D-C7898BA75194}.Release|x64.ActiveCfg = Release|x64
+		{7E3592C5-59CF-4F12-925D-C7898BA75194}.Release|x64.Build.0 = Release|x64
+		{7E3592C5-59CF-4F12-925D-C7898BA75194}.Release|x86.ActiveCfg = Release|Any CPU
+		{7E3592C5-59CF-4F12-925D-C7898BA75194}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

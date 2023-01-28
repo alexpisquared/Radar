@@ -12,6 +12,8 @@ global using AsLink;
 global using Microsoft.Extensions.Configuration;
 global using Radar.Properties;
 global using RadarPicCollect;
-global using SpeechSynthLib.Adapter;
-
 global using static System.Diagnostics.Trace;
+global using System.IO;
+global using System.Net;
+global using AmbienceLib;
+global using OpenWeather2022.Response;

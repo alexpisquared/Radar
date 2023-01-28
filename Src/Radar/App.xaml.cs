@@ -1,9 +1,4 @@
-﻿using System.IO;
-using System.Net;
-using OpenWeather2022.Response;
-
-namespace Radar;
-
+﻿namespace Radar;
 public partial class App : Application
 {
   public static readonly DateTime Started = DateTime.Now;
@@ -14,8 +9,8 @@ public partial class App : Application
     sayUpTimeNoUI = "sayUpTimeNoUI",
     sayUpTimeShow = "sayUpTimeShow",
     showIfRainCmn = "ShowIfOnOrComingSoon";
-  static SpeechSynthesizer? _synth = null; public static SpeechSynthesizer Synth { get { if (_synth == null) { _synth = new SpeechSynthesizer(); _synth.SpeakAsyncCancelAll(); _synth.Rate = 6; _synth.Volume = 25; /*_synth.SelectVoiceByHints(gender: VoiceGender.Female); */ } return _synth; } }
-
+  //static SpeechSynthesizer? _synth = null; public static SpeechSynthesizer Synth { get { if (_synth == null) { _synth = new SpeechSynthesizer(); _synth.SpeakAsyncCancelAll(); _synth.Rate = 6; _synth.Volume = 25; /*_synth.SelectVoiceByHints(gender: VoiceGender.Female); */ } return _synth; } }
+  static SpeechSynth? _synth = null; public static SpeechSynth Synth => _synth ??= new(new ConfigurationBuilder().AddUserSecrets<App>().Build()["AppSecrets:MagicSpeech"] ?? throw new ArgumentNullException("###################"), true, CC.EnusAriaNeural.Voice);
   protected override async void OnStartup(StartupEventArgs e)
   {
     base.OnStartup(e);
@@ -53,7 +48,7 @@ public partial class App : Application
         case justUiNotElse: new RadarAnimation(Settings.AlarmThreshold).ShowDialog(); break;
         case showIfRainCmn: if (sayRainOnOrComing(e.Args, uptime))                    /**/ goto default; break;
         case sayUpTimeShow: sayRainOnOrComing(e.Args, uptime);                        /**/ goto default;
-        case sayUpTimeNoUI: if (uptime.TotalMinutes > 20) Synth.SpeakFaF(upTimeMsg(uptime, "No UI.")); break;
+        case sayUpTimeNoUI: if (uptime.TotalMinutes > 20) Synth.SpeakExpressFAF(upTimeMsg(uptime, "No UI.")); break;
       }
 #endif
 
@@ -64,8 +59,8 @@ public partial class App : Application
     }
     catch (Exception ex)
     {
-      Bpr.BeepBigError();
-      Synth.SpeakFaF(ex.Message);
+      //Bpr.BeepBigError();
+      Synth.SpeakExpressFAF(ex.Message);
     }
     finally
     {
@@ -107,7 +102,7 @@ public partial class App : Application
       if ((args.Length > 1 && args[1].Equals("ShowLsaPopup")) || IsDue(uptime))
         showLongStretchAlertPopup(uptime, rainAndUptimeMsg);
       else if (rainAndUptimeMsg.Length > 0)
-        Synth.SpeakFaF(rainAndUptimeMsg);
+        Synth.SpeakExpressFAF(rainAndUptimeMsg);
     }
 
     return true; // show anyway in case of issues.
