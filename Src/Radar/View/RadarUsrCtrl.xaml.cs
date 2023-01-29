@@ -49,7 +49,7 @@ namespace Radar
       //KeyUp += (s, e) => OnKeyDown__(e.Key);
       MouseWheel += async (s, e) => { if (e.Delta > 0) await showNextAsync(); else await showPrevAsync(); };
 
-      tbBuildTime.Header = VerHelper.CurVerStr(".Net5");
+      tbBuildTime.Header = VerHelper.CurVerStr("");
 
       keyFocusBtn.Focus();
     }
