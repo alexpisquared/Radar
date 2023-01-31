@@ -54,17 +54,11 @@ public partial class App : Application
 
         _serviceProvider.GetRequiredService<ILogger>().LogInformation($"OnStrt  {_audit}");
 
-#if !ParseToClasses
         MainWindow = _serviceProvider.GetRequiredService<MainPlotViewWin>();                //   400 ms
         MainWindow.DataContext = _serviceProvider.GetRequiredService<PlotViewModel>();      //   700 ms
-
         MainWindow.Show();
-#else // ParseToClasses:
-    var rv = await new OpenWea().ParseJsonToClasses(_serviceProvider.GetRequiredService .. config["AppSecrets:MagicNumber"]);
-    Current.Shutdown();
-#endif
 
-        base.OnStartup(e);
+        base.OnStartup(e); //_ = await new OpenWea().ParseJsonToClasses(_serviceProvider.GetRequiredService<IConfigurationRoot>()["AppSecrets:MagicNumber"]);
     }
     protected override void OnExit(ExitEventArgs e)
     {
