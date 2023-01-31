@@ -44,7 +44,7 @@ public partial class App : Application
         _serviceProvider = services.BuildServiceProvider();
     }
 
-    protected override async void OnStartup(StartupEventArgs e)
+    protected override void OnStartup(StartupEventArgs e)
     {
         Current.DispatcherUnhandledException += UnhandledExceptionHndlr.OnCurrentDispatcherUnhandledException;
         EventManager.RegisterClassHandler(typeof(TextBox), TextBox.GotFocusEvent, new RoutedEventHandler((s, re) => { (s as TextBox ?? new TextBox()).SelectAll(); }));
@@ -58,18 +58,9 @@ public partial class App : Application
         MainWindow = _serviceProvider.GetRequiredService<MainPlotViewWin>();                //   400 ms
         MainWindow.DataContext = _serviceProvider.GetRequiredService<PlotViewModel>();      //   700 ms
 
-        await Task.Yield(); //the only way to populate PlotView: await ((MainViewModel)MainPlotOldWindow.DataContext).PopulateAll();
-
         MainWindow.Show();
-#else // Release:
-    var config = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
-    Trace.WriteLine($"---   WhereAmI: '{config["WhereAmI"]}'       {config["AppSecrets:MagicNumber"]}");
-
-    /* //tu: not storing file in the GitHub:     (https://youtu.be/ASraHYMi808?t=832)
-    git update-index    --assume-unchanged AppSettings.json
-    git update-index --no-assume-unchanged AppSettings.json            */
-
-    var rv = await new OpenWea().ParseJsonToClasses(config["AppSecrets:MagicNumber"]);
+#else // ParseToClasses:
+    var rv = await new OpenWea().ParseJsonToClasses(_serviceProvider.GetRequiredService .. config["AppSecrets:MagicNumber"]);
     Current.Shutdown();
 #endif
 
