@@ -1,5 +1,4 @@
 ﻿#define ObsCol // Go figure: ObsCol works, while array NOT! Just an interesting factoid.
-using AmbienceLib;
 
 namespace OpenWeaWpfApp;
 public partial class PlotViewModel : ObservableValidator
@@ -84,7 +83,7 @@ public partial class PlotViewModel : ObservableValidator
   public PlotViewModel(/*WeatherxContext weatherxContext,*/ OpenWea openWea, DbxHelper dbh, ILogger lgr, SpeechSynth synth)
   {
     _cfg = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
-    //_dbx = weatherxContext; // WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
+    //_dbx = weatherxContext; // _lgr.Log(LogLevel.Trace, $"*** {_dbx.Database.GetConnectionString()}"); // 480ms
     _dbh = dbh;
     _lgr = lgr;
     _synth = synth;
@@ -105,7 +104,7 @@ public partial class PlotViewModel : ObservableValidator
     ModelClearAdd("ctor");
     _lgr.Log(LogLevel.Trace, "PlotViewModel() EOCtor");
 
-    _synth.SpeakProsodyFAF("Test");
+    //_synth.SpeakProsodyFAF("Test");
   }
 
   [RelayCommand]
@@ -120,7 +119,7 @@ public partial class PlotViewModel : ObservableValidator
 
       if (obj is null) bpr.Finish();
     }
-    catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
+    catch (Exception ex) { _lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
   }
   [RelayCommand]
   void PrevForecastFromDb(object? obj)
@@ -234,8 +233,8 @@ public partial class PlotViewModel : ObservableValidator
       var ytd = now.AddHours(-24);
       var dby = now.AddHours(-48);
 
-      //if (Environment.UserDomainName != "RAZER1") try { _dbx.EnsureCreated22(); } catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
-      //WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
+      //if (Environment.UserDomainName != "RAZER1") try { _dbx.EnsureCreated22(); } catch (Exception ex) { _lgr.Log(LogLevel.Trace, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
+      //_lgr.Log(LogLevel.Trace, $"*** {_dbx.Database.GetConnectionString()}"); // 480ms
 
       var dbx = _dbh.WeatherxContext;
 
@@ -245,7 +244,7 @@ public partial class PlotViewModel : ObservableValidator
 
       return (a, b, c);
     }
-    catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
+    catch (Exception ex) { _lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
     finally { _isDbBusy = false; }
   }
 
@@ -292,7 +291,7 @@ public partial class PlotViewModel : ObservableValidator
 
       return true;
     }
-    catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
+    catch (Exception ex) { _lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
   }
 
   void DrawPast24hrEC(string site, List<MeteoDataMy> lst)
@@ -310,7 +309,7 @@ public partial class PlotViewModel : ObservableValidator
 
       Model.InvalidatePlot(true); SmartAdd($"{(DateTime.Now - _now).TotalSeconds,6:N1}\t  Envt CA  Past       \t{site}\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin,-4}  {YAxsRMax} \t   \n");    //await TickRepaintDelay();
     }
-    catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
+    catch (Exception ex) { _lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
   }
 
   void DrawFore24hrEC(string site, siteData? sitedata)
@@ -329,7 +328,7 @@ public partial class PlotViewModel : ObservableValidator
 
       Model.InvalidatePlot(true); SmartAdd($"{(DateTime.Now - _now).TotalSeconds,6:N1}\t  Envt CA      Fore   \t{site.Substring(4, 3)}\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin,-4}  {YAxsRMax} \t   \n");
     }
-    catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
+    catch (Exception ex) { _lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
   }
 
   void DrawD53(RootobjectFrc5Day3Hr D53)
@@ -342,7 +341,7 @@ public partial class PlotViewModel : ObservableValidator
 
     D53.list.ToList().ForEach(r =>
     {
-      //tmi: WriteLine($"});d53:  {r.dt_txt}    {UnixToDt(r.dt)}    {UnixToDt(r.dt):MMM dd  HH:mm}     {r.weather[0].description,-26}       {r.main.temp_min,6:N1} ÷ {r.main.temp_max,4:N1}°    pop{r.pop * 100,3:N0}%      {r}");
+      //tmi: _lgr.Log(LogLevel.Trace, $"});d53:  {r.dt_txt}    {UnixToDt(r.dt)}    {UnixToDt(r.dt):MMM dd  HH:mm}     {r.weather[0].description,-26}       {r.main.temp_min,6:N1} ÷ {r.main.temp_max,4:N1}°    pop{r.pop * 100,3:N0}%      {r}");
       OpnWeaIco3[h3] = new BitmapImage(new Uri($"http://openweathermap.org/img/wn/{r.weather[0].icon}@2x.png"));
       OpnWeaTip3[h3] = $"{OpenWea.UnixToDt(r.dt):MMM d  H:mm} \n\n    {r.weather[0].description}   \n    {r.main.temp:N1}°    pop {r.pop * 100:N0}%";
       h3++;
@@ -401,7 +400,7 @@ public partial class PlotViewModel : ObservableValidator
 
   void ModelClearAdd(string note)
   {
-    WriteLine($"::: {note}");
+    _lgr.Log(LogLevel.Trace, $"::: {note}");
     //Model = new PlotModel(); // { Title = note, TextColor = OxyColors.OrangeRed };
     try
     {
@@ -430,7 +429,7 @@ public partial class PlotViewModel : ObservableValidator
       Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFMis, MarkerFill = OxyColors.Transparent, Title = "ECa _Mis", MarkerType = MarkerType.Circle, MarkerStroke = _Mis });
       Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFPhc, MarkerFill = OxyColors.Transparent, Title = "OWA _Phc", MarkerType = MarkerType.Circle, MarkerStroke = _Phc, TrackerFormatString = "{}{0}&#xA;Time:   {2:HH:mm} &#xA;Temp:  {4:0.0}° " });
     }
-    catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
+    catch (Exception ex) { _lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
 
     Model.InvalidatePlot(true); //SmartAdd($"{(DateTime.Now - _now).TotalSeconds,6:N1}\t  Model re-freshed\t▓  {note,-26}  \t\t   \n";
   }
