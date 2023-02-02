@@ -6,8 +6,8 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
 {
   readonly IConfigurationRoot _cfg;
   readonly OpenWea _opnwea;
-  private readonly ILogger _lgr;
-  private readonly SpeechSynth _synth;
+  readonly ILogger _lgr;
+  readonly SpeechSynth _synth;
   readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _yHi = 2, _yLo = 13;
   bool _busy;
   const int _maxIcons = 50, _timeToPaintMS = 88;
