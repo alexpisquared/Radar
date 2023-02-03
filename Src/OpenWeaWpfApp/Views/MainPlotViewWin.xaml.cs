@@ -1,11 +1,10 @@
-﻿using AmbienceLib;
-
-namespace OpenWeaWpfApp;
+﻿namespace OpenWeaWpfApp;
 public partial class MainPlotViewWin : WindowBase
 {
   readonly Bpr bpr = new();
+  private readonly SpeechSynth snt;
 
-  public MainPlotViewWin(ILogger logger) : base(logger)
+  public MainPlotViewWin(ILogger logger, SpeechSynth snt) : base(logger)
   {
     InitializeComponent();
 
@@ -26,6 +25,7 @@ public partial class MainPlotViewWin : WindowBase
     KeepOpenReason = null; // nothing to hold on to.
 
     Title = $"OpenWeaWpfApp - {string.Join(',', Environment.GetCommandLineArgs())}";
+    this.snt = snt;
   }
 
   async void OnLoadad(object sender, RoutedEventArgs e)
@@ -44,6 +44,6 @@ public partial class MainPlotViewWin : WindowBase
   void OnClose(object sender, RoutedEventArgs e) => Close();
   void OnPoplte(object sender, RoutedEventArgs e) =>  ((PlotViewModel)DataContext).PopulateAll(null);  // only lines chart is drawn.
   void OnShowPocBin(object sender, RoutedEventArgs e) => new PocBin().Show();
-  void OnActivated(object sender, EventArgs e) { radar1.IsPlaying = true; }
-  void OnDeActivtd(object sender, EventArgs e) { radar1.IsPlaying = false; }
+  void OnActivated(object sender, EventArgs e) { radar1.IsPlaying = true; snt.SpeakProsodyFAF("Activated", volumePercent: 5); }
+  void OnDeActivtd(object sender, EventArgs e) { radar1.IsPlaying = false; snt.SpeakProsodyFAF("Deactivated", volumePercent: 5); }
 }

@@ -74,7 +74,7 @@ public partial class RadarTypeViewUserControl : UserControl
       }
     }
     catch (TaskCanceledException ex) /**/ { WriteLine($"-- {ex.GetType().Name}: \t{ex.Message}.   "); await bpr.ErrorAsync(); }
-    catch (OperationCanceledException ex) { WriteLine($"-- {ex.GetType().Name}: \t{ex.Message}.   "); await bpr.ErrorAsync(); }
+    catch (OperationCanceledException ex) { WriteLine($"-- {ex.GetType().Name}: \t{ex.Message}.   "); await bpr.TickAsync(); }
     catch (Exception ex)             /**/ { WriteLine($"-- {ex.GetType().Name}: \t{ex.Message}.   "); await bpr.ErrorAsync(); }
     finally { _cts?.Dispose(); WriteLine($"-- finally      {UrlSuffix}.\n"); }
   }
