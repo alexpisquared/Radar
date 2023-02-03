@@ -104,8 +104,8 @@ public partial class PlotViewModel : ObservableValidator
     ModelClearAdd("ctor");
     _lgr.Log(LogLevel.Trace, "PlotViewModel() EOCtor");
 
-    if (VersionHelper.IsDbg)
-      _synth.SpeakProsodyFAF("Test");
+    //if (VersionHelper.IsDbg) _synth.SpeakProsodyFAF("Are you sure?");
+    if (VersionHelper.IsDbg) _synth.SpeakExpressFAF("Done!");
   }
 
   [RelayCommand]
