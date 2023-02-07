@@ -50,7 +50,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
       await PopulateEnvtCanaAsync();        /**/ await Tick();
       await PopulateScatModelAsync(days);   /**/ await Tick();
 
-      _synth.SpeakProsodyFAF("All stored to DB.");
+      _synth.SpeakFAF("All stored to DB.");
     }
     catch (Exception ex)
     {
