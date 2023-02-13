@@ -46,8 +46,8 @@ public partial class MainWindow : Window
     {
       //WindowState = WindowState.Normal;
       //WindowStartupLocation = WindowStartupLocation.Manual;
-      Left = 100;
-      Top = 100;
+      Left = 68;
+      Top = 10;
       //Width = 3750;
       //Height = 1080;
     }
