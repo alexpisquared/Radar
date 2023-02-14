@@ -108,6 +108,7 @@ public partial class PlotViewModel : ObservableValidator
     if (VersionHelper.IsDbg) _synth.SpeakFAF("Done!");
   }
 
+  [ObservableProperty] DateTime lastBuild = VersionHelper.GetLastBuildTime;
   [RelayCommand]
   public void PopulateAll(object? obj)
   {

@@ -337,7 +337,7 @@
         <TextBlock Visibility="{Binding GetDaysCommand.IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}" Text="Loading..." Foreground="#555" />
       </Viewbox>
 
-      <TextBlock Text="Ver: 2023-02-02" Foreground="#08f" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="32" />
+      <TextBlock Text="{Binding LastBuild, StringFormat='{}{0:yyyy-MM-dd}'}" Foreground="#08f" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="32" />
 
     </Grid>
   </Border>
