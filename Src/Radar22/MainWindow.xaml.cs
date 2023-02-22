@@ -39,8 +39,8 @@ public partial class MainWindow : Window
     }
     else if (Environment.UserDomainName == "RAZER1")
     {
-      Left = 3100;
-      Top = -1200;
+      Left = 600;
+      Top = -1400;
     }
     else if (Environment.UserDomainName != "RAZER1")
     {

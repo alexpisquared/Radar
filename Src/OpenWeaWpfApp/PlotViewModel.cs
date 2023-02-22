@@ -6,7 +6,7 @@ public partial class PlotViewModel : ObservableValidator
   #region fields
   readonly DateTime _now = DateTime.Now;
   readonly Bpr bpr = new();
-  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _vOffsetWas200 = 300, _yHi = 2, _yLo = 0; // 0 works for winter
+  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _vOffsetWas200 = 300, _yHi = 2, _yLo = 11; // 0 works for winter
   readonly IConfigurationRoot _cfg;
 
   //readonly WeatherxContext _dbx;
