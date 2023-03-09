@@ -23,6 +23,7 @@ public partial class PlotViewModel : ObservableValidator
           _330 = OxyColor.FromRgb(0x30, 0x30, 0x00),
           _mjg = OxyColor.FromRgb(0x40, 0x40, 0x40),
           _aaa = OxyColor.FromRgb(0xa0, 0xa0, 0xa0),
+          _80f = OxyColor.FromRgb(0x80, 0x00, 0xf0),
           _cc0 = OxyColor.FromRgb(0xc0, 0xc0, 0x00),
           _ccc = OxyColor.FromRgb(0xc0, 0xc0, 0xc0),
           _eee = OxyColor.FromRgb(0xe0, 0xe0, 0xe0),
@@ -422,7 +423,7 @@ public partial class PlotViewModel : ObservableValidator
       Model.Series.Add(new LineSeries { ItemsSource = SunSinusoid, Color = _cc0, StrokeThickness = 0.5, Title = "SunRS Sin", YAxisKey = "yAxisL" });
       Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclSunT, Color = _330, StrokeThickness = 0.0, Title = "SunRS Sqr", YAxisKey = "yAxisR" });
       Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclPopr, Color = _PoP, StrokeThickness = 0.0, Title = "owa PoPr", InterpolationAlgorithm = IA, YAxisKey = "yAxisR" });
-      Model.Series.Add(new LineSeries { ItemsSource = OwaTempExtr, Color = _aaa, StrokeThickness = 1.0, Title = "owa Extr" });
+      Model.Series.Add(new LineSeries { ItemsSource = OwaTempExtr, Color = _80f, StrokeThickness = 1.0, Title = "owa Extr", LineStyle = LineStyle.LongDashDotDot });
       Model.Series.Add(new LineSeries { ItemsSource = OwaLoclTemp, Color = _Phc, StrokeThickness = 1.5, Title = "owa Temp", InterpolationAlgorithm = IA });
       Model.Series.Add(new LineSeries { ItemsSource = OwaLoclFeel, Color = _Phc, StrokeThickness = 0.5, Title = "owa Feel", InterpolationAlgorithm = IA });
       Model.Series.Add(new LineSeries { ItemsSource = OwaLoclPrsr, Color = _Prs, StrokeThickness = 1.0, Title = "owa Prsr", InterpolationAlgorithm = IA, LineStyle = LineStyle.LongDashDotDot });
