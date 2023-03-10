@@ -39,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Radar22", "Radar22\Radar22.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Radar22.Lib", "Radar22.Lib\Radar22.Lib.csproj", "{B712593B-45B5-4B39-B87D-C470733749C3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmbienceLib", "..\..\AAV.Shared\Src\Net.CI\Ambience\AmbienceLib.csproj", "{7E3592C5-59CF-4F12-925D-C7898BA75194}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmbienceLib", "..\..\AAV.Shared\Src\NetLts\Ambience\AmbienceLib.csproj", "{7E3592C5-59CF-4F12-925D-C7898BA75194}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

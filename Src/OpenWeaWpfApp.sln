@@ -11,11 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DB.WeatherX.PwrTls", "DB.We
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Radar22.Lib", "Radar22.Lib\Radar22.Lib.csproj", "{B20BD130-B69A-4DEE-BF6B-5142D8C0DA61}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardLib", "..\..\AAV.Shared\Src\Net.CI\StandardLib\StandardLib.csproj", "{1440FDBC-B352-4D8E-A486-ED2B10EE491B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardLib", "..\..\AAV.Shared\Src\NetLts\StandardLib\StandardLib.csproj", "{1440FDBC-B352-4D8E-A486-ED2B10EE491B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmbienceLib", "..\..\AAV.Shared\Src\Net.CI\Ambience\AmbienceLib.csproj", "{9A8256CB-6D6B-4308-9DED-E9C74D407BFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmbienceLib", "..\..\AAV.Shared\Src\NetLts\Ambience\AmbienceLib.csproj", "{9A8256CB-6D6B-4308-9DED-E9C74D407BFA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfUserControlLib", "..\..\AAV.Shared\Src\Net.CI\WpfUserControlLib\WpfUserControlLib.csproj", "{906C4A5B-C851-4254-9A2F-F6F6EE3F08BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfUserControlLib", "..\..\AAV.Shared\Src\NetLts\WpfUserControlLib\WpfUserControlLib.csproj", "{906C4A5B-C851-4254-9A2F-F6F6EE3F08BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
