@@ -203,8 +203,24 @@ public partial class PlotViewModel : ObservableValidator
         OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), -000));
       });
 
-      DrawSunSinosoid(day0);
-
+      DrawSunSinosoid(OpenWea.UnixToDt(day0.sunrise).ToOADate());
+      /*
+      DrawSunSinosoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 7.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);
+      DrawSunSinosoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 6.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);
+      DrawSunSinosoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 5.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);
+      DrawSunSinosoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 4.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);
+      DrawSunSinosoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 3.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);
+      DrawSunSinosoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 2.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);
+      DrawSunSinosoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 1.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);
+      DrawSunSinosoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 0.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);
+      DrawSunSinosoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 1.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);
+      DrawSunSinosoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 2.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);
+      DrawSunSinosoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 3.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);
+      DrawSunSinosoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 4.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);
+      DrawSunSinosoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 5.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);
+      DrawSunSinosoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 6.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);
+      DrawSunSinosoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 7.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);
+      */
       var d53 = await _opnwea.GetIt(_cfg["AppSecrets:MagicWeather"] ?? throw new ArgumentNullException(nameof(obj)), OpenWea.OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(d53); // PHC107
       if (d53 != null)
       {
@@ -276,7 +292,7 @@ public partial class PlotViewModel : ObservableValidator
 
   async Task<bool> DelayedStoreToDbIf(int delayMs)
   {
-    if (!_store) 
+    if (!_store || VersionHelper.IsDbg)
       return false;
 
     await Task.Delay(delayMs); //hack: //todo: fix the db synch one day.
@@ -352,19 +368,19 @@ public partial class PlotViewModel : ObservableValidator
     });
   }
 
-  void DrawSunSinosoid(Daily x)
+  void DrawSunSinosoid(double sunrizeWithDate)
   {
+    var amplitudeInDegC = 16;
+    var noon = -.19; // :summer; for winter add 1hr: -.19 + 1.0/24.    Solstice sunrize at 7:27.5 == new DateTime(2023,3,15,7, 27, 30).ToOADate(); = 0.3107638888888889 ..why not ~.19 ?
+
+    var dAmplitude = amplitudeInDegC * Math.Sin((sunrizeWithDate - noon) * Math.PI * 2);
+
     SunSinusoid.Clear();
-
-    var t0 = OpenWea.UnixToDt(x.sunrise).ToOADate();
-    var st = .5 + t0 - Math.Truncate(t0) - .003; // not sure why .003 makes perfect (Mar 14, 2023)
-    var dh = Math.Cos(t0 * Math.PI * 2);
-
-    FunctionSeries__(Math.Sin, t0 - 1.3, t0 + 17.4, .0125);
+    FunctionSeries__(Math.Sin, sunrizeWithDate - 1.3, sunrizeWithDate + 17.4, .0125);
     void FunctionSeries__(Func<double, double> cos, double x0, double x1, double dx)
     {
       for (var t = x0; t <= x1 + (dx * 0.5); t += dx)
-        SunSinusoid.Add(new DataPoint(t, dh - (16 * cos((t-st)  * Math.PI * 2))));
+        SunSinusoid.Add(new DataPoint(t, dAmplitude - (amplitudeInDegC * cos((t - noon) * Math.PI * 2))));
     }
   }
 
