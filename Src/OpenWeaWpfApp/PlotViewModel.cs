@@ -276,7 +276,8 @@ public partial class PlotViewModel : ObservableValidator
 
   async Task<bool> DelayedStoreToDbIf(int delayMs)
   {
-    if (!_store) return false;
+    if (!_store) 
+      return false;
 
     await Task.Delay(delayMs); //hack: //todo: fix the db synch one day.
 
@@ -356,13 +357,14 @@ public partial class PlotViewModel : ObservableValidator
     SunSinusoid.Clear();
 
     var t0 = OpenWea.UnixToDt(x.sunrise).ToOADate();
-    var dh = 16 * Math.Cos(t0 * Math.PI * 2);
+    var st = .5 + t0 - Math.Truncate(t0) - .003; // not sure why .003 makes perfect (Mar 14, 2023)
+    var dh = Math.Cos(t0 * Math.PI * 2);
 
-    FunctionSeries__(Math.Cos, t0 - 1.3, t0 + 7.4, .0125);
-    void FunctionSeries__(Func<double, double> f, double x0, double x1, double dx)
+    FunctionSeries__(Math.Sin, t0 - 1.3, t0 + 17.4, .0125);
+    void FunctionSeries__(Func<double, double> cos, double x0, double x1, double dx)
     {
       for (var t = x0; t <= x1 + (dx * 0.5); t += dx)
-        SunSinusoid.Add(new DataPoint(t, dh - (16 * f(t * Math.PI * 2))));
+        SunSinusoid.Add(new DataPoint(t, dh - (16 * cos((t-st)  * Math.PI * 2))));
     }
   }
 
