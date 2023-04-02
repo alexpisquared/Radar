@@ -6,7 +6,7 @@ public partial class PlotViewModel : ObservableValidator
   #region fields
   readonly DateTime _now = DateTime.Now;
   readonly Bpr bpr = new();
-  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _vOffsetWas200 = 300, _yHi = 2, _yLo = 11; // 0 works for winter
+  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _vOffsetWas200 = 300, _yHi = 2; // 0 works for winter
   readonly IConfigurationRoot _cfg;
 
   //readonly WeatherxContext _dbx;
@@ -273,7 +273,7 @@ public partial class PlotViewModel : ObservableValidator
 
     if (double.TryParse(sitedata.almanac.temperature[0].Value, out var exmx)) { _extrMax = exmx; YAxsRMax = _vOffsetWas200 + (10 * (YAxisMax = exmx + _yHi)); }
 
-    if (double.TryParse(sitedata.almanac.temperature[1].Value, out var exmn)) { _extrMin = exmn; YAxsRMin = _vOffsetWas200 + (10 * (YAxisMin = (Math.Floor(exmn / 10) * 10) - _yLo)); }
+    if (double.TryParse(sitedata.almanac.temperature[1].Value, out var exmn)) { _extrMin = exmn; YAxsRMin = _vOffsetWas200 + (10 * (YAxisMin = (Math.Floor(exmn / 10) * 10) - 21)); } // <<<<<<<<<<
 
     if (double.TryParse(sitedata.almanac.temperature[2].Value, out var nrmx)) NormTMax = nrmx;
     if (double.TryParse(sitedata.almanac.temperature[3].Value, out var nrmn)) NormTMin = nrmn;
