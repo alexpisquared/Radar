@@ -334,7 +334,7 @@
       <Views:RadarTypeViewUserControl Margin="0 0 62 42" UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="Snow.gif"    StartPlaying="1" Grid.RowSpan="2" Grid.Column="2" Opacity=".8" VerticalAlignment="Bottom" x:Name="radar1" />
 
       <Viewbox Grid.ColumnSpan="3" Grid.RowSpan="2">
-        <TextBlock Visibility="{Binding GetDaysCommand.IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}" Text="Loading..." Foreground="#555" />
+        <TextBlock Visibility="{Binding GetDaysCommand.IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}" Text="Loading..." Foreground="#5555" />
       </Viewbox>
 
       <TextBlock Text="{Binding LastBuild, StringFormat='{}{0:yyyy-MM-dd}'}" Foreground="#08f" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="32" />
