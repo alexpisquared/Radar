@@ -272,7 +272,7 @@ public partial class PlotViewModel : ObservableValidator
     ArgumentNullException.ThrowIfNull(sitedata, $"@@@@@@@@@ {nameof(sitedata)}");
 
     if (double.TryParse(sitedata.almanac.temperature[0].Value, out var exmx)) { _extrMax = exmx; YAxsRMax = _vOffsetWas200 + (10 * (YAxisMax = exmx + _yHi)); }
-    if (double.TryParse(sitedata.almanac.temperature[1].Value, out var exmn)) { _extrMin = exmn; YAxsRMin = _vOffsetWas200 + (10 * (YAxisMin = (Math.Floor(exmn / 10) * 10) - 21)); } // <<<<<<<<<<
+    if (double.TryParse(sitedata.almanac.temperature[1].Value, out var exmn)) { _extrMin = exmn; YAxsRMin = _vOffsetWas200 + (10 * (YAxisMin = (Math.Floor((exmn - 10) / 10) * 10) - 1)); } // <<<<<<<<<<
     if (double.TryParse(sitedata.almanac.temperature[2].Value, out var nrmx)) NormTMax = nrmx;
     if (double.TryParse(sitedata.almanac.temperature[3].Value, out var nrmn)) NormTMin = nrmn;
 
