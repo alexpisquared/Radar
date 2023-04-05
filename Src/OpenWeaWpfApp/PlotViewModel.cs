@@ -6,7 +6,7 @@ public partial class PlotViewModel : ObservableValidator
   #region fields
   readonly DateTime _now = DateTime.Now;
   readonly Bpr bpr = new();
-  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600, _vOffsetWas200 = 300, _yHi = 2; // 0 works for winter
+  readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600;
   readonly IConfigurationRoot _cfg;
 
   //readonly WeatherxContext _dbx;
@@ -270,9 +270,10 @@ public partial class PlotViewModel : ObservableValidator
   void GetImprtandDatFromPearson(siteData? sitedata)
   {
     ArgumentNullException.ThrowIfNull(sitedata, $"@@@@@@@@@ {nameof(sitedata)}");
+    const int  _vOffset = 300; 
 
-    if (double.TryParse(sitedata.almanac.temperature[0].Value, out var exmx)) { _extrMax = exmx; YAxsRMax = _vOffsetWas200 + (10 * (YAxisMax = exmx + _yHi)); }
-    if (double.TryParse(sitedata.almanac.temperature[1].Value, out var exmn)) { _extrMin = exmn; YAxsRMin = _vOffsetWas200 + (10 * (YAxisMin = (Math.Floor((exmn - 10) / 10) * 10) - 1)); } // <<<<<<<<<<
+    if (double.TryParse(sitedata.almanac.temperature[0].Value, out var exmx)) { _extrMax = exmx; YAxsRMax = _vOffset + (10 * (YAxisMax = exmx + 2)); }
+    if (double.TryParse(sitedata.almanac.temperature[1].Value, out var exmn)) { _extrMin = exmn; YAxsRMin = _vOffset + (10 * (YAxisMin = (Math.Floor((exmn - 20) / 10) * 10) - 1)); } // <<<<<<<<<<
     if (double.TryParse(sitedata.almanac.temperature[2].Value, out var nrmx)) NormTMax = nrmx;
     if (double.TryParse(sitedata.almanac.temperature[3].Value, out var nrmn)) NormTMin = nrmn;
 
