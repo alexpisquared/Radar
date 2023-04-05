@@ -5,7 +5,7 @@
                 xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
                 xmlns:ox_="http://oxyplot.org/wpf/contrib"
                 xmlns:oxo="http://oxyplot.org/wpf"
-                Title="MainPlotViewWin" Height="500" Width="1800" Background="Transparent" AllowsTransparency="True" WindowStyle="None" Loaded="OnLoadad" Activated="OnActivated" Deactivated="OnDeActivtd">
+                Title="Main Plot View" Height="500" Width="1800" Background="Transparent" AllowsTransparency="True" WindowStyle="None" Loaded="OnLoadad" Activated="OnActivated" Deactivated="OnDeActivtd">
   <WindowChrome.WindowChrome>
     <WindowChrome CaptionHeight="0" ResizeBorderThickness="10" />
   </WindowChrome.WindowChrome>
