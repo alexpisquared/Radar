@@ -143,7 +143,7 @@ public partial class PlotViewModel : ObservableValidator
   void PopulateScatModel(object? obj)
   {
     if (obj is null) bpr.Click();
-    
+
     _ = Task.Run(async () => await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24YYZ)).ContinueWith(_ => { DrawPast24hrEC(Cnst.pearson, _.Result); _pastPea = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
     _ = Task.Run(async () => await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24YKZ)).ContinueWith(_ => { DrawPast24hrEC(Cnst.batnvil, _.Result); _pastBvl = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
     _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._mississ)).ContinueWith(_ => { DrawFore24hrEC(Cnst._mississ, _.Result); _foreMis = _.Result; Model.Title += $"Miss at {(_foreMis?.currentConditions)?.dateTime[1].hour.Value}:{(_foreMis?.currentConditions)?.dateTime[1].minute}   {float.Parse(_foreMis?.currentConditions?.temperature?.Value ?? "-999F"),5:+##.#;-##.#;0}°   {float.Parse(_foreMis?.currentConditions?.windChill?.Value ?? _foreMis?.currentConditions?.temperature?.Value ?? "-999"),4:+##;-##;0}° {_foreMis?.currentConditions?.wind?.speed?.Value,5:N1} {(_foreMis?.currentConditions?.wind)?.speed.units}  \t \t \t \t \t■ \t \t \t■\t\t"; }, TaskScheduler.FromCurrentSynchronizationContext());
@@ -272,8 +272,8 @@ public partial class PlotViewModel : ObservableValidator
     ArgumentNullException.ThrowIfNull(sitedata, $"@@@@@@@@@ {nameof(sitedata)}");
     const int _vOffset = 300;
 
-    if (double.TryParse(sitedata.almanac.temperature[0].Value, out var exmx)) { _extrMax = exmx; YAxsRMax = _vOffset + (10 * (YAxisMax = exmx + 2)); }
-    if (double.TryParse(sitedata.almanac.temperature[1].Value, out var exmn)) { _extrMin = exmn; YAxsRMin = _vOffset + (10 * (YAxisMin = (Math.Floor((exmn - 20) / 10) * 10) - 1)); } // <<<<<<<<<<
+    if (double.TryParse(sitedata.almanac.temperature[0].Value, out var xmax)) { _extrMax = xmax; YAxsRMax = _vOffset + (10 * (YAxisMax = xmax + 2)); }
+    if (double.TryParse(sitedata.almanac.temperature[1].Value, out var xmin)) { _extrMin = xmin; YAxsRMin = -10; YAxisMin = (Math.Floor((xmax - 50) / 10) * 10) - 1; } // <<<<<<<<<<
     if (double.TryParse(sitedata.almanac.temperature[2].Value, out var nrmx)) NormTMax = nrmx;
     if (double.TryParse(sitedata.almanac.temperature[3].Value, out var nrmn)) NormTMin = nrmn;
 
