@@ -470,10 +470,10 @@ public partial class PlotViewModel : ObservableValidator
   void SmartAdd(string note)
   {
     SubHeader += note;
+    var max = 520;
     var len = SubHeader.Length;
-    var max = 260;
     if (len > max)
-      SubHeader = $"   ...\t  {SubHeader.Substring(len - max, max)}";
+      SubHeader = $"   {DateTime.Now:ddd HH:mm}\t{SubHeader.Substring(len - max, max)}"; // cut off the excess from the beginning.
   }
   internal void ClearPlot()
   {
