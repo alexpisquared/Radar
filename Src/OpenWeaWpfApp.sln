@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmbienceLib", "..\..\AAV.Sh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfUserControlLib", "..\..\AAV.Shared\Src\NetLts\WpfUserControlLib\WpfUserControlLib.csproj", "{906C4A5B-C851-4254-9A2F-F6F6EE3F08BA}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardContractsLib", "..\..\AAV.Shared\Src\NetLts\StandardContractsLib\StandardContractsLib.csproj", "{CDB9B87C-0AF3-41B0-A20D-3E06BD6806E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,18 @@ Global
 		{906C4A5B-C851-4254-9A2F-F6F6EE3F08BA}.Release|x64.Build.0 = Release|x64
 		{906C4A5B-C851-4254-9A2F-F6F6EE3F08BA}.Release|x86.ActiveCfg = Release|Any CPU
 		{906C4A5B-C851-4254-9A2F-F6F6EE3F08BA}.Release|x86.Build.0 = Release|Any CPU
+		{CDB9B87C-0AF3-41B0-A20D-3E06BD6806E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDB9B87C-0AF3-41B0-A20D-3E06BD6806E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDB9B87C-0AF3-41B0-A20D-3E06BD6806E8}.Debug|x64.ActiveCfg = Debug|x64
+		{CDB9B87C-0AF3-41B0-A20D-3E06BD6806E8}.Debug|x64.Build.0 = Debug|x64
+		{CDB9B87C-0AF3-41B0-A20D-3E06BD6806E8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CDB9B87C-0AF3-41B0-A20D-3E06BD6806E8}.Debug|x86.Build.0 = Debug|Any CPU
+		{CDB9B87C-0AF3-41B0-A20D-3E06BD6806E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDB9B87C-0AF3-41B0-A20D-3E06BD6806E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDB9B87C-0AF3-41B0-A20D-3E06BD6806E8}.Release|x64.ActiveCfg = Release|x64
+		{CDB9B87C-0AF3-41B0-A20D-3E06BD6806E8}.Release|x64.Build.0 = Release|x64
+		{CDB9B87C-0AF3-41B0-A20D-3E06BD6806E8}.Release|x86.ActiveCfg = Release|Any CPU
+		{CDB9B87C-0AF3-41B0-A20D-3E06BD6806E8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
