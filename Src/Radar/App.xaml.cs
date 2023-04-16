@@ -48,19 +48,19 @@ public partial class App : Application
         case justUiNotElse: new RadarAnimation(Settings.AlarmThreshold).ShowDialog(); break;
         case showIfRainCmn: if (sayRainOnOrComing(e.Args, uptime))                    /**/ goto default; break;
         case sayUpTimeShow: sayRainOnOrComing(e.Args, uptime);                        /**/ goto default;
-        case sayUpTimeNoUI: if (uptime.TotalMinutes > 20) Synth.SpeakExpressFAF(upTimeMsg(uptime, "No UI.")); break;
+        case sayUpTimeNoUI: if (uptime.TotalMinutes > 20) Synth.SpeakFAF(upTimeMsg(uptime, "No UI.")); break;
       }
 #endif
 
       var eois = await EvLogHelper.UpdateEvLogToDb(0, $"Radar.exe {e.Args.FirstOrDefault()}");
-      Trace.WriteLine($"{eois} events found/saved to db."); // System.Threading.Thread.Sleep(3999);            Synth.Speak($"{eois} events found");
+      WriteLine($"{eois} events found/saved to db."); // System.Threading.Thread.Sleep(3999);            Synth.Speak($"{eois} events found");
 
       //Bpr.BeepEnd2();
     }
     catch (Exception ex)
     {
       //Bpr.BeepBigError();
-      Synth.SpeakExpressFAF(ex.Message);
+      Synth.SpeakFAF(ex.Message);
     }
     finally
     {
@@ -68,7 +68,6 @@ public partial class App : Application
       App.Current.Shutdown();
     }
   }
-
 
   bool sayRainOnOrComing(string[] args, TimeSpan uptime)
   {
@@ -78,7 +77,7 @@ public partial class App : Application
       var maxPicsToGet = 2; // 1 hr + 10 min.
       var minRainPace = Settings.AlarmThreshold; // .01 - .05
       var rpc = new RadarPicCollector();
-      rpc.DownloadRadarPics_MostRecent_RAIN_only(maxPicsToGet, 10);
+      _ = rpc.DownloadRadarPics_MostRecent_RAIN_only(maxPicsToGet, 10);
       if (rpc.Pics.Count < maxPicsToGet)
         rainAndUptimeMsg += ($"Not enough radar pictures have been acquired: {rpc.Pics.Count}, while {maxPicsToGet} is needed.");
       else
@@ -102,7 +101,7 @@ public partial class App : Application
       if ((args.Length > 1 && args[1].Equals("ShowLsaPopup")) || IsDue(uptime))
         showLongStretchAlertPopup(uptime, rainAndUptimeMsg);
       else if (rainAndUptimeMsg.Length > 0)
-        Synth.SpeakExpressFAF(rainAndUptimeMsg);
+        Synth.SpeakFAF(rainAndUptimeMsg);
     }
 
     return true; // show anyway in case of issues.
@@ -113,7 +112,7 @@ public partial class App : Application
 #if DEBUG
     var timeLimitHr = .01;
 #else
-      var timeLimitHr = 1;
+    var timeLimitHr = 1;
 #endif
     if (uptime.TotalHours < timeLimitHr)
     {
@@ -137,7 +136,7 @@ public partial class App : Application
     //too annoying: Synth.SpeakAsync($"Showing");
     Settings.PopUp_LastTime = DateTime.Now;
     Settings.Save();
-    new View.LongStretchAlertPopup(uptime, rainAndUptimeMsg, Synth).ShowDialog();
+    _ = new View.LongStretchAlertPopup(uptime, rainAndUptimeMsg, Synth).ShowDialog();
   }
 
   static string upTimeMsg(TimeSpan uptime, string src)
