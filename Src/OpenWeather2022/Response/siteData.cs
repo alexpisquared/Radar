@@ -3391,6 +3391,8 @@ namespace XSD.CLS // XSD.exe-generated with /recordes flag only
     /// <remarks/>
     [System.Xml.Serialization.XmlEnumAttribute("grésil ")]
     grésil,
+    
+    SR, ///2023
   }
 
   /// <remarks/>
@@ -3533,6 +3535,8 @@ namespace XSD.CLS // XSD.exe-generated with /recordes flag only
     /// <remarks/>
     [System.Xml.Serialization.XmlEnumAttribute("")]
     Item,
+
+    SR, // 2023-04-17
   }
 
   /// <remarks/>
