@@ -44,6 +44,6 @@ public partial class MainPlotViewWin : WindowBase
   void OnClose(object sender, RoutedEventArgs e) => Close();
   void OnPoplte(object sender, RoutedEventArgs e) =>  ((PlotViewModel)DataContext).PopulateAll(null);  // only lines chart is drawn.
   void OnShowPocBin(object sender, RoutedEventArgs e) => new PocBin().Show();
-  void OnActivated(object sender, EventArgs e) { radar1.IsPlaying = true; snt.SpeakFAF("Activated", volumePercent: 5); }
-  void OnDeActivtd(object sender, EventArgs e) { radar1.IsPlaying = false; snt.SpeakFAF("Deactivated", volumePercent: 5); }
+  void OnActivated(object sender, EventArgs e) { radar1.IsPlaying = true;  /*snt.SpeakFAF("Activated", volumePercent: 5);*/ }
+  void OnDeActivtd(object sender, EventArgs e) { radar1.IsPlaying = false; /*snt.SpeakFAF("Deactivated", volumePercent: 5);*/ }
 }
