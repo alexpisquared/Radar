@@ -27,6 +27,8 @@ public partial class App : Application
 
     Tracer.SetupTracingOptions("Radar", new TraceSwitch("Verbose-ish", "See ScrSvr for the model.") { Level = TraceLevel.Verbose }, false);
 
+    WriteLine($"e.Args[0]: '{e.Args[0]}'.");
+
     try
     {
       scheduleAutoAppShutDownIfAsked(e);
