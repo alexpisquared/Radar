@@ -54,10 +54,7 @@ public partial class App : Application
       }
 #endif
 
-      var eois = await EvLogHelper.UpdateEvLogToDb(0, $"Radar.exe {e.Args.FirstOrDefault()}");
-      WriteLine($"{eois} events found/saved to db."); // System.Threading.Thread.Sleep(3999);            Synth.Speak($"{eois} events found");
-
-      //Bpr.BeepEnd2();
+      // tracking in MDBs is phased out :TMI      var eois = await EvLogHelper.UpdateEvLogToDb(0, $"Radar.exe {e.Args.FirstOrDefault()}");      WriteLine($"{eois} events found/saved to db."); // System.Threading.Thread.Sleep(3999);            Synth.Speak($"{eois} events found");
     }
     catch (Exception ex)
     {

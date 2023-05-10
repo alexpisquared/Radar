@@ -1,4 +1,6 @@
-﻿namespace Radar;
+﻿using System.Drawing;
+
+namespace Radar;
 
 public partial class RadarUsrCtrl
 {
@@ -95,9 +97,9 @@ public partial class RadarUsrCtrl
     hourHandTransform.Angle = (t.Hour * 30) + (t.Minute / 2) - 180;
     minuteHandTransform.Angle = (t.Minute * 6) - 180;
 
-    var mySolidColorBrush = new SolidColorBrush();
+    var mySolidColorBrush = new System.Windows.Media.SolidColorBrush();
     var b = (byte)(128 - 127.0 * Math.Cos((hourHandTransform.Angle + 120) * 3.141 / 360));
-    mySolidColorBrush.Color = Color.FromRgb(b, b, b);
+    mySolidColorBrush.Color = System.Windows.Media.Color.FromRgb(b, b, b);
 
     ClockFace.Fill = mySolidColorBrush;
 
@@ -276,7 +278,7 @@ public partial class RadarUsrCtrl
   {
     btnSnow.IsEnabled = !(btnRain.IsEnabled = (RadarPicCollector.RainOrSnow != "RAIN"));
     LTitle.Text = "Going for it....";
-    MainCanvas.Background = Brushes.DarkKhaki;
+    MainCanvas.Background = System.Windows.Media.Brushes.DarkKhaki;
 
     for (var stationIndex = 0; stationIndex < _radarPicCollector.StationCount - 1; stationIndex++)
     {
@@ -308,7 +310,7 @@ public partial class RadarUsrCtrl
     await Task.Delay(5000);
     LTitl2.Text = deleteOldSmallImages(OneDrive.WebCacheFolder);
     LTitle.Foreground =
-    LTitl2.Foreground = EnvCanRadarUrlHelper.IsDark ? Brushes.White : Brushes.DarkBlue;
+    LTitl2.Foreground = EnvCanRadarUrlHelper.IsDark ? System.Windows.Media.Brushes.White : System.Windows.Media.Brushes.DarkBlue;
   }
   async void onRain(object s, RoutedEventArgs e) { RadarPicCollector.RainOrSnow = "RAIN"; await fetchFromWebBegin(); }
   async void onSnow(object s, RoutedEventArgs e) { RadarPicCollector.RainOrSnow = "SNOW"; await fetchFromWebBegin(); }
