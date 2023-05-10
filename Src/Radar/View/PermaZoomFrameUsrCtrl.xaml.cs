@@ -6,7 +6,7 @@ using System.Windows.Controls;
 
 namespace Radar.View
 {
-  public partial class PermaZoomFrameUsrCtrl : UserControl
+  public partial class PermaZoomFrameUsrCtrl
   {
     public PermaZoomFrameUsrCtrl()
     {
