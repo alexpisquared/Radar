@@ -30,6 +30,7 @@
     <ProjectReference Include="..\..\..\ScSv\Src\AlexPi.Scr\WebScrap\WebScrap.csproj" />
     <ProjectReference Include="..\..\..\TimeTracking\N50\TimeTracking50\Db.EventLog\Db.EventLog.csproj" />
     <ProjectReference Include="..\OpenWeather2022\OpenWeather2022.csproj" />
+    <ProjectReference Include="..\PixelMeasure\PixelMeasure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
