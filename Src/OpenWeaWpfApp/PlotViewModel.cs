@@ -272,19 +272,29 @@ public partial class PlotViewModel : ObservableValidator
     ArgumentNullException.ThrowIfNull(sitedata, $"@@@@@@@@@ {nameof(sitedata)}");
     const int _vOffset = 300;
 
-    if (double.TryParse(sitedata.almanac.temperature[0].Value, out var xmax)) { _extrMax = xmax; YAxsRMax = _vOffset + (10 * (YAxisMax = xmax + 5)); }
-    if (double.TryParse(sitedata.almanac.temperature[1].Value, out var xmin)) { _extrMin = xmin; YAxsRMin = -10; YAxisMin = (Math.Floor((xmax - 50) / 10) * 10) - 1; } // <<<<<<<<<<
-    if (double.TryParse(sitedata.almanac.temperature[2].Value, out var nrmx)) NormTMax = nrmx;
-    if (double.TryParse(sitedata.almanac.temperature[3].Value, out var nrmn)) NormTMin = nrmn;
+    if (double.TryParse(sitedata.almanac.temperature[0].Value, out _extrMax) &&
+        double.TryParse(sitedata.almanac.temperature[1].Value, out _extrMin))
+    {
+      const int pad = 2;
+      YAxisMin = Math.Floor((_extrMax - 50) / 10) * 10 - pad;
+      YAxisMax = _extrMax + 5;
 
-    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), _extrMax));
-    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), _extrMax));
-    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMax));
-    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMax));
-    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMin));
-    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMin));
-    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), _extrMin));
-    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), _extrMin));
+      YAxsRMin = -10 * pad;
+      YAxsRMax = (YAxisMax - YAxisMin - pad) * 10;
+    }
+
+    if (double.TryParse(sitedata.almanac.temperature[2].Value, out normTMax) &&
+        double.TryParse(sitedata.almanac.temperature[3].Value, out normTMin))
+    {
+      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), _extrMax));
+      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), _extrMax));
+      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMax));
+      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMax));
+      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMin));
+      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMin));
+      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), _extrMin));
+      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), _extrMin));
+    }
 
     EnvtCaIconM = $"https://weather.gc.ca/weathericons/{sitedata?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
   }
