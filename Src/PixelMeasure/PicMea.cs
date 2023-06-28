@@ -91,7 +91,7 @@ public static class PicMea // 2023: the latest!!!
 
       return rv;
     }
-    catch (Exception ex) { /*ex.Log();*/ return -2; }
+    catch (Exception) { /*ex.Log();*/ return -2; }
   }
 
   static void addOrIncrementCount(Dictionary<int, int> mmcnt, int k) { if (mmcnt.ContainsKey(k)) mmcnt[k]++; else mmcnt.Add(k, 1); }
@@ -103,9 +103,7 @@ public static class PicMea // 2023: the latest!!!
     BitmapEncoder enc = new BmpBitmapEncoder();
     enc.Frames.Add(BitmapFrame.Create(bitmapImage));
     enc.Save(outStream);
-    var bitmap = new Bitmap(outStream);
-
-    return new Bitmap(bitmap);
+    return new Bitmap(outStream);
   }
 
   public static Image BitmapImage2DrawingImage(BitmapImage bitmapImage)
