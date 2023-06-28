@@ -1,4 +1,6 @@
-﻿namespace Radar;
+﻿using WpfUserControlLib.Helpers;
+
+namespace Radar;
 public partial class App : Application
 {
   public static readonly DateTime Started = DateTime.Now;
@@ -25,7 +27,7 @@ public partial class App : Application
 
     Current.DispatcherUnhandledException += UnhandledExceptionHndlr.OnCurrentDispatcherUnhandledException;     //new SpeechSynthesizer().Speak("Testing");			new SpeechSynthesizer().SpeakAsync("Testing");
 
-    Tracer.SetupTracingOptions("Radar", new TraceSwitch("Verbose-ish", "See ScrSvr for the model.") { Level = TraceLevel.Verbose }, false);
+    //Tracer.SetupTracingOptions("Radar", new TraceSwitch("Verbose-ish", "See ScrSvr for the model.") { Level = TraceLevel.Verbose }, false);
 
     WriteLine($"e.Args[0]: '{e.Args[0]}'.");
 

@@ -1,5 +1,4 @@
-﻿using AAV.WPF.AltBpr;
-using AsLink;
+﻿using AsLink;
 using Radar.Properties;
 using System;
 using System.Threading.Tasks;
@@ -9,7 +8,7 @@ using System.Windows.Threading;
 
 namespace Radar.View
 {
-  public partial class LongStretchAlertPopup : AAV.WPF.Base.WindowBase
+  public partial class LongStretchAlertPopup //: AAV.WPF.Base.WindowBase
   {
     readonly TimeSpan _uptime;
     readonly string _rainAndUptimeMsg;

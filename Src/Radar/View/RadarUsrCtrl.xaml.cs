@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using StandardLib.Extensions;
+using StandardLib.Helpers;
 
 namespace Radar;
 
@@ -33,7 +34,7 @@ public partial class RadarUsrCtrl
     //KeyUp += (s, e) => OnKeyDown__(e.Key);
     MouseWheel += async (s, e) => { if (e.Delta > 0) await showNextAsync(); else await showPrevAsync(); };
 
-    tbBuildTime.Header = VerHelper.CurVerStr("");
+    tbBuildTime.Header = """VerHelper.CurVerStr("");""";
 
     _ = keyFocusBtn.Focus();
   }

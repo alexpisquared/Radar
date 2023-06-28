@@ -1,4 +1,6 @@
-﻿namespace Radar.View;
+﻿using StandardLib.Extensions;
+
+namespace Radar.View;
 
 public partial class PermaZoomFrameUsrCtrl
 {

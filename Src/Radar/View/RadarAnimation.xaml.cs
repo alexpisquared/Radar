@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace Radar
 {
-  public partial class RadarAnimation : AAV.WPF.Base.WindowBase
+  public partial class RadarAnimation //: AAV.WPF.Base.WindowBase
   {
     public RadarAnimation(double alarmThreshold = .05)
     {

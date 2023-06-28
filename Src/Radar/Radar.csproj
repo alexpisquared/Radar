@@ -25,8 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\Ambience\AmbienceLib.csproj" />
-    <ProjectReference Include="..\..\..\AAV.Shared\Src\Net6.0\AAV.Sys\AAV.Sys.csproj" />
-    <ProjectReference Include="..\..\..\AAV.Shared\Src\Net6.0\AAV.WPF\AAV.WPF.csproj" />
+    <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\WpfUserControlLib\WpfUserControlLib.csproj" />
     <ProjectReference Include="..\..\..\ScSv\Src\AlexPi.Scr\WebScrap\WebScrap.csproj" />
     <ProjectReference Include="..\..\..\TimeTracking\N50\TimeTracking50\Db.EventLog\Db.EventLog.csproj" />
     <ProjectReference Include="..\OpenWeather2022\OpenWeather2022.csproj" />

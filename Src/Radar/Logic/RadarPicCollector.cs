@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using PixelMeasure;
+using StandardLib.Extensions;
 using WebScrap;
 
 namespace RadarPicCollect;
