@@ -25,7 +25,7 @@
     <Views:SiteViewUserControl Grid.Column="8" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Top" RootUrl="DPQPE/GIF/CASKR" />
 
     <Views:RadarTypeViewUserControl Grid.Column="2" Grid.Row="2" VerticalAlignment="Top" UrlSuffix="PRECIPET/GIF/WKR"   PreciTp="SNOW.gif" />
-    <Views:RadarTypeViewUserControl Grid.Column="8" Grid.Row="2" VerticalAlignment="Top" UrlSuffix="DPQPE/GIF/CASKR"    PreciTp="Snow.gif" />
+    <Views:RadarTypeViewUserControl Grid.Column="8" Grid.Row="2" VerticalAlignment="Top" UrlSuffix="DPQPE/GIF/CASKR"    PreciTp="SNOW.gif" />
     <!--
     <Views:RadarTypeViewUserControl Grid.Column="4" Grid.Row="2" VerticalAlignment="Top" RootUrl="PRECIPET/GIF/CASKR" PreciTp="COMP_PRECIPET_SNOW.gif" />
     <Views:RadarTypeViewUserControl Grid.Column="6" Grid.Row="2" VerticalAlignment="Top" RootUrl="PRECIPET/GIF/CASKR" PreciTp="ASKR_PRECIPET_SNOW.gif" />

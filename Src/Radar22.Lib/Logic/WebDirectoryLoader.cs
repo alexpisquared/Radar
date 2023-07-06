@@ -11,7 +11,7 @@ public class WebDirectoryLoader
     return new Regex("<a href=\".*\">(?<name>.*)</a>").Matches(html)
       .Where(r => r.Success)
       .Select(r => r.Groups["name"].ToString())
-      .Where(r => r.EndsWith(endsWith))
+      .Where(r => r.EndsWith(endsWith, StringComparison.OrdinalIgnoreCase))
       .TakeLast(takeLastCount)
       .OrderBy(r => r)
       .ToList();

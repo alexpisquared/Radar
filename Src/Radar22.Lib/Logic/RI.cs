@@ -1,6 +1,9 @@
-﻿namespace xEnvtCanRadar.Logic;
+﻿using System.Security.Policy;
+using System.Xml.Serialization;
 
-public record RI
+namespace Radar22.Lib.Logic;
+
+public class RI
 {
   public string GifUrl { get; set; } = "@@@@@@@@@@@";
   public string FileName { get; internal set; } = default!;
@@ -15,5 +18,36 @@ public record RI
       throw new ArgumentOutOfRangeException(nameof(yyyyMMddHHmm), yyyyMMddHHmm, "■─■─■ Can you imagine?!?!?!");
 
     return utc.ToLocalTime(); //tu: UTC to Local time.
+  }
+
+  double _FileSize = -1;
+  public double FileSizeКb
+  {
+    get
+    {
+      if (_FileSize <= 0)
+        _FileSize = GetFileSizeAsync(GifUrl).Result / 1_000.0;
+      return _FileSize;
+    }
+  }
+
+
+  public async Task<long> GetFileSizeAsync(string url)
+  {
+    var sw = Stopwatch.StartNew();
+    try
+    {
+      using var client = new HttpClient();
+      var response = await client.GetAsync(url).ConfigureAwait(false);
+      if (response.IsSuccessStatusCode && response.Content.Headers.Contains("Content-Length"))
+        return response.Content.Headers.ContentLength ?? -888;
+
+      if (response == null || response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        return -4;
+    }
+    catch (Exception ex) { WriteLine($"■─■═■  {sw.Elapsed.TotalSeconds:N1}s  {url}  {ex.Message}  ■═■─■"); if (Debugger.IsAttached) Debugger.Break(); else { /*System.Windows.Clipboard.SetText(url);*/ throw; } }
+    finally         /**/ { WriteLine($"+++++  {sw.Elapsed.TotalSeconds:N1}s  {url}  Success."); }
+
+    return -3;
   }
 }

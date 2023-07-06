@@ -1,4 +1,5 @@
 ﻿using AmbienceLib;
+using Radar22.Lib.Logic;
 
 namespace xEnvtCanRadar.Views;
 
@@ -10,28 +11,40 @@ public partial class RadarTypeViewUserControl : UserControl
   const int _pauseFrames = 25, _maxFrames = 25 * 60; // prevent from running forever 
   CancellationTokenSource? _cts;
   bool _loaded, isPlaying;
-
-  public RadarTypeViewUserControl() => InitializeComponent();
+  public RadarTypeViewUserControl()
+  {
+    InitializeComponent();
+  }
 
   async void OnReload(object s, RoutedEventArgs e) { await ReLoad(int.Parse(((FrameworkElement)s).Tag?.ToString() ?? "11")); _loaded = true; chkIsPlaying.IsChecked = true; } // max is 480 == 2 days on 10 per hour basis.
   async Task ReLoad(int takeLastCount)
   {
     chkIsPlaying.IsChecked = false;
+
     await Task.Delay(TimeSpan.FromSeconds(_fpsPeriod));
 
     try
     {
+      if (DateTime.Today.Month > 3)
+        PreciTp = PreciTp.Replace("SNOW", "RAIN");
+
       var gifurls = await new WebDirectoryLoader().ParseFromHtmlUsingRegex($"{_urlRoot}{UrlSuffix}", PreciTp, takeLastCount);
 
       var list = new List<RI>();
       lbxAllPics.Items.Clear();
 
-      gifurls.ForEach(imgFile =>
+      if (gifurls.Count < 1)
       {
-        var r = new RI { GifUrl = $"{_urlRoot}{UrlSuffix}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile) };
-        list.Add(r);
-        lbxAllPics.Items.Add(r);
-      });
+        MessageBox.Show($"No files found for {_urlRoot}{UrlSuffix} * {PreciTp}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        Debug.WriteLine($"No files found for {_urlRoot}{UrlSuffix} * {PreciTp}");
+      }
+      else
+        gifurls.ForEach(imgFile =>
+        {
+          var r = new RI { GifUrl = $"{_urlRoot}{UrlSuffix}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile) };
+          list.Add(r);
+          lbxAllPics.Items.Add(r);
+        });
 
       chkIsPlaying.Content = $"_{UrlSuffix}      {gifurls.Count} files      {list.First().ImgTime:ddd HH:mm} ÷ {list.Last().ImgTime:ddd HH:mm}";
 
@@ -80,7 +93,7 @@ public partial class RadarTypeViewUserControl : UserControl
   }
 
   public string UrlSuffix { get; set; } = "{name}PRECIPET/GIF/WKR";
-  public string PreciTp { get; set; } = "Snow";
+  public string PreciTp { get; set; } = "RAIN.gif";
   public string StartPlaying { get; set; } = "0";
   public bool IsPlaying
   {

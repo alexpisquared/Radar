@@ -10,7 +10,7 @@
 
     <TextBlock x:Name="tbxTitle" d:Text="Found CCC thingies." VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="#08f"/>
 
-    <ListView x:Name="lbx" ItemTemplate="{StaticResource gif}" Background="#222" Margin="0 28 0 0"
+    <ListView x:Name="lbxRadarImages" ItemTemplate="{StaticResource gif}" Background="#222" Margin="0 28 0 0"
       ScrollViewer.HorizontalScrollBarVisibility="Disabled">
       <ListView.ItemsPanel>
         <ItemsPanelTemplate>

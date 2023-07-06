@@ -14,9 +14,9 @@
       <RowDefinition Height="100*"/>
       <RowDefinition Height="015*"/>
     </Grid.RowDefinitions>
-    <Views:RadarTypeViewUserControl UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="Snow.gif"    StartPlaying="1" Grid.RowSpan="4" />
+    <Views:RadarTypeViewUserControl UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="SNOW.gif"    StartPlaying="1" Grid.RowSpan="4" />
+    <Views:RadarTypeViewUserControl UrlSuffix="PRECIPET/GIF/ONT" PreciTp="SNOW_WT.gif" StartPlaying="1" Grid.Row="2" HorizontalAlignment="Right" Margin="0 0 0 0"/>
     <GridSplitter Grid.Row="1" Background="Transparent" HorizontalAlignment="Stretch" FocusVisualStyle="{x:Null}" />
-    <Views:RadarTypeViewUserControl UrlSuffix="PRECIPET/GIF/ONT" PreciTp="SNOW_WT.gif" StartPlaying="1" Grid.Row="2" HorizontalAlignment="Right" Margin="0 0 -100 0"/>
     <TextBlock Margin="0 4 214 0" FontFamily="Courier New" FontSize="14" Text="Jan 2023 ver" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="#0ae" />
     <!--
     <Views:RadarTypeViewUserControl UrlSuffix="PRECIPET/GIF/WKR" PreciTp="SNOW.gif"    StartPlaying="0" Grid.Row="2" HorizontalAlignment="Left" IsEnabled="False" />

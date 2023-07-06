@@ -1,6 +1,4 @@
-﻿using AmbienceLib;
-
-namespace xEnvtCanRadar.Views;
+﻿namespace xEnvtCanRadar.Views;
 
 public partial class SiteViewUserControl : UserControl
 {
@@ -18,7 +16,7 @@ public partial class SiteViewUserControl : UserControl
       tbxTitle.Text = $"{RootUrl}   {gifurls.Count} files";
       foreach (var imgFile in gifurls)
       {
-        lbx.Items.Add(new Logic.RI { GifUrl = $"{RootUrl}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile)});
+        lbxRadarImages.Items.Add(new RI { GifUrl = $"{RootUrl}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile)});
       }
 
       bpr.Tick();
