@@ -1,12 +1,10 @@
-﻿using System.Security.Policy;
-using System.Xml.Serialization;
-
-namespace Radar22.Lib.Logic;
+﻿namespace Radar22.Lib.Logic;
 
 public class RI
 {
-  public string GifUrl { get; set; } = "@@@@@@@@@@@";
   public string FileName { get; internal set; } = default!;
+  public int FileSizeКb { get; set; } = -1;
+  public string GifUrl { get; set; } = "@@@@@@@@@@@";
   public DateTimeOffset ImgTime => ToLocalDate(FileName);
   static DateTimeOffset ToLocalDate(string gifName)
   {
@@ -20,18 +18,8 @@ public class RI
     return utc.ToLocalTime(); //tu: UTC to Local time.
   }
 
-  double _FileSize = -1;
   bool _letGet;
 
-  public double FileSizeКb
-  {
-    get
-    {
-      if (LetGet && _FileSize <= 0)
-        _FileSize = GetFileSizeAsync(GifUrl).Result / 1_000.0;
-      return _FileSize;
-    }
-  }
 
   public bool LetGet { get => _letGet; set => _letGet = value; }
 

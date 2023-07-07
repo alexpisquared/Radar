@@ -12,7 +12,7 @@ global using System.Windows;
 global using System.Windows.Controls;
 global using System.Windows.Input;
 global using AmbienceLib;
-global using Radar;
+//global using Radar;
 global using Radar22.Lib.Logic;
 global using static System.Diagnostics.Trace;
 

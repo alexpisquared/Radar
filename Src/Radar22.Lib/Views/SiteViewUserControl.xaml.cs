@@ -12,19 +12,15 @@ public partial class SiteViewUserControl : UserControl
   {
     try
     {
-      var gifurls = await (new WebDirectoryLoader()).ParseFromHtmlUsingRegex(RootUrl);
-      tbxTitle.Text = $"{RootUrl}   {gifurls.Count} files";
-      foreach (var imgFile in gifurls)
-      {
-        lbxRadarImages.Items.Add(new RI { GifUrl = $"{RootUrl}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile)});
-      }
+      var ris = await (new WebDirectoryLoader()).ParseFromHtmlUsingRegex(RootUrl, ".gif");
+      tbxTitle.Text = $"{RootUrl}   {ris.Count} files";
+      foreach (var ri in ris)
+        lbxRadarImages.Items.Add(ri);
 
       bpr.Tick();
     }
-    catch (Exception ex) { bpr.Error(); MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
+    catch (Exception ex) { bpr.Error(); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.Message, "Error888", MessageBoxButton.OK, MessageBoxImage.Error); }
   }
-
-  DateTimeOffset getTime(string item) => DateTimeOffset.Now;
 
   public string RootUrl { get; set; } = "PRECIPET/GIF/WKR";
 }

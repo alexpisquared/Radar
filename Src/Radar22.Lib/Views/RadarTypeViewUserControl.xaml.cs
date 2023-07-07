@@ -41,15 +41,14 @@ public partial class RadarTypeViewUserControl : UserControl
 
       if (gifurls.Count < 1)
       {
-        _ = MessageBox.Show($"No files found for {_urlRoot}{UrlSuffix} * {PreciTp}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        Debug.WriteLine($"No files found for {_urlRoot}{UrlSuffix} * {PreciTp}");
+        Debug.WriteLine($"No files found for {_urlRoot}{UrlSuffix} * {PreciTp}"); // _ = MessageBox.Show($"No files found for {_urlRoot}{UrlSuffix} * {PreciTp}", "Error88a", MessageBoxButton.OK, MessageBoxImage.Error);
       }
       else
-        gifurls.ForEach(imgFile =>
+        gifurls.ForEach(ri =>
         {
-          var r = new RI { GifUrl = $"{_urlRoot}{UrlSuffix}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile) };
-          list.Add(r);
-          _ = lbxAllPics.Items.Add(r);
+          var r = new RI { GifUrl = $"{_urlRoot}{UrlSuffix}/{ri}", FileName = Path.GetFileNameWithoutExtension(ri.FileName) };
+          list.Add(ri);
+          _ = lbxAllPics.Items.Add(ri);
         });
 
       chkIsPlaying.Content = $"_{UrlSuffix}      {gifurls.Count} files      {list.First().ImgTime:ddd HH:mm} ÷ {list.Last().ImgTime:ddd HH:mm}  {Stopwatch.GetElapsedTime(sw).TotalSeconds:N2}";
@@ -58,7 +57,7 @@ public partial class RadarTypeViewUserControl : UserControl
       //using var timer = new PeriodicTimer(TimeSpan.FromSeconds(_fpsPeriod));
       //await RunTimer(timer);
     }
-    catch (Exception ex) { bpr.Error(); _ = MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
+    catch (Exception ex) { bpr.Error();  if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.Message, "Error888", MessageBoxButton.OK, MessageBoxImage.Error); }
     finally { }
   }
 
