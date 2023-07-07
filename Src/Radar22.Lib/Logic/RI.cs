@@ -21,16 +21,19 @@ public class RI
   }
 
   double _FileSize = -1;
+  bool _letGet;
+
   public double FileSizeКb
   {
     get
     {
-      if (_FileSize <= 0)
+      if (LetGet && _FileSize <= 0)
         _FileSize = GetFileSizeAsync(GifUrl).Result / 1_000.0;
       return _FileSize;
     }
   }
 
+  public bool LetGet { get => _letGet; set => _letGet = value; }
 
   public async Task<long> GetFileSizeAsync(string url)
   {

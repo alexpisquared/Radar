@@ -1,7 +1,4 @@
-﻿using AmbienceLib;
-using Radar22.Lib.Logic;
-
-namespace xEnvtCanRadar.Views;
+﻿namespace xEnvtCanRadar.Views;
 
 public partial class RadarTypeViewUserControl : UserControl
 {
@@ -11,17 +8,26 @@ public partial class RadarTypeViewUserControl : UserControl
   const int _pauseFrames = 25, _maxFrames = 25 * 60; // prevent from running forever 
   CancellationTokenSource? _cts;
   bool _loaded, isPlaying;
-  public RadarTypeViewUserControl()
-  {
-    InitializeComponent();
-  }
+  public RadarTypeViewUserControl() => InitializeComponent();
 
-  async void OnReload(object s, RoutedEventArgs e) { await ReLoad(int.Parse(((FrameworkElement)s).Tag?.ToString() ?? "11")); _loaded = true; chkIsPlaying.IsChecked = true; } // max is 480 == 2 days on 10 per hour basis.
+  async void OnReload(object s, RoutedEventArgs e)
+  {
+    await ReLoad(int.Parse(((FrameworkElement)s).Tag?.ToString() ?? "11")); 
+    _loaded = true; 
+    chkIsPlaying.IsChecked = true;
+    await Task.Delay(TimeSpan.FromSeconds(5));
+
+    foreach (var item in lbxAllPics.Items)
+    {
+      ((RI)item).LetGet = true;
+    }    
+  } // max is 480 == 2 days on 10 per hour basis.
   async Task ReLoad(int takeLastCount)
   {
     chkIsPlaying.IsChecked = false;
 
     await Task.Delay(TimeSpan.FromSeconds(_fpsPeriod));
+    var sw = Stopwatch.GetTimestamp();
 
     try
     {
@@ -35,7 +41,7 @@ public partial class RadarTypeViewUserControl : UserControl
 
       if (gifurls.Count < 1)
       {
-        MessageBox.Show($"No files found for {_urlRoot}{UrlSuffix} * {PreciTp}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        _ = MessageBox.Show($"No files found for {_urlRoot}{UrlSuffix} * {PreciTp}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         Debug.WriteLine($"No files found for {_urlRoot}{UrlSuffix} * {PreciTp}");
       }
       else
@@ -43,16 +49,16 @@ public partial class RadarTypeViewUserControl : UserControl
         {
           var r = new RI { GifUrl = $"{_urlRoot}{UrlSuffix}/{imgFile}", FileName = Path.GetFileNameWithoutExtension(imgFile) };
           list.Add(r);
-          lbxAllPics.Items.Add(r);
+          _ = lbxAllPics.Items.Add(r);
         });
 
-      chkIsPlaying.Content = $"_{UrlSuffix}      {gifurls.Count} files      {list.First().ImgTime:ddd HH:mm} ÷ {list.Last().ImgTime:ddd HH:mm}";
+      chkIsPlaying.Content = $"_{UrlSuffix}      {gifurls.Count} files      {list.First().ImgTime:ddd HH:mm} ÷ {list.Last().ImgTime:ddd HH:mm}  {Stopwatch.GetElapsedTime(sw).TotalSeconds:N2}";
 
       //await Task.Delay(1000);
       //using var timer = new PeriodicTimer(TimeSpan.FromSeconds(_fpsPeriod));
       //await RunTimer(timer);
     }
-    catch (Exception ex) { bpr.Error(); MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
+    catch (Exception ex) { bpr.Error(); _ = MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
     finally { }
   }
 
