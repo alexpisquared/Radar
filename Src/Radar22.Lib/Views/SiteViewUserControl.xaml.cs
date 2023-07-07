@@ -10,6 +10,8 @@ public partial class SiteViewUserControl : UserControl
   }
   async void OnLoaded(object sender, RoutedEventArgs e)
   {
+    if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this)) return; //tu: design mode
+    
     try
     {
       var ris = await (new WebDirectoryLoader()).ParseFromHtmlUsingRegex(RootUrl, ".gif");

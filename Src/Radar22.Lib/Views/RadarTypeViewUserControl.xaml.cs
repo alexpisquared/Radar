@@ -1,4 +1,6 @@
-﻿namespace xEnvtCanRadar.Views;
+﻿using System.ComponentModel;
+
+namespace xEnvtCanRadar.Views;
 
 public partial class RadarTypeViewUserControl : UserControl
 {
@@ -9,26 +11,30 @@ public partial class RadarTypeViewUserControl : UserControl
   CancellationTokenSource? _cts;
   bool _loaded, isPlaying;
   public RadarTypeViewUserControl() => InitializeComponent();
+  public static readonly DependencyProperty ScaleFactorProperty = DependencyProperty.Register("ScaleFactor", typeof(double), typeof(RadarTypeViewUserControl), new PropertyMetadata(1.0)); public double ScaleFactor { get { return (double)GetValue(ScaleFactorProperty); } set { SetValue(ScaleFactorProperty, value); } }
 
   async void OnReload(object s, RoutedEventArgs e)
   {
-    await ReLoad(int.Parse(((FrameworkElement)s).Tag?.ToString() ?? "11")); 
-    _loaded = true; 
+    await ReLoad(int.Parse(((FrameworkElement)s).Tag?.ToString() ?? "11"));
+    _loaded = true;
     chkIsPlaying.IsChecked = true;
   } // max is 480 == 2 days on 10 per hour basis.
   async Task ReLoad(int takeLastCount)
   {
+    if (DesignerProperties.GetIsInDesignMode(this)) return; //tu: design mode
+
     chkIsPlaying.IsChecked = false;
 
     await Task.Delay(TimeSpan.FromSeconds(_fpsPeriod));
     var sw = Stopwatch.GetTimestamp();
+    var ff = new WebDirectoryLoader();
 
     try
     {
       if (DateTime.Today.Month > 3)
         PreciTp = PreciTp.Replace("SNOW", "RAIN");
 
-      var gifurls = await new WebDirectoryLoader().ParseFromHtmlUsingRegex($"{_urlRoot}{UrlSuffix}", PreciTp, takeLastCount);
+      var gifurls = await ff.ParseFromHtmlUsingRegex($"{_urlRoot}{UrlSuffix}", PreciTp, takeLastCount);
 
       var riis = new List<RadarImageInfo>();
       lbxAllPics.Items.Clear();
@@ -45,13 +51,15 @@ public partial class RadarTypeViewUserControl : UserControl
           _ = lbxAllPics.Items.Add(ri);
         });
 
-      chkIsPlaying.Content = $"_{UrlSuffix}   {gifurls.Count} imgs   {riis.First().ImgTime:ddd HH:mm}÷{riis.Last().ImgTime:HH:mm}   {Stopwatch.GetElapsedTime(sw).TotalSeconds:N1}s   {new WebDirectoryLoader().CalulateSlope(riis):N2}↕";
+      chkIsPlaying.Content = $"_{UrlSuffix}   {gifurls.Count} imgs   {riis.First().ImgTime:ddd HH:mm}÷{riis.Last().ImgTime:HH:mm}   {Stopwatch.GetElapsedTime(sw).TotalSeconds:N1}s   {ff.CalulateSlope(riis):N2}↕";
+
+      ScaleFactor = AutoScale ? (ff.CalulateAvgSize(riis) - 10) * .1 : 1; // 13 - 35 => .3 - 2.5
 
       //await Task.Delay(1000);
       //using var timer = new PeriodicTimer(TimeSpan.FromSeconds(_fpsPeriod));
       //await RunTimer(timer);
     }
-    catch (Exception ex) { bpr.Error();  if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.Message, "Error888", MessageBoxButton.OK, MessageBoxImage.Error); }
+    catch (Exception ex) { bpr.Error(); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.Message, "Error888", MessageBoxButton.OK, MessageBoxImage.Error); }
     finally { }
   }
 
@@ -94,6 +102,7 @@ public partial class RadarTypeViewUserControl : UserControl
   public string UrlSuffix { get; set; } = "{name}PRECIPET/GIF/WKR";
   public string PreciTp { get; set; } = "RAIN.gif";
   public string StartPlaying { get; set; } = "0";
+  public bool AutoScale { get; set; } = false;
   public bool IsPlaying
   {
     get => isPlaying; set

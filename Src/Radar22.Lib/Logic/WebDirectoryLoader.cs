@@ -48,8 +48,8 @@ public class WebDirectoryLoader
         .Where(r => r.Groups["FileName2"].ToString().Contains(precipitnFilter, StringComparison.OrdinalIgnoreCase))
         .TakeLast(takeLastCount)
         .OrderBy(r => r.Groups["FileName2"].ToString());
-      int i = 0;
-      foreach (Match match in matches)
+      var i = 0;
+      foreach (var match in matches)
       {
         list.Add(new RadarImageInfo
         {
@@ -69,12 +69,14 @@ public class WebDirectoryLoader
   public double CalulateSlope(List<RadarImageInfo> list)
   {
     double slope = 0;
-    
-    for (int i = 0; i < list.Count - 1; i++)
+
+    for (var i = 0; i < list.Count - 1; i++)
     {
-      slope += list[i+1].FileSizeКb - list[i].FileSizeКb;
+      slope += list[i + 1].FileSizeКb - list[i].FileSizeКb;
     }
 
     return slope / list.Count;
   }
+
+  public double CalulateAvgSize(List<RadarImageInfo> list) => list.Average(r => r.FileSizeКb);
 }

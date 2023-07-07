@@ -381,7 +381,7 @@
       </Menu>
 
       <GridSplitter Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" FocusVisualStyle="{x:Null}"/>
-      <Views:RadarTypeViewUserControl Margin="0 0 62 26" UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="SNOW.gif"    StartPlaying="1" Grid.RowSpan="2" Grid.Column="2" Opacity=".8" VerticalAlignment="Bottom"/>
+      <Views:RadarTypeViewUserControl Margin="0 0 62 26" UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="SNOW.gif" AutoScale="True" StartPlaying="1" Grid.RowSpan="2" Grid.Column="2" Opacity=".8" VerticalAlignment="Bottom"/>
 
     </Grid>
   </Border>

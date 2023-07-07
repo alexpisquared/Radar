@@ -331,7 +331,7 @@
       </Menu>
 
       <GridSplitter Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" FocusVisualStyle="{x:Null}"/>
-      <Views:RadarTypeViewUserControl Margin="0 0 62 42" UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="SNOW.gif"    StartPlaying="1" Grid.RowSpan="2" Grid.Column="2" Opacity=".8" VerticalAlignment="Bottom" x:Name="radar1" />
+      <Views:RadarTypeViewUserControl Margin="0 0 62 42" UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="SNOW.gif" AutoScale="True" StartPlaying="1" Grid.RowSpan="2" Grid.Column="2" Opacity=".8" VerticalAlignment="Bottom" x:Name="radar1" />
 
       <Viewbox Grid.ColumnSpan="3" Grid.RowSpan="2">
         <TextBlock Visibility="{Binding GetDaysCommand.IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}" Text="Loading..." Foreground="#5555" />
