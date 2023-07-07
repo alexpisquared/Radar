@@ -15,12 +15,6 @@ public partial class RadarTypeViewUserControl : UserControl
     await ReLoad(int.Parse(((FrameworkElement)s).Tag?.ToString() ?? "11")); 
     _loaded = true; 
     chkIsPlaying.IsChecked = true;
-    await Task.Delay(TimeSpan.FromSeconds(5));
-
-    foreach (var item in lbxAllPics.Items)
-    {
-      ((RI)item).LetGet = true;
-    }    
   } // max is 480 == 2 days on 10 per hour basis.
   async Task ReLoad(int takeLastCount)
   {
@@ -36,7 +30,7 @@ public partial class RadarTypeViewUserControl : UserControl
 
       var gifurls = await new WebDirectoryLoader().ParseFromHtmlUsingRegex($"{_urlRoot}{UrlSuffix}", PreciTp, takeLastCount);
 
-      var list = new List<RI>();
+      var riis = new List<RadarImageInfo>();
       lbxAllPics.Items.Clear();
 
       if (gifurls.Count < 1)
@@ -46,12 +40,12 @@ public partial class RadarTypeViewUserControl : UserControl
       else
         gifurls.ForEach(ri =>
         {
-          var r = new RI { GifUrl = $"{_urlRoot}{UrlSuffix}/{ri}", FileName = Path.GetFileNameWithoutExtension(ri.FileName) };
-          list.Add(ri);
+          var r = new RadarImageInfo { GifUrl = $"{_urlRoot}{UrlSuffix}/{ri}", FileName = Path.GetFileNameWithoutExtension(ri.FileName) };
+          riis.Add(ri);
           _ = lbxAllPics.Items.Add(ri);
         });
 
-      chkIsPlaying.Content = $"_{UrlSuffix}      {gifurls.Count} files      {list.First().ImgTime:ddd HH:mm} ÷ {list.Last().ImgTime:ddd HH:mm}  {Stopwatch.GetElapsedTime(sw).TotalSeconds:N2}";
+      chkIsPlaying.Content = $"_{UrlSuffix}   {gifurls.Count} imgs   {riis.First().ImgTime:ddd HH:mm}÷{riis.Last().ImgTime:HH:mm}   {Stopwatch.GetElapsedTime(sw).TotalSeconds:N1}s   {new WebDirectoryLoader().CalulateSlope(riis):N2}↕";
 
       //await Task.Delay(1000);
       //using var timer = new PeriodicTimer(TimeSpan.FromSeconds(_fpsPeriod));

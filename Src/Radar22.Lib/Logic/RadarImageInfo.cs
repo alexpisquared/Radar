@@ -1,6 +1,6 @@
 ﻿namespace Radar22.Lib.Logic;
 
-public class RI
+public class RadarImageInfo
 {
   public string FileName { get; internal set; } = default!;
   public int FileSizeКb { get; set; } = -1;
@@ -21,7 +21,7 @@ public class RI
   bool _letGet;
 
 
-  public bool LetGet { get => _letGet; set => _letGet = value; }
+  public int Index { get; internal set; }
 
   public async Task<long> GetFileSizeAsync(string url)
   {

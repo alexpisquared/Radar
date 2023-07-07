@@ -20,12 +20,12 @@
       <Ellipse Width="20" Height="20" StrokeThickness="2.5" Stroke="#037" Margin="424,293,120,167" />
       <!--ipse Width="20" Height="20" StrokeThickness="2.5" Stroke="#f0f"  Margin="600,313,304,201" />-->
 
-      <Menu VerticalAlignment="Top" HorizontalAlignment="Left" Margin="38 1" Background="Transparent" Foreground="#ff0" Padding="4 0 0 1" FontSize="12" FontStyle="Oblique" IsEnabled="{Binding ElementName=chkIsPlaying, Path=IsChecked}">
-        <MenuItem Header="1_h" Click="OnReload" Tag="011" InputGestureText="F1" ToolTip="Check DB for changes"  />
-        <MenuItem Header="_3"  Click="OnReload" Tag="031" InputGestureText="F1" ToolTip="Check DB for changes"  />
-        <MenuItem Header="_12" Click="OnReload" Tag="120" InputGestureText="F1" ToolTip="Check DB for changes"  />
-        <MenuItem Header="_24" Click="OnReload" Tag="240" InputGestureText="F2" ToolTip="Check DB for changes"  />
-        <MenuItem Header="_48" Click="OnReload" Tag="480" InputGestureText="F3" ToolTip="Check DB for changes"  />
+      <Menu VerticalAlignment="Top" HorizontalAlignment="Left" Margin="38 1" Background="Transparent" Foreground="#ff0" Padding="4 0 0 1" FontSize="12" FontStyle="Oblique">
+        <MenuItem Header="1_h" Click="OnReload" Tag="011" InputGestureText="F1" ToolTip="Check DB for changes" />
+        <MenuItem Header="_3"  Click="OnReload" Tag="031" InputGestureText="F1" ToolTip="Check DB for changes" />
+        <MenuItem Header="_12" Click="OnReload" Tag="120" InputGestureText="F1" ToolTip="Check DB for changes" />
+        <MenuItem Header="_24" Click="OnReload" Tag="240" InputGestureText="F2" ToolTip="Check DB for changes" />
+        <MenuItem Header="_48" Click="OnReload" Tag="480" InputGestureText="F3" ToolTip="Check DB for changes" />
       </Menu>
 
       <CheckBox  Width="500" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="44 21 0 0" x:Name="chkIsPlaying" Foreground="#ff0" Background="#ff0" FontWeight="Medium" d:Content="~DPQPE/GIF/CASKR~" 
