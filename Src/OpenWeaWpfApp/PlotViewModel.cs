@@ -424,7 +424,7 @@ public partial class PlotViewModel : ObservableValidator
       OwaLoclPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 100));
     });
   }
-  //static async Task TickRepaintDelay() { bpr.Tick(); await Task.Delay(_timeToPaintMS); }
+  //static async Task TickRepaintDelay() { _bpr.Tick(); await Task.Delay(_timeToPaintMS); }
 
   [Browsable(false)][ObservableProperty] PlotModel model = new() { TextColor = OxyColors.Gray }; //void OnModelChanged() => PropertiesChanged();  void PropertiesChanged() => Model = ModelClearAdd("Prop Chgd");
 

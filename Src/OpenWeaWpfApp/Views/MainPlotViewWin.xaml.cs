@@ -1,21 +1,29 @@
-﻿namespace OpenWeaWpfApp;
+﻿using StandardContractsLib;
+using WpfUserControlLib.Extensions;
+
+namespace OpenWeaWpfApp;
 public partial class MainPlotViewWin : WindowBase
 {
-  readonly Bpr bpr = new();
-  private readonly SpeechSynth snt;
+  readonly SpeechSynth _syn;
+  readonly ILogger _lgr;
+  readonly IBpr _bpr;
 
-  public MainPlotViewWin(ILogger logger, SpeechSynth snt) : base(logger)
+  public MainPlotViewWin(ILogger lgr, IBpr bpr, SpeechSynth snt) : base(lgr)
   {
     InitializeComponent();
+
+    _lgr = lgr;
+    _bpr = bpr;
+    _syn = snt;
 
     KeyUp += async (s, e) =>
     {
       switch (e.Key)
       {
-        case Key.C: bpr.Error(); ((PlotViewModel)DataContext).ClearPlot(); break;
-        case Key.I: bpr.Error(); plotBR.InvalidatePlot(true); break;
-        case Key.J: bpr.Error(); plotBR.InvalidatePlot(false); break;
-        case Key.R: bpr.Error(); ((PlotViewModel)DataContext).PopulateAll(null); goto case Key.I;
+        case Key.C: _bpr.Error(); ((PlotViewModel)DataContext).ClearPlot(); break;
+        case Key.I: _bpr.Error(); plotBR.InvalidatePlot(true); break;
+        case Key.J: _bpr.Error(); plotBR.InvalidatePlot(false); break;
+        case Key.R: _bpr.Error(); ((PlotViewModel)DataContext).PopulateAll(null); goto case Key.I;
         default: await Task.Delay(333); break;
       }
     };
@@ -25,7 +33,6 @@ public partial class MainPlotViewWin : WindowBase
     KeepOpenReason = null; // nothing to hold on to.
 
     Title = $"OpenWeaWpfApp - {string.Join(',', Environment.GetCommandLineArgs())}";
-    this.snt = snt;
   }
 
   async void OnLoadad(object sender, RoutedEventArgs e)
@@ -37,13 +44,12 @@ public partial class MainPlotViewWin : WindowBase
     }
     catch (Exception ex)
     {
-      WriteLine($"■─■─■ {ex.Message} \n\t {ex} ■─■─■");
-      if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
+      ex.Pop(_lgr);
     }
   }
   void OnClose(object sender, RoutedEventArgs e) => Close();
   void OnPoplte(object sender, RoutedEventArgs e) =>  ((PlotViewModel)DataContext).PopulateAll(null);  // only lines chart is drawn.
   void OnShowPocBin(object sender, RoutedEventArgs e) => new PocBin().Show();
-  void OnActivated(object sender, EventArgs e) { radar1.IsPlaying = true;  /*snt.SpeakFAF("Activated", volumePercent: 5);*/ }
-  void OnDeActivtd(object sender, EventArgs e) { radar1.IsPlaying = false; /*snt.SpeakFAF("Deactivated", volumePercent: 5);*/ }
+  void OnActivated(object sender, EventArgs e) { radar1.IsPlaying = true;  /*_syn.SpeakFAF("Activated", volumePercent: 5);*/ }
+  void OnDeActivtd(object sender, EventArgs e) { radar1.IsPlaying = false; /*_syn.SpeakFAF("Deactivated", volumePercent: 5);*/ }
 }

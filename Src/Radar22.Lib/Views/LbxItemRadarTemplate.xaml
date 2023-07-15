@@ -20,8 +20,8 @@
         </LinearGradientBrush>
       </Rectangle.Fill>
     </Rectangle>
-    <TextBlock Text="{Binding FileName}" d:Text="202202042100_WKR_COMP_PRECIPET_RAIN.gif"  FontSize="12" Foreground="#0F0" Margin="1" Padding="8 0 12 1"           HorizontalAlignment="Right" VerticalAlignment="Top" />
-    <TextBlock Text="{Binding ImgTime, StringFormat='{}{0:ddd HH:mm}'}" d:Text="Sun 12:05" FontSize="16" Foreground="#0f0" Margin="02,60" Padding="8 4" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="Medium" Background="#f000" />
-    <TextBlock Text="{Binding FileSizeКb, StringFormat='{}{0:N1}'}"     d:Text="123.22"    FontSize="16" Foreground="#0f0" Margin="02,90" Padding="8 4" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="Medium" Background="#f000" />
+    <TextBlock Text="{Binding FileName}" d:Text="202202042100_WKR_COMP_PRECIPET_RAIN.gif"  FontSize="12" Margin="1"    Padding="8 0 12 1" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="#0F0" />
+    <TextBlock Text="{Binding ImgTime, StringFormat='{}{0:ddd HH:mm}'}" d:Text="Sun 12:05" FontSize="16" Margin="2,60" Padding="8 4"      HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="#0f0" FontWeight="Medium" Background="#000" />
+    <TextBlock Text="{Binding FileSizeКb, StringFormat='{}{0:N0} kb'}"  d:Text="12 kb"     FontSize="16" Margin="2,90" Padding="8 4"      HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="#0f0" FontWeight="Medium" Background="#000" />
   </Grid>
 </UserControl>

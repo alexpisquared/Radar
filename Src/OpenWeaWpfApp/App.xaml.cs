@@ -1,4 +1,6 @@
-﻿namespace OpenWeaWpfApp;
+﻿using StandardContractsLib;
+
+namespace OpenWeaWpfApp;
 public partial class App : Application
 {
   string _audit = "Default!!";
@@ -13,6 +15,7 @@ public partial class App : Application
     _ = services.AddSingleton<MainPlotOldWindow>();
     _ = services.AddTransient<OpenWea>();
     _ = services.AddTransient<DbxHelper>();
+    _ = services.AddSingleton<IBpr, Bpr>();
 
     _ = services.AddSingleton<IConfigurationRoot>(new ConfigurationBuilder().AddUserSecrets<App>().Build());
 
