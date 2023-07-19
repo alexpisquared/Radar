@@ -1,0 +1,19 @@
+﻿<lnk:WindowBase x:Class="OpenWea.MainWeaWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"        
+                xmlns:local="clr-namespace:OpenWea"
+                xmlns:lnk="clr-namespace:WpfUserControlLib.Base;assembly=WpfUserControlLib" 
+                Title="Main Plot View" Height="450" Width="1800" Background="Transparent" AllowsTransparency="True" WindowStyle="None" Loaded="OnLoadad" Activated="OnActivated" Deactivated="OnDeActivtd">
+  <WindowChrome.WindowChrome>
+    <WindowChrome CaptionHeight="0" ResizeBorderThickness="10" />
+  </WindowChrome.WindowChrome>
+  <Border CornerRadius="8" Padding="3" BorderBrush="#555" BorderThickness="1" Background="#000" >
+    <Grid>
+
+      <Menu Margin="0,0,8,0" FontStyle="Oblique" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent" Foreground="#dd0" Grid.Column="0" Grid.ColumnSpan="3">
+        <MenuItem   Header="  _X  " ToolTip="Close" Click="OnClose" />
+      </Menu>
+
+      <TextBlock Text="{Binding LastBuild, StringFormat='{}{0:yyyy-MM-dd}'}" Foreground="#08f" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="32" />
+
+    </Grid>
+  </Border>
+  </lnk:WindowBase>

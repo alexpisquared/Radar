@@ -1,10 +1,10 @@
 ﻿namespace OpenWeaWpfApp;
-public partial class App //: Application
+public class LibInit
 {
   string _audit = "Default!!";
   readonly IServiceProvider _serviceProvider;
 
-  public App()
+  public LibInit()
   {
     ServiceCollection services = new();
     _ = services.AddTransient<MainViewModel>();
@@ -41,42 +41,4 @@ public partial class App //: Application
 
     _serviceProvider = services.BuildServiceProvider();
   }
-
-  protected override void OnStartup(StartupEventArgs e)
-  {
-    Current.DispatcherUnhandledException += UnhandledExceptionHndlr.OnCurrentDispatcherUnhandledException;
-    EventManager.RegisterClassHandler(typeof(TextBox), TextBox.GotFocusEvent, new RoutedEventHandler((s, re) => { (s as TextBox ?? new TextBox()).SelectAll(); }));
-    ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
-
-    _audit = VersionHelper.DevDbgAudit(_serviceProvider.GetRequiredService<IConfigurationRoot>(), "Hello");
-
-    _serviceProvider.GetRequiredService<ILogger>().LogInformation($"OnStrt  {_audit}");
-
-    MainWindow = _serviceProvider.GetRequiredService<MainPlotViewWin>();                //   400 ms
-    MainWindow.DataContext = _serviceProvider.GetRequiredService<PlotViewModel>();      //   700 ms
-    MainWindow.Show();
-
-    base.OnStartup(e); //_ = await new OpenWea().ParseJsonToClasses(_serviceProvider.GetRequiredService<IConfigurationRoot>()["AppSecrets:MagicNumber"]);
-  }
-  protected override void OnExit(ExitEventArgs e)
-  {
-    Current.DispatcherUnhandledException -= UnhandledExceptionHndlr.OnCurrentDispatcherUnhandledException;
-
-    base.OnExit(e);
-  }
 }
-
-#if Host
-public static class AddViewModelsHostBuilderExtensions
-{
-  public static IHostBuilder AddViewModels(this IHostBuilder hostBuilder)
-  {
-    hostBuilder.ConfigureServices(services =>
-    {
-      services.AddSingleton<MainViewModel>();
-    });
-
-    return hostBuilder;
-  }
-}
-#endif

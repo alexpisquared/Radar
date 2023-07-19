@@ -270,7 +270,6 @@ public partial class PlotViewModel : ObservableValidator
   void GetImprtandDatFromPearson(siteData? sitedata)
   {
     ArgumentNullException.ThrowIfNull(sitedata, $"@@@@@@@@@ {nameof(sitedata)}");
-    const int _vOffset = 300;
 
     if (double.TryParse(sitedata.almanac.temperature[0].Value, out _extrMax) &&
         double.TryParse(sitedata.almanac.temperature[1].Value, out _extrMin))
