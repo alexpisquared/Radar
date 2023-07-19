@@ -11,6 +11,9 @@
 
       <Menu Margin="0,0,8,0" FontStyle="Oblique" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent" Foreground="#dd0" Grid.Column="0" Grid.ColumnSpan="3">
         <MenuItem   Header="  _X  " ToolTip="Close" Click="OnClose" />
+        <MenuItem   Header="  _X  " ToolTip="Close" Click="OnClose" />
+        <MenuItem   Header="  _X  " ToolTip="Close" Click="OnClose" />
+        <MenuItem   Header="  _X  " ToolTip="Close" Click="OnClose" />
       </Menu>
 
       <TextBlock Text="{Binding LastBuild, StringFormat=\{0:yyyy-MM-dd\}}" Foreground="#08f" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="32" />
