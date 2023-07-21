@@ -7,7 +7,7 @@ public partial class App //: Application
   public App()
   {
     ServiceCollection services = new();
-    _ = services.AddTransient<MainViewModel>();
+    //_ = services.AddTransient<MainPlotOldVM>();
     _ = services.AddTransient<PlotViewModel>();
     _ = services.AddSingleton<MainPlotViewWin>();
     _ = services.AddSingleton<MainPlotOldWindow>();
@@ -73,7 +73,7 @@ public static class AddViewModelsHostBuilderExtensions
   {
     hostBuilder.ConfigureServices(services =>
     {
-      services.AddSingleton<MainViewModel>();
+      services.AddSingleton<MainPlotOldVM>();
     });
 
     return hostBuilder;

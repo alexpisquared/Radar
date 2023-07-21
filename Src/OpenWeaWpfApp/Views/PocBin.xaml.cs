@@ -1,8 +1,5 @@
-﻿
-using AmbienceLib;
-
-namespace OpenWeaWpfApp;
-public partial class PocBin : Window
+﻿namespace OpenWeaWpfApp;
+public partial class PocBin //: Window
 {
   readonly Bpr bpr = new();
   public PocBin()
@@ -13,7 +10,7 @@ public partial class PocBin : Window
     {
       switch (e.Key)
       {
-        case Key.R: bpr.Error(); _ = await ((MainViewModel)DataContext).PopulateAsync(); goto case Key.I;
+        case Key.R: bpr.Error(); _ = await ((MainPlotOldVM)DataContext).PopulateAsync(); goto case Key.I;
         case Key.I: bpr.Error(); plotTR.InvalidatePlot(true); plotBR.InvalidatePlot(true); break;
         case Key.Escape: base.OnKeyUp(e); e.Handled = true; Close(); break;
         default: break;
@@ -42,9 +39,8 @@ public partial class PocBin : Window
   {
     await Task.Delay(1);
 
-
-    _ = await ((MainViewModel)DataContext).PopulateAsync();  // only lines chart is drawn.
+    _ = await ((MainPlotOldVM)DataContext).PopulateAsync();  // only lines chart is drawn.
   }
 
-  async void OnPoplte(object sender, RoutedEventArgs e) => _ = await ((MainViewModel)DataContext).PopulateAsync();  // only lines chart is drawn.
+  async void OnPoplte(object sender, RoutedEventArgs e) => _ = await ((MainPlotOldVM)DataContext).PopulateAsync();  // only lines chart is drawn.
 }

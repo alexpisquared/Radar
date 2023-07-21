@@ -11,7 +11,7 @@ public partial class MainPlotOldWindow : Window
     {
       switch (e.Key)
       {
-        case Key.R: _ = await ((MainViewModel)DataContext).PopulateAsync(); goto case Key.I;
+        case Key.R: _ = await ((MainPlotOldVM)DataContext).PopulateAsync(); goto case Key.I;
         case Key.I: plotBR.InvalidatePlot(true); break;
         case Key.Escape: base.OnKeyUp(e); e.Handled = true; Close(); break;
         default: break;
@@ -53,7 +53,7 @@ public partial class MainPlotOldWindow : Window
       SctrPtTPFMis.TrackerFormatString += "{Tag}"; // Oxyplot ScatterPoint custom Label
       SctrPtTPFPhc.TrackerFormatString += "{Tag}"; // Oxyplot ScatterPoint custom Label
 
-      _ = await ((MainViewModel)DataContext).PopulateAsync();  // only lines chart is drawn.
+      _ = await ((MainPlotOldVM)DataContext).PopulateAsync();  // only lines chart is drawn.
     }
     catch (Exception ex)
     {
@@ -62,7 +62,7 @@ public partial class MainPlotOldWindow : Window
     }
   }
 
-  async void OnPoplte(object sender, RoutedEventArgs e) => _ = await ((MainViewModel)DataContext).PopulateAsync();  // only lines chart is drawn.
+  async void OnPoplte(object sender, RoutedEventArgs e) => _ = await ((MainPlotOldVM)DataContext).PopulateAsync();  // only lines chart is drawn.
 
     void OnPocBin(object sender, RoutedEventArgs e)
     {

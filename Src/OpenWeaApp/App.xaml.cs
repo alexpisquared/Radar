@@ -23,7 +23,7 @@ public partial class App : Application
   public App()
   {
     ServiceCollection services = new();
-    _ = services.AddTransient<MainViewModel>();
+    //_ = services.AddTransient<MainPlotOldVM>();
     _ = services.AddTransient<PlotViewModel>();
     _ = services.AddSingleton<MainWeaWindow>();
     _ = services.AddSingleton<MainPlotOldWindow>();
@@ -69,6 +69,7 @@ public partial class App : Application
     _serviceProvider.GetRequiredService<ILogger>().LogInformation($"OnStrt  {_audit}");
 
     MainWindow = _serviceProvider.GetRequiredService<MainWeaWindow>();
+    var DataContext_ = _serviceProvider.GetRequiredService<PlotViewModel>();
     MainWindow.DataContext = _serviceProvider.GetRequiredService<PlotViewModel>();
     MainWindow.Show();
 

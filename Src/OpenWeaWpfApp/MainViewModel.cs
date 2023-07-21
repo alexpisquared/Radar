@@ -1,8 +1,7 @@
 ﻿#define ObsCol // Go figure: ObsCol works, while array NOT! Just an interesting factoid.
-using AmbienceLib;
-
 namespace OpenWeaWpfApp;
-public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.ObservableValidator
+[Obsolete("Hello!?!?!?", false)]
+public partial class MainPlotOldVM : CommunityToolkit.Mvvm.ComponentModel.ObservableValidator
 {
   readonly IConfigurationRoot _cfg;
   readonly OpenWea _opnwea;
@@ -19,7 +18,7 @@ public partial class MainViewModel : CommunityToolkit.Mvvm.ComponentModel.Observ
     _urlPast24hrYYZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yyz", // Pearson
     _urlPast24hrYKZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=ykz"; // Buttonville
 
-  public MainViewModel(WeatherxContext weatherxContext, OpenWea openWea, ILogger lgr, SpeechSynth synth)
+  public MainPlotOldVM(WeatherxContext weatherxContext, OpenWea openWea, ILogger lgr, SpeechSynth synth)
   {
     _cfg = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets min usersecrets 
     _lgr = lgr;

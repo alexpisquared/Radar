@@ -1,9 +1,13 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-             xmlns:local="clr-namespace:OpenWeaWpfApp" >
-  <DataTemplate DataType="{x:Type local:MainViewModel}">
+                    xmlns:local="clr-namespace:OpenWeaWpfApp" 
+                    xmlns:local1="clr-namespace:OpenWeaWpfApp.Views">
+  <!--<DataTemplate DataType="{x:Type local:MainPlotOldVM}">
     <local:MainPlotOldWindow/>
   </DataTemplate>
-  <DataTemplate DataType="{x:Type local:MainViewModel}">
+  <DataTemplate DataType="{x:Type local:MainPlotOldVM}">
     <local:PocBin/>
   </DataTemplate>
+  <DataTemplate DataType="{x:Type local:MainPlotOldVM}">
+    <local1:MainPlotViewUsrCtrl/>
+  </DataTemplate>-->
 </ResourceDictionary>
