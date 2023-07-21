@@ -64,7 +64,7 @@ public partial class MainPlotOldWindow : Window
 
   async void OnPoplte(object sender, RoutedEventArgs e) => _ = await ((MainViewModel)DataContext).PopulateAsync();  // only lines chart is drawn.
 
-    void MenuItem_Click(object sender, RoutedEventArgs e)
+    void OnPocBin(object sender, RoutedEventArgs e)
     {
       new PocBin().Show();
   }

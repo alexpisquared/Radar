@@ -24,6 +24,8 @@ public partial class App : Application
       sp.GetRequiredService<ILogger>()));
 
     _serviceProvider = services.BuildServiceProvider();
+
+    LibInit.InitLib(services, _serviceProvider);
   }
 
   protected override void OnStartup(StartupEventArgs e)
@@ -40,5 +42,11 @@ public partial class App : Application
     MainWindow.Show();
 
     base.OnStartup(e);
+  }
+  protected override void OnExit(ExitEventArgs e)
+  {
+    Current.DispatcherUnhandledException -= UnhandledExceptionHndlr.OnCurrentDispatcherUnhandledException;
+
+    base.OnExit(e);
   }
 }

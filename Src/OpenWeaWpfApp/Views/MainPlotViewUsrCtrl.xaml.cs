@@ -1,26 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
-namespace OpenWeaWpfApp.Views;
-/// <summary>
-/// Interaction logic for MainPlotViewUsrCtrl.xaml
-/// </summary>
+﻿namespace OpenWeaWpfApp.Views;
 public partial class MainPlotViewUsrCtrl : UserControl
 {
-  public MainPlotViewUsrCtrl()
-  {
-    InitializeComponent();
-  }
+  public MainPlotViewUsrCtrl() => InitializeComponent();
+
+  async void OnPoplte(object sender, RoutedEventArgs e) => _ = await ((MainViewModel)DataContext).PopulateAsync();  // only lines chart is drawn.
+  void OnPocBin(object sender, RoutedEventArgs e) => new PocBin().Show();
 }
