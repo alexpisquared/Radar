@@ -1,18 +1,8 @@
-﻿using System;
-using System.Windows;
-using DB.WeatherX.PwrTls.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using OpenWeather2022;
-using OpenWeaWpfApp.Helpers;
-
-namespace OpenWeaWpfApp;
+﻿namespace OpenWeaWpfApp;
 
 public static class AppStartHelper
 {
-
-  public static void InitOpenWeaServices(ServiceCollection services)
+  public static void InitOpenWeaServices(IServiceCollection services)
   {
     _ = services.AddTransient<PlotViewModel>();
     _ = services.AddTransient<OpenWea>();
