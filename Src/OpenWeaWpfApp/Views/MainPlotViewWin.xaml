@@ -1,5 +1,4 @@
-﻿<lnk:WindowBase xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Class="OpenWeaWpfApp.MainPlotViewWin" mc:Ignorable="d"
-                xmlns:lnk="clr-namespace:WpfUserControlLib.Base;assembly=WpfUserControlLib" 
+﻿<lnk:WindowBase xmlns:lnk="clr-namespace:WpfUserControlLib.Base;assembly=WpfUserControlLib" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Class="OpenWeaWpfApp.MainPlotViewWin" mc:Ignorable="d"                
                 xmlns:Views="clr-namespace:xEnvtCanRadar.Views;assembly=Radar22.Lib" 
                 xmlns:vms="clr-namespace:OpenWeaWpfApp" d:DataContext="{d:DesignInstance Type={x:Type vms:PlotViewModel}}"
                 xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"

@@ -1,29 +1,23 @@
 ﻿<UserControl x:Class="OpenWeaWpfApp.Views.MainPlotViewUsrCtrl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" 
-             xmlns:local="clr-namespace:OpenWeaWpfApp.Views"
              xmlns:Views="clr-namespace:xEnvtCanRadar.Views;assembly=Radar22.Lib" 
              xmlns:vms="clr-namespace:OpenWeaWpfApp" d:DataContext="{d:DesignInstance Type={x:Type vms:MainViewModel}}"
-             xmlns:oxy="http://oxyplot.org/wpf/contrib"
+             xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
+             Loaded="OnLoadad" 
              d:DesignHeight="450" d:DesignWidth="1800">
-    <Grid Background="#603">
+  <Grid>
     <Grid.Resources>
       <Color x:Key="Vgn">#08f</Color>
       <Color x:Key="Mis">#080</Color>
-      <Color x:Key="Phc">#e0e</Color>
       <Color x:Key="d00">#d00</Color>
       <Color x:Key="b80">#b80</Color>
+      <Color x:Key="Phc">#e0e</Color>
       <Color x:Key="WDir">#888</Color>
       <Color x:Key="PoPr">#04f</Color>
       <Color x:Key="Prsr">#bb0</Color>
-
-      <Style TargetType="{x:Type oxy:Legend}">
-        <Setter Property="IsLegendVisible"    Value="True" />
-        <Setter Property="LegendOrientation"  Value="Vertical" />
-        <Setter Property="LegendPosition"     Value="TopCenter" />
-        <Setter Property="LegendTextColor"    Value="{StaticResource WDir}" />
-      </Style>
+      <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Grid.Resources>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="6*"/>
+      <ColumnDefinition Width="8*"/>
       <ColumnDefinition Width="10"/>
       <ColumnDefinition Width="1*"/>
     </Grid.ColumnDefinitions>
@@ -32,65 +26,7 @@
       <RowDefinition Height="1*"/>
     </Grid.RowDefinitions>
 
-    <oxy:Plot Title="{Binding PlotTitle}" TitleColor="#bdf" Background="#222" x:Name="plotBR" SubtitleColor="Red" TextColor="#0f0" PlotAreaBorderColor="Transparent" Grid.RowSpan="2" Grid.ColumnSpan="3" d:Title="LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ LKJLKJLKJLKJLKJLKJ "                
-                >
-      <!--LegendTextColor="#eee" LegendTitleColor="Yellow"-->
-      <oxy:Plot.Axes>
-        <oxy:DateTimeAxis Key="xAxis" TextColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Top" StringFormat="                  ddd d" MajorStep="1" MinorStep="0.25" 
-                            MajorGridlineStyle="Solid" 
-                            MajorGridlineColor="#000" 
-                            MinorGridlineStyle="Solid" MinorGridlineColor="#333" 
-                            MinorTickSize="4" TicklineColor="#ccc" 
-                            d:Minimum="0"
-                            d:Maximum="7"
-                            Minimum="{Binding TimeMin, FallbackValue=-1}"
-                            Maximum="{Binding TimeMax, FallbackValue=+2}"
-                            />
-        <oxy:LinearAxis   Key="yAxisL" Minimum="{Binding YAxisMin}" Maximum="{Binding YAxisMax}" MajorStep="010" MinorStep="01" TextColor="#eee" TitleColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Left"   MajorGridlineStyle="Solid" MajorGridlineColor="#000" Title="Temp [°C]" MinorTickSize="4" TicklineColor="#ccc" />
-        <oxy:LinearAxis   Key="yAxisR" Minimum="{Binding YAxiXMin}" Maximum="{Binding YAxiXMax}" MajorStep="100" MinorStep="10" TextColor="#eee" TitleColor="#eee" IsZoomEnabled="False" IsPanEnabled="False" Position="Right"  MajorGridlineStyle="None"  MajorGridlineColor="#000" Title="Wind k/h  PoP %"  />
-      </oxy:Plot.Axes>
-      <!--<oxy:Plot.DefaultTrackerTemplate>
-          <ControlTemplate>
-            <oxy:TrackerControl Position="{Binding Position}" BorderThickness="8" Background="#444">
-              <oxy:TrackerControl.Content>
-                <StackPanel Margin="8">
-                  <TextBlock Text="{Binding XAxis.Title}" Foreground="Red" />
-                  <TextBlock DockPanel.Dock="Right" Text="{Binding DataPoint.X, StringFormat='{}{0:N1}'}" Foreground="#ff0" />
-                  <TextBlock Text="{Binding YAxis.Title}" Foreground="Green" />
-                  <TextBlock DockPanel.Dock="Right" Text="{Binding DataPoint.Y, StringFormat='{}{0:N1}°'}" Foreground="#ff0" FontWeight="Bold" />
-                  <TextBlock DockPanel.Dock="Right" Text="{Binding DataPoint.Tag}" Foreground="#f0f" FontWeight="Bold" />
-                  <TextBlock DockPanel.Dock="Right" Text="{Binding DataPoint.Size}" Foreground="#f0f" FontWeight="Bold" />
-                  <TextBlock DockPanel.Dock="Right" Text="{Binding DataPoint.Value}" Foreground="#f0f" FontWeight="Bold" />
-                </StackPanel>
-              </oxy:TrackerControl.Content>
-            </oxy:TrackerControl>
-          </ControlTemplate>
-        </oxy:Plot.DefaultTrackerTemplate>-->
-
-      <oxy:LineSeries    ItemsSource="{Binding OwaLoclGus_}" Color="#cc0" StrokeThickness="0.5" Title="owa G" YAxisKey="yAxisL" />
-
-      <oxy:LineSeries    ItemsSource="{Binding OwaLoclNowT}" Color="#aaa" StrokeThickness="1.0" Title="123" />
-      <oxy:AreaSeries    ItemsSource="{Binding OwaLoclSunT}" Color="#330" StrokeThickness="0.0" Title="123" />
-
-      <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFVgn}" MarkerType="Circle" Title="ECa Vgn" MarkerStroke="{StaticResource Vgn}" MarkerFill="Transparent" x:Name="SctrPtTPFVgn" />
-      <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFMis}" MarkerType="Circle" Title="ECa Mis" MarkerStroke="{StaticResource Mis}" MarkerFill="Transparent" x:Name="SctrPtTPFMis" />
-      <oxy:ScatterSeries ItemsSource="{Binding SctrPtTPFPhc}" MarkerType="Circle" Title="OWA Phc" MarkerStroke="{StaticResource Phc}" MarkerFill="Transparent" x:Name="SctrPtTPFPhc" TrackerFormatString="{}{0}&#xA;Time:   {2:HH:mm} &#xA;Temp:  {4:0.0}° " />
-
-      <oxy:LineSeries    ItemsSource="{Binding ECaToroTemp}" Color="{StaticResource b80}" StrokeThickness="5.0" Title="EC TO"  LineStyle="LongDash" />
-      <oxy:LineSeries    ItemsSource="{Binding ECaMissTemp}" Color="{StaticResource Mis}" StrokeThickness="3.0" Title="EC Mis" LineStyle="LongDashDotDot" />
-      <oxy:LineSeries    ItemsSource="{Binding ECaTIslTemp}" Color="{StaticResource d00}" StrokeThickness="1.0" Title="EC TI"  LineStyle="Dot" />
-      <oxy:LineSeries    ItemsSource="{Binding ECaVghnTemp}" Color="{StaticResource Vgn}" StrokeThickness="3.0" Title="EC VA"  LineStyle="Dash" />
-      <oxy:LineSeries    ItemsSource="{Binding ECaMrkhTemp}" Color="{StaticResource Vgn}" StrokeThickness="2.0" Title="EC MA"  LineStyle="Dash" InterpolationAlgorithm="{Binding IA}" />
-
-      <oxy:LineSeries    ItemsSource="{Binding OwaLoclTemp}" Color="{StaticResource Phc}" StrokeThickness="1.5" Title="owa T"  InterpolationAlgorithm="{Binding IA}" />
-      <oxy:LineSeries    ItemsSource="{Binding OwaLoclFeel}" Color="{StaticResource Phc}" StrokeThickness="0.5" Title="owa F"  InterpolationAlgorithm="{Binding IA}" />
-      <oxy:LineSeries    ItemsSource="{Binding OwaLoclPrsr}" Color="{StaticResource Prsr}" StrokeThickness="1.0" Title="owa P" InterpolationAlgorithm="{Binding IA}" LineStyle="LongDashDotDot" />
-
-      <oxy:AreaSeries    ItemsSource="{Binding ECaBtvlWind}" Color="{StaticResource Phc}" StrokeThickness="0.5" Title="Wind EC Owa" YAxisKey="yAxisR" Fill="#550f" />
-      <oxy:LineSeries    ItemsSource="{Binding ECaPearWind}" Color="{StaticResource Phc}" StrokeThickness="0.5" Title="Wind EC Pea" YAxisKey="yAxisR"  />
-      <oxy:AreaSeries    ItemsSource="{Binding OwaLoclPopr}" Color="{StaticResource PoPr}" StrokeThickness="0.0" Title="PoPr"       InterpolationAlgorithm="{Binding IA}" YAxisKey="yAxisR" />
-      <oxy:LineSeries    ItemsSource="{Binding OwaLoclGust}" Color="{StaticResource WDir}" StrokeThickness="0.5" Title="owa G"      InterpolationAlgorithm="{Binding IA}" YAxisKey="yAxisR" />
-    </oxy:Plot>
+    <oxy:PlotView Model="{Binding Model}" Background="#111" x:Name="plotBR" Grid.RowSpan="2" Grid.ColumnSpan="3" d:IsHidden="True" />
 
     <Button IsDefault="True" Click="OnPoplte" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="1" />
 
@@ -356,12 +292,23 @@
         <Image Grid.Column="41" Source="{Binding OpnWeaIco3[39]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
       </Grid>-->
 
-    <TextBlock Text="{Binding SubHeader}" d:Text="SubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeader" HorizontalAlignment="Left" Foreground="#ff0" Margin="5" VerticalAlignment="Bottom" Grid.RowSpan="3" Grid.ColumnSpan="3" />
+    <TextBlock Text="{Binding SubHeader}" HorizontalAlignment="Left" Foreground="#888" Margin="70 15" VerticalAlignment="Bottom" Grid.RowSpan="3" Grid.ColumnSpan="3" d:Text="SubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeader" />
 
-    <Menu Margin="0,10,15,0" FontStyle="Oblique" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent" Foreground="#ddd" Grid.Column="0" Grid.ColumnSpan="3">
-      <MenuItem   Header="_A 2" Command="{Binding GetDaysCommand}" CommandParameter="2" InputGestureText="F2" ToolTip="Check DB for changes"  />
-      <MenuItem   Header="_B 3" Command="{Binding GetDaysCommand}" CommandParameter="3" InputGestureText="F3" ToolTip="Check DB for changes"  />
-      <MenuItem   Header="_C 8" Command="{Binding GetDaysCommand}" CommandParameter="8" InputGestureText="F8" ToolTip="Check DB for changes"  />
+    <Menu Margin="0,0,8,0" FontStyle="Oblique" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent" Foreground="#dd0" Grid.Column="0" Grid.ColumnSpan="3">
+      <MenuItem   Header="_..."        ToolTip="Clear Data" Height="33" Foreground="#880" >
+        <MenuItem   Header="C_lear Data"        Command="{Binding ClearDataCommand}"            ToolTip="Clear Data" Height="33" />
+        <MenuItem   Header="F_rom Web"          Command="{Binding PopulateScatModelCommand}"    ToolTip="Populate from Scat Model"  />
+        <MenuItem   Header="_From DB"           Command="{Binding PrevForecastFromDbCommand}"   ToolTip="Populate from DB"  />
+        <MenuItem   Header="_Populate All"      Command="{Binding PopulateAllCommand}"          ToolTip="Populate ALL"  />
+        <Separator />
+        <MenuItem   Header="Refresh _Mdl"       Command="{Binding CreateMdlCommand}"  CommandParameter="Cmnd"  ToolTip="Updates all data sources since set to true"  />
+        <MenuItem   Header="Invalidate"         Command="{Binding InvalidateCommand}" CommandParameter="true"  ToolTip="Updates all data sources since set to true"  />
+        <Separator />
+      </MenuItem>
+      <MenuItem   Header="  _A 2  " Command="{Binding GetDaysCommand}" CommandParameter="2" InputGestureText="F2" ToolTip="Check DB for changes"  />
+      <MenuItem   Header="  _B 3  " Command="{Binding GetDaysCommand}" CommandParameter="3" InputGestureText="F3" ToolTip="Check DB for changes"  />
+      <MenuItem   Header="  _C 8  " Command="{Binding GetDaysCommand}" CommandParameter="8" InputGestureText="F8" ToolTip="Check DB for changes"  />
+      <Separator />
       <!--
         <MenuItem   Header="Days: _1 " Command="{Binding GetDaysCommand}" CommandParameter="1" InputGestureText="F1" ToolTip="Check DB for changes"  />
         <MenuItem   Header="_4" Command="{Binding GetDaysCommand}" CommandParameter="4" InputGestureText="F4" ToolTip="Check DB for changes"  />
@@ -371,12 +318,20 @@
       <!--<MenuItem   Header="° ° °"  Visibility="{Binding IsDevDbgViz}" >
           <MenuItem Header="Dmp" Command="{Binding SaveExcelTsvCommand}"  ToolTip="Dump tsv"  />
           <MenuItem Header="Tgl _DevDbgViz" IsCheckable="True" IsChecked="{Binding IsDevDbg}" />
-        </MenuItem>-->
-      <MenuItem   Header="_POC" ToolTip="No action" FontStyle="Normal" Click="OnPocBin" />
+        </MenuItem>
+      <MenuItem   Header="_POC" ToolTip="No action" FontStyle="Oblique" Click="OnShowPocBin" />
+      -->
+      <Separator />
     </Menu>
 
     <GridSplitter Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" FocusVisualStyle="{x:Null}"/>
-    <Views:RadarTypeViewUserControl Margin="0 0 62 26" UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="SNOW.gif" AutoScale="True" StartPlaying="1" Grid.RowSpan="2" Grid.Column="2" Opacity=".8" VerticalAlignment="Bottom"/>
+    <Views:RadarTypeViewUserControl Margin="0 0 62 42" UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="SNOW.gif" AutoScale="True" StartPlaying="1" Grid.RowSpan="2" Grid.Column="2" Opacity=".8" VerticalAlignment="Bottom" x:Name="radar1" />
+
+    <Viewbox Grid.ColumnSpan="3" Grid.RowSpan="2">
+      <TextBlock Visibility="{Binding GetDaysCommand.IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}" Text="Loading..." Foreground="#5555" />
+    </Viewbox>
+
+    <TextBlock Text="{Binding LastBuild, StringFormat='{}{0:yyyy-MM-dd}'}" Foreground="#08f" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="32" />
 
   </Grid>
 </UserControl>

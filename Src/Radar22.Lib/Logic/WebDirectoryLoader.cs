@@ -11,13 +11,15 @@ public class WebDirectoryLoader
       if (response == null || response.StatusCode == System.Net.HttpStatusCode.NotFound) throw new Exception($"@@@@@@@@@@  {gigUrl}  is problematic!!!");
       var html = await response.Content.ReadAsStringAsync();
 
+#if DEBUG_
       foreach (var item in new Regex("<a href=\".*\">(?<name>.*)</a>").Matches(html)
         .Where(r => r.Success)
         .Select(r => r./*Groups["name"].*/ToString())
         .Where(r => r.Contains(precipitnFilter, StringComparison.OrdinalIgnoreCase))
         .TakeLast(takeLastCount)
         .OrderBy(r => r)
-        .ToList()) { WriteLine(item); }
+        .ToList()) { WriteLine($" ... {item} ... Dbg only"); }
+#endif
 
       return ParseFromHtmlUsingRegex2(gigUrl, precipitnFilter, takeLastCount, html);
     }
@@ -60,8 +62,8 @@ public class WebDirectoryLoader
         });
       }
     }
-    catch (Exception ex) { WriteLine($"■─■═■  {sw.Elapsed.TotalSeconds:N1}s  {ex.Message}  ■═■─■"); if (Debugger.IsAttached) Debugger.Break(); else { /*System.Windows.Clipboard.SetText(url);*/ throw; } }
-    finally         /**/ { WriteLine($"+++++  {sw.Elapsed.TotalSeconds:N1}s  Success."); }
+    catch (Exception ex) { WriteLine($"■─■═■  ParseFromHtmlUsingRegex2  {sw.Elapsed.TotalSeconds:N1}s  {ex.Message}  ■═■─■"); if (Debugger.IsAttached) Debugger.Break(); else { /*System.Windows.Clipboard.SetText(url);*/ throw; } }
+    finally         /**/ { WriteLine($"+++++  ParseFromHtmlUsingRegex2  {sw.Elapsed.TotalSeconds:N1}s  Success."); }
 
     return list;
   }

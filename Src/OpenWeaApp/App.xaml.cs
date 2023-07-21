@@ -1,4 +1,20 @@
-﻿namespace OpenWea;
+﻿using System;
+using System.Reflection;
+using System.Windows;
+using System.Windows.Controls;
+using AmbienceLib;
+using DB.WeatherX.PwrTls.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using OpenWeather2022;
+using OpenWeaWpfApp;
+using OpenWeaWpfApp.Helpers;
+using StandardContractsLib;
+using StandardLib.Helpers;
+
+namespace OpenWeaApp;
 public partial class App : Application
 {
   string _audit = "Default!!";
@@ -11,7 +27,7 @@ public partial class App : Application
     _ = services.AddTransient<PlotViewModel>();
     _ = services.AddSingleton<MainWeaWindow>();
     _ = services.AddSingleton<MainPlotOldWindow>();
-    _ = services.AddTransient<OpenWeather2022.OpenWea>();
+    _ = services.AddTransient<OpenWea>();
     _ = services.AddTransient<DbxHelper>();
     _ = services.AddSingleton<IBpr, Bpr>();
 
@@ -53,7 +69,7 @@ public partial class App : Application
     _serviceProvider.GetRequiredService<ILogger>().LogInformation($"OnStrt  {_audit}");
 
     MainWindow = _serviceProvider.GetRequiredService<MainWeaWindow>();
-    MainWindow.DataContext = _serviceProvider.GetRequiredService<PlotViewModel>();      
+    MainWindow.DataContext = _serviceProvider.GetRequiredService<PlotViewModel>();
     MainWindow.Show();
 
     base.OnStartup(e);
