@@ -1,7 +1,7 @@
 ﻿#define ObsCol // Go figure: ObsCol works, while array NOT! Just an interesting factoid.
 namespace OpenWeaWpfApp;
 [Obsolete("Hello!?!?!?", false)]
-public partial class MainPlotOldVM : CommunityToolkit.Mvvm.ComponentModel.ObservableValidator
+public partial class MainPlotOldVM : ObservableValidator
 {
   readonly IConfigurationRoot _cfg;
   readonly OpenWea _opnwea;
