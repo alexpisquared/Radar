@@ -49,7 +49,6 @@ public partial class App : Application
     _serviceProvider.GetRequiredService<ILogger>().LogInformation($"OnStrt  {_audit}");
 
     MainWindow = _serviceProvider.GetRequiredService<MainWeaWindow>();
-    var DataContext_ = _serviceProvider.GetRequiredService<PlotViewModel>();
     MainWindow.DataContext = _serviceProvider.GetRequiredService<PlotViewModel>();
     MainWindow.Show();
 

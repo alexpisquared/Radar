@@ -1,25 +1,22 @@
 ﻿namespace OpenWeaWpfApp.Views;
 public partial class MainPlotViewUsrCtrl : UserControl
 {
-  public MainPlotViewUsrCtrl()
-  {
-    InitializeComponent();
+  public MainPlotViewUsrCtrl() => InitializeComponent();
 
-  }
-
-  async void OnLoadad(object sender, RoutedEventArgs e)
+  void OnLoadad(object sender, RoutedEventArgs e)
   {
+    if (DesignerProperties.GetIsInDesignMode(this)) return; //tu: design mode
+
     try
     {
-    DataContext = this.FindParentWindow().DataContext;
-      ((PlotViewModel)DataContext).PopulateAll("Silent");  // only lines chart is drawn.
-      await Task.Delay(1);
+      // Assign DataContext to the viewmodel registered in AppStartHelper.cs OpenWeaWpfApp.AppStartHelper.InitOpenWeaServices(IServiceCollection services) method.
+      dynamic ac = Application.Current;
+      var sp = ac.ServiceProvider;
+      DataContext = sp.GetService(typeof(PlotViewModel));
+      
+      ((PlotViewModel?)DataContext)?.PopulateAll("Silent");  // only lines chart is drawn.
     }
-    catch (Exception ex)
-    {
-      WriteLine(ex.ToString());
-      //ex.Pop(_lgr);
-    }
+    catch (Exception ex)    {      ex.Pop();    }
   }
   void OnPoplte(object sender, RoutedEventArgs e) => ((PlotViewModel)DataContext).PopulateAll(null);  // only lines chart is drawn.
   void OnPocBin(object sender, RoutedEventArgs e) => new PocBin().Show();
