@@ -1,4 +1,6 @@
 ﻿namespace OpenWeaWpfApp;
+
+[Obsolete("Replaced by the caller assenbly", true)]
 public partial class App //: Application
 {
   string _audit = "Default!!";

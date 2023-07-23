@@ -81,10 +81,9 @@ public partial class PlotViewModel : ObservableValidator
 #endif
   #endregion
 
-  public PlotViewModel(/*WeatherxContext weatherxContext,*/ OpenWea openWea, DbxHelper dbh, ILogger lgr, SpeechSynth synth)
+  public PlotViewModel(OpenWea openWea, DbxHelper dbh, ILogger lgr, SpeechSynth synth, IConfigurationRoot cfg)
   {
-    _cfg = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
-    //_dbx = weatherxContext; // _lgr.Log(LogLevel.Trace, $"*** {_dbx.Database.GetConnectionString()}"); // 480ms
+    _cfg = cfg; // _cfg = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
     _dbh = dbh;
     _lgr = lgr;
     _synth = synth;

@@ -18,7 +18,7 @@ namespace OpenWeaApp;
 public partial class App : Application
 {
   string _audit = "Default!!";
-  readonly IServiceProvider _serviceProvider;
+  readonly IServiceProvider _serviceProvider; public IServiceProvider ServiceProvider => _serviceProvider;
 
   public App()
   {
@@ -33,7 +33,7 @@ public partial class App : Application
 
     _ = services.AddSingleton<MainWeaWindow>();
 
-    OpenWeaWpfApp.AppStartHelper.InitOpenWeaServices(services);
+    AppStartHelper.InitOpenWeaServices(services);
 
     _serviceProvider = services.BuildServiceProvider(); // LibInit.InitLib(services, _serviceProvider);
   }
@@ -49,7 +49,7 @@ public partial class App : Application
     _serviceProvider.GetRequiredService<ILogger>().LogInformation($"OnStrt  {_audit}");
 
     MainWindow = _serviceProvider.GetRequiredService<MainWeaWindow>();
-    MainWindow.DataContext = _serviceProvider.GetRequiredService<PlotViewModel>();
+    //use ServiceProvider instead: MainWindow.DataContext = _serviceProvider.GetRequiredService<PlotViewModel>();
     MainWindow.Show();
 
     base.OnStartup(e);
