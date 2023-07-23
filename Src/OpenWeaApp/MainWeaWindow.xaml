@@ -1,6 +1,6 @@
 ﻿<lnk:WindowBase x:Class="OpenWeaApp.MainWeaWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
                 xmlns:lnk="clr-namespace:WpfUserControlLib.Base;assembly=WpfUserControlLib" 
-                xmlns:Views="clr-namespace:OpenWeaWpfApp.Views;assembly=OpenWeaWpfApp" 
+                xmlns:Views="clr-namespace:OpenWeaWpfApp.Views;assembly=OpenWeaLib" 
                 Title="Main Plot View" Height="450" Width="1800" Background="Transparent" AllowsTransparency="True" WindowStyle="None" Loaded="OnLoadad" Activated="OnActivated" Deactivated="OnDeActivtd" >
   <WindowChrome.WindowChrome>
     <WindowChrome CaptionHeight="0" ResizeBorderThickness="10" />

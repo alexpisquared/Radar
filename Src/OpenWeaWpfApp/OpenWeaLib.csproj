@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <!--<OutputType>WinExe</OutputType>-->
     <TargetFramework>net7.0-windows</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
@@ -40,7 +40,7 @@
     <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\StandardLib\StandardLib.csproj" />
     <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\WpfUserControlLib\WpfUserControlLib.csproj" />
     <ProjectReference Include="..\DB.WeatherX.PwrTls\DB.WeatherX.PwrTls.csproj" />
-    <ProjectReference Include="..\OpenWeather2022\OpenWeather2022.csproj" />
+    <ProjectReference Include="..\OpenWeather2022\OpenWeaSvc.csproj" />
     <ProjectReference Include="..\Radar22.Lib\Radar22.Lib.csproj" />
   </ItemGroup>
 

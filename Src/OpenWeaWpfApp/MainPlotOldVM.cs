@@ -20,7 +20,7 @@ public partial class MainPlotOldVM : ObservableValidator
 
   public MainPlotOldVM(WeatherxContext weatherxContext, OpenWea openWea, ILogger lgr, SpeechSynth synth)
   {
-    _cfg = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets min usersecrets 
+                                 //_cfg = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets min usersecrets 
     _lgr = lgr;
     this._synth = synth;
     _opnwea = openWea;
