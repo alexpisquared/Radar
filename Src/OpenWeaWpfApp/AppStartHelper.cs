@@ -15,13 +15,13 @@ public static class AppStartHelper
 
         dynamic ac = Application.Current;
         var sp = ac.ServiceProvider;
-        IConfigurationRoot cfg = sp.GetService(typeof(IConfigurationRoot)); // = new ConfigurationBuilder().AddUserSecrets<App>().Build();
+        IConfigurationRoot cfg = sp.GetService(typeof(IConfigurationRoot)); // = new ConfigurationBuilder().AddUserSecrets<App>().Build(); 
 
-        var scs = cfg.GetConnectionString("Exprs") ?? throw new ArgumentNullException(nameof(services), "cfg.GetConnectionString('Exprs')\n\nCheck the app settings!!!");
+        var scs = cfg.GetConnectionString("Exprs") ?? throw new ArgumentNullException(nameof(services), $"cfg.GetConnectionString('Exprs')\n\nCheck the app settings!!!\n\n{cfg["WhereAmI"]}\n\n");
 
         _ = optionsBuilder.UseSqlServer(scs);
-      } //todo: bad: new ConfigurationBuilder().AddUserSecrets<App>().Build()
-      catch (Exception ex) { _ = MessageBox.Show(ex.Message, "Exception in App()"); }
+      } 
+      catch (Exception ex) { ex.Pop(); }
     });
   }
 }
