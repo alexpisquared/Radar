@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Net.Http;
 using System.Windows.Media.Imaging;
 
 namespace PixelMeasure;
@@ -115,5 +116,18 @@ public static class PicMea // 2023: the latest!!!
     var bitmap = new Bitmap(outStream);
 
     return bitmap;
+  }
+
+  public static async Task<BitmapImage> GetBitmapImageFromUrl(string url)
+  {
+    using var client = new HttpClient();
+    using HttpResponseMessage response = await client.GetAsync(url);
+    using Stream stream = await response.Content.ReadAsStreamAsync();
+    var image = new BitmapImage();
+    image.BeginInit();
+    image.StreamSource = stream;
+    image.CacheOption = BitmapCacheOption.OnLoad;
+    image.EndInit();
+    return image;
   }
 }
