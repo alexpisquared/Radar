@@ -9,7 +9,7 @@ namespace PixelMeasure;
 public static class PicMea // 2023: the latest!!!
 {
   const int _x0 = 250, _y0 = 260, _radiusInPixelsX = 40, _radiusInPixelsY = 40;     //const int _x0 = 525, _y0 = 240, _radiusInPixelsX = 4, _radiusInPixelsY = 100; // color pallete area
-  public static double CalcMphInTheArea(Bitmap bmp, DateTime imgTime) // only for dark theme ...i think (Jan 2021)
+  public static double CalcMphInTheArea(Bitmap bmp) // only for dark theme ...i think (Jan 2021)
   {
     if (bmp == null) return -1;
 
@@ -86,7 +86,7 @@ public static class PicMea // 2023: the latest!!!
       var rv = ttlMPH * .1 / ttlArea;
 
       //77 
-      Debug.WriteLine($":> mea @ {imgTime:HH:mm}   {sw.Elapsed.TotalMilliseconds,5:N1} ms for  {_radiusInPixelsX}x{_radiusInPixelsY} radiusInPixels X*Y   => {ttlArea} area in pixels  ===> {rv:N5} mm/h/km²      {cases.Count} new cases");
+      Debug.WriteLine($":> mea @    {sw.Elapsed.TotalMilliseconds,5:N1} ms for  {_radiusInPixelsX}x{_radiusInPixelsY} radiusInPixels X*Y   => {ttlArea} area in pixels  ===> {rv:N5} mm/h/km²      {cases.Count} new cases");
 
       foreach (var c in cases) Debug.WriteLine($"      {c.Key}   {c.Value,5}");
 
@@ -129,5 +129,11 @@ public static class PicMea // 2023: the latest!!!
     image.CacheOption = BitmapCacheOption.OnLoad;
     image.EndInit();
     return image;
+  }
+
+  public static async Task<double> CalcMphInTheAreaAsync(string url) {
+
+    var mph = PixelMeasure.PicMea.CalcMphInTheArea(PixelMeasure.PicMea.BitmapImage2Bitmap(await PixelMeasure.PicMea.GetBitmapImageFromUrl(url)));
+    return mph;
   }
 }
