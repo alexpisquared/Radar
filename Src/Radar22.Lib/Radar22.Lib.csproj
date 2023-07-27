@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\Ambience\AmbienceLib.csproj" />
+    <ProjectReference Include="..\PixelMeasure\PixelMeasure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

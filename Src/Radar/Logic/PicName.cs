@@ -22,6 +22,6 @@ namespace RadarPicCollect
 		public string StationName { get; set; }
 		public System.Drawing.Point PicOffset { get; set; }
 		public string CacheName { get; set; }
-    public double Measure => _measure == -99 && Bitmap != null ? _measure = PicMea.CalcMphInTheArea(Bitmap, ImageTime) : _measure; // cm/hr/km^2
+    public double Measure => _measure == -99 && Bitmap != null ? _measure = PicMea.CalcMphInTheArea(Bitmap) : _measure; // cm/hr/km^2
 	}
 }

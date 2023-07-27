@@ -3,15 +3,46 @@ using System.Drawing;
 using System.IO;
 using System.Net.Http;
 using System.Windows.Media.Imaging;
-
 namespace PixelMeasure;
-
 public static class PicMea // 2023: the latest!!!
 {
-  const int _x0 = 250, _y0 = 260, _radiusInPixelsX = 40, _radiusInPixelsY = 40;     //const int _x0 = 525, _y0 = 240, _radiusInPixelsX = 4, _radiusInPixelsY = 100; // color pallete area
-  public static double CalcMphInTheArea(Bitmap bmp) // only for dark theme ...i think (Jan 2021)
+  public static async Task<double> CalcMphInTheAreaAsync(string url) => CalcMphInTheArea(BitmapImage2Bitmap(await GetBitmapImageFromUrl(url)));
+  public static async Task<BitmapImage> GetBitmapImageFromUrl(string url)
+  {
+    using var client = new HttpClient();
+    using var response = await client.GetAsync(url);
+    using var stream = await response.Content.ReadAsStreamAsync();
+    var image = new BitmapImage();
+    image.BeginInit();
+    image.StreamSource = stream;
+    image.CacheOption = BitmapCacheOption.OnLoad;
+    image.EndInit();
+    return image;
+  }
+  public static Bitmap BitmapImage2Bitmap(BitmapImage bitmapImage)
+  {
+    using var outStream = new MemoryStream();
+    BitmapEncoder enc = new BmpBitmapEncoder();
+    enc.Frames.Add(BitmapFrame.Create(bitmapImage));
+    enc.Save(outStream);
+    return new Bitmap(outStream);
+  }
+  public static Image BitmapImage2DrawingImage(BitmapImage bitmapImage)
+  {
+    using var outStream = new MemoryStream();
+    BitmapEncoder enc = new BmpBitmapEncoder();
+    enc.Frames.Add(BitmapFrame.Create(bitmapImage));
+    enc.Save(outStream);
+    var bitmap = new Bitmap(outStream);
+
+    return bitmap;
+  }
+
+  public static double CalcMphInTheArea(Bitmap bmp)
   {
     if (bmp == null) return -1;
+
+    const int _x0 = 250, _y0 = 260, _radiusInPixelsX = 40, _radiusInPixelsY = 40;     //const int _x0 = 525, _y0 = 240, _radiusInPixelsX = 4, _radiusInPixelsY = 100; // color pallete area
 
     var sw = Stopwatch.StartNew();
     try
@@ -94,46 +125,6 @@ public static class PicMea // 2023: the latest!!!
     }
     catch (Exception) { /*ex.Log();*/ return -2; }
   }
-
   static void addOrIncrementCount(Dictionary<int, int> mmcnt, int k) { if (mmcnt.ContainsKey(k)) mmcnt[k]++; else mmcnt.Add(k, 1); }
   static void addOrIncrementCount(SortedDictionary<string, int> cases, string s) { if (cases.ContainsKey(s)) cases[s]++; else cases.Add(s, 1); }
-
-  public static Bitmap BitmapImage2Bitmap(BitmapImage bitmapImage)
-  {
-    using var outStream = new MemoryStream();
-    BitmapEncoder enc = new BmpBitmapEncoder();
-    enc.Frames.Add(BitmapFrame.Create(bitmapImage));
-    enc.Save(outStream);
-    return new Bitmap(outStream);
-  }
-
-  public static Image BitmapImage2DrawingImage(BitmapImage bitmapImage)
-  {
-    using var outStream = new MemoryStream();
-    BitmapEncoder enc = new BmpBitmapEncoder();
-    enc.Frames.Add(BitmapFrame.Create(bitmapImage));
-    enc.Save(outStream);
-    var bitmap = new Bitmap(outStream);
-
-    return bitmap;
-  }
-
-  public static async Task<BitmapImage> GetBitmapImageFromUrl(string url)
-  {
-    using var client = new HttpClient();
-    using HttpResponseMessage response = await client.GetAsync(url);
-    using Stream stream = await response.Content.ReadAsStreamAsync();
-    var image = new BitmapImage();
-    image.BeginInit();
-    image.StreamSource = stream;
-    image.CacheOption = BitmapCacheOption.OnLoad;
-    image.EndInit();
-    return image;
-  }
-
-  public static async Task<double> CalcMphInTheAreaAsync(string url) {
-
-    var mph = PixelMeasure.PicMea.CalcMphInTheArea(PixelMeasure.PicMea.BitmapImage2Bitmap(await PixelMeasure.PicMea.GetBitmapImageFromUrl(url)));
-    return mph;
-  }
 }

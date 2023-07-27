@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using System.Security.Policy;
+using PixelMeasure;
 
 namespace xEnvtCanRadar.Views;
 
@@ -15,13 +17,21 @@ public partial class RadarTypeViewUserControl : UserControl
 
   async void OnReload(object s, RoutedEventArgs e)
   {
-    await ReLoad(int.Parse(((FrameworkElement)s).Tag?.ToString() ?? "11"));
+    var riis0 = await ReLoad(int.Parse(((FrameworkElement)s).Tag?.ToString() ?? "11"));
     _loaded = true;
     chkIsPlaying.IsChecked = true;
+
+    if (riis0.Count > 1)
+    {
+      await Task.Delay(5000);
+      await PseudoChart(riis0);
+    }
   } // max is 480 == 2 days on 10 per hour basis.
-  async Task ReLoad(int takeLastCount)
+  async Task<List<RadarImageInfo>> ReLoad(int takeLastCount)
   {
-    if (DesignerProperties.GetIsInDesignMode(this)) return; //tu: design mode
+    var riis1 = new List<RadarImageInfo>();
+
+    if (DesignerProperties.GetIsInDesignMode(this)) return riis1; //tu: design mode
 
     chkIsPlaying.IsChecked = false;
 
@@ -34,33 +44,45 @@ public partial class RadarTypeViewUserControl : UserControl
       if (DateTime.Today.Month > 3)
         PreciTp = PreciTp.Replace("SNOW", "RAIN");
 
-      var gifurls = await ff.ParseFromHtmlUsingRegex($"{_urlRoot}{UrlSuffix}", PreciTp, takeLastCount);
-
-      var riis = new List<RadarImageInfo>();
+      var riis0 = await ff.ParseFromHtmlUsingRegex($"{_urlRoot}{UrlSuffix}", PreciTp, takeLastCount);
       lbxAllPics.Items.Clear();
 
-      if (gifurls.Count < 1)
+      if (riis0.Count < 1)
       {
         Debug.WriteLine($"No files found for {_urlRoot}{UrlSuffix} * {PreciTp}"); // _ = MessageBox.Show($"No files found for {_urlRoot}{UrlSuffix} * {PreciTp}", "Error88a", MessageBoxButton.OK, MessageBoxImage.Error);
       }
       else
-        gifurls.ForEach(ri =>
+      {
+        riis0.ForEach(rii0 =>
         {
-          var r = new RadarImageInfo { GifUrl = $"{_urlRoot}{UrlSuffix}/{ri}", FileName = Path.GetFileNameWithoutExtension(ri.FileName) };
-          riis.Add(ri);
-          _ = lbxAllPics.Items.Add(ri);
+          riis1.Add(rii0);
+          _ = lbxAllPics.Items.Add(rii0);
         });
+      }
 
-      chkIsPlaying.Content = $"_{UrlSuffix}   {gifurls.Count} imgs   {riis.First().ImgTime:ddd HH:mm}÷{riis.Last().ImgTime:HH:mm}   {Stopwatch.GetElapsedTime(sw).TotalSeconds:N1}s   {ff.CalulateSlope(riis):N2}↕";
+      chkIsPlaying.Content = $"_{UrlSuffix}   {riis0.Count} imgs   {riis1.First().ImgTime:ddd HH:mm}÷{riis1.Last().ImgTime:HH:mm}   {Stopwatch.GetElapsedTime(sw).TotalSeconds:N1}s   {ff.CalulateSlope(riis1):N2}↕";
 
-      ScaleFactor = AutoScale ? (ff.CalulateAvgSize(riis) - 10) * .1 : 1; // 13 - 35 => .3 - 2.5
+      ScaleFactor = AutoScale ? (ff.CalulateAvgSize(riis1) - 10) * .1 : 1; // 13 - 35 => .3 - 2.5
 
-      //await Task.Delay(1000);
       //using var timer = new PeriodicTimer(TimeSpan.FromSeconds(_fpsPeriod));
       //await RunTimer(timer);
     }
     catch (Exception ex) { bpr.Error(); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.Message, "Error888", MessageBoxButton.OK, MessageBoxImage.Error); }
     finally { }
+
+    return riis1;
+  }
+
+  async Task PseudoChart(List<RadarImageInfo> riis0)
+  {
+    var rp = "           cm/h \r\n";
+    foreach (var rii0 in riis0)
+    {
+      var lcl = rii0.ImgTime.ToLocalTime();
+      var cmh = await PicMea.CalcMphInTheAreaAsync(rii0.GifUrl);
+      rp += $" {lcl,5:H:mm}  {cmh,5:N1} {new string(' ', (int)(10 * cmh))}■ \r\n";
+    }
+    lblTL.Text = rp;
   }
 
   async Task RunTimer(PeriodicTimer timer)

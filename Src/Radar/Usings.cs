@@ -14,7 +14,7 @@ global using static System.Diagnostics.Trace;
 global using System.IO;
 global using System.Net;
 global using AmbienceLib;
-global using OpenWeather2022.Response;
+//global using OpenWeaSvc.Response;
 global using System.Windows.Controls;
 global using System.Windows.Data;
 global using System.Windows.Input;

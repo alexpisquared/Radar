@@ -27,6 +27,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{26F50195-9FF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenWeaApp", "OpenWeaApp\OpenWeaApp.csproj", "{08CE2A6E-8EBB-4643-B3A4-D1045E9FA964}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelMeasure", "PixelMeasure\PixelMeasure.csproj", "{8FC73CB0-52AB-4945-BBD2-BE51CF5D1D97}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -157,6 +159,18 @@ Global
 		{08CE2A6E-8EBB-4643-B3A4-D1045E9FA964}.Release|x64.Build.0 = Release|Any CPU
 		{08CE2A6E-8EBB-4643-B3A4-D1045E9FA964}.Release|x86.ActiveCfg = Release|Any CPU
 		{08CE2A6E-8EBB-4643-B3A4-D1045E9FA964}.Release|x86.Build.0 = Release|Any CPU
+		{8FC73CB0-52AB-4945-BBD2-BE51CF5D1D97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FC73CB0-52AB-4945-BBD2-BE51CF5D1D97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FC73CB0-52AB-4945-BBD2-BE51CF5D1D97}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8FC73CB0-52AB-4945-BBD2-BE51CF5D1D97}.Debug|x64.Build.0 = Debug|Any CPU
+		{8FC73CB0-52AB-4945-BBD2-BE51CF5D1D97}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8FC73CB0-52AB-4945-BBD2-BE51CF5D1D97}.Debug|x86.Build.0 = Debug|Any CPU
+		{8FC73CB0-52AB-4945-BBD2-BE51CF5D1D97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FC73CB0-52AB-4945-BBD2-BE51CF5D1D97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FC73CB0-52AB-4945-BBD2-BE51CF5D1D97}.Release|x64.ActiveCfg = Release|Any CPU
+		{8FC73CB0-52AB-4945-BBD2-BE51CF5D1D97}.Release|x64.Build.0 = Release|Any CPU
+		{8FC73CB0-52AB-4945-BBD2-BE51CF5D1D97}.Release|x86.ActiveCfg = Release|Any CPU
+		{8FC73CB0-52AB-4945-BBD2-BE51CF5D1D97}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

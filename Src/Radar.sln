@@ -27,8 +27,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpTimeMonitor", "UpTimeMoni
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventLogLib", "EventLogLib\EventLogLib.csproj", "{23946C40-7FDD-48C0-A1B2-DD3391048C8C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenWeather2022", "OpenWeather2022\OpenWeather2022.csproj", "{DCFA53D5-ACB0-46F5-8709-DD5967560C10}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Radar22", "Radar22\Radar22.csproj", "{AA9F5057-6094-4F4C-80EF-5A036CD19A68}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Radar22.Lib", "Radar22.Lib\Radar22.Lib.csproj", "{B712593B-45B5-4B39-B87D-C470733749C3}"
@@ -40,6 +38,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardLib", "..\..\AAV.Shared\Src\NetLts\StandardLib\StandardLib.csproj", "{409768CB-DF01-447A-A8C8-91B8151DD797}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfUserControlLib", "..\..\AAV.Shared\Src\NetLts\WpfUserControlLib\WpfUserControlLib.csproj", "{EC20A9B1-7C76-4899-A8AA-2AF7D7087657}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenWeaSvc", "OpenWeather2022\OpenWeaSvc.csproj", "{62582749-CE75-4352-8E44-1E8C5DA431D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -183,18 +183,6 @@ Global
 		{23946C40-7FDD-48C0-A1B2-DD3391048C8C}.Release|x64.Build.0 = Release|Any CPU
 		{23946C40-7FDD-48C0-A1B2-DD3391048C8C}.Release|x86.ActiveCfg = Release|Any CPU
 		{23946C40-7FDD-48C0-A1B2-DD3391048C8C}.Release|x86.Build.0 = Release|Any CPU
-		{DCFA53D5-ACB0-46F5-8709-DD5967560C10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DCFA53D5-ACB0-46F5-8709-DD5967560C10}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DCFA53D5-ACB0-46F5-8709-DD5967560C10}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{DCFA53D5-ACB0-46F5-8709-DD5967560C10}.Debug|x64.Build.0 = Debug|Any CPU
-		{DCFA53D5-ACB0-46F5-8709-DD5967560C10}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{DCFA53D5-ACB0-46F5-8709-DD5967560C10}.Debug|x86.Build.0 = Debug|Any CPU
-		{DCFA53D5-ACB0-46F5-8709-DD5967560C10}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DCFA53D5-ACB0-46F5-8709-DD5967560C10}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DCFA53D5-ACB0-46F5-8709-DD5967560C10}.Release|x64.ActiveCfg = Release|Any CPU
-		{DCFA53D5-ACB0-46F5-8709-DD5967560C10}.Release|x64.Build.0 = Release|Any CPU
-		{DCFA53D5-ACB0-46F5-8709-DD5967560C10}.Release|x86.ActiveCfg = Release|Any CPU
-		{DCFA53D5-ACB0-46F5-8709-DD5967560C10}.Release|x86.Build.0 = Release|Any CPU
 		{AA9F5057-6094-4F4C-80EF-5A036CD19A68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AA9F5057-6094-4F4C-80EF-5A036CD19A68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA9F5057-6094-4F4C-80EF-5A036CD19A68}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -267,6 +255,18 @@ Global
 		{EC20A9B1-7C76-4899-A8AA-2AF7D7087657}.Release|x64.Build.0 = Release|x64
 		{EC20A9B1-7C76-4899-A8AA-2AF7D7087657}.Release|x86.ActiveCfg = Release|Any CPU
 		{EC20A9B1-7C76-4899-A8AA-2AF7D7087657}.Release|x86.Build.0 = Release|Any CPU
+		{62582749-CE75-4352-8E44-1E8C5DA431D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62582749-CE75-4352-8E44-1E8C5DA431D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62582749-CE75-4352-8E44-1E8C5DA431D4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{62582749-CE75-4352-8E44-1E8C5DA431D4}.Debug|x64.Build.0 = Debug|Any CPU
+		{62582749-CE75-4352-8E44-1E8C5DA431D4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{62582749-CE75-4352-8E44-1E8C5DA431D4}.Debug|x86.Build.0 = Debug|Any CPU
+		{62582749-CE75-4352-8E44-1E8C5DA431D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62582749-CE75-4352-8E44-1E8C5DA431D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62582749-CE75-4352-8E44-1E8C5DA431D4}.Release|x64.ActiveCfg = Release|Any CPU
+		{62582749-CE75-4352-8E44-1E8C5DA431D4}.Release|x64.Build.0 = Release|Any CPU
+		{62582749-CE75-4352-8E44-1E8C5DA431D4}.Release|x86.ActiveCfg = Release|Any CPU
+		{62582749-CE75-4352-8E44-1E8C5DA431D4}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
