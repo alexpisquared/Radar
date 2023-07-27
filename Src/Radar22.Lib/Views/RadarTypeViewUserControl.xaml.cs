@@ -1,8 +1,4 @@
-﻿using System.ComponentModel;
-using System.Security.Policy;
-using PixelMeasure;
-
-namespace xEnvtCanRadar.Views;
+﻿namespace xEnvtCanRadar.Views;
 
 public partial class RadarTypeViewUserControl : UserControl
 {
@@ -13,7 +9,7 @@ public partial class RadarTypeViewUserControl : UserControl
   CancellationTokenSource? _cts;
   bool _loaded, isPlaying;
   public RadarTypeViewUserControl() => InitializeComponent();
-  public static readonly DependencyProperty ScaleFactorProperty = DependencyProperty.Register("ScaleFactor", typeof(double), typeof(RadarTypeViewUserControl), new PropertyMetadata(1.0)); public double ScaleFactor { get { return (double)GetValue(ScaleFactorProperty); } set { SetValue(ScaleFactorProperty, value); } }
+  public static readonly DependencyProperty ScaleFactorProperty = DependencyProperty.Register("ScaleFactor", typeof(double), typeof(RadarTypeViewUserControl), new PropertyMetadata(1.0)); public double ScaleFactor { get => (double)GetValue(ScaleFactorProperty); set => SetValue(ScaleFactorProperty, value); }
 
   async void OnReload(object s, RoutedEventArgs e)
   {
@@ -63,9 +59,6 @@ public partial class RadarTypeViewUserControl : UserControl
       chkIsPlaying.Content = $"_{UrlSuffix}   {riis0.Count} imgs   {riis1.First().ImgTime:ddd HH:mm}÷{riis1.Last().ImgTime:HH:mm}   {Stopwatch.GetElapsedTime(sw).TotalSeconds:N1}s   {ff.CalulateSlope(riis1):N2}↕";
 
       ScaleFactor = AutoScale ? (ff.CalulateAvgSize(riis1) - 10) * .1 : 1; // 13 - 35 => .3 - 2.5
-
-      //using var timer = new PeriodicTimer(TimeSpan.FromSeconds(_fpsPeriod));
-      //await RunTimer(timer);
     }
     catch (Exception ex) { bpr.Error(); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.Message, "Error888", MessageBoxButton.OK, MessageBoxImage.Error); }
     finally { }
@@ -76,7 +69,7 @@ public partial class RadarTypeViewUserControl : UserControl
   async Task PseudoChart(List<RadarImageInfo> riis0)
   {
     var rp = "           cm/h \r\n";
-    foreach (var rii0 in riis0)
+    foreach (var rii0 in riis0.TakeLast(21))
     {
       var lcl = rii0.ImgTime.ToLocalTime();
       var cmh = await PicMea.CalcMphInTheAreaAsync(rii0.GifUrl);

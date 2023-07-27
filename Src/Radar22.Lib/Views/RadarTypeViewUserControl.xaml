@@ -41,7 +41,7 @@
                  Unchecked="chkIsPlaying_Unchecked"
                  FocusVisualStyle="{x:Null}" FontSize="13"/>
 
-      <TextBlock x:Name="lblTL"  VerticalAlignment="Top"     HorizontalAlignment="Left"    d:Text="*** some text ***" FontSize="12" Margin="0 46" Background="#4000" Foreground="#fcc">
+      <TextBlock x:Name="lblTL"  VerticalAlignment="Top"     HorizontalAlignment="Left"    d:Text="*** some text ***" FontSize="12" Margin="0 30" Background="#4000" Foreground="#fcc">
           <UIElement.RenderTransform>
               <TransformGroup>
                   <ScaleTransform/>
@@ -52,9 +52,9 @@
                   <TranslateTransform/>
               </TransformGroup>
           </UIElement.RenderTransform>
-            </TextBlock>
+      </TextBlock>
 
-            <ListView x:Name="lbxAllPics" ItemTemplate="{StaticResource radarThumbnail}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+      <ListView x:Name="lbxAllPics" ItemTemplate="{StaticResource radarThumbnail}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                 VerticalAlignment="Bottom" FocusVisualStyle="{x:Null}" 
                 Background="Transparent" BorderThickness="0" MaxWidth="580" GotFocus="lbxAllPics_GotFocus" LostFocus="lbxAllPics_LostFocus">
         <ListView.ItemsPanel>
