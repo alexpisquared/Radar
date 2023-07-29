@@ -88,7 +88,7 @@ public partial class PlotViewModel : ObservableValidator
     _lgr = lgr;
     _synth = synth;
     _opnwea = openWea;
-    _store = _cfg["StoreData"] == "Yes";
+    _store = _cfg["StoreDataToDB"] == "Yes";
 
     for (var i = 0; i < _maxIcons; i++)
     {
@@ -228,7 +228,7 @@ public partial class PlotViewModel : ObservableValidator
           DrawBothWhenReady(oca, d53);
       }
 
-      await GetDays(2);
+      await GetDays(3);
 
       Model.InvalidatePlot(true); SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  OWA  \n");
 
@@ -478,7 +478,7 @@ public partial class PlotViewModel : ObservableValidator
   void SmartAdd(string note)
   {
     SubHeader += note;
-    var max = 520;
+    var max = 800;
     var len = SubHeader.Length;
     if (len > max)
       SubHeader = $"   {_startedAt:ddd HH:mm}\t{SubHeader.Substring(len - max, max)}"; // cut off the excess from the beginning.

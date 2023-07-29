@@ -241,7 +241,7 @@ public static class EventLogHelper // 2022-09 excrept from C:\g\TimeTracking\N50
     using var reader = GetEventLogReader(qry);
     for (var ev = reader.ReadEventSafe(); ev != null; ev = reader.ReadEventSafe())
     {
-      //32 Debug.Write($" *** ev time: {ev.TimeCreated.Value:y-MM-dd HH:mm:ss.fff} - {evOfIntFlag}={(EvOfIntFlag)evOfIntFlag,}:"); Debug.Assert(!lst.ContainsKey(ev.TimeCreated.Value), $" -- already added {ev.TimeCreated.Value} - {evOfIntFlag}");
+      //32 Debug.Write($" *** ev time: {ev.TimeCreated.Value:yy-MM-dd HH:mm:ss.fff} - {evOfIntFlag}={(EvOfIntFlag)evOfIntFlag,}:"); Debug.Assert(!lst.ContainsKey(ev.TimeCreated.Value), $" -- already added {ev.TimeCreated.Value} - {evOfIntFlag}");
 
       if (lst.Any(r => r.Value == evOfIntFlag) && ev.TimeCreated.HasValue && (ev.TimeCreated.Value - lst.Where(r => r.Value == evOfIntFlag).Max(r => r.Key)).TotalSeconds < 60) // if same last one is < 60 sec ago.
       {
