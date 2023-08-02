@@ -12,10 +12,7 @@ public static class AppStartHelper
     {
       try
       {
-
-        dynamic ac = Application.Current;
-        var sp = ac.ServiceProvider;
-        IConfigurationRoot cfg = sp.GetService(typeof(IConfigurationRoot)); // = new ConfigurationBuilder().AddUserSecrets<App>().Build(); 
+        IConfigurationRoot cfg = (Application.Current as dynamic).ServiceProvider.GetService(typeof(IConfigurationRoot)); 
 
         var scs = cfg.GetConnectionString("Exprs") ?? throw new ArgumentNullException(nameof(services), $"cfg.GetConnectionString('Exprs')\n\nCheck the app settings!!!\n\n{cfg["WhereAmI"]}\n\n");
 

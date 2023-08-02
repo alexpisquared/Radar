@@ -2,7 +2,7 @@
              xmlns:Views="clr-namespace:xEnvtCanRadar.Views;assembly=Radar22.Lib" 
              xmlns:vms="clr-namespace:OpenWeaWpfApp" d:DataContext="{d:DesignInstance Type={x:Type vms:PlotViewModel}}"
              xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
-             Loaded="OnLoadad" MouseLeftButtonDown="OnDragMove" 
+             Loaded="OnLoaded" MouseLeftButtonDown="OnDragMove" 
              d:DesignHeight="450" d:DesignWidth="1800">
   <Grid>
     <Grid.Resources>

@@ -3,7 +3,22 @@ public partial class MainPlotViewUsrCtrl : UserControl
 {
   public MainPlotViewUsrCtrl() => InitializeComponent();
 
-  void OnLoadad(object sender, RoutedEventArgs e)
+
+
+  public bool IsActive
+  {
+    get { return (bool)GetValue(IsActiveProperty); }
+    set { SetValue(IsActiveProperty, value); }
+  }
+
+  // Using a DependencyProperty as the backing store for IsActive.  This enables animation, styling, binding, etc...
+  public static readonly DependencyProperty IsActiveProperty =
+      DependencyProperty.Register("IsActive", typeof(bool), typeof(MainPlotViewUsrCtrl), new PropertyMetadata(default(bool), OnPropertyChanged));
+
+  static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => 
+    ((MainPlotViewUsrCtrl)d).Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Collapsed;
+
+  void OnLoaded(object sender, RoutedEventArgs e)
   {
     if (DesignerProperties.GetIsInDesignMode(this)) return; //tu: design mode
 

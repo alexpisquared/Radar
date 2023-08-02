@@ -9,6 +9,7 @@
     <UserSecretsId>706a5572-d715-42f2-bd05-c9e56c30d9a8</UserSecretsId>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>Android-Weather.ico</ApplicationIcon>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
