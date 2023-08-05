@@ -44,7 +44,7 @@ public partial class MainPlotOldVM : ObservableValidator
     _busy = true;
     try
     {
-      Clear();                              /**/            await Tick();
+      Clear();                              /**/ await Tick();
       await PrevForecastFromDB();           /**/ await Tick();
       await PopulateEnvtCanaAsync();        /**/ await Tick();
       await PopulateScatModelAsync(days);   /**/ await Tick();
