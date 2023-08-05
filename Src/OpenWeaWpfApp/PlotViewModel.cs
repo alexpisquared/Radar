@@ -105,7 +105,7 @@ public partial class PlotViewModel : ObservableValidator
     _lgr.Log(LogLevel.Trace, "PlotViewModel() EOCtor");
 
     //if (VersionHelper.IsDbg) _synth.SpeakFAF("Are you sure?", voice: "en-US-AriaNeural", style: "terrified", speakingRate: .25, volumePercent: 75);
-    if (VersionHelper.IsDbg) _synth.SpeakFAF("Done!");
+    //if (VersionHelper.IsDbg) _synth.SpeakFAF("Done!");
   }
 
   [ObservableProperty] DateTime lastBuild = VersionHelper.GetLastBuildTime;
