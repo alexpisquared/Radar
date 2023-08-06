@@ -18,7 +18,7 @@
     </Grid.Resources>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="8*"/>
-      <ColumnDefinition Width="10"/>
+      <ColumnDefinition Width="Auto"/>
       <ColumnDefinition Width="1*"/>
     </Grid.ColumnDefinitions>
     <Grid.RowDefinitions>
@@ -27,8 +27,6 @@
     </Grid.RowDefinitions>
 
     <oxy:PlotView Model="{Binding Model}" Background="#111" x:Name="plotBR" Grid.RowSpan="2" Grid.ColumnSpan="3" d:IsHidden="True" />
-
-    <Button IsDefault="True" Click="OnPoplte" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="1" />
 
     <Grid Width="222" Height="222" Margin="90,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="2">
       <Ellipse   Width="222" Height="222" StrokeThickness="2" Stroke="#555" Fill="#c002" HorizontalAlignment="Center"/>
@@ -52,10 +50,6 @@
         <TextBlock d:Text="12.1" Text="{Binding CurWindKmHr}" Foreground="#f9f" HorizontalAlignment="Center" FontSize="26" FontWeight="SemiBold" Margin="0 -12 0 10"/>
       </StackPanel>
     </Grid>
-
-    <Image Margin="0,26,170,0"  Source="{Binding EnvtCaIconV, FallbackValue=http://openweathermap.org/img/wn/01n@2x.png}" d:Source="https://weather.gc.ca/weathericons/00.gif"   Width="90"  Height="90"  VerticalAlignment="Top" HorizontalAlignment="Right" Grid.RowSpan="2" Grid.Column="1"/>
-    <Image Margin="0,4,255,0"   Source="{Binding OpnWeaIcom,  FallbackValue=http://openweathermap.org/img/wn/01n@2x.png}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" Width="180" Height="180" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.RowSpan="2" Grid.Column="1" />
-    <Image Margin="0,65,350,0"  Source="{Binding EnvtCaIconM, FallbackValue=http://openweathermap.org/img/wn/01n@2x.png}" d:Source="https://weather.gc.ca/weathericons/02.gif"   Width="90"  Height="90"  VerticalAlignment="Top" HorizontalAlignment="Right" RenderTransformOrigin="-0.2,0.551" Grid.Row="1" Grid.Column="1"/>
 
     <Grid Height="116" Margin="0" Grid.Row="0" Grid.ColumnSpan="3" VerticalAlignment="Top">
       <Grid.RowDefinitions>
@@ -304,6 +298,7 @@
         <MenuItem   Header="Refresh _Mdl"       Command="{Binding CreateMdlCommand}"  CommandParameter="Cmnd"  ToolTip="Updates all data sources since set to true"  />
         <MenuItem   Header="Invalidate"         Command="{Binding InvalidateCommand}" CommandParameter="true"  ToolTip="Updates all data sources since set to true"  />
         <Separator />
+        <Button    Content="Populate" IsDefault="True" Click="OnPoplte" />
       </MenuItem>
       <MenuItem   Header="  _A 2  " Command="{Binding GetDaysCommand}" CommandParameter="2" InputGestureText="F2" ToolTip="Check DB for changes"  />
       <MenuItem   Header="  _B 3  " Command="{Binding GetDaysCommand}" CommandParameter="3" InputGestureText="F3" ToolTip="Check DB for changes"  />
@@ -327,11 +322,11 @@
     <GridSplitter Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" FocusVisualStyle="{x:Null}"/>
     <Views:RadarTypeViewUserControl Margin="0 0 62 42" UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="SNOW.gif" AutoScale="True" StartPlaying="1" Grid.RowSpan="2" Grid.Column="2" Opacity=".8" VerticalAlignment="Bottom" x:Name="radar1" />
 
-    <Viewbox Grid.ColumnSpan="3" Grid.RowSpan="2">
-      <TextBlock Visibility="{Binding GetDaysCommand.IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}" Text="Loading..." Foreground="#5555" />
+    <Viewbox Grid.ColumnSpan="3" Grid.RowSpan="2" Visibility="{Binding GetDaysCommand.IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}" >
+      <TextBlock Text="Loading..." Foreground="#5555" />
     </Viewbox>
 
-    <TextBlock Text="{Binding LastBuild, StringFormat='{}{0:yyyy-MM-dd}'}" Foreground="#08f" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="32" />
+    <TextBlock Text="{Binding LastBuild, StringFormat='{}{0:yyyy-MM-dd}'}" Foreground="#08f" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="1" Margin="32"/>
 
   </Grid>
 </UserControl>

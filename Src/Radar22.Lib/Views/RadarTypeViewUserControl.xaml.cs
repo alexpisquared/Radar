@@ -19,7 +19,7 @@ public partial class RadarTypeViewUserControl : UserControl
 
     if (riis0.Count > 1)
     {
-      await Task.Delay(5000);
+      await Task.Delay(2500);
       await PseudoChart(riis0);
     }
   } // max is 480 == 2 days on 10 per hour basis.
@@ -58,7 +58,7 @@ public partial class RadarTypeViewUserControl : UserControl
 
       chkIsPlaying.Content = $"_{UrlSuffix}   {riis0.Count} imgs   {riis1.First().ImgTime:ddd HH:mm}÷{riis1.Last().ImgTime:HH:mm}   {Stopwatch.GetElapsedTime(sw).TotalSeconds:N1}s   {ff.CalulateSlope(riis1):N2}↕";
 
-      ScaleFactor = AutoScale ? (ff.CalulateAvgSize(riis1) - 10) * .1 : 1; // 13 - 35 => .3 - 2.5
+      ScaleFactor = AutoScale ? (ff.CalulateAvgSize(riis1) - 10) * .15 : 1; // 13÷-35 => .3÷2.5
     }
     catch (Exception ex) { bpr.Error(); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.Message, "Error888", MessageBoxButton.OK, MessageBoxImage.Error); }
     finally { }
@@ -68,13 +68,14 @@ public partial class RadarTypeViewUserControl : UserControl
 
   async Task PseudoChart(List<RadarImageInfo> riis0)
   {
-    var rp = "           cm/h \r\n";
+    var rp = "       0.1*mm/h \r\n";
     foreach (var rii0 in riis0.TakeLast(21))
     {
-      var lcl = rii0.ImgTime.ToLocalTime();
-      var cmh = await PicMea.CalcMphInTheAreaAsync(rii0.GifUrl);
-      rp += $" {lcl,5:H:mm}  {cmh,5:N1} {new string(' ', (int)(10 * cmh))}■ \r\n";
+      var tlcl = rii0.ImgTime.ToLocalTime();
+      var cmph = await PicMea.CalcMphInTheAreaAsync(rii0.GifUrl);
+      rp += $" {tlcl,5:H:mm}{(int)(cmph*100),6} {new string(' ', (int)(10 * cmph))}■ \r\n";
     }
+
     lblTL.Text = rp;
   }
 
