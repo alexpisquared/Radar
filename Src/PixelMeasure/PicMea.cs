@@ -42,7 +42,7 @@ public static class PicMea // 2023: the latest!!!
   {
     if (bmp == null) return -1;
 
-    const int _x0 = 250, _y0 = 260, _radiusInPixelsX = 40, _radiusInPixelsY = 40;     //const int _x0 = 525, _y0 = 240, _radiusInPixelsX = 4, _radiusInPixelsY = 100; // color pallete area
+    const int _x0 = 246, _y0 = 255, _radiusInPixelsX = 40, _radiusInPixelsY = 40;     //const int _x0 = 525, _y0 = 240, _radiusInPixelsX = 4, _radiusInPixelsY = 100; // color pallete area
 
     var sw = Stopwatch.StartNew();
     try
