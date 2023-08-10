@@ -232,7 +232,7 @@ public partial class PlotViewModel : ObservableValidator
 
       Model.InvalidatePlot(true); SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  OWA  \n");
 
-      await DelayedStoreToDbIf(300_000); // too many db stores ==> 5 min delay.
+      await DelayedStoreToDbIf(1_860_000); // too many db stores ==> 35=31+4 min delay.
 
     }, TaskScheduler.FromCurrentSynchronizationContext());
   }
