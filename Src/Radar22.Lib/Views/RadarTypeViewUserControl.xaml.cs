@@ -4,8 +4,8 @@ public partial class RadarTypeViewUserControl : UserControl
 {
   readonly Bpr bpr = new();
   const string _urlRoot = "https://dd.meteo.gc.ca/radar/";
-  const double _fpsPeriod = .04;
-  const int _pauseFrames = 25, _maxFrames = 25 * 60; // prevent from running forever 
+  const double _periodMs = 32; // below 20 - no faster; 32 is OK.
+  const int _pauseFrames = 50, _maxFrames = 25_000; // prevent from running forever 
   CancellationTokenSource? _cts;
   bool _loaded, isPlaying;
   public RadarTypeViewUserControl() => InitializeComponent();
@@ -31,7 +31,7 @@ public partial class RadarTypeViewUserControl : UserControl
 
     chkIsPlaying.IsChecked = false;
 
-    await Task.Delay(TimeSpan.FromSeconds(_fpsPeriod));
+    await Task.Delay(TimeSpan.FromMilliseconds(_periodMs));
     var sw = Stopwatch.GetTimestamp();
     var ff = new WebDirectoryLoader();
 
@@ -99,7 +99,10 @@ public partial class RadarTypeViewUserControl : UserControl
         if (c == lbxAllPics.Items.Count && StartPlaying == "0")
           chkIsPlaying.IsChecked = false;
 
-        lbxAllPics.SelectedIndex = c >= lbxAllPics.Items.Count ? lbxAllPics.Items.Count : c;
+        if (c >= lbxAllPics.Items.Count + _pauseFrames/2)
+          lbxAllPics.SelectedIndex = 0;
+        else if (c < lbxAllPics.Items.Count)
+          lbxAllPics.SelectedIndex = c;
 
         if (_cts.Token.IsCancellationRequested) // Poll on this property if you have to do other cleanup before throwing.
         {
@@ -136,7 +139,7 @@ public partial class RadarTypeViewUserControl : UserControl
     WriteLine($"-- <<<<<<<<<    {UrlSuffix}   {(_loaded ? "Starting" : "Not yet")}.");
     if (!_loaded) return;
     StartPlaying = "1";
-    using var timer = new PeriodicTimer(TimeSpan.FromSeconds(_fpsPeriod));
+    using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(_periodMs));
     await RunTimer(timer);
   }
   async void chkIsPlaying_Unchecked(object sender, RoutedEventArgs e) { WriteLine($"-- Cancelling   {UrlSuffix}."); try { _cts?.Cancel(); } catch (Exception ex) { WriteLine($"-- {ex.GetType().Name}: \t{ex.Message}.   "); await bpr.ErrorAsync(); } }
