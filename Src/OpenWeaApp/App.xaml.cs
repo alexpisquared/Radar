@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,7 +27,7 @@ public partial class App : Application
 
     _ = services.AddSingleton<IBpr, Bpr>();
     _ = services.AddSingleton<IConfigurationRoot>(new ConfigurationBuilder().AddUserSecrets<App>().Build());
-    _ = services.AddSingleton<ILogger>(sp => SeriLogHelper.InitLoggerFactory((@$"C:\Temp\Logs\{Assembly.GetExecutingAssembly().GetName().Name![..5]}.{Environment.UserName[..3]}..log"), "-Verbose -Info +Warning -Error -ErNT -11mb -Infi").CreateLogger<MainWeaWindow>());
+    _ = services.AddSingleton<ILogger>(sp => SeriLogHelper.InitLoggerFactory((@$"{Path.Combine(OneDrive.Root, @"Public")}\Logs\{Assembly.GetExecutingAssembly().GetName().Name![..5]}.{Environment.UserName[..3]}..log"), "-Verbose -Info -Warning -Error -ErNT -11mb +Infi").CreateLogger<MainWeaWindow>());
     _ = services.AddSingleton<SpeechSynth>(sp => SpeechSynth.Factory(
       sp.GetRequiredService<IConfigurationRoot>()["AppSecrets:MagicSpeech"] ?? throw new ArgumentNullException(nameof(services), "cfg.AppSecrets:MagicSpeech"),
       sp.GetRequiredService<ILogger>()));
