@@ -1,0 +1,11 @@
+﻿<Window x:Class="PixelMeasureApp.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+        xmlns:local="clr-namespace:PixelMeasureApp"
+        Title="MainWindow" Background="#333" Width="580" Height="480" >
+  <Viewbox >
+    <Grid>
+      <Button Click="OnClose" Background="#333" IsCancel="True" />
+      <Image x:Name="imgage1" Width="580" Height="480" MouseUp="Image_MouseUp" Source="/20230823T0854Z_MSC_Radar-DPQPE_CASKR_Rain.gif" />
+      <TextBlock x:Name="tbkReport" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="38 -4" Background="#5000" Foreground="#0f0" FontSize="18" d:Text="12312312"/>
+    </Grid>
+  </Viewbox>
+</Window>

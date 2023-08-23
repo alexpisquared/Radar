@@ -24,9 +24,9 @@
 
       <Views:LbxItemRadarTemplate DataContext="{Binding ElementName=lbxAllPics, Path=SelectedItem}" Height="480" />
       <Image Source="/Radar22.Lib;component/WKR_roads.gif" HorizontalAlignment="Left" Opacity=".5"  Height="480" />
-      <Ellipse Width="10" Height="10" StrokeThickness="1.5" Stroke="#ff0" Margin="234,240,320,214" />
-      <Ellipse Width="20" Height="20" StrokeThickness="2.5" Stroke="#037" Margin="424,293,120,167" />
-      <!--ipse Width="20" Height="20" StrokeThickness="2.5" Stroke="#f0f"  Margin="600,313,304,201" />-->
+      <Ellipse   Width="10" Height="10" StrokeThickness="0.5" Stroke="#ff0" Margin="241,250,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"  />
+      <Rectangle Width="80" Height="80" StrokeThickness="0.5" Stroke="#ff0" Margin="206,215,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Tag="Rain calculation area." />
+      <Ellipse   Width="20" Height="20" StrokeThickness="2.5" Stroke="#037" Margin="424,293,120,167" Tag="107 location on the bigger map .. hidden by sea color on this map."/>
 
       <Menu VerticalAlignment="Top" HorizontalAlignment="Left" Margin="38 1" Background="Transparent" Foreground="#ff0" Padding="4 0 0 1" FontSize="12" FontStyle="Oblique">
         <MenuItem Header="1_h" Click="OnReload" Tag="011" InputGestureText="F1" ToolTip="Check DB for changes" />

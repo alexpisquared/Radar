@@ -6,7 +6,8 @@ using System.Windows.Media.Imaging;
 namespace PixelMeasure;
 public static class PicMea // 2023: the latest!!!
 {
-  public static async Task<double> CalcMphInTheAreaAsync(string url) => CalcMphInTheArea(BitmapImage2Bitmap(await GetBitmapImageFromUrl(url)));
+  const int _x0 = 246, _y0 = 255, _radiusInPixelsX = 40, _radiusInPixelsY = 40;     //const int _x0 = 525, _y0 = 240, _radiusInPixelsX = 4, _radiusInPixelsY = 100; // color pallete area
+  public static async Task<double> CalcMphInTheAreaAsync(string url, int x0 = _x0, int y0 = _y0) => CalcMphInTheArea(BitmapImage2Bitmap(await GetBitmapImageFromUrl(url)), x0, y0);
   public static async Task<BitmapImage> GetBitmapImageFromUrl(string url)
   {
     using var client = new HttpClient();
@@ -38,11 +39,17 @@ public static class PicMea // 2023: the latest!!!
     return bitmap;
   }
 
-  public static double CalcMphInTheArea(Bitmap bmp)
+  public static Bitmap DrawSquare(Bitmap bmp, int x0, int y0)
+  {
+    // draw a 40x40 red square at the x0, yo center of the bmp:
+    using var g = Graphics.FromImage(bmp);
+    using var p = new Pen(Color.Red, 2);
+    g.DrawRectangle(p, x0 - 20, y0 - 20, 40, 40);
+    return bmp;
+  }
+  public static double CalcMphInTheArea(Bitmap bmp, int x0, int y0)
   {
     if (bmp == null) return -1;
-
-    const int _x0 = 246, _y0 = 255, _radiusInPixelsX = 40, _radiusInPixelsY = 40;     //const int _x0 = 525, _y0 = 240, _radiusInPixelsX = 4, _radiusInPixelsY = 100; // color pallete area
 
     var sw = Stopwatch.StartNew();
     try
@@ -55,7 +62,7 @@ public static class PicMea // 2023: the latest!!!
       for (var x = -_radiusInPixelsX; x < _radiusInPixelsX; x++)
         for (var y = -_radiusInPixelsY; y < _radiusInPixelsY; y++, ttlArea++)
         {
-          var pc = bmp.GetPixel(_x0 + x, _y0 + y);
+          var pc = bmp.GetPixel(x0 + x, y0 + y);
           switch (pc.ToArgb())
           {
             default: addOrIncrementCount(cases, $"case {pc.ToArgb(),9}: addOrIncrementCount(mmcnt, -1); ttlMPH += -1; break; // {pc.Name,10}   RGB: {pc.R,3} {pc.G,3} {pc.B,3}   <Rectangle Fill=\"#{pc.Name}\" />"); break; //dev: addIfN(mmcnt, -003); 

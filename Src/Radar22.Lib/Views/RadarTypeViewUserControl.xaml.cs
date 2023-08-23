@@ -78,6 +78,7 @@ public partial class RadarTypeViewUserControl : UserControl
     }
 
     lblTL.Text = rp;
+    Console.Beep(200, 200);
   }
 
   async Task RunTimer(PeriodicTimer timer)

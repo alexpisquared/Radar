@@ -13,6 +13,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="bin\**" />
+    <EmbeddedResource Remove="bin\**" />
+    <None Remove="bin\**" />
+    <Page Remove="bin\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="NoDataIndicator.png" />
     <None Remove="Views\NoDataIndicator.bmp" />
   </ItemGroup>
@@ -43,10 +50,6 @@
     <ProjectReference Include="..\DB.WeatherX.PwrTls\DB.WeatherX.PwrTls.csproj" />
     <ProjectReference Include="..\OpenWeather2022\OpenWeaSvc.csproj" />
     <ProjectReference Include="..\Radar22.Lib\Radar22.Lib.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="bin\Logs\" />
   </ItemGroup>
 
   <ItemGroup>

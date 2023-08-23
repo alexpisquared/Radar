@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="20230823T0854Z_MSC_Radar-DPQPE_CASKR_Rain.gif" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PixelMeasure\PixelMeasure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="20230823T0854Z_MSC_Radar-DPQPE_CASKR_Rain.gif" />
+  </ItemGroup>
+
+</Project>
