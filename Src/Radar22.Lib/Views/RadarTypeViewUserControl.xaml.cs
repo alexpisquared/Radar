@@ -10,6 +10,7 @@ public partial class RadarTypeViewUserControl : UserControl
   bool _loaded, isPlaying;
   public RadarTypeViewUserControl() => InitializeComponent();
   public static readonly DependencyProperty ScaleFactorProperty = DependencyProperty.Register("ScaleFactor", typeof(double), typeof(RadarTypeViewUserControl), new PropertyMetadata(1.0)); public double ScaleFactor { get => (double)GetValue(ScaleFactorProperty); set => SetValue(ScaleFactorProperty, value); }
+  public static readonly DependencyProperty ScaleFacto_Property = DependencyProperty.Register("ScaleFacto_", typeof(double), typeof(RadarTypeViewUserControl), new PropertyMetadata(1.0)); public double ScaleFacto_ { get => (double)GetValue(ScaleFacto_Property); set => SetValue(ScaleFacto_Property, value); }
 
   async void OnReload(object s, RoutedEventArgs e)
   {
@@ -75,6 +76,7 @@ public partial class RadarTypeViewUserControl : UserControl
       rp += $" {tlcl,5:H:mm}{(int)(cmph * 100),6} {new string(' ', (int)(10 * cmph))}■ \r\n";
 
       ScaleFactor = AutoScale ? 1 + Math.Log2(1 + cmph * 10) : 1; // x8 is like a good value for the max.
+      ScaleFacto_ = 1 + Math.Log2(1 + cmph * 10); // x8 is like a good value for the max.
     }
 
     lblTL.Text = rp;

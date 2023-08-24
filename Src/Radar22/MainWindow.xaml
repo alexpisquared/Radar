@@ -6,13 +6,12 @@
   </WindowChrome.WindowChrome>
   <Grid>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="8*"/>
-      <ColumnDefinition Width="16"/>
-      <ColumnDefinition Width="2*"/>
-      <ColumnDefinition Width="0*"/>
+      <ColumnDefinition Width="5.52*"/>
+      <ColumnDefinition Width="26"/>
+      <ColumnDefinition Width="*"/>
     </Grid.ColumnDefinitions>
     <Views:RadarTypeViewUserControl UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="SNOW.gif"    StartPlaying="1" AutoScale="False" Grid.ColumnSpan="4" />
-    <Views:RadarTypeViewUserControl UrlSuffix="PRECIPET/GIF/ONT" PreciTp="SNOW_WT.gif" StartPlaying="1" AutoScale="False" Grid.ColumnSpan="2" Grid.Column="1" VerticalAlignment="Bottom"/>
+    <Views:RadarTypeViewUserControl UrlSuffix="PRECIPET/GIF/ONT" PreciTp="SNOW_WT.gif" StartPlaying="1" AutoScale="False" Grid.ColumnSpan="2" Grid.Column="1" VerticalAlignment="Bottom" Margin="2"/>
     <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" FocusVisualStyle="{x:Null}" Background="Transparent"/>
     <!--
     <Views:RadarTypeViewUserControl UrlSuffix="PRECIPET/GIF/WKR" PreciTp="SNOW.gif"    StartPlaying="0" Grid.Column="2" HorizontalAlignment="Left" IsEnabled="False" />
