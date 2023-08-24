@@ -259,13 +259,13 @@ public partial class PlotViewModel : ObservableValidator
 
       var dbx = _dbh.WeatherxContext;
 
-      var a = await dbx.PointFore.Where(r => r.SiteId == Cnst._phc && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
-      var b = await dbx.PointFore.Where(r => r.SiteId == Cnst._vgn && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
-      var c = await dbx.PointFore.Where(r => r.SiteId == Cnst._mis && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
+      var phc = await dbx.PointFore.Where(r => r.SiteId == Cnst._phc && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
+      var vgn = await dbx.PointFore.Where(r => r.SiteId == Cnst._vgn && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
+      var mis = await dbx.PointFore.Where(r => r.SiteId == Cnst._mis && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
 
-      return (a, b, c);
+      return (phc, vgn, mis);
     }
-    catch (Exception ex) { _lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
+    catch (Exception ex) { _lgr.Log(LogLevel.Error, $"■88 {ex.Message}"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
     finally { _isDbBusy = false; }
   }
 

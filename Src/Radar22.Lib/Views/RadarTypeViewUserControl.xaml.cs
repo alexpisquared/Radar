@@ -75,8 +75,8 @@ public partial class RadarTypeViewUserControl : UserControl
       var cmph = await PicMea.CalcMphInTheAreaAsync(rii0.GifUrl); // 0 ÷ 4_000
       rp += $" {tlcl,5:H:mm}{(int)(cmph * 100),6} {new string(' ', (int)(10 * cmph))}■ \r\n";
 
-      ScaleFactor = AutoScale ? 1 + Math.Log2(1 + cmph * 10) : 1; // x8 is like a good value for the max.
-      ScaleFacto_ = 1 + Math.Log2(1 + cmph * 10); // x8 is like a good value for the max.
+      ScaleFacto_ = 1 + Math.Log(1 + cmph * 10, 1.5); // x8 is like a good value for the max.
+      ScaleFactor = AutoScale ? ScaleFacto_ : 1;  
     }
 
     lblTL.Text = rp;
