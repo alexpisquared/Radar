@@ -71,10 +71,10 @@ public partial class RadarTypeViewUserControl : UserControl
     foreach (var rii0 in riis0.TakeLast(21))
     {
       var tlcl = rii0.ImgTime.ToLocalTime();
-      var cmph = await PicMea.CalcMphInTheAreaAsync(rii0.GifUrl); // 0 ÷ 350
+      var cmph = await PicMea.CalcMphInTheAreaAsync(rii0.GifUrl); // 0 ÷ 4_000
       rp += $" {tlcl,5:H:mm}{(int)(cmph * 100),6} {new string(' ', (int)(10 * cmph))}■ \r\n";
 
-      ScaleFactor = AutoScale ? 1 + (cmph / 50.0) : 1; // x8 is like a good value for the max.
+      ScaleFactor = AutoScale ? 1 + Math.Log2(1 + cmph * 10) : 1; // x8 is like a good value for the max.
     }
 
     lblTL.Text = rp;
