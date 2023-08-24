@@ -75,8 +75,8 @@ public partial class RadarTypeViewUserControl : UserControl
       var cmph = await PicMea.CalcMphInTheAreaAsync(rii0.GifUrl); // 0 ÷ 4_000
       rp += $" {tlcl,5:H:mm}{(int)(cmph * 100),6} {new string(' ', (int)(10 * cmph))}■ \r\n";
 
-      ScaleFacto_ = 1 + Math.Log(1 + cmph * 10, 1.5); // x8 is like a good value for the max.
-      ScaleFactor = AutoScale ? ScaleFacto_ : 1;  
+      ScaleFacto_ = Math.Min(3, .5 + Math.Log(1 + (cmph * 10), 2.5));
+      ScaleFactor = AutoScale ? ScaleFacto_ : 1;
     }
 
     lblTL.Text = rp;
@@ -103,7 +103,7 @@ public partial class RadarTypeViewUserControl : UserControl
         if (c == lbxAllPics.Items.Count && StartPlaying == "0")
           chkIsPlaying.IsChecked = false;
 
-        if (c >= lbxAllPics.Items.Count + _pauseFrames / 2)
+        if (c >= lbxAllPics.Items.Count + (_pauseFrames / 2))
           lbxAllPics.SelectedIndex = 0;
         else if (c < lbxAllPics.Items.Count)
           lbxAllPics.SelectedIndex = c;
