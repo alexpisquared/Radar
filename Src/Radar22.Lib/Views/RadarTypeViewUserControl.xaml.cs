@@ -69,7 +69,7 @@ public partial class RadarTypeViewUserControl : UserControl
   async Task PseudoChart(List<RadarImageInfo> riis0)
   {
     var rp = "       0.1*mm/h \r\n";
-    foreach (var rii0 in riis0.TakeLast(21))
+    foreach (var rii0 in riis0.TakeLast(41))
     {
       var tlcl = rii0.ImgTime.ToLocalTime();
       var cmph = await PicMea.CalcMphInTheAreaAsync(rii0.GifUrl); // 0 ÷ 4_000
