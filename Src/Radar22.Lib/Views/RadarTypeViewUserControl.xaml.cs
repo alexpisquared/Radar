@@ -151,3 +151,7 @@ public partial class RadarTypeViewUserControl : UserControl
   void lbxAllPics_SelectionChanged(object sender, SelectionChangedEventArgs e) { }
   void lbxAllPics_LostFocus(object sender, RoutedEventArgs e) { }
 }
+
+
+//     _ = WinAPI.PrintWindow(handle, hdc, 1); // captures a window bitmap even if the window is covered by other windows or if it is off-screen. 
+
