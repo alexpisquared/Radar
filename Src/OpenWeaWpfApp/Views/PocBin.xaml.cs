@@ -17,13 +17,8 @@ public partial class PocBin //: Window
       }
     };
 
-    if (Debugger.IsAttached)
-    {
-      Topmost = true;
-    }
-    else
-    {
-    }
+    if (Debugger.IsAttached) Topmost = true;
+
 
     WindowState = WindowState.Normal;
     WindowStartupLocation = WindowStartupLocation.Manual;

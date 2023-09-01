@@ -25,7 +25,7 @@ public partial class MainPlotViewWin // : WindowBase
       }
     };
 
-    Topmost = Debugger.IsAttached;
+    if (Debugger.IsAttached) Topmost = true;
 
     KeepOpenReason = null; // nothing to hold on to.
 
