@@ -108,7 +108,7 @@ public partial class PlotViewModel : ObservableValidator
     //if (VersionHelper.IsDbg) _synth.SpeakFAF("Done!");
   }
 
-  [ObservableProperty] DateTime lastBuild = VersionHelper.GetLastBuildTime;
+  [ObservableProperty] string lastBuild = VersionHelper.CurVerStr;
   [RelayCommand]
   public void PopulateAll(object? obj)
   {
@@ -287,14 +287,17 @@ public partial class PlotViewModel : ObservableValidator
     if (double.TryParse(sitedata.almanac.temperature[2].Value, out normTMax) &&
         double.TryParse(sitedata.almanac.temperature[3].Value, out normTMin))
     {
-      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), _extrMax));
-      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), _extrMax));
-      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMax));
-      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMax));
-      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), NormTMin));
-      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), NormTMin));
-      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), _extrMin));
-      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), _extrMin));
+      var now = DateTime.Now;
+      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(-2)), _extrMax));
+      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(+8)), _extrMax));
+      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(+8)), NormTMax));
+      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now), NormTMax));
+      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now), +100));
+      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now), -100));
+      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now), NormTMin));
+      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(+8)), NormTMin));
+      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(+8)), _extrMin));
+      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(-2)), _extrMin));
     }
 
     EnvtCaIconM = $"https://weather.gc.ca/weathericons/{sitedata?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));

@@ -15,7 +15,7 @@
         <MenuItem   Header="  _X  " ToolTip="Close" Click="OnClose" />
       </Menu>
 
-      <TextBlock Text="{Binding LastBuild, StringFormat=\{0:yyyy-MM-dd\}}" Foreground="#08f" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="32" />
+      <TextBlock Text="{Binding LastBuild}" Foreground="#08f" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="32" />
 
       <Views:MainPlotViewUsrCtrl Margin="0"/>
 

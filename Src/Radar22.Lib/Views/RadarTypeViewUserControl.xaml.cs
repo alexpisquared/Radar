@@ -20,7 +20,7 @@ public partial class RadarTypeViewUserControl : UserControl
 
     if (riis0.Count > 1)
     {
-      await Task.Delay(2500);
+      await Task.Delay(500);
       await PseudoChart(riis0);
     }
   } // max is 480 == 2 days on 10 per hour basis.
