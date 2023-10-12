@@ -9,4 +9,4 @@ global using System.Xml.Serialization;
 global using OpenWeather2022.Response;
 global using XSD.CLS;
 global using static System.Diagnostics.Trace;
-
+global using HtmlAgilityPack;

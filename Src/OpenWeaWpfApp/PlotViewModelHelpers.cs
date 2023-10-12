@@ -6,7 +6,7 @@ internal static class Cnst
     pearson = "pea",
     batnvil = "bvl",
   _Past24YYZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yyz", // Pearson                                                                                        
-  _Past24YKZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=ykz"; // Buttonville
+  _Past24OKN = @"http://weather.gc.ca/past_conditions/index_e.html?station=okn"; // King City (https://www.google.ca/maps/@43.9640351,-79.5739119,34m/data=!3m1!1e3?entry=ttu)  :ykz.Buttonville past is gone Oct, 2023.
 }
 internal static class PlotViewModelHelpers
 {
@@ -18,7 +18,7 @@ internal static class PlotViewModelHelpers
     {
       try
       {
-        ArgumentNullException.ThrowIfNull(siteFore, $"@@@@@@@@@ {nameof(siteFore)}");
+        ArgumentNullException.ThrowIfNull(siteFore, $"e846 {nameof(siteFore)}");
         var now = DateTime.Now;
 
         //var connectionString = _cfg.GetConnectionString("Exprs");
@@ -191,7 +191,7 @@ internal static class PlotViewModelHelpers
   {
     Past24hrHAP p24 = new();
     var pea = await p24.GetIt(Cnst._Past24YYZ);
-    var bvl = await p24.GetIt(Cnst._Past24YKZ);
+    var bvl = await p24.GetIt(Cnst._Past24OKN);
     return (bvl, pea);
   }
   internal static async Task<(siteData? sitedataMiss, siteData? sitedataVghn)> GetFore24hrFromEC()
