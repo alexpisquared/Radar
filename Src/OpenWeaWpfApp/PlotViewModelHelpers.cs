@@ -12,7 +12,7 @@ internal static class PlotViewModelHelpers
 {
   static Bpr bpr = new Bpr();
 
-  internal static async Task AddForecastToDB_EnvtCa(WeatherxContext _dbx, string siteId, siteData? siteFore, string srcId = "eca", string measureId = "tar")
+  internal static async Task AddForecastToDB_EnvtCa(ILogger _lgr, WeatherxContext _dbx, string siteId, siteData? siteFore, string srcId = "eca", string measureId = "tar")
   {
     for (int i = 0; i < 10; i++)
     {
@@ -56,8 +56,8 @@ internal static class PlotViewModelHelpers
         WriteLine($"■■ {await _dbx.SaveChangesAsync()} rows saved ■■");
         return;
       }
-      catch (InvalidOperationException ex) { WriteLine($"WARN: F{i,3} {ex.Message}"); await Task.Delay(1000); bpr.Warn(); }
-      catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
+      catch (InvalidOperationException ex) { _lgr.LogWarning($"F{i,3} {ex.Message}"); await Task.Delay(1000); bpr.Warn(); }
+      catch (Exception ex) { ex.Pop(_lgr); }
     }
   }
   internal static async Task AddForecastToDB_OpnWea(WeatherxContext _dbx, string siteId, RootobjectOneCallApi? siteFore, string srcId = "owa", string measureId = "tar")
