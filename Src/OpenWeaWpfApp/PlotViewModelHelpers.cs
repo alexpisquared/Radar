@@ -25,6 +25,8 @@ internal static class PlotViewModelHelpers
         //WeatherxContextFactory dbf = new(connectionString);
         //using WeatherxContext _dbx = dbf.CreateDbContext();
 
+        _lgr.LogInformation($"■■ {siteFore.currentConditions.dateTime[1]} ■■  <== is this OK for a date?");
+
         var forecastedAt = EnvtCaDate(siteFore.currentConditions.dateTime[1]);
 
         foreach (var f in siteFore.hourlyForecastGroup.hourlyForecast.ToList()) //siteFore.hourlyForecastGroup.hourlyForecast.ToList().ForEach(async f =>
