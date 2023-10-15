@@ -18,11 +18,11 @@ public partial class MainPlotOldVM : ObservableValidator
     _urlPast24hrYYZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yyz", // Pearson
     _urlPast24hrYKZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=ykz"; // Buttonville
 
-  public MainPlotOldVM(WeatherxContext weatherxContext, OpenWea openWea, ILogger lgr, SpeechSynth synth)
+  public MainPlotOldVM(WeatherxContext weatherxContext, OpenWea openWea, ILogger lgr, SpeechSynth synth, IConfigurationRoot cfg)
   {
-                                 //_cfg = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets min usersecrets 
+    _cfg = cfg; //new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets min usersecrets 
     _lgr = lgr;
-    this._synth = synth;
+    _synth = synth;
     _opnwea = openWea;
     _dbx = weatherxContext; // WriteLine($"*** {_dbx.Database.GetConnectionString()}"); // 480ms
 

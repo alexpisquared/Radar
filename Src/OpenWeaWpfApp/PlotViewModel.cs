@@ -284,9 +284,12 @@ public partial class PlotViewModel : ObservableValidator
       YAxsRMax = (YAxisMax - YAxisMin - pad) * 10;
     }
 
-    if (double.TryParse(sitedata.almanac.temperature[2].Value, out normTMax) &&
-        double.TryParse(sitedata.almanac.temperature[3].Value, out normTMin))
+    if (double.TryParse(sitedata.almanac.temperature[2].Value, out var max) &&
+        double.TryParse(sitedata.almanac.temperature[3].Value, out var min))
     {
+      NormTMax = max;
+      NormTMin = min;
+
       var now = DateTime.Now;
       OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(-2)), _extrMax));
       OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(+8)), _extrMax));
