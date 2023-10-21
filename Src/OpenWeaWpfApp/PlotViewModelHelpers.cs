@@ -25,9 +25,7 @@ internal static class PlotViewModelHelpers
         //WeatherxContextFactory dbf = new(connectionString);
         //using WeatherxContext _dbx = dbf.CreateDbContext();
 
-        _lgr.LogInformation($"■■ {siteFore.currentConditions.dateTime[1]} ■■  <== is this OK for a date?");
-
-        var forecastedAt = EnvtCaDate(siteFore.currentConditions.dateTime[1]);
+        var forecastedAt = GetDateSafe(_lgr, siteFore);
 
         foreach (var f in siteFore.hourlyForecastGroup.hourlyForecast.ToList()) //siteFore.hourlyForecastGroup.hourlyForecast.ToList().ForEach(async f =>
         {
@@ -55,13 +53,37 @@ internal static class PlotViewModelHelpers
           }
         };
 
+#if DEBUG
+        WriteLine($"■■  await _dbx.SaveChangesAsync()  suspended in DEBUG ■■");
+#else
         WriteLine($"■■ {await _dbx.SaveChangesAsync()} rows saved ■■");
+#endif
         return;
       }
       catch (InvalidOperationException ex) { _lgr.LogWarning($"F{i,3} {ex.Message}"); await Task.Delay(1000); bpr.Warn(); }
       catch (Exception ex) { ex.Pop(_lgr); }
     }
   }
+
+  private static DateTimeOffset GetDateSafe(ILogger _lgr, siteData siteFore)
+  {
+    try
+    {
+      var report = $"■■ {siteFore.dateTime.Length} items in the dateTime array ■■  ";
+      if (siteFore.dateTime.Length > 1)
+        _lgr.LogInformation($"■■ {siteFore.dateTime[1]} ■■  <== is this OK for a date?");
+      else
+        _lgr.LogInformation($"■■ ?????????");
+    }
+    catch (Exception ex)
+    {
+      _lgr.LogWarning($"■■ {ex.Message} ■■");
+    }
+
+    var forecastedAt = EnvtCaDate(siteFore.dateTime[1]);
+    return forecastedAt;
+  }
+
   internal static async Task AddForecastToDB_OpnWea(WeatherxContext _dbx, string siteId, RootobjectOneCallApi? siteFore, string srcId = "owa", string measureId = "tar")
   {
     for (int i = 0; i < 10; i++)
