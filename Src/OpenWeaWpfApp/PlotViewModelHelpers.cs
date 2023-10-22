@@ -1,6 +1,4 @@
-﻿using AmbienceLib;
-
-internal static class Cnst
+﻿internal static class Cnst
 {
   public const string _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaughan = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582", _phc = "phc", _vgn = "vgn", _mis = "mis",
     pearson = "pea",
@@ -10,11 +8,24 @@ internal static class Cnst
 }
 internal static class PlotViewModelHelpers
 {
-  static Bpr bpr = new Bpr();
+  static readonly Bpr bpr = new();
+
+  internal static async Task<DateTimeOffset> LastTimeStoredToDb(ILogger _lgr, WeatherxContext weatherxContext)
+  {
+    try
+    {
+      return await weatherxContext.PointReal.MaxAsync(r => r.CreatedAt);
+    }
+    catch (Exception ex)
+    {
+      ex.Pop(_lgr);
+      return DateTimeOffset.Now;
+    }
+  }
 
   internal static async Task AddForecastToDB_EnvtCa(ILogger _lgr, WeatherxContext _dbx, string siteId, siteData? siteFore, string srcId = "eca", string measureId = "tar")
   {
-    for (int i = 0; i < 10; i++)
+    for (var i = 0; i < 10; i++)
     {
       try
       {
@@ -86,7 +97,7 @@ internal static class PlotViewModelHelpers
 
   internal static async Task AddForecastToDB_OpnWea(WeatherxContext _dbx, string siteId, RootobjectOneCallApi? siteFore, string srcId = "owa", string measureId = "tar")
   {
-    for (int i = 0; i < 10; i++)
+    for (var i = 0; i < 10; i++)
     {
       try
       {
@@ -135,7 +146,7 @@ internal static class PlotViewModelHelpers
   {
     ArgumentNullException.ThrowIfNull(sitePast, $"@@@@@@@@@ {nameof(sitePast)}");
 
-    for (int i = 0; i < 10; i++)
+    for (var i = 0; i < 10; i++)
     {
       try
       {
@@ -185,10 +196,9 @@ internal static class PlotViewModelHelpers
 
   internal static DateTimeOffset EnvtCaDate(dateStampType dateStampType)
   {
-    if (!DateTimeOffset.TryParseExact($"{dateStampType.year}-{dateStampType.month.Value}-{dateStampType.day.Value} {dateStampType.hour.Value}:{dateStampType.minute}", "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var dt))
-      throw new ArgumentException(nameof(dateStampNameType));
-
-    return dt;
+    return !DateTimeOffset.TryParseExact($"{dateStampType.year}-{dateStampType.month.Value}-{dateStampType.day.Value} {dateStampType.hour.Value}:{dateStampType.minute}", "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var dt)
+      ? throw new ArgumentException(nameof(dateStampNameType))
+      : dt;
   }
 
   internal static void RefillForeEnvtCa(ObservableCollection<DataPoint> points, siteData? siteDt)

@@ -235,7 +235,7 @@ public partial class PlotViewModel : ObservableValidator
 
       Model.InvalidatePlot(true); SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  OWA  \n");
 
-      await DelayedStoreToDbIf(1_860_000); // too many db stores ==> 35=31+4 min delay.
+      await DelayedStoreToDbIf(); 
 
     }, TaskScheduler.FromCurrentSynchronizationContext());
   }
@@ -306,12 +306,20 @@ public partial class PlotViewModel : ObservableValidator
     EnvtCaIconM = $"https://weather.gc.ca/weathericons/{sitedata?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
   }
 
-  async Task<bool> DelayedStoreToDbIf(int delayMs)
+  async Task<bool> DelayedStoreToDbIf()
   {
     if (!_store || VersionHelper.IsDbg)
       return false;
 
-    await Task.Delay(delayMs); //hack: //todo: fix the db synch one day.
+    await Task.Delay(60_000); 
+
+    var timeSinceLastDbStor2 = await PlotViewModelHelpers.LastTimeStoredToDb(_lgr, _dbh.WeatherxContext);
+    var timeSinceLastDbStore = DateTimeOffset.Now - timeSinceLastDbStor2;
+    if (timeSinceLastDbStore.TotalHours < 6)
+    {
+      _synth.SpeakFAF($"Too soon to store to DB: only {timeSinceLastDbStore.TotalHours:N1} hours passed.", volumePercent: 10);
+      return false;
+    }
 
     try
     {
