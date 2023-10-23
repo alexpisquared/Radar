@@ -317,7 +317,8 @@ public partial class PlotViewModel : ObservableValidator
     var timeSinceLastDbStore = DateTimeOffset.Now - timeSinceLastDbStor2;
     if (timeSinceLastDbStore.TotalHours < 6)
     {
-      _synth.SpeakFAF($"Too soon to store to DB: only {timeSinceLastDbStore.TotalHours:N1} hours passed.", volumePercent: 10);
+      //_synth.SpeakFAF($"Too soon to store to DB: only {timeSinceLastDbStore.TotalHours:N1} hours passed.", volumePercent: 10);
+      _synth.SpeakFAF($"Too soon to store to DB: less than 6 hours passed.", volumePercent: 10);
       return false;
     }
 
