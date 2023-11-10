@@ -311,7 +311,7 @@ public partial class PlotViewModel : ObservableValidator
     if (!_store || VersionHelper.IsDbg)
       return false;
 
-    await Task.Delay(60_000); 
+    await Task.Delay(120_000); 
 
     var timeSinceLastDbStor2 = await PlotViewModelHelpers.LastTimeStoredToDb(_lgr, _dbh.WeatherxContext);
     var timeSinceLastDbStore = DateTimeOffset.Now - timeSinceLastDbStor2;
