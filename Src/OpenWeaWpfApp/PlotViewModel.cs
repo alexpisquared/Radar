@@ -194,14 +194,14 @@ public partial class PlotViewModel : ObservableValidator
 
       var day0 = oca.daily.First();
       OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), -000));
-      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), +500));
-      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), +500));
+      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), +800));
+      OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(),  +800));
       OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), -000));
       oca.daily.ToList().ForEach(x =>
       {
         OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), -000));
-        OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), +500));
-        OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), +500));
+        OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), +800));
+        OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), +800));
         OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), -000));
       });
 
@@ -235,7 +235,7 @@ public partial class PlotViewModel : ObservableValidator
 
       Model.InvalidatePlot(true); SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  OWA  \n");
 
-      await DelayedStoreToDbIf(); 
+      await DelayedStoreToDbIf();
 
     }, TaskScheduler.FromCurrentSynchronizationContext());
   }
@@ -311,7 +311,7 @@ public partial class PlotViewModel : ObservableValidator
     if (!_store || VersionHelper.IsDbg)
       return false;
 
-    await Task.Delay(120_000); 
+    await Task.Delay(120_000);
 
     var timeSinceLastDbStor2 = await PlotViewModelHelpers.LastTimeStoredToDb(_lgr, _dbh.WeatherxContext);
     var timeSinceLastDbStore = DateTimeOffset.Now - timeSinceLastDbStor2;
@@ -396,16 +396,18 @@ public partial class PlotViewModel : ObservableValidator
   void DrawSunSinosoid(double sunrizeWithDate)
   {
     var amplitudeInDegC = 16;
-    var noon = -.19; // :summer; for winter add 1hr: -.19 + 1.0/24.    Solstice sunrize at 7:27.5 == new DateTime(2023,3,15,7, 27, 30).ToOADate(); = 0.3107638888888889 ..why not ~.19 ?
+    var sunsetLineCrossing = -.202; // -.202 is perfect for Dec 7 (was -.19)
+    var isDaylightSaving = TimeZoneInfo.Local.IsDaylightSavingTime(_startedAt);
+    var noon = sunsetLineCrossing - (isDaylightSaving ? 0 : (1.0 / 24.0)); // :summer; for winter add 1hr: -.19 + 1.0/24.    Solstice sunrize at 7:27.5 == new DateTime(2023,3,15,7, 27, 30).ToOADate(); = 0.3107638888888889 ..why not ~.19 ?
 
     var dAmplitude = amplitudeInDegC * Math.Sin((sunrizeWithDate - noon) * Math.PI * 2);
 
     SunSinusoid.Clear();
     FunctionSeries__(Math.Sin, sunrizeWithDate - 1.3, sunrizeWithDate + 17.4, .0125);
-    void FunctionSeries__(Func<double, double> cos, double x0, double x1, double dx)
+    void FunctionSeries__(Func<double, double> sin, double x0, double x1, double dx)
     {
       for (var t = x0; t <= x1 + (dx * 0.5); t += dx)
-        SunSinusoid.Add(new DataPoint(t, dAmplitude - (amplitudeInDegC * cos((t - noon) * Math.PI * 2))));
+        SunSinusoid.Add(new DataPoint(t, dAmplitude - (amplitudeInDegC * sin((t - noon) * Math.PI * 2))));
     }
   }
 
