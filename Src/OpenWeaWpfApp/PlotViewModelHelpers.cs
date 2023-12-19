@@ -15,8 +15,7 @@ internal static class PlotViewModelHelpers
     try
     {
       return await weatherxContext.PointReal.MaxAsync(r => r.CreatedAt);
-    }
-    catch (Exception ex)
+    } catch (Exception ex)
     {
       ex.Pop(_lgr);
       return DateTimeOffset.Now;
@@ -70,9 +69,7 @@ internal static class PlotViewModelHelpers
         WriteLine($"■■ {await _dbx.SaveChangesAsync()} rows saved ■■");
 #endif
         return;
-      }
-      catch (InvalidOperationException ex) { _lgr.LogWarning($"F{i,3} {ex.Message}"); await Task.Delay(1000); bpr.Warn(); }
-      catch (Exception ex) { ex.Pop(_lgr); }
+      } catch (InvalidOperationException ex) { _lgr.LogWarning($"F{i,3} {ex.Message}"); await Task.Delay(1000); bpr.Warn(); } catch (Exception ex) { ex.Pop(_lgr); }
     }
   }
 
@@ -80,13 +77,14 @@ internal static class PlotViewModelHelpers
   {
     try
     {
-      var report = $"■■ {siteFore.dateTime.Length} items in the dateTime array ■■  ";
-      if (siteFore.dateTime.Length > 1)
-        _lgr.LogInformation($"■■ {siteFore.dateTime[1]} ■■  <== is this OK for a date?");
-      else
-        _lgr.LogInformation($"■■ ?????????");
-    }
-    catch (Exception ex)
+      var report = $"";
+      for (var i = 0; i < siteFore.dateTime.Length; i++)
+      {
+        var dt = EnvtCaDate(siteFore.dateTime[i]);
+        report += $"\n\t\t■:  [{i}] {dt:yyyy-MM-dd HH:mm}  :{siteFore.dateTime[1]} ";
+      }
+      _lgr.LogInformation($"{report}");
+    } catch (Exception ex)
     {
       _lgr.LogWarning($"■■ {ex.Message} ■■");
     }
@@ -137,9 +135,7 @@ internal static class PlotViewModelHelpers
 
         WriteLine($"■■ {await _dbx.SaveChangesAsync()} rows saved ■■");
         return;
-      }
-      catch (InvalidOperationException ex) { WriteLine($"WARN: O{i,3} {ex.Message}"); await Task.Delay(1000); bpr.Warn(); }
-      catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
+      } catch (InvalidOperationException ex) { WriteLine($"WARN: O{i,3} {ex.Message}"); await Task.Delay(1000); bpr.Warn(); } catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
     }
   }
   internal static async Task AddPast24hrToDB_EnvtCa(WeatherxContext _dbx, string siteId, List<MeteoDataMy>? sitePast, string srcId = "eca", string measureId = "tar")
@@ -180,9 +176,7 @@ internal static class PlotViewModelHelpers
 
         WriteLine($"■■ {await _dbx.SaveChangesAsync()} rows saved ■■");
         return;
-      }
-      catch (InvalidOperationException ex) { WriteLine($"WARN: P{i,3} {ex.Message}"); await Task.Delay(1000); bpr.Warn(); }
-      catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
+      } catch (InvalidOperationException ex) { WriteLine($"WARN: P{i,3} {ex.Message}"); await Task.Delay(1000); bpr.Warn(); } catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
     }
   }
 
