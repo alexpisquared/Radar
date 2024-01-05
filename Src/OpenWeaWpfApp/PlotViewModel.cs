@@ -121,7 +121,10 @@ public partial class PlotViewModel : ObservableValidator
 
       if (obj is null) bpr.Finish();
     }
-    catch (Exception ex) { _lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
+    catch (Exception ex)
+    {
+      ex.Pop(_lgr); //_lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
+    }
   }
   [RelayCommand]
   void PrevForecastFromDb(object? obj)
@@ -139,7 +142,10 @@ public partial class PlotViewModel : ObservableValidator
         bpr.Tick();
       }, TaskScheduler.FromCurrentSynchronizationContext());
     }
-    catch (Exception ex) { _lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
+    catch (Exception ex)
+    {
+      ex.Pop(_lgr); //_lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
+    }
   }
   [RelayCommand]
   void PopulateScatModel(object? obj)
@@ -339,7 +345,11 @@ public partial class PlotViewModel : ObservableValidator
 
       return true;
     }
-    catch (Exception ex) { _lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
+    catch (Exception ex)
+    {
+      ex.Pop(_lgr); //_lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
+      throw;
+    }
   }
 
   void DrawPast24hrEC(string site, List<MeteoDataMy> lst)
@@ -357,7 +367,10 @@ public partial class PlotViewModel : ObservableValidator
 
       Model.InvalidatePlot(true); SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  Envt CA  Past       \t{site}\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin,-4}  {YAxsRMax} \t   \n");    //await TickRepaintDelay();
     }
-    catch (Exception ex) { _lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
+    catch (Exception ex)
+    {
+      ex.Pop(_lgr); //_lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
+    }
   }
 
   void DrawFore24hrEC(string site, siteData? sitedata)
@@ -376,7 +389,10 @@ public partial class PlotViewModel : ObservableValidator
 
       Model.InvalidatePlot(true); SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  Envt CA      Fore   \t{site.Substring(4, 3)}\t {YAxisMin}  {YAxisMax,-4}    {YAxsRMin,-4}  {YAxsRMax} \t   \n");
     }
-    catch (Exception ex) { _lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
+    catch (Exception ex)
+    {
+      ex.Pop(_lgr); //_lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
+    }
   }
 
   void DrawD53(RootobjectFrc5Day3Hr D53)
@@ -480,7 +496,10 @@ public partial class PlotViewModel : ObservableValidator
       Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFMis, MarkerFill = OxyColors.Transparent, Title = "ECa _Mis", MarkerType = MarkerType.Circle, MarkerStroke = _Mis });
       Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFPhc, MarkerFill = OxyColors.Transparent, Title = "OWA _Phc", MarkerType = MarkerType.Circle, MarkerStroke = _Phc, TrackerFormatString = "{}{0}&#xA;Time:   {2:HH:mm} &#xA;Temp:  {4:0.0}° " });
     }
-    catch (Exception ex) { _lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
+    catch (Exception ex)
+    {
+      ex.Pop(_lgr); //_lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
+    }
 
     Model.InvalidatePlot(true); //SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  Model re-freshed\t▓  {note,-26}  \t\t   \n";
   }

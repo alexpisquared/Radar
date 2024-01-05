@@ -27,7 +27,7 @@ public partial class App : Application
 
     _ = services.AddSingleton<IBpr, Bpr>();
     _ = services.AddSingleton<IConfigurationRoot>(new ConfigurationBuilder().AddUserSecrets<App>().Build());
-    _ = services.AddSingleton<ILogger>(sp => SeriLogHelper.CreateFallbackLogger<MainWeaWindow>());
+    _ = services.AddSingleton<ILogger>(sp => SeriLogHelper.CreateLogger<MainWeaWindow>());
     _ = services.AddSingleton<SpeechSynth>(sp => SpeechSynth.Factory(
       sp.GetRequiredService<IConfigurationRoot>()["AppSecrets:MagicSpeech"] ?? throw new ArgumentNullException(nameof(services), "cfg.AppSecrets:MagicSpeech"),
       sp.GetRequiredService<ILogger>()));
