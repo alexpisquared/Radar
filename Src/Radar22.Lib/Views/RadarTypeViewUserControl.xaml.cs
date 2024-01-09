@@ -73,7 +73,7 @@ public partial class RadarTypeViewUserControl : UserControl
     {
       var tlcl = rii0.ImgTime.ToLocalTime();
       var cmph = await PicMea.CalcMphInTheAreaAsync(rii0.GifUrl); // 0 ÷ 4_000
-      rp += $" {tlcl,5:H:mm}{(int)(cmph * 100),6} {new string(' ', (int)(10 * cmph))}■ \r\n";
+      rp += $" {tlcl,5:H:mm}{(int)(cmph * 100),6} {new string(' ', (int)(3.33 * cmph))}■ \r\n";
 
       ScaleFacto_ = Math.Min(3, .5 + Math.Log(1 + (cmph * 10), 2.5));
       ScaleFactor = AutoScale ? ScaleFacto_ : 1;
