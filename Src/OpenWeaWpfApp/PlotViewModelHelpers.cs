@@ -3,8 +3,8 @@
   public const string _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaughan = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582", _phc = "phc", _vgn = "vgn", _mis = "mis",
     pearson = "pea",
     batnvil = "bvl",
-  _Past24YYZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yyz", // Pearson                                                                                        
-  _Past24OKN = @"http://weather.gc.ca/past_conditions/index_e.html?station=okn"; // King City (https://www.google.ca/maps/@43.9640351,-79.5739119,34m/data=!3m1!1e3?entry=ttu)  :ykz.Buttonville past is gone Oct, 2023.
+  _Past24YYZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yyz", // Pearson   20.5 km from PHC  https://www.google.ca/maps/@43.6800000,-79.6300000,34m/data=!3m1!1e3?entry=ttu                                                                    
+  _Past24OKN = @"http://weather.gc.ca/past_conditions/index_e.html?station=okn"; // King City 15.3 km from PHC  https://www.google.ca/maps/@43.9640351,-79.5739119,34m/data=!3m1!1e3?entry=ttu  :ykz.Buttonville station is gone Oct, 2023.
 }
 internal static class PlotViewModelHelpers
 {
