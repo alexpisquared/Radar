@@ -1,6 +1,6 @@
 ﻿internal static class Cnst
 {
-  public const string _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaughan = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582", _phc = "phc", _vgn = "vgn", _mis = "mis",
+  public const string _kingcty = "s0000582", _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaugOLD = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582", _phc = "phc", _vgn = "vgn", _mis = "mis",
     pearson = "pea",
     batnvil = "bvl",
   _Past24YYZ = @"http://weather.gc.ca/past_conditions/index_e.html?station=yyz", // Pearson   20.5 km from PHC  https://www.google.ca/maps/@43.6800000,-79.6300000,34m/data=!3m1!1e3?entry=ttu                                                                    
@@ -219,7 +219,7 @@ internal static class PlotViewModelHelpers
   internal static async Task<(siteData? sitedataMiss, siteData? sitedataVghn)> GetFore24hrFromEC()
   {
     var sitedataMiss = await OpenWea.GetEnvtCa(Cnst._mississ);
-    var sitedataVghn = await OpenWea.GetEnvtCa(Cnst._vaughan);
+    var sitedataVghn = await OpenWea.GetEnvtCa(Cnst._kingcty);
 
     return (sitedataMiss, sitedataVghn);
   }

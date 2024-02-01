@@ -154,8 +154,8 @@ public partial class PlotViewModel : ObservableValidator
 
     _ = Task.Run(async () => await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24YYZ)).ContinueWith(_ => { DrawPast24hrEC(Cnst.pearson, _.Result); _pastPea = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
     _ = Task.Run(async () => await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24OKN)).ContinueWith(_ => { DrawPast24hrEC(Cnst.batnvil, _.Result); _pastBvl = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
-    _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._mississ)).ContinueWith(_ => { DrawFore24hrEC(Cnst._mississ, _.Result); _foreMis = _.Result; Model.Title += $"Miss  {(_foreMis?.currentConditions)?.dateTime[1].hour.Value}:{(_foreMis?.currentConditions)?.dateTime[1].minute}  {float.Parse(_foreMis?.currentConditions?.temperature?.Value ?? "-999F"),5:+##.#;-##.#;0}°  {float.Parse(_foreMis?.currentConditions?.windChill?.Value ?? _foreMis?.currentConditions?.temperature?.Value ?? "-999"),4:+##;-##;0}°  {_foreMis?.currentConditions?.wind?.speed?.Value} {(_foreMis?.currentConditions?.wind)?.speed.units} · \t · \t · \t · \t · \t · \t · \t · \t · \t \t \t■\t\t"; }, TaskScheduler.FromCurrentSynchronizationContext());
-    _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._vaughan)).ContinueWith(_ => { DrawFore24hrEC(Cnst._vaughan, _.Result); _foreVgn = _.Result; /* //todo: _foreVgn has no data for currentConditions .. nor any other like RichmngHill, ets. Must find one ..maybe */}, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._mississ)).ContinueWith(_ => { DrawFore24hrEC(Cnst._mississ, _.Result); _foreMis = _.Result; Model.Title += $"Miss {(_foreMis?.currentConditions)?.dateTime[1].hour.Value}:{(_foreMis?.currentConditions)?.dateTime[1].minute}  {float.Parse(_foreMis?.currentConditions?.temperature?.Value ?? "-999F"),5:+##.#;-##.#;0}° {float.Parse(_foreMis?.currentConditions?.windChill?.Value ?? _foreMis?.currentConditions?.temperature?.Value ?? "-999"),4:+##;-##;0}°  {_foreMis?.currentConditions?.wind?.speed?.Value} {(_foreMis?.currentConditions?.wind)?.speed.units}       "; }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._kingcty)).ContinueWith(_ => { DrawFore24hrEC(Cnst._kingcty, _.Result); _foreVgn = _.Result; Model.Title += $"King {(_foreVgn?.currentConditions)?.dateTime[1].hour.Value}:{(_foreVgn?.currentConditions)?.dateTime[1].minute}  {float.Parse(_foreVgn?.currentConditions?.temperature?.Value ?? "-999F"),5:+##.#;-##.#;0}° {float.Parse(_foreVgn?.currentConditions?.windChill?.Value ?? _foreVgn?.currentConditions?.temperature?.Value ?? "-999"),4:+##;-##;0}°  {_foreVgn?.currentConditions?.wind?.speed?.Value} {(_foreVgn?.currentConditions?.wind)?.speed.units}       "; }, TaskScheduler.FromCurrentSynchronizationContext());
     _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._toronto)).ContinueWith(_ => { DrawFore24hrEC(Cnst._toronto, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
     _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._torIsld)).ContinueWith(_ => { DrawFore24hrEC(Cnst._torIsld, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
     _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._markham)).ContinueWith(_ => { DrawFore24hrEC(Cnst._markham, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
@@ -165,7 +165,7 @@ public partial class PlotViewModel : ObservableValidator
       oca = _.Result as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(oca); // PHC107
 
       //SmartAdd($"{(DateTime.Now-_startedAt).TotalSeconds,5:N1}  {oca.current}";
-      Model.Title /*= CurrentConditions*/ = $"OWA  {OpenWea.UnixToDt(oca.current.dt):HH:mm}  {oca.current.temp,5:+##.#;-##.#;0}°  {oca.current.feels_like,4:+##;-##;0}°  {oca.current.wind_speed * _ms2kh / _wk:N1} k/h   \t{Model.Title}";
+      Model.Title /*= CurrentConditions*/ = $"OWA  {OpenWea.UnixToDt(oca.current.dt):HH:mm}  {oca.current.temp,5:+##.#;-##.#;0}° {oca.current.feels_like,4:+##;-##;0}°  {oca.current.wind_speed * _ms2kh / _wk:N1} k/h       {Model.Title}";
       WindDirn = oca.current.wind_deg;
       WindVeloKmHr = oca.current.wind_speed * _ms2kh / _wk;
       WindGustKmHr = oca.current.wind_gust * _ms2kh / _wk;
@@ -382,7 +382,7 @@ public partial class PlotViewModel : ObservableValidator
         case Cnst._toronto: PlotViewModelHelpers.RefillForeEnvtCa(ECaToroTemp, sitedata); break;
         case Cnst._torIsld: PlotViewModelHelpers.RefillForeEnvtCa(ECaTIslTemp, sitedata); break;
         case Cnst._mississ: PlotViewModelHelpers.RefillForeEnvtCa(ECaMissTemp, sitedata); GetImprtandDatFromPearson(sitedata); break;
-        case Cnst._vaughan: PlotViewModelHelpers.RefillForeEnvtCa(ECaVghnTemp, sitedata); break;
+        case Cnst._kingcty: PlotViewModelHelpers.RefillForeEnvtCa(ECaVghnTemp, sitedata); break;
         case Cnst._markham: PlotViewModelHelpers.RefillForeEnvtCa(ECaMrkhTemp, sitedata); break;
         default: break;
       }
