@@ -26,6 +26,8 @@ namespace XSD.CLS // XSD.exe-generated with /recordes flag only
   [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
   public partial record siteData
   {
+    public double DistanceLocation { get; set; }
+    public double DistanceStation { get; set; }
 
     private string licenseField;
 
