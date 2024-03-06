@@ -237,7 +237,7 @@ public partial class PlotViewModel : ObservableValidator
           DrawBothWhenReady(oca, d53);
       }
 
-      await GetDays(3);
+      await GetDays(8);
 
       Model.InvalidatePlot(true); SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  OWA  \n");
 
