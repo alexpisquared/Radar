@@ -41,6 +41,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfUserControlLib", "..\..\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenWeaSvc", "OpenWeather2022\OpenWeaSvc.csproj", "{62582749-CE75-4352-8E44-1E8C5DA431D4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryImportLib", "..\..\AAV.Shared\Src\NetLts\LibraryImportLib\LibraryImportLib.csproj", "{FECA286A-677D-43F2-8412-FA61B646C0C4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoneAreaCoder", "..\..\AAV.Shared\Src\NetLts\PhoneAreaCoder\PhoneAreaCoder.csproj", "{7783E7B1-4EC2-4D00-A5BF-84C689601C73}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -267,6 +271,30 @@ Global
 		{62582749-CE75-4352-8E44-1E8C5DA431D4}.Release|x64.Build.0 = Release|Any CPU
 		{62582749-CE75-4352-8E44-1E8C5DA431D4}.Release|x86.ActiveCfg = Release|Any CPU
 		{62582749-CE75-4352-8E44-1E8C5DA431D4}.Release|x86.Build.0 = Release|Any CPU
+		{FECA286A-677D-43F2-8412-FA61B646C0C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FECA286A-677D-43F2-8412-FA61B646C0C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FECA286A-677D-43F2-8412-FA61B646C0C4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FECA286A-677D-43F2-8412-FA61B646C0C4}.Debug|x64.Build.0 = Debug|Any CPU
+		{FECA286A-677D-43F2-8412-FA61B646C0C4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FECA286A-677D-43F2-8412-FA61B646C0C4}.Debug|x86.Build.0 = Debug|Any CPU
+		{FECA286A-677D-43F2-8412-FA61B646C0C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FECA286A-677D-43F2-8412-FA61B646C0C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FECA286A-677D-43F2-8412-FA61B646C0C4}.Release|x64.ActiveCfg = Release|Any CPU
+		{FECA286A-677D-43F2-8412-FA61B646C0C4}.Release|x64.Build.0 = Release|Any CPU
+		{FECA286A-677D-43F2-8412-FA61B646C0C4}.Release|x86.ActiveCfg = Release|Any CPU
+		{FECA286A-677D-43F2-8412-FA61B646C0C4}.Release|x86.Build.0 = Release|Any CPU
+		{7783E7B1-4EC2-4D00-A5BF-84C689601C73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7783E7B1-4EC2-4D00-A5BF-84C689601C73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7783E7B1-4EC2-4D00-A5BF-84C689601C73}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7783E7B1-4EC2-4D00-A5BF-84C689601C73}.Debug|x64.Build.0 = Debug|Any CPU
+		{7783E7B1-4EC2-4D00-A5BF-84C689601C73}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7783E7B1-4EC2-4D00-A5BF-84C689601C73}.Debug|x86.Build.0 = Debug|Any CPU
+		{7783E7B1-4EC2-4D00-A5BF-84C689601C73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7783E7B1-4EC2-4D00-A5BF-84C689601C73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7783E7B1-4EC2-4D00-A5BF-84C689601C73}.Release|x64.ActiveCfg = Release|Any CPU
+		{7783E7B1-4EC2-4D00-A5BF-84C689601C73}.Release|x64.Build.0 = Release|Any CPU
+		{7783E7B1-4EC2-4D00-A5BF-84C689601C73}.Release|x86.ActiveCfg = Release|Any CPU
+		{7783E7B1-4EC2-4D00-A5BF-84C689601C73}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -239,7 +239,8 @@ public class RadarPicCollector
         if (bmp != null)
         {
           tm[j] = dt.AddHours(-RadarPicCollector.GmtOffset);
-          mh[j] = PicMea.CalcMphInTheArea(bmp, DateTime.Now);
+          //??mh[j] = PicMea.CalcMphInTheArea(bmp, DateTime.Now);
+          mh[j] = PicMea.CalcMphInTheArea(bmp, i, j); //2024: i, j is wrong - just to compile.
           j--;
         }
       }

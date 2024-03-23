@@ -1,4 +1,5 @@
 ﻿using WpfUserControlLib.Helpers;
+using static AmbienceLib.SpeechSynth;
 
 namespace Radar;
 public partial class App : Application

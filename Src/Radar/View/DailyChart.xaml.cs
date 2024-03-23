@@ -1,6 +1,8 @@
 ﻿using AsLink;
 using Db.EventLog;
 using Db.EventLog.DbModel;
+using Db.EventLog.Main;
+
 //using Microsoft.Expression.Shapes;
 using Microsoft.Win32;
 using System;
@@ -50,7 +52,7 @@ namespace UpTimeChart
 
         _clr = (TrgDateC.DayOfWeek == DayOfWeek.Saturday || TrgDateC.DayOfWeek == DayOfWeek.Sunday) ? cWE : cWD;
 
-        var allPCs = Db.EventLog.DbLogHelper.AllPCsSynch();
+        var allPCs = Db.EventLog.Main.DbLogHelper.AllPCsSynch();
         foreach (var pc in allPCs.Where(pc => !pc.MachineName.Equals(Environment.MachineName, StringComparison.OrdinalIgnoreCase))) { drawUpDnLine(TrgDateC, pc.MachineName, pc.ColorRGB); }
         foreach (var pc in allPCs.Where(pc => pc.MachineName.Equals(Environment.MachineName, StringComparison.OrdinalIgnoreCase))) { drawUpDnLine(TrgDateC, pc.MachineName, pc.ColorRGB); } // show current last to see the text summary.
 
@@ -72,7 +74,7 @@ namespace UpTimeChart
 
         _clr = (TrgDateC.DayOfWeek == DayOfWeek.Saturday || TrgDateC.DayOfWeek == DayOfWeek.Sunday) ? cWE : cWD;
 
-        var allPCs = await Db.EventLog.DbLogHelper.AllPCsAsync();
+        var allPCs = await DbLogHelper.AllPCsAsync();
         foreach (var pc in allPCs.Where(pc => !pc.MachineName.Equals(Environment.MachineName, StringComparison.OrdinalIgnoreCase))) { drawUpDnLine(TrgDateC, pc.MachineName, pc.ColorRGB); await Task.Delay(200); } // yeield is too jarring
         foreach (var pc in allPCs.Where(pc => pc.MachineName.Equals(Environment.MachineName, StringComparison.OrdinalIgnoreCase))) { drawUpDnLine(TrgDateC, pc.MachineName, pc.ColorRGB); } // show current last to see the text summary.
 
