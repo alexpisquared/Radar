@@ -53,7 +53,7 @@ public partial class App : Application
         case justUiNotElse: new RadarAnimation(Settings.AlarmThreshold).ShowDialog(); break;
         case showIfRainCmn: if (sayRainOnOrComing(e.Args, uptime))                    /**/ goto default; break;
         case sayUpTimeShow: sayRainOnOrComing(e.Args, uptime);                        /**/ goto default;
-        case sayUpTimeNoUI: if (uptime.TotalMinutes > 20) Synth.SpeakFAF(upTimeMsg(uptime, "No UI.")); break;
+        case sayUpTimeNoUI: if (uptime.TotalMinutes > 20) Synth.SpeakFree(upTimeMsg(uptime, "No UI.")); break;
       }
 #endif
 
@@ -103,7 +103,7 @@ public partial class App : Application
       if ((args.Length > 1 && args[1].Equals("ShowLsaPopup")) || IsDue(uptime))
         showLongStretchAlertPopup(uptime, rainAndUptimeMsg);
       else if (rainAndUptimeMsg.Length > 0)
-        Synth.SpeakFAF(rainAndUptimeMsg);
+        Synth.SpeakFree(rainAndUptimeMsg);
     }
 
     return true; // show anyway in case of issues.
@@ -135,7 +135,7 @@ public partial class App : Application
 
   void showLongStretchAlertPopup(TimeSpan uptime, string rainAndUptimeMsg)
   {
-    //too annoying: Synth.SpeakAsync($"Showing");
+    //too annoying: Synth.SpeakFree($"Showing");
     Settings.PopUp_LastTime = DateTime.Now;
     Settings.Save();
     _ = new View.LongStretchAlertPopup(uptime, rainAndUptimeMsg, Synth).ShowDialog();
