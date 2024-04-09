@@ -326,7 +326,7 @@ public partial class PlotViewModel : ObservableValidator
     var timeSinceLastDbStore = DateTimeOffset.Now - timeSinceLastDbStor2;
     if (timeSinceLastDbStore.TotalHours < 9)
     {
-      _synth.SpeakFreeFAF($"Too soon to store to DB: only {timeSinceLastDbStore.TotalHours:N1} hours passed.", volumePercent: 10); // _synth.SpeakFAF($"Too soon to store to DB: less than 6 hours passed.", volumePercent: 10);
+      //tmi: _synth.SpeakFreeFAF($"Too soon to store to DB: only {timeSinceLastDbStore.TotalHours:N1} hours passed.", volumePercent: 10); // _synth.SpeakFAF($"Too soon to store to DB: less than 6 hours passed.", volumePercent: 10);
       return false;
     }
 
@@ -338,7 +338,7 @@ public partial class PlotViewModel : ObservableValidator
       await PlotViewModelHelpers.AddForecastToDB_EnvtCa(_lgr, _dbh.WeatherxContext, Cnst._vgn, _foreVgn);
       await PlotViewModelHelpers.AddForecastToDB_OpnWea(_dbh.WeatherxContext, Cnst._phc, oca);
 
-      _synth.SpeakFAF("All stored to DB.", volumePercent: 10);
+      //tmi: _synth.SpeakFAF("All stored to DB.", volumePercent: 10);
 
       SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  All stored to DB! \n");
 
