@@ -11,10 +11,10 @@
       <ColumnDefinition Width="*"/>
     </Grid.ColumnDefinitions>
     <Views:RadarTypeViewUserControl UrlSuffix="DPQPE/GIF/CASKR"  PreciTp="SNOW.gif"    StartPlaying="1" AutoScale="False" Grid.ColumnSpan="4" />
-    <Views:RadarTypeViewUserControl UrlSuffix="PRECIPET/GIF/ONT" PreciTp="SNOW_WT.gif" StartPlaying="1" AutoScale="False" Grid.ColumnSpan="2" Grid.Column="1" VerticalAlignment="Bottom" Margin="2"/>
-    <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" FocusVisualStyle="{x:Null}" Background="Transparent"/>
     <!--
+    <Views:RadarTypeViewUserControl UrlSuffix="PRECIPET/GIF/ONT" PreciTp="SNOW_WT.gif" StartPlaying="1" AutoScale="False" Grid.ColumnSpan="2" Grid.Column="1" VerticalAlignment="Bottom" Margin="2"/>
     <Views:RadarTypeViewUserControl UrlSuffix="PRECIPET/GIF/WKR" PreciTp="SNOW.gif"    StartPlaying="0" Grid.Column="2" HorizontalAlignment="Left" IsEnabled="False" />
     https://dd.meteo.gc.ca/radar/PRECIPET/GIF/ONT/202202180150_ONT_PRECIPET_SNOW_WT.gif   573c300-->
+    <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" FocusVisualStyle="{x:Null}" Background="Transparent"/>
   </Grid>
 </Window>
