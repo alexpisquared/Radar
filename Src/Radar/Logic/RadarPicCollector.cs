@@ -21,7 +21,7 @@ public class RadarPicCollector
 
   public int StationCount => _station.Length;
 
-  [Obsolete]
+  // [Obsolete] :why Copilot decides to mark it such?
   public string DownloadRadarPics(int max = 99999)
   {
     _backLenCur = _backLenLive;
@@ -38,7 +38,7 @@ public class RadarPicCollector
     return string.Format("   <{0} out of {1} Pics Loaded @{2}>", Pics.Count, _backLenCur, DateTime.Now.ToString("d HH:mm"));
   }
 
-  [Obsolete]
+  // [Obsolete] :why Copilot decides to mark it such?
   public string DownloadRadarPics_MostRecent_RAIN_only(int max, int period)
   {
     var gmt10 = RoundBy10min(DateTime.UtcNow); // DateTime.Now.AddHours(4));//.AddMinutes(-10 * backLen);//shows 1 hr behind at winter time (Dec2007)  Debug.Assert(DateTime.Now.AddHours(4) == DateTime.UtcNow); //Apr2015
@@ -49,7 +49,7 @@ public class RadarPicCollector
     return string.Format("   <{0} out of {1} Pics Loaded @{2}>", Pics.Count, _backLenCur, DateTime.Now.ToString("d HH:mm"));
   }
 
-  [Obsolete]
+  // [Obsolete] :why Copilot decides to mark it such?
   void getPic(int times10minBack, DateTime gmt10Now, int period, string? rainOrSnow = null)
   {
     if (!string.IsNullOrEmpty(rainOrSnow))
@@ -126,7 +126,7 @@ public class RadarPicCollector
 
   static string? _rainOrSnow = null;//(DateTime.Now.DayOfYear < 72 || DateTime.Now.Month == 12) ? "SNOW" : "RAIN";
 
-  [Obsolete]
+  // [Obsolete] :why Copilot decides to mark it such?
   public string DownloadRadarPicsNextBatch(int stationIndex = 0) { _stationIndex = stationIndex; return DownloadRadarPics(); }
 
   public List<PicDetail> Pics { get; set; } = new();
@@ -218,7 +218,7 @@ public class RadarPicCollector
 
   static readonly SortedList<DateTime, Bitmap> _cache = new();
 
-  [Obsolete]
+  // [Obsolete] :why Copilot decides to mark it such?
   public static string GetRainForecastReport()
   {
     var report = "";
