@@ -7,7 +7,7 @@ using XSD.CLS;
 var lattitude0 = 43.837;
 var lontitude0 = 79.496;
 
-var siteList = XmlFileSerializer.Load<OpenWeaConsoleApp.siteList>(@"C:\g\Radar\Src\OpenWeaWpfApp\JsonResults\SiteList.xml");
+var siteList = XmlFileSerializer.Load<OpenWeaConsoleApp.siteList>(@"C:\g\Radar\Src\OpenWeaWpfApp\weather.gc.ca\SiteList.xml");
 
 var i = 0;
 var sds = new List<siteData>();

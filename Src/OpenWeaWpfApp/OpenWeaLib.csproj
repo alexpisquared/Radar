@@ -22,10 +22,12 @@
   <ItemGroup>
     <None Remove="NoDataIndicator.png" />
     <None Remove="Views\NoDataIndicator.bmp" />
+    <None Remove="weather.gc.ca\ReadMe.md" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Android-Weather.ico" />
+    <Content Include="weather.gc.ca\ReadMe.md" />
   </ItemGroup>
 
   <ItemGroup>

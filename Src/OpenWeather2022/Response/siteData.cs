@@ -168,7 +168,7 @@ namespace XSD.CLS // XSD.exe-generated with /recordes flag only
     }
 
     /// <remarks/>
-    public almanacType almanac
+    public almanacType almanac_DEPRECATED_ON_JUN_2024
     {
       get
       {

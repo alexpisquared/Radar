@@ -131,12 +131,16 @@ public partial class MainPlotOldVM : ObservableValidator
     ArgumentNullException.ThrowIfNull(sitedataMiss, $"@@@@@@@@@ {nameof(sitedataMiss)}");
     SubHeader += $"{sitedataMiss.currentConditions.wind.speed}\n";
 
-    if (double.TryParse(sitedataMiss.almanac.temperature[0].Value, out var d)) { YAxiXMax = 200 + (10 * (YAxisMax = d + _yHi)); _extrMax = d; }
+    var d = 0.0;
+    //if (double.TryParse(sitedataMiss.almanac.temperature[0].Value, out d)) { YAxiXMax = 200 + (10 * (YAxisMax = d + _yHi)); _extrMax = d; }
+    //if (double.TryParse(sitedataMiss.almanac.temperature[1].Value, out d)) { YAxiXMin = 200 + (10 * (YAxisMin = (Math.Floor(d / 10) * 10) - _yLo)); _extrMin = d; }
+    //if (double.TryParse(sitedataMiss.almanac.temperature[2].Value, out d)) NormTMax = d;
+    //if (double.TryParse(sitedataMiss.almanac.temperature[3].Value, out d)) NormTMin = d;
 
-    if (double.TryParse(sitedataMiss.almanac.temperature[1].Value, out /**/d)) { YAxiXMin = 200 + (10 * (YAxisMin = (Math.Floor(d / 10) * 10) - _yLo)); _extrMin = d; }
-
-    if (double.TryParse(sitedataMiss.almanac.temperature[2].Value, out d)) NormTMax = d;
-    if (double.TryParse(sitedataMiss.almanac.temperature[3].Value, out d)) NormTMin = d;
+    d = 35; YAxiXMax = 200 + (10 * (YAxisMax = d + _yHi)); _extrMax = d;
+    d = 05; YAxiXMin = 200 + (10 * (YAxisMin = (Math.Floor(d / 10) * 10) - _yLo)); _extrMin = d;
+    d = 25; NormTMax = d;
+    d = 15; NormTMin = d;
 
     OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(-2)), _extrMax));
     OwaLoclNowT.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now.AddDays(+8)), _extrMax));

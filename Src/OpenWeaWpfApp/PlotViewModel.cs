@@ -1,5 +1,9 @@
 ﻿#define ObsCol // Go figure: ObsCol works, while array NOT! Just an interesting factoid.
 
+using System.IO;
+using System.Xml.Serialization;
+using OpenWeaLib.weather.gc.ca;
+
 namespace OpenWeaWpfApp;
 public partial class PlotViewModel : ObservableValidator
 {
@@ -16,7 +20,7 @@ public partial class PlotViewModel : ObservableValidator
   readonly SpeechSynth _synth;
   readonly bool _store;
   const int _maxIcons = 50;
-  double _extrMax = +20, _extrMin = -20;
+  double _extrMax = +35, _extrMin = +05;
   readonly OxyColor
           _111 = OxyColor.FromRgb(0x10, 0x10, 0x10),
           _mng = OxyColor.FromRgb(0x20, 0x20, 0x20),
@@ -165,7 +169,7 @@ public partial class PlotViewModel : ObservableValidator
       oca = _.Result as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(oca); // PHC107
 
       //SmartAdd($"{(DateTime.Now-_startedAt).TotalSeconds,5:N1}  {oca.current}";
-      Model.Title /*= CurrentConditions*/ = $"OWA {OpenWea.UnixToDt(oca.current.dt):HH:mm} {oca.current.temp,5:+##.#;-##.#;0}° {oca.current.feels_like,4:+##;-##;0}° {oca.current.wind_speed * _ms2kh / _wk,5:N1} k/h    {Model.Title}" ;
+      Model.Title /*= CurrentConditions*/ = $"OWA {OpenWea.UnixToDt(oca.current.dt):HH:mm} {oca.current.temp,5:+##.#;-##.#;0}° {oca.current.feels_like,4:+##;-##;0}° {oca.current.wind_speed * _ms2kh / _wk,5:N1} k/h    {Model.Title}";
       WindDirn = oca.current.wind_deg;
       WindVeloKmHr = oca.current.wind_speed * _ms2kh / _wk;
       WindGustKmHr = oca.current.wind_gust * _ms2kh / _wk;
@@ -280,38 +284,36 @@ public partial class PlotViewModel : ObservableValidator
 
   void GetImprtandDatFromPearson(siteData? sitedata)
   {
+    using var fileStream = new FileStream(@"C:\g\Radar\Src\OpenWeaWpfApp\weather.gc.ca\en_climate_almanac_ON_6158733.xml", FileMode.Open);
+    var almanac = ((climatedata?)new XmlSerializer(typeof(climatedata))?.Deserialize(fileStream))?.month[DateTime.Today.Month].day[DateTime.Today.Day]; // ~50 ms
+    ArgumentNullException.ThrowIfNull(almanac, $"@1232 {nameof(sitedata)}");
+
+    _extrMax = (double)almanac.temperature[0].Value;
+    _extrMin = (double)almanac.temperature[1].Value;
+    NormTMax = (double)almanac.temperature[2].Value;
+    NormTMin = (double)almanac.temperature[3].Value;
+
+    const int pad = 2;
+    YAxisMin = Math.Floor((_extrMax - 50) / 10) * 10 - pad;
+    YAxisMax = _extrMax + 5;
+
+    YAxsRMin = -10 * pad;
+    YAxsRMax = (YAxisMax - YAxisMin - pad) * 10;
+
+    var now = DateTime.Now;
+    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(-2)), _extrMax));
+    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(+8)), _extrMax));
+    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(+8)), NormTMax));
+    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now), NormTMax));
+    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now), +100));
+    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now), -100));
+    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now), NormTMin));
+    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(+8)), NormTMin));
+    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(+8)), _extrMin));
+    OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(-2)), _extrMin));
+
+
     ArgumentNullException.ThrowIfNull(sitedata, $"@@@@@@@@@ {nameof(sitedata)}");
-
-    if (double.TryParse(sitedata.almanac.temperature[0].Value, out _extrMax) &&
-        double.TryParse(sitedata.almanac.temperature[1].Value, out _extrMin))
-    {
-      const int pad = 2;
-      YAxisMin = Math.Floor((_extrMax - 50) / 10) * 10 - pad;
-      YAxisMax = _extrMax + 5;
-
-      YAxsRMin = -10 * pad;
-      YAxsRMax = (YAxisMax - YAxisMin - pad) * 10;
-    }
-
-    if (double.TryParse(sitedata.almanac.temperature[2].Value, out var max) &&
-        double.TryParse(sitedata.almanac.temperature[3].Value, out var min))
-    {
-      NormTMax = max;
-      NormTMin = min;
-
-      var now = DateTime.Now;
-      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(-2)), _extrMax));
-      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(+8)), _extrMax));
-      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(+8)), NormTMax));
-      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now), NormTMax));
-      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now), +100));
-      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now), -100));
-      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now), NormTMin));
-      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(+8)), NormTMin));
-      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(+8)), _extrMin));
-      OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(-2)), _extrMin));
-    }
-
     EnvtCaIconM = $"https://weather.gc.ca/weathericons/{sitedata?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
   }
 
@@ -638,8 +640,8 @@ public partial class PlotViewModel : ObservableValidator
   [ObservableProperty] string envtCaIconM = "https://weather.gc.ca/weathericons/05.gif";
   [ObservableProperty] string envtCaIconV = "https://weather.gc.ca/weathericons/05.gif";
   [ObservableProperty] string subHeader = "";
-  [ObservableProperty] double normTMin = -08;
-  [ObservableProperty] double normTMax = +02;
+  [ObservableProperty] double normTMin = +15;
+  [ObservableProperty] double normTMax = +25;
   [ObservableProperty] double yAxisMin = -18; partial void OnYAxisMinChanged(double value) => ReCreateAxises("Y min");
   [ObservableProperty] double yAxisMax = +12; partial void OnYAxisMaxChanged(double value) => ReCreateAxises("Y max");
   [ObservableProperty] double yAxsRMax = +180; partial void OnYAxsRMaxChanged(double value) => ReCreateAxises("Y max R");

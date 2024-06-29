@@ -36,11 +36,11 @@ public class OpenWea
       if (response == null || response.StatusCode == System.Net.HttpStatusCode.NotFound) return new siteData();
       var xml = await response.Content.ReadAsStringAsync() ?? throw new ArgumentNullException(nameof(site));
 
-#if NotSaveToFile
-      await File.WriteAllTextAsync($@"..\..\..\JsonResults\EvntCa-{site}-{DateTime.Now:yyMMdd·HHmmss}.xml", xml);
-#else
-      oca = (siteData?)new XmlSerializer(typeof(siteData)).Deserialize(new StringReader(xml));
+#if SaveToFile
+      await File.WriteAllTextAsync($@"C:\g\Radar\Src\OpenWeaWpfApp\weather.gc.ca\EvntCa-{site}-{DateTime.Now:yyMMdd·HHmmss}.xml", xml);
 #endif
+
+      oca = (siteData?)new XmlSerializer(typeof(siteData)).Deserialize(new StringReader(xml));
     }
     catch (Exception ex) { WriteLine($"■─■═■  {sw.Elapsed.TotalSeconds:N1}s  {url}  {ex.Message}  ■═■─■"); if (Debugger.IsAttached) Debugger.Break(); else { /*System.Windows.Clipboard.SetText(url);*/ throw; } }
     finally         /**/ { WriteLine($"+++++  {sw.Elapsed.TotalSeconds:N1}s  {url}  Success."); }
@@ -81,7 +81,7 @@ public class OpenWea
 #if NotSaveToFile
       var json = await response.Content.ReadAsStringAsync();
       WriteLine($":> {what}  =>  {url}  ==> {sw.ElapsedMilliseconds}ms  ==>  {json}");
-      await File.WriteAllTextAsync($@"..\..\..\JsonResults\{city}-{xtra}-{what}-{DateTime.Now:yyMMdd·HHmmss}.{frmt}", json);
+      await File.WriteAllTextAsync($@"..\..\..\weather.gc.ca\{city}-{xtra}-{what}-{DateTime.Now:yyMMdd·HHmmss}.{frmt}", json);
 #else
 #endif
       switch (what) //todo: https://docs.microsoft.com/en-us/aspnet/core/web-api/route-to-code?view=aspnetcore-6.; break ;
@@ -133,7 +133,7 @@ public class OpenWea
   //#if NotSaveToFile
   //      var json = await response.Content.ReadAsStringAsync();
   //      WriteLine(json);
-  //      await System.IO.File.WriteAllTextAsync($@"..\..\..\JsonResults\{city}-{xtra}-{what}-{DateTime.Now:yyMMdd·HHmmss}.{frmt}", json);
+  //      await System.IO.File.WriteAllTextAsync($@"..\..\..\weather.gc.ca\{city}-{xtra}-{what}-{DateTime.Now:yyMMdd·HHmmss}.{frmt}", json);
   //#else
   //      switch (what) //todo: https://docs.microsoft.com/en-us/aspnet/core/web-api/route-to-code?view=aspnetcore-6.; break ;
   //      {

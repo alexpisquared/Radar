@@ -1,0 +1,24 @@
+﻿Station Name		TORONTO LESTER B. PEARSON INT'L A
+Province or Territory		ONTARIO
+Latitude		43.68
+Longitude		-79.63
+Elevation		173.40
+Climate Identifier	6158733
+WMO Identifier		71624
+TC Identifier		YYZ
+
+Legend
+A	Accumulated
+B	More than one occurrence and estimated
+C	Precipitation occurred, amount uncertain
+E	Estimated
+F	Accumulated and estimated
+L	Precipitation may or may not have occurred
+M	Missing
+N	Temperature missing but known to be > 0
+S	More than one occurrence
+T	Trace
+Y	Temperature missing but known to be < 0
+[empty]	No data available
+^	The value displayed is based on incomplete data
+†	Data that is not subject to review by the National Climate Archives
