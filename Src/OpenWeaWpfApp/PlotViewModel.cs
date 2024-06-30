@@ -1,6 +1,7 @@
 ﻿#define ObsCol // Go figure: ObsCol works, while array NOT! Just an interesting factoid.
 
 using System.IO;
+using System.Windows;
 using System.Xml.Serialization;
 using OpenWeaLib.weather.gc.ca;
 
@@ -284,8 +285,16 @@ public partial class PlotViewModel : ObservableValidator
 
   void GetImprtandDatFromPearson(siteData? sitedata)
   {
+#if ResaveToHardcodedField // Jun 2024
     using var fileStream = new FileStream(@"C:\g\Radar\Src\OpenWeaWpfApp\weather.gc.ca\en_climate_almanac_ON_6158733.xml", FileMode.Open);
-    var almanac = ((climatedata?)new XmlSerializer(typeof(climatedata))?.Deserialize(fileStream))?.month[DateTime.Today.Month].day[DateTime.Today.Day]; // ~50 ms
+    var almanacAll = ((climatedata?)new XmlSerializer(typeof(climatedata)).Deserialize(fileStream));
+    Clipboard.SetText(JsonStringSerializer.Save(almanacAll)); // paste to ClimatedataStore.Json
+#else
+    var almanacAll = JsonStringSerializer.Load<climatedata>(ClimatedataStore.Json) as climatedata;
+#endif
+
+    var almanac = almanacAll?.month[DateTime.Today.Month].day[DateTime.Today.Day]; // ~50 ms
+
     ArgumentNullException.ThrowIfNull(almanac, $"@1232 {nameof(sitedata)}");
 
     _extrMax = (double)almanac.temperature[0].Value;
