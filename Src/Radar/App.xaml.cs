@@ -26,7 +26,7 @@ public partial class App : Application
 #endif
     //Bpr.BeepBgn2();
 
-    Current.DispatcherUnhandledException += UnhandledExceptionHndlr.OnCurrentDispatcherUnhandledException;     //new SpeechSynthesizer().Speak("Testing");			new SpeechSynthesizer().SpeakAsync("Testing");
+    Current.DispatcherUnhandledException += UnhandledExceptionHndlrUI.OnCurrentDispatcherUnhandledException;     //new SpeechSynthesizer().Speak("Testing");			new SpeechSynthesizer().SpeakAsync("Testing");
 
     //Tracer.SetupTracingOptions("Radar", new TraceSwitch("Verbose-ish", "See ScrSvr for the model.") { Level = TraceLevel.Verbose }, false);
 

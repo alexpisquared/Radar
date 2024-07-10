@@ -35,7 +35,7 @@
     //tu: OxyPlot - do not use latest ver 2.1.0 : it does not even compile!!!
     -->
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
     <PackageReference Include="OxyPlot.Contrib" Version="2.1.2" />
     <PackageReference Include="OxyPlot.Contrib.Wpf" Version="2.1.2" />
