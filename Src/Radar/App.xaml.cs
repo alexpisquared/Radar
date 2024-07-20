@@ -2,6 +2,7 @@
 using System;
 using WpfUserControlLib.Helpers;
 using static AmbienceLib.SpeechSynth;
+using Radar.Logic;
 
 namespace Radar;
 public partial class App : Application
@@ -33,7 +34,7 @@ public partial class App : Application
     //Tracer.SetupTracingOptions("Radar", new TraceSwitch("Verbose-ish", "See ScrSvr for the model.") { Level = TraceLevel.Verbose }, false);
     Listeners.Add(new TextWriterTraceListener(@$"C:\Users\alexp\OneDrive\Public\Logs\{AppDomain.CurrentDomain.FriendlyName}.log"));
     AutoFlush = true;
-    WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.f}  e.Args[0]: '{e.Args[0]}'.");
+    WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.f}  args[0]: '{e.Args[0]}'.");
 
     try
     {
@@ -147,8 +148,6 @@ public partial class App : Application
   void showLongStretchAlertPopup(TimeSpan uptime, string rainAndUptimeMsg)
   {
     //too annoying: Synth.SpeakFree($"Showing");
-    Settings.PopUp_LastTime = DateTime.Now;
-    Settings.Save();
     _ = new View.LongStretchAlertPopup(uptime, rainAndUptimeMsg, Synth).ShowDialog();
   }
 

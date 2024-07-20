@@ -164,7 +164,7 @@ namespace UpTimeChart
         gridvroot.Background = (trgDate.DayOfWeek == DayOfWeek.Saturday || trgDate.DayOfWeek == DayOfWeek.Sunday) ? cPnk : cBlk;
       }
       catch (Exception ex) { ex.Pop(); }
-      finally { Trace.WriteLine($" ==> { tbSummary.Text} "); }
+      //tmi: finally { Trace.WriteLine($" ==> { tbSummary.Text} "); }
     }
 
     void add_________Time(DateTime timeA, DateTime timeB, EvOfIntFlag eoiA, EvOfIntFlag eoiB, ref TimeSplit ts)

@@ -1,5 +1,5 @@
 ﻿using AsLink;
-using Radar.Properties;
+using Radar.Logic;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
