@@ -290,7 +290,7 @@ and TimeCreated[@SystemTime&gt;='{a.ToUniversalTime():o}'] and TimeCreated[@Syst
       if ((lst.Min(r => r.Key) - min).TotalSeconds > +30) // only if > 30 sec
         lst.Add(min, EvOfIntFlag.Day1stAmbiguos);
       else
-        Debug.WriteLine("+???");
+        Debug.Write(" +??? ");
     }
 
     if (lst.Count < 1)

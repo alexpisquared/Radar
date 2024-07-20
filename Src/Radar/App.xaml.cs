@@ -1,4 +1,6 @@
-﻿using WpfUserControlLib.Helpers;
+﻿using System.Diagnostics;
+using System;
+using WpfUserControlLib.Helpers;
 using static AmbienceLib.SpeechSynth;
 
 namespace Radar;
@@ -29,8 +31,9 @@ public partial class App : Application
     Current.DispatcherUnhandledException += UnhandledExceptionHndlrUI.OnCurrentDispatcherUnhandledException;     //new SpeechSynthesizer().Speak("Testing");			new SpeechSynthesizer().SpeakAsync("Testing");
 
     //Tracer.SetupTracingOptions("Radar", new TraceSwitch("Verbose-ish", "See ScrSvr for the model.") { Level = TraceLevel.Verbose }, false);
-
-    WriteLine($"e.Args[0]: '{e.Args[0]}'.");
+    Listeners.Add(new TextWriterTraceListener(@$"C:\Users\alexp\OneDrive\Public\Logs\{AppDomain.CurrentDomain.FriendlyName}.log"));
+    AutoFlush = true;
+    WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.f}  e.Args[0]: '{e.Args[0]}'.");
 
     try
     {
@@ -69,6 +72,14 @@ public partial class App : Application
       await Task.Delay(2500); // what are we waiting for?
       App.Current.Shutdown();
     }
+  }
+
+  protected override void OnExit(ExitEventArgs e)
+  {
+    base.OnExit(e);
+
+    Flush();
+    Close();
   }
 
   bool sayRainOnOrComing(string[] args, TimeSpan uptime)

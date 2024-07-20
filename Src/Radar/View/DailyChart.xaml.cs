@@ -214,8 +214,7 @@ namespace UpTimeChart
             ToolTip = $"Span: {time:h\\:mm\\:ss}  => {wid:N0} pxl."
           });
       }
-      else
-        Debug.Write($" >>> width too small to add time box: {time.TotalSeconds:N2} sec => {wid:N1} pxl");
+      //tmi: else        Debug.Write($" >>> width too small to add time box: {time.TotalSeconds:N2} sec => {wid:N1} pxl");
     }
 
     void addArcDtl(double hgt, double left, double width)
