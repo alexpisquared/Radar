@@ -1,10 +1,4 @@
 ﻿#define ObsCol // Go figure: ObsCol works, while array NOT! Just an interesting factoid.
-
-using System.IO;
-using System.Windows;
-using System.Xml.Serialization;
-using OpenWeaLib.weather.gc.ca;
-
 namespace OpenWeaWpfApp;
 public partial class PlotViewModel : ObservableValidator
 {
@@ -47,24 +41,24 @@ public partial class PlotViewModel : ObservableValidator
   //Uri _k = new("http://openweathermap.org/img/wn/04n@2x.png"); public Uri WIcon { get => _k; set => SetProperty(ref _k, value); }
   const float _wk = 10f;
   const float _ms2kh = 3.6f * _wk;
-  readonly ObservableCollection<ScatterPoint> SctrPtTPFVgn = new();
-  readonly ObservableCollection<ScatterPoint> SctrPtTPFPhc = new();
-  readonly ObservableCollection<ScatterPoint> SctrPtTPFMis = new();
-  readonly ObservableCollection<DataPoint> OwaLoclTemp = new();
-  readonly ObservableCollection<DataPoint> OwaLoclFeel = new();
-  readonly ObservableCollection<DataPoint> OwaLoclPrsr = new();
-  readonly ObservableCollection<DataPoint> OwaLoclGust = new();
-  readonly ObservableCollection<DataPoint> SunSinusoid = new();
-  readonly ObservableCollection<DataPoint> ECaBtvlWind = new();
-  readonly ObservableCollection<DataPoint> ECaPearWind = new();
-  readonly ObservableCollection<DataPoint> OwaLoclSunT = new();
-  readonly ObservableCollection<DataPoint> OwaTempExtr = new();
-  readonly ObservableCollection<DataPoint> OwaLoclPopr = new();
-  readonly ObservableCollection<DataPoint> ECaToroTemp = new();
-  readonly ObservableCollection<DataPoint> ECaVghnTemp = new();
-  readonly ObservableCollection<DataPoint> ECaMrkhTemp = new();
-  readonly ObservableCollection<DataPoint> ECaMissTemp = new();
-  readonly ObservableCollection<DataPoint> ECaTIslTemp = new();
+  readonly ObservableCollection<ScatterPoint> SctrPtTPFVgn = [];
+  readonly ObservableCollection<ScatterPoint> SctrPtTPFPhc = [];
+  readonly ObservableCollection<ScatterPoint> SctrPtTPFMis = [];
+  readonly ObservableCollection<DataPoint> OwaLoclTemp = [];
+  readonly ObservableCollection<DataPoint> OwaLoclFeel = [];
+  readonly ObservableCollection<DataPoint> OwaLoclPrsr = [];
+  readonly ObservableCollection<DataPoint> OwaLoclGust = [];
+  readonly ObservableCollection<DataPoint> SunSinusoid = [];
+  readonly ObservableCollection<DataPoint> ECaBtvlWind = [];
+  readonly ObservableCollection<DataPoint> ECaPearWind = [];
+  readonly ObservableCollection<DataPoint> OwaLoclSunT = [];
+  readonly ObservableCollection<DataPoint> OwaTempExtr = [];
+  readonly ObservableCollection<DataPoint> OwaLoclPopr = [];
+  readonly ObservableCollection<DataPoint> ECaToroTemp = [];
+  readonly ObservableCollection<DataPoint> ECaVghnTemp = [];
+  readonly ObservableCollection<DataPoint> ECaMrkhTemp = [];
+  readonly ObservableCollection<DataPoint> ECaMissTemp = [];
+  readonly ObservableCollection<DataPoint> ECaTIslTemp = [];
   [ObservableProperty] double timeMin = DateTime.Today.ToOADate() - 1; partial void OnTimeMinChanged(double value) => ReCreateAxises("T min");
   [ObservableProperty] double timeMax = DateTime.Today.ToOADate() + 2; partial void OnTimeMaxChanged(double value) => ReCreateAxises("T max");
   [ObservableProperty] string plotTitle = "";
@@ -74,10 +68,10 @@ public partial class PlotViewModel : ObservableValidator
   [ObservableProperty] string curWindKmHr = "";
   [ObservableProperty] int windDirn;
   [ObservableProperty] float windVeloKmHr;
-  [ObservableProperty] ObservableCollection<string> opnWeaIcoA = new();
+  [ObservableProperty] ObservableCollection<string> opnWeaIcoA = [];
 #if ObsCol
-  [ObservableProperty] ObservableCollection<ImageSource> opnWeaIco3 = new();
-  [ObservableProperty] ObservableCollection<string> opnWeaTip3 = new();
+  [ObservableProperty] ObservableCollection<ImageSource> opnWeaIco3 = [];
+  [ObservableProperty] ObservableCollection<string> opnWeaTip3 = [];
 #else
   ImageSource[] _3 = new ImageSource[_maxIcons]; public ImageSource[] OpnWeaIco3 { get => _3; set => SetProperty(ref _3, value); }
   string[] _4 = new string[_maxIcons]; public string[] OpnWeaTip3 { get => _4; set => SetProperty(ref _4, value); }
@@ -282,7 +276,6 @@ public partial class PlotViewModel : ObservableValidator
     }
     finally { _isDbBusy = false; }
   }
-
   void GetImprtandDatFromPearson(siteData? sitedata)
   {
 #if ResaveToHardcodedField // Jun 2024
@@ -290,7 +283,7 @@ public partial class PlotViewModel : ObservableValidator
     var almanacAll = ((climatedata?)new XmlSerializer(typeof(climatedata)).Deserialize(fileStream));
     Clipboard.SetText(JsonStringSerializer.Save(almanacAll)); // paste to ClimatedataStore.Json
 #else
-    var almanacAll = JsonStringSerializer.Load<climatedata>(ClimatedataStore.Json) as climatedata;
+    var almanacAll = JsonStringSerializer.Load<climatedata>(ClimatedataStore.Json);
 #endif
 
     var almanac = almanacAll?.month[DateTime.Today.Month].day[DateTime.Today.Day]; // ~50 ms
@@ -303,7 +296,7 @@ public partial class PlotViewModel : ObservableValidator
     NormTMin = (double)almanac.temperature[3].Value;
 
     const int pad = 2;
-    YAxisMin = Math.Floor((_extrMax - 50) / 10) * 10 - pad;
+    YAxisMin = (Math.Floor((_extrMax - 50) / 10) * 10) - pad;
     YAxisMax = _extrMax + 5;
 
     YAxsRMin = -10 * pad;
@@ -321,11 +314,9 @@ public partial class PlotViewModel : ObservableValidator
     OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(+8)), _extrMin));
     OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(-2)), _extrMin));
 
-
     ArgumentNullException.ThrowIfNull(sitedata, $"@@@@@@@@@ {nameof(sitedata)}");
     EnvtCaIconM = $"https://weather.gc.ca/weathericons/{sitedata?.currentConditions?.iconCode?.Value ?? "5":0#}.gif"; // img1.Source = new BitmapImage(new Uri($"https://weather.gc.ca/weathericons/{(sitedata?.currentConditions?.iconCode?.Value ?? "5"):0#}.gif"));
   }
-
   async Task<bool> DelayedStoreToDbIf()
   {
     if (!_store || VersionHelper.IsDbg)
@@ -361,7 +352,6 @@ public partial class PlotViewModel : ObservableValidator
       throw;
     }
   }
-
   void DrawPast24hrEC(string site, List<MeteoDataMy> lst)
   {
     try
@@ -382,7 +372,6 @@ public partial class PlotViewModel : ObservableValidator
       ex.Pop(_lgr); //_lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
     }
   }
-
   void DrawFore24hrEC(string site, siteData? sitedata)
   {
     try
@@ -404,7 +393,6 @@ public partial class PlotViewModel : ObservableValidator
       ex.Pop(_lgr); //_lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
     }
   }
-
   void DrawD53(RootobjectFrc5Day3Hr D53)
   {
     var h3 = 0; for (; h3 < OpenWea.UnixToDt(D53.list[0].dt).Hour / 3; h3++)
@@ -421,7 +409,6 @@ public partial class PlotViewModel : ObservableValidator
       h3++;
     });
   }
-
   void DrawSunSinosoid(double sunrizeWithDate)
   {
     var amplitudeInDegC = 16;
@@ -439,7 +426,6 @@ public partial class PlotViewModel : ObservableValidator
         SunSinusoid.Add(new DataPoint(t, dAmplitude - (amplitudeInDegC * sin((t - noon) * Math.PI * 2))));
     }
   }
-
   void DrawBothWhenReady(RootobjectOneCallApi OCA, RootobjectFrc5Day3Hr D53)
   {
     D53.list.Where(d => d.dt > OCA.hourly.Max(d => d.dt)).ToList().ForEach(x =>
@@ -513,7 +499,6 @@ public partial class PlotViewModel : ObservableValidator
 
     Model.InvalidatePlot(true); //SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  Model re-freshed\t▓  {note,-26}  \t\t   \n";
   }
-
   void ReCreateAxises(string note)
   {
     var dddD = "                  ddd d";
@@ -526,7 +511,6 @@ public partial class PlotViewModel : ObservableValidator
     Model.InvalidatePlot(true);
     SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  Axiss re-adjustd\t■  {note,-26}  \n");
   }
-
   void SmartAdd(string note)
   {
     SubHeader += note;

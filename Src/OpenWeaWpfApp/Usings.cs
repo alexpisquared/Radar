@@ -35,3 +35,4 @@ global using StandardLib.Helpers;
 global using XSD.CLS;
 global using static System.Diagnostics.Trace;
 global using WpfUserControlLib.Extensions;
+global using OpenWeaLib.weather.gc.ca;
