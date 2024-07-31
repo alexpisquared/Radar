@@ -286,7 +286,7 @@ public partial class PlotViewModel : ObservableValidator
     var almanacAll = JsonStringSerializer.Load<climatedata>(ClimatedataStore.Json);
 #endif
 
-    var almanac = almanacAll?.month[DateTime.Today.Month].day[DateTime.Today.Day]; // ~50 ms
+    var almanac = almanacAll?.month[DateTime.Today.Month - 1].day[DateTime.Today.Day - 1]; // ~50 ms
 
     ArgumentNullException.ThrowIfNull(almanac, $"@1232 {nameof(sitedata)}");
 

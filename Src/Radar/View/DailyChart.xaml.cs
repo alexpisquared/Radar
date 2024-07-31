@@ -122,9 +122,13 @@ namespace UpTimeChart
         SortedList<DateTime, int> eois; 
         if (isHere)
         {
+#if LocalDB_is_in_use
           var localEvLog = EvLogHelper.GetAllEventsOfInterest(timeA, timeB);
           var dbaseEvLog = DbLogHelper.GetAllEventsOfInterest(timeA, timeB, pc);
           eois = localEvLog.Count > dbaseEvLog.Count ? localEvLog : dbaseEvLog; // Jan 2020: whoever has more events wins!
+#else
+          eois = EvLogHelper.GetAllEventsOfInterest(timeA, timeB);
+#endif
         }
         else
         {
