@@ -124,7 +124,7 @@ public class RadarPicCollector
     }
   }
 
-  static string? _rainOrSnow = null;//(DateTime.Now.DayOfYear < 72 || DateTime.Now.Month == 12) ? "SNOW" : "RAIN";
+  static string? _rainOrSnow = null;
 
   // [Obsolete] :why Copilot decides to mark it such?
   public string DownloadRadarPicsNextBatch(int stationIndex = 0) { _stationIndex = stationIndex; return DownloadRadarPics(); }
@@ -188,7 +188,6 @@ public class RadarPicCollector
   {
     if (_cache.ContainsKey(gmtTime)) return _cache[gmtTime];
 
-    //string rainOrSnow = (DateTime.Now.DayOfYear < 70 || DateTime.Now.Month == 12) ? "SNOW" : "RAIN";//todo: maybe temperature based.
     Bitmap? bmp = null;
 
     try

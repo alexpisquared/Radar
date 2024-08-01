@@ -38,8 +38,8 @@ public partial class RadarTypeViewUserControl : UserControl
 
     try
     {
-      if (DateTime.Today.Month > 3)
-        PreciTp = PreciTp.Replace("SNOW", "RAIN");
+      if (DateTime.Today.Month > 3)                // interesting solution
+        PreciTp = PreciTp.Replace("SNOW", "RAIN"); // interesting solution
 
       var riis0 = await loader.ParseFromHtmlUsingRegex($"{_urlRoot}{UrlSuffix}", PreciTp, takeLastCount);
       lbxAllPics.Items.Clear();
