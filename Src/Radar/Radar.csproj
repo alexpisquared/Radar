@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\Ambience\AmbienceLib.csproj" />
+    <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\StandardLib\StandardLib.csproj" />
     <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\WpfUserControlLib\WpfUserControlLib.csproj" />
     <ProjectReference Include="..\..\..\ScSv\Src\AlexPi.Scr\WebScrap\WebScrap.csproj" />
     <ProjectReference Include="..\..\..\TimeTracking\N50\TimeTracking50\Db.EventLog\Db.EventLog.csproj" />
@@ -84,10 +85,6 @@
     <Page Update="View\ScreenTimeUsrCtrl.xaml">
       <SubType>Designer</SubType>
     </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="AsLink\" />
   </ItemGroup>
 
   <ItemGroup>
