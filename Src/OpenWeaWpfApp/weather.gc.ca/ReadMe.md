@@ -5,3 +5,6 @@
   Select XML and click Download Data to get the XML file, which contains the data for each day of the year.
 
 ### https://dd.weather.gc.ca/citypage_weather/schema/
+
+## 2024-09-19
+If the key is not working, switch to https://open-meteo.com/
