@@ -77,6 +77,8 @@ public class OpenWea
       using var client = new HttpClient();
       var response = await client.GetAsync(url).ConfigureAwait(false);
       if (response == null || response.StatusCode == System.Net.HttpStatusCode.NotFound) return new RootobjectOneCallApi();
+      
+      if (response.StatusCode != System.Net.HttpStatusCode.OK) throw new UnauthorizedAccessException("@");
 
 #if NotSaveToFile
       var json = await response.Content.ReadAsStringAsync();
