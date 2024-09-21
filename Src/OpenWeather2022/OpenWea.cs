@@ -7,23 +7,6 @@ namespace OpenWeather2022;
 // Toronto,ON ::: 43.7181557, -79.5181414
 public class OpenWea
 {
-  public async Task<bool> ParseJsonToClasses(string code)
-  {
-    Write($"Today {DateTimeToUnixTimestamp(DateTime.Today)}\n  now {DateTimeToUnixTimestamp(DateTime.Now)}\n  UTC {DateTimeToUnixTimestamp(DateTime.UtcNow)} *******\n");
-
-    //var sr = new List<int>(_sunrizes);
-    //var min = sr.Min();
-    //foreach (int sunrize in sr.Distinct().OrderBy(r => r)) { Write($"  {sunrize}, // {UnixTimeStampToDateTime(sunrize)}  {sunrize - dt - 86400} \n"); dt = sunrize; }
-
-    //for (int i = -5; i <= 0; i++) { _ = await GetIt(code, what: OpenWeatherCd.TimeMachin, time: DateTimeToUnixTimestamp(DateTime.Today.AddDays(i)).ToString()); await Task.Delay(1111); }
-    ////await Test_(code, what: OpenWeatherCd.Forecast16);
-    ////await Test_(code, what: OpenWeatherCd.CurrentWea);
-    await GetIt(code, what: OpenWeatherCd.Frc5Day3Hr);
-
-    await Task.Yield();
-    return true;
-  }
-
   public static async Task<siteData?> GetEnvtCa(string site = "s0000458"/*toronto pearson*/) //   "s0000785_e"/*toronto island*/        }; //         "s0000773_e",/*richmond hill*/   };       // May 2020: localized to the most informative (with extremums). ... https://dd.weather.gc.ca/citypage_weather/xml/siteList.xml
   {
     siteData? oca = default!;
@@ -48,7 +31,7 @@ public class OpenWea
     return oca;
   }
 
-  public async Task<object?> GetIt(string code, OpenWeatherCd what /*= OpenWeatherCd.OneCallApi*/, double lat = 43.8374229, double lon = -79.4961442, // PHC107  
+  public async Task<object?> GetIt__(string code, OpenWeatherCd what, double lat = 43.8374229, double lon = -79.4961442, // PHC107  
     string city = "Vaughan,ON,CA",
     string xtra = "&cnt=16",        // 16 is MAX.
     string time = "1586468027",
@@ -60,6 +43,15 @@ public class OpenWea
     string url = default!;
     try
     {
+      string[] _url = [
+        "https://api.openweathermap.org/data/2.5/onecall/timemachine?",
+        "https://api.openweathermap.org/data/2.5/forecast/daily?",
+        "https://api.openweathermap.org/data/2.5/weather?",
+        "http://maps.openweathermap.org/maps/2.0/weather/TA2/1/48/78?",
+        "https://pro.openweathermap.org/data/2.5/forecast/climate?",
+        "https://api.openweathermap.org/data/2.5/onecall?",          // paid only 2024-09
+        "https://api.openweathermap.org/data/2.5/forecast?"];
+
       var url_ = _url[(int)what];
       url = what switch
       {
@@ -76,9 +68,15 @@ public class OpenWea
 
       using var client = new HttpClient();
       var response = await client.GetAsync(url).ConfigureAwait(false);
-      if (response == null || response.StatusCode == System.Net.HttpStatusCode.NotFound) return new RootobjectOneCallApi();
-      
-      if (response.StatusCode != System.Net.HttpStatusCode.OK) throw new UnauthorizedAccessException("@");
+      if (response == null || response.StatusCode != System.Net.HttpStatusCode.OK)
+      {
+        WriteLine($"▄▀▄▀▄▀ {response.StatusCode}  {what}  for  {url}  ■─■─■");
+        /*
+        https://api.openweathermap.org/data/2.5/onecall?appid=f413b73b1d75f49af0985518ca400bf1&units=metric&lat=43.8374229&lon=-79.4961442
+        https://api.openweathermap.org/data/2.5/weather?lat=11&lon=55&appid=f413b73b1d75f49af0985518ca400bf1
+        */
+        return new RootobjectOneCallApi(); // throw new UnauthorizedAccessException("@"); //
+      }
 
 #if NotSaveToFile
       var json = await response.Content.ReadAsStringAsync();
@@ -171,16 +169,6 @@ public class OpenWea
     Frc5Day3Hr  // openweathermap.org/forecast5
   }
 
-  readonly string[] _url = new string[]
-  {
-    "https://api.openweathermap.org/data/2.5/onecall/timemachine?",
-    "https://api.openweathermap.org/data/2.5/forecast/daily?",
-    "https://api.openweathermap.org/data/2.5/weather?",
-    "http://maps.openweathermap.org/maps/2.0/weather/TA2/1/48/78?",
-    "https://pro.openweathermap.org/data/2.5/forecast/climate?",
-    "https://api.openweathermap.org/data/2.5/onecall?",
-    "https://api.openweathermap.org/data/2.5/forecast?"
-  };
   readonly int[] _sunrizes = new int[] {
   1640868706, // 2021-12-30 07:51:46  1640782306 
   1640955112, // 2021-12-31 07:51:52  6 

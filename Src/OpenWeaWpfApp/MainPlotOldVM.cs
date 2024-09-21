@@ -302,8 +302,8 @@ public partial class MainPlotOldVM : ObservableValidator
   async Task PopulateScatModelAsync(int days = 5)
   {
     var mgk = _cfg["AppSecrets:MagicWeather"] ?? throw new ArgumentNullException(nameof(days), nameof(_cfg));
-    OCA = await _opnwea.GetIt(mgk, OpenWea.OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(OCA); // PHC107
-    D53 = await _opnwea.GetIt(mgk, OpenWea.OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(D53); // PHC107
+    OCA = await _opnwea.GetIt__(mgk, OpenWea.OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(OCA); // PHC107
+    D53 = await _opnwea.GetIt__(mgk, OpenWea.OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; ArgumentNullException.ThrowIfNull(D53); // PHC107
 
     SubHeader += $"{OCA.current}";
     PlotTitle = CurrentConditions = $"{OpenWea.UnixToDt(OCA.current.dt):HH:mm:ss}   {OCA.current.temp,5:N1}°   {OCA.current.feels_like,4:N0}°  {OCA.current.wind_speed * _kWind:N1}k/h";
