@@ -71,10 +71,6 @@ public class OpenWea
       if (response == null || response.StatusCode != System.Net.HttpStatusCode.OK)
       {
         WriteLine($"▄▀▄▀▄▀ {response.StatusCode}  {what}  for  {url}  ■─■─■");
-        /*
-        https://api.openweathermap.org/data/2.5/onecall?appid=f413b73b1d75f49af0985518ca400bf1&units=metric&lat=43.8374229&lon=-79.4961442
-        https://api.openweathermap.org/data/2.5/weather?lat=11&lon=55&appid=f413b73b1d75f49af0985518ca400bf1
-        */
         return new RootobjectOneCallApi(); // throw new UnauthorizedAccessException("@"); //
       }
 
