@@ -15,6 +15,13 @@ using OpenWeaWpfApp.Helpers;
 using StandardContractsLib;
 using StandardLib.Helpers;
 
+
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using OpenMeteoClient.Application.Interfaces;
+using OpenMeteoClient.Infrastructure;
+
 namespace OpenWeaApp;
 public partial class App : Application
 {
@@ -35,6 +42,8 @@ public partial class App : Application
     _ = services.AddSingleton<MainWeaWindow>();
 
     AppStartHelper.InitOpenWeaServices(services);
+
+    services.AddOpenMeteoClient();
 
     _serviceProvider = services.BuildServiceProvider(); // LibInit.InitLib(services, _serviceProvider);
   }

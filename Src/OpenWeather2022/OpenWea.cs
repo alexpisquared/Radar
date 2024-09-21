@@ -43,14 +43,16 @@ public class OpenWea
     string url = default!;
     try
     {
+      // api.openweathermap.org/data/2.5/forecast?lat=44.34&lon=10.99&appid={API key}
+      // api.openweathermap.org/data/2.5/weather?lat=44.34&lon=10.99&appid={API key}
       string[] _url = [
         "https://api.openweathermap.org/data/2.5/onecall/timemachine?",
         "https://api.openweathermap.org/data/2.5/forecast/daily?",
-        "https://api.openweathermap.org/data/2.5/weather?",
+        "https://api.openweathermap.org/data/2.5/weather?",                 // free  https://openweathermap.org/current
         "http://maps.openweathermap.org/maps/2.0/weather/TA2/1/48/78?",
         "https://pro.openweathermap.org/data/2.5/forecast/climate?",
-        "https://api.openweathermap.org/data/2.5/onecall?",          // paid only 2024-09
-        "https://api.openweathermap.org/data/2.5/forecast?"];
+        "https://api.openweathermap.org/data/2.5/onecall?",                 // paid only since 2024-09
+        "https://api.openweathermap.org/data/2.5/forecast?"];               // free  https://openweathermap.org/forecast5
 
       var url_ = _url[(int)what];
       url = what switch

@@ -50,6 +50,7 @@
     <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\StandardLib\StandardLib.csproj" />
     <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\WpfUserControlLib\WpfUserControlLib.csproj" />
     <ProjectReference Include="..\DB.WeatherX.PwrTls\DB.WeatherX.PwrTls.csproj" />
+    <ProjectReference Include="..\OpenMeteoClient\src\OpenMeteoClient\OpenMeteoClient.csproj" />
     <ProjectReference Include="..\OpenWeather2022\OpenWeaSvc.csproj" />
     <ProjectReference Include="..\Radar22.Lib\Radar22.Lib.csproj" />
   </ItemGroup>
