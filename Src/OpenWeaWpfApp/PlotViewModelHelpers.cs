@@ -1,4 +1,6 @@
-﻿internal static class Cnst
+﻿using OpenMeteoClient.Domain.Models;
+
+internal static class Cnst
 {
   public const string _kingcty = "s0000582", _toronto = "s0000458", _torIsld = "s0000785", _mississ = "s0000786", _vaugOLD = "s0000584", _markham = "s0000585", _richmhl = "s0000773", _newmark = "s0000582", _phc = "phc", _vgn = "vgn", _mis = "mis",
     pearson = "pea",
@@ -81,6 +83,10 @@ internal static class PlotViewModelHelpers
     try { for (var i = 0; i < siteFore.dateTime.Length; i++) WriteLine($"■■: [{i}] {EnvtCaDate(siteFore.dateTime[i]):yyyy-MM-dd HH:mm:ss.fff}  <==  {siteFore.dateTime[1]} "); } catch (Exception ex) { _lgr.LogWarning($"■■ {ex.Message} ■■"); }
 
     return EnvtCaDate(siteFore.dateTime[^1]); // looks like the [1] is the local time, and [0] is the UTC time.
+  }
+
+  internal static async Task AddForecastToDB_OpnMto(WeatherxContext _dbx, string siteId, WeatherForecast? siteFore, string srcId = "owa", string measureId = "tar")
+  {
   }
 
   internal static async Task AddForecastToDB_OpnWea(WeatherxContext _dbx, string siteId, RootobjectOneCallApi? siteFore, string srcId = "owa", string measureId = "tar")

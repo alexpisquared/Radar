@@ -166,49 +166,49 @@ public partial class PlotViewModel : ObservableValidator
 
     _ = Task.Run<object>(async () => await _openMeteoSvc.GetForecastAsync(43.83, -79.5) ?? throw new ArgumentNullException(nameof(obj))).ContinueWith(async _ =>
     {
-      var oca = _.Result as WeatherForecast;
-      ArgumentNullException.ThrowIfNull(oca);
+      _opn = _.Result as WeatherForecast;
+      ArgumentNullException.ThrowIfNull(_opn);
 
-      //SmartAdd($"{(DateTime.Now-_startedAt).TotalSeconds,5:N1}  {oca.Current}";
-      Model.Title /*= CurrentConditions*/ = $"OWA {(oca.Current.Time):HH:mm} {oca.Current.Temperature2m,5:+##.#;-##.#;0}° {oca.Current.ApparentTemperature,4:+##;-##;0}° {oca.Current.WindSpeed10m * _ms2kh / _wk,5:N1} k/h    {Model.Title}";
-      WindDirn = oca.Current.WindDirection10m;
-      WindVeloKmHr = (float)(oca.Current.WindSpeed10m); //  * _ms2kh / _wk;
-      WindGustKmHr = oca.Current.WindGusts10m; //  * _ms2kh / _wk;
-      CurTempReal = $"{oca.Current.Temperature2m:+#.#;-#.#;0}°";
-      CurTempFeel = $"{oca.Current.ApparentTemperature:+#;-#;0}°";
+      //SmartAdd($"{(DateTime.Now-_startedAt).TotalSeconds,5:N1}  {_opn.Current}";
+      Model.Title /*= CurrentConditions*/ = $"OWA {(_opn.Current.Time):HH:mm} {_opn.Current.Temperature2m,5:+##.#;-##.#;0}° {_opn.Current.ApparentTemperature,4:+##;-##;0}° {_opn.Current.WindSpeed10m * _ms2kh / _wk,5:N1} k/h    {Model.Title}";
+      WindDirn = _opn.Current.WindDirection10m;
+      WindVeloKmHr = (float)(_opn.Current.WindSpeed10m); //  * _ms2kh / _wk;
+      WindGustKmHr = _opn.Current.WindGusts10m; //  * _ms2kh / _wk;
+      CurTempReal = $"{_opn.Current.Temperature2m:+#.#;-#.#;0}°";
+      CurTempFeel = $"{_opn.Current.ApparentTemperature:+#;-#;0}°";
       CurWindKmHr = $"{WindVeloKmHr:N1}";
 
-      //todo: OpnWeaIcom = $"http://openweathermap.org/img/wn/{oca.Current.weather.First().icon}@2x.png";
-      //todo: for (var i = 0; i < oca.daily.Length; i++) OpnWeaIcoA.Add($"http://openweathermap.org/img/wn/{oca.daily[i].weather[0].icon}@2x.png");
+      //todo: OpnWeaIcom = $"http://openweathermap.org/img/wn/{_opn.Current.weather.First().icon}@2x.png";
+      //todo: for (var i = 0; i < _opn.daily.Length; i++) OpnWeaIcoA.Add($"http://openweathermap.org/img/wn/{_opn.daily[i].weather[0].icon}@2x.png");
 
-      for (int i = 0; i < oca.Hourly.Time.Count; i++)
+      for (int i = 0; i < _opn.Hourly.Time.Count; i++)
       {
-        var t = oca.Hourly.Time[i].ToOADate();
+        var t = _opn.Hourly.Time[i].ToOADate();
 
-        OwaLoclTemp.Add(new DataPoint(t, oca.Hourly.Temperature2m[i]));
-        //OwaLoclFeel.Add(new DataPoint(t, oca.Hourly.app));
-        //OwaLoclPrsr.Add(new DataPoint(t, oca.Hourly.pressure - 1030));
-        OwaLoclGust.Add(new DataPoint(t, oca.Hourly.WindGusts10m[i]));
-        OwaLoclPopr.Add(new DataPoint(t, oca.Hourly.PrecipitationProbability[i]));
+        OwaLoclTemp.Add(new DataPoint(t, _opn.Hourly.Temperature2m[i]));
+        //OwaLoclFeel.Add(new DataPoint(t, _opn.Hourly.app));
+        //OwaLoclPrsr.Add(new DataPoint(t, _opn.Hourly.pressure - 1030));
+        OwaLoclGust.Add(new DataPoint(t, _opn.Hourly.WindGusts10m[i]));
+        OwaLoclPopr.Add(new DataPoint(t, _opn.Hourly.PrecipitationProbability[i]));
 
-        var rad = Math.PI * oca.Hourly.WindDirection10m[i] * 2 / 360;
+        var rad = Math.PI * _opn.Hourly.WindDirection10m[i] * 2 / 360;
         var dx = 0.10 * Math.Cos(rad);
         var dy = 10.0 * Math.Sin(rad);
         var tx = .002 * Math.Cos(rad + 90);
         var ty = 0.20 * Math.Sin(rad + 90);
         var sx = .002 * Math.Cos(rad - 90);
         var sy = 0.20 * Math.Sin(rad - 90);
-        ECaBtvlWind.Add(new DataPoint(t + tx, ty + (oca.Hourly.WindSpeed10m[i] * _wk)));
-        ECaBtvlWind.Add(new DataPoint(t + dx, dy + (oca.Hourly.WindSpeed10m[i] * _wk)));
-        ECaBtvlWind.Add(new DataPoint(t + sx, sy + (oca.Hourly.WindSpeed10m[i] * _wk)));
+        ECaBtvlWind.Add(new DataPoint(t + tx, ty + (_opn.Hourly.WindSpeed10m[i] * _wk)));
+        ECaBtvlWind.Add(new DataPoint(t + dx, dy + (_opn.Hourly.WindSpeed10m[i] * _wk)));
+        ECaBtvlWind.Add(new DataPoint(t + sx, sy + (_opn.Hourly.WindSpeed10m[i] * _wk)));
       }
 
-      //var day0 = oca.daily.First();
+      //var day0 = _opn.daily.First();
       //OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), -000));
       //OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), +800));
       //OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), +800));
       //OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), -000));
-      //oca.daily.ToList().ForEach(x =>
+      //_opn.daily.ToList().ForEach(x =>
       //{
       //  OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), -000));
       //  OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), +800));
@@ -222,8 +222,8 @@ public partial class PlotViewModel : ObservableValidator
       //if (d53 != null)
       //{
       //  DrawD53(d53);
-      //  if (oca != null)
-      //    DrawBothWhenReady(oca, d53);
+      //  if (_opn != null)
+      //    DrawBothWhenReady(_opn, d53);
       //}
 
       await GetDays(8);
@@ -234,24 +234,26 @@ public partial class PlotViewModel : ObservableValidator
 
     }, TaskScheduler.FromCurrentSynchronizationContext());
 
+    if (DateTime.Now != DateTime.Today) return;
+
     _ = Task.Run<object>(async () => await _opnwea.GetIt__(_cfg["AppSecrets:MagicWeather"] ?? throw new ArgumentNullException(nameof(obj)), OpenWea.OpenWeatherCd.OneCallApi) ?? throw new ArgumentNullException(nameof(obj))).ContinueWith(async _ =>
     {
-      oca = _.Result as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(oca); // PHC107
+      _oca = _.Result as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(_oca); // PHC107
 
-      //SmartAdd($"{(DateTime.Now-_startedAt).TotalSeconds,5:N1}  {oca.current}";
-      Model.Title /*= CurrentConditions*/ = $"OWA {OpenWea.UnixToDt(oca.current.dt):HH:mm} {oca.current.temp,5:+##.#;-##.#;0}° {oca.current.feels_like,4:+##;-##;0}° {oca.current.wind_speed * _ms2kh / _wk,5:N1} k/h    {Model.Title}";
-      WindDirn = oca.current.wind_deg;
-      WindVeloKmHr = oca.current.wind_speed * _ms2kh / _wk;
-      WindGustKmHr = oca.current.wind_gust * _ms2kh / _wk;
-      CurTempReal = $"{oca.current.temp:+#.#;-#.#;0}°";
-      CurTempFeel = $"{oca.current.feels_like:+#;-#;0}°";
+      //SmartAdd($"{(DateTime.Now-_startedAt).TotalSeconds,5:N1}  {_oca.current}";
+      Model.Title /*= CurrentConditions*/ = $"OWA {OpenWea.UnixToDt(_oca.current.dt):HH:mm} {_oca.current.temp,5:+##.#;-##.#;0}° {_oca.current.feels_like,4:+##;-##;0}° {_oca.current.wind_speed * _ms2kh / _wk,5:N1} k/h    {Model.Title}";
+      WindDirn = _oca.current.wind_deg;
+      WindVeloKmHr = _oca.current.wind_speed * _ms2kh / _wk;
+      WindGustKmHr = _oca.current.wind_gust * _ms2kh / _wk;
+      CurTempReal = $"{_oca.current.temp:+#.#;-#.#;0}°";
+      CurTempFeel = $"{_oca.current.feels_like:+#;-#;0}°";
       CurWindKmHr = $"{WindVeloKmHr:N1}";
 
-      OpnWeaIcom = $"http://openweathermap.org/img/wn/{oca.current.weather.First().icon}@2x.png";
+      OpnWeaIcom = $"http://openweathermap.org/img/wn/{_oca.current.weather.First().icon}@2x.png";
 
-      for (var i = 0; i < oca.daily.Length; i++) OpnWeaIcoA.Add($"http://openweathermap.org/img/wn/{oca.daily[i].weather[0].icon}@2x.png");
+      for (var i = 0; i < _oca.daily.Length; i++) OpnWeaIcoA.Add($"http://openweathermap.org/img/wn/{_oca.daily[i].weather[0].icon}@2x.png");
 
-      oca.hourly.ToList().ForEach(x =>
+      _oca.hourly.ToList().ForEach(x =>
       {
         //scaters.Points.Add(new(DateTimeAxis.ToDouble(OpenWea.UnixToDt(day0.dt)), day0.snow?._1h ?? 0, day0.snow?._1h ?? 0, _d3c)); // either null or 0 so far.
         OwaLoclTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.temp));
@@ -272,12 +274,12 @@ public partial class PlotViewModel : ObservableValidator
         ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + sx, sy + (x.wind_speed * _ms2kh)));
       });
 
-      var day0 = oca.daily.First();
+      var day0 = _oca.daily.First();
       OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), -000));
       OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), +800));
       OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), +800));
       OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), -000));
-      oca.daily.ToList().ForEach(x =>
+      _oca.daily.ToList().ForEach(x =>
       {
         OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), -000));
         OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), +800));
@@ -307,8 +309,8 @@ public partial class PlotViewModel : ObservableValidator
       if (d53 != null)
       {
         DrawD53(d53);
-        if (oca != null)
-          DrawBothWhenReady(oca, d53);
+        if (_oca != null)
+          DrawBothWhenReady(_oca, d53);
       }
 
       await GetDays(8);
@@ -413,7 +415,9 @@ public partial class PlotViewModel : ObservableValidator
       await PlotViewModelHelpers.AddPast24hrToDB_EnvtCa(_dbh.WeatherxContext, Cnst.batnvil, _pastBvl);
       await PlotViewModelHelpers.AddForecastToDB_EnvtCa(_lgr, _dbh.WeatherxContext, Cnst._mis, _foreMis);
       await PlotViewModelHelpers.AddForecastToDB_EnvtCa(_lgr, _dbh.WeatherxContext, Cnst._vgn, _foreVgn);
-      await PlotViewModelHelpers.AddForecastToDB_OpnWea(_dbh.WeatherxContext, Cnst._phc, oca);
+      //todo:
+      //await PlotViewModelHelpers.AddForecastToDB_OpnWea(_dbh.WeatherxContext, Cnst._phc, _oca);
+      await PlotViewModelHelpers.AddForecastToDB_OpnMto(_dbh.WeatherxContext, Cnst._phc, _opn);
 
       //tmi: _synth.SpeakFAF("All stored to DB.", volumePercent: 10);
 
@@ -717,7 +721,8 @@ public partial class PlotViewModel : ObservableValidator
   [ObservableProperty] double windGustKmHr;
   [ObservableProperty] IInterpolationAlgorithm iA = InterpolationAlgorithms.CatmullRomSpline; // the least vertical jumping beyond y value.
 
-  RootobjectOneCallApi? oca;
+  RootobjectOneCallApi? _oca;
+  WeatherForecast? _opn;
   siteData? _foreVgn, _foreMis;
   List<MeteoDataMy>? _pastPea, _pastBvl;
   bool _isDbBusy;

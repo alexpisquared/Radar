@@ -1,5 +1,5 @@
-﻿namespace OpenWeaWpfApp;
-
+﻿using OpenMeteoClient.Infrastructure;
+namespace OpenWeaWpfApp;
 public static class AppStartHelper
 {
   public static void InitOpenWeaServices(IServiceCollection services)
@@ -7,6 +7,7 @@ public static class AppStartHelper
     _ = services.AddTransient<PlotViewModel>();
     _ = services.AddTransient<OpenWea>();
     _ = services.AddTransient<DbxHelper>();
+    _ = services.AddOpenMeteoClient();
 
     _ = services.AddDbContext<WeatherxContext>((serviceProvider, optionsBuilder) => //tu: dbcontext connstr https://youtu.be/7OBMhoKieqk?t=505 + https://codedocu.com/details?d=2653&a=9&f=425&d=0  :Project\Manage Connected Svcs !!! 2021-12
     {
