@@ -85,26 +85,66 @@ internal static class PlotViewModelHelpers
     return EnvtCaDate(siteFore.dateTime[^1]); // looks like the [1] is the local time, and [0] is the UTC time.
   }
 
-  internal static async Task AddForecastToDB_OpnMto(WeatherxContext _dbx, string siteId, WeatherForecast? siteFore, string srcId = "owa", string measureId = "tar")
-  {
-  }
-
-  internal static async Task AddForecastToDB_OpnWea(WeatherxContext _dbx, string siteId, RootobjectOneCallApi? siteFore, string srcId = "owa", string measureId = "tar")
+  internal static async Task AddForecastToDB_OpnMto(WeatherxContext _dbx, string siteId, WeatherForecast? siteData, string srcId = "omt", string measureId = "tar")
   {
     for (var i = 0; i < 10; i++)
     {
       try
       {
-        ArgumentNullException.ThrowIfNull(siteFore, $"@@@@@@@@@ {nameof(siteFore)}");
+        ArgumentNullException.ThrowIfNull(siteData, $"@ Open Meteo Data{nameof(siteData)}");
+        var now = DateTime.Now;
+
+        var forecastedAt = (siteData.Current.Time);
+
+        for (int h = 0; h < siteData.Hourly.Time.Count; h++)
+        {
+          var forecastedFor = siteData.Hourly.Time[h];
+
+          if (await _dbx.PointFore.AnyAsync(d =>
+              d.SrcId == srcId &&
+              d.SiteId == siteId &&
+              d.MeasureValue == siteData.Hourly.Temperature2m[h] && // _store only changes in recalculation results
+              d.MeasureId == measureId &&
+              d.ForecastedFor == forecastedFor) == false)
+          {
+            _ = _dbx.PointFore.Add(new PointFore
+            {
+              SrcId = srcId,
+              SiteId = siteId,
+              MeasureId = measureId,
+              MeasureValue = siteData.Hourly.Temperature2m[h],
+              ForecastedFor = forecastedFor,
+              ForecastedAt = forecastedAt,
+              Note64 = "[early runs]",
+              CreatedAt = now
+            });
+          }
+        };
+
+        WriteLine($"■■ {await _dbx.SaveChangesAsync()} rows saved ■■");
+        return;
+      }
+      catch (InvalidOperationException ex) { WriteLine($"WARN: O{i,3} {ex.Message}"); await Task.Delay(1000); bpr.Warn(); }
+      catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
+    }
+  }
+
+  internal static async Task AddForecastToDB_OpnWea(WeatherxContext _dbx, string siteId, RootobjectOneCallApi? siteData, string srcId = "owa", string measureId = "tar")
+  {
+    for (var i = 0; i < 10; i++)
+    {
+      try
+      {
+        ArgumentNullException.ThrowIfNull(siteData, $"@@@@@@@@@ {nameof(siteData)}");
         var now = DateTime.Now;
 
         //var connectionString = _cfg.GetConnectionString("Exprs");
         //WeatherxContextFactory dbf = new(connectionString);
         //using WeatherxContext _dbx = dbf.CreateDbContext();
 
-        var forecastedAt = OpenWea.UnixToDt(siteFore.current.dt);
+        var forecastedAt = OpenWea.UnixToDt(siteData.current.dt);
 
-        foreach (var f in siteFore.hourly.ToList()) //siteFore.hourlyForecastGroup.hourlyForecast.ToList().ForEach(async f =>
+        foreach (var f in siteData.hourly.ToList()) //siteFore.hourlyForecastGroup.hourlyForecast.ToList().ForEach(async f =>
         {
           var forecastedFor = OpenWea.UnixToDt(f.dt);
 
