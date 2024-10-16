@@ -16,7 +16,7 @@ public partial class MainPlotViewUsrCtrl
         try
         {
             // Assign DataContext to the viewmodel registered in AppStartHelper.cs OpenWeaWpfApp.AppStartHelper.InitOpenWeaServices(IServiceCollection services) method.
-            DataContext = (Application.Current as dynamic).ServiceProvider.GetService(typeof(PlotViewModel));
+            DataContext = (System.Windows.Application.Current as dynamic).ServiceProvider.GetService(typeof(PlotViewModel));
 
             ((PlotViewModel?)DataContext)?.PopulateAll("Silent");  // only lines chart is drawn.
         }

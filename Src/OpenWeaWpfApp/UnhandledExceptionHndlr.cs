@@ -13,8 +13,8 @@ public static class UnhandledExceptionHndlr // Core 3
     {
       if (Debugger.IsAttached)
         Debugger.Break();
-      else if (MessageBox.Show(report, "Unhandled Exception - Do you want to continue?", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.Yes) == MessageBoxResult.No)
-        Application.Current.Shutdown(44);
+      else if (System.Windows.MessageBox.Show(report, "Unhandled Exception - Do you want to continue?", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.Yes) == MessageBoxResult.No)
+        System.Windows.Application.Current.Shutdown(44);
     }
     catch (Exception ex)
     {

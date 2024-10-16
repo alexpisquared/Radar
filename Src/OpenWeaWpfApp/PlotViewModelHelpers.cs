@@ -125,7 +125,7 @@ internal static class PlotViewModelHelpers
         return;
       }
       catch (InvalidOperationException ex) { WriteLine($"WARN: O{i,3} {ex.Message}"); await Task.Delay(1000); bpr.Warn(); }
-      catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
+      catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = System.Windows.MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, System.Windows.MessageBoxOptions.ServiceNotification); throw; }
     }
   }
 
@@ -173,7 +173,7 @@ internal static class PlotViewModelHelpers
         return;
       }
       catch (InvalidOperationException ex) { WriteLine($"WARN: O{i,3} {ex.Message}"); await Task.Delay(1000); bpr.Warn(); }
-      catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
+      catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = System.Windows.MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, System.Windows.MessageBoxOptions.ServiceNotification); throw; }
     }
   }
   internal static async Task AddPast24hrToDB_EnvtCa(WeatherxContext _dbx, string siteId, List<MeteoDataMy>? sitePast, string srcId = "eca", string measureId = "tar")
@@ -216,7 +216,7 @@ internal static class PlotViewModelHelpers
         return;
       }
       catch (InvalidOperationException ex) { WriteLine($"WARN: P{i,3} {ex.Message}"); await Task.Delay(1000); bpr.Warn(); }
-      catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); throw; }
+      catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = System.Windows.MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, System.Windows.MessageBoxOptions.ServiceNotification); throw; }
     }
   }
 

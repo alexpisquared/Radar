@@ -54,7 +54,7 @@ public partial class MainPlotOldVM : ObservableValidator
     catch (Exception ex)
     {
       WriteLine($"■─■─■ {ex.Message} \n\t {ex} ■─■─■");
-      if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
+      if (Debugger.IsAttached) Debugger.Break(); else _ = System.Windows.MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, System.Windows.MessageBoxOptions.ServiceNotification);
       return false;
     }
     finally { _busy = false; }
@@ -82,7 +82,7 @@ public partial class MainPlotOldVM : ObservableValidator
       catch (Exception ex)
       {
         WriteLine($"■─■─■ {ex.Message} \n\t {ex} ■─■─■");
-        if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
+        if (Debugger.IsAttached) Debugger.Break(); else _ = System.Windows.MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, System.Windows.MessageBoxOptions.ServiceNotification);
       }
     }
 

@@ -58,7 +58,7 @@ public partial class MainPlotOldWindow : Window
     catch (Exception ex)
     {
       WriteLine($"■─■─■ {ex.Message} \n\t {ex} ■─■─■");
-      if (Debugger.IsAttached) Debugger.Break(); else MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
+      if (Debugger.IsAttached) Debugger.Break(); else System.Windows.MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, System.Windows.MessageBoxOptions.ServiceNotification);
     }
   }
 
