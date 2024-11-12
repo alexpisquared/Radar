@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="ReadMe.md" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Android-Weather.ico" />
   </ItemGroup>
 
