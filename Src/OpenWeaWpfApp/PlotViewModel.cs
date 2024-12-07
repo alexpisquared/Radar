@@ -23,10 +23,23 @@ public partial class PlotViewModel : ObservableValidator
   readonly OxyColor
           _111 = OxyColor.FromRgb(0x10, 0x10, 0x10),
           _mng = OxyColor.FromRgb(0x20, 0x20, 0x20),
+
           _330 = OxyColor.FromRgb(0x30, 0x30, 0x00),
+          _PoP = OxyColor.FromRgb(0x00, 0x30, 0xa0),
+          _80f = OxyColor.FromRgb(0x40, 0x00, 0xa0),
+          _Phc = OxyColor.FromRgb(0xe0, 0x00, 0xe0),
+          _Prs = OxyColor.FromRgb(0x60, 0x60, 0x00),
+          _wnd = OxyColor.FromRgb(0x00, 0xcc, 0xff),
+
+          _33m = OxyColor.FromRgb(0x80, 0x80, 0x00),
+          _Pom = OxyColor.FromRgb(0x00, 0x40, 0xf0),
+          _80m = OxyColor.FromRgb(0x80, 0x00, 0xf0),
+          _Phm = OxyColor.FromRgb(0xcc, 0xcc, 0x00),
+          _Prm = OxyColor.FromRgb(0xb0, 0xb0, 0x00),
+          _wnm = OxyColor.FromRgb(0x00, 0xff, 0x00), //todo: scale!
+
           _mjg = OxyColor.FromRgb(0x40, 0x40, 0x40),
           _aaa = OxyColor.FromRgb(0xa0, 0xa0, 0xa0),
-          _80f = OxyColor.FromRgb(0x80, 0x00, 0xf0),
           _cc0 = OxyColor.FromRgb(0xc0, 0xc0, 0x00),
           _ccc = OxyColor.FromRgb(0xc0, 0xc0, 0xc0),
           _eee = OxyColor.FromRgb(0xe0, 0xe0, 0xe0),
@@ -34,10 +47,6 @@ public partial class PlotViewModel : ObservableValidator
           _d00 = OxyColor.FromRgb(0xd0, 0x00, 0x00),
           _Vgn = OxyColor.FromRgb(0x00, 0x80, 0xff),
           _Mis = OxyColor.FromRgb(0x00, 0x80, 0x00),
-          _Phc = OxyColor.FromRgb(0xe0, 0x00, 0xe0),
-          _Prs = OxyColor.FromRgb(0xb0, 0xb0, 0x00),
-          _PoP = OxyColor.FromRgb(0x00, 0x40, 0xf0),
-          _wnd = OxyColor.FromRgb(0x00, 0xff, 0x80),
    _wnD = OxyColor.FromArgb(0x20, 0x00, 0xff, 0x80),
    _qqq = OxyColor.FromArgb(0x50, 0x00, 0xff, 0x80);
 
@@ -52,12 +61,19 @@ public partial class PlotViewModel : ObservableValidator
   readonly ObservableCollection<DataPoint> OwaLoclFeel = [];
   readonly ObservableCollection<DataPoint> OwaLoclPrsr = [];
   readonly ObservableCollection<DataPoint> OwaLoclGust = [];
-  readonly ObservableCollection<DataPoint> SunSinusoid = [];
-  readonly ObservableCollection<DataPoint> ECaBtvlWind = [];
-  readonly ObservableCollection<DataPoint> ECaPearWind = [];
   readonly ObservableCollection<DataPoint> OwaLoclSunT = [];
   readonly ObservableCollection<DataPoint> OwaTempExtr = [];
   readonly ObservableCollection<DataPoint> OwaLoclPopr = [];
+  readonly ObservableCollection<DataPoint> OMeLoclTemp = [];
+  readonly ObservableCollection<DataPoint> OMeLoclFeel = [];
+  readonly ObservableCollection<DataPoint> OMeLoclPrsr = [];
+  readonly ObservableCollection<DataPoint> OMeLoclGust = [];
+  readonly ObservableCollection<DataPoint> OMeLoclSunT = [];
+  readonly ObservableCollection<DataPoint> OMeTempExtr = [];
+  readonly ObservableCollection<DataPoint> OMeLoclPopr = [];
+  readonly ObservableCollection<DataPoint> SunSinusoid = [];
+  readonly ObservableCollection<DataPoint> ECaBtvlWind = [];
+  readonly ObservableCollection<DataPoint> ECaPearWind = [];
   readonly ObservableCollection<DataPoint> ECaToroTemp = [];
   readonly ObservableCollection<DataPoint> ECaVghnTemp = [];
   readonly ObservableCollection<DataPoint> ECaMrkhTemp = [];
@@ -185,11 +201,11 @@ public partial class PlotViewModel : ObservableValidator
       {
         var t = _opn.Hourly.Time[i].ToOADate();
 
-        OwaLoclTemp.Add(new DataPoint(t, _opn.Hourly.Temperature2m[i]));
-        //OwaLoclFeel.Add(new DataPoint(t, _opn.Hourly.app));
-        //OwaLoclPrsr.Add(new DataPoint(t, _opn.Hourly.pressure - 1030));
-        OwaLoclGust.Add(new DataPoint(t, _opn.Hourly.WindGusts10m[i]));
-        OwaLoclPopr.Add(new DataPoint(t, _opn.Hourly.PrecipitationProbability[i]));
+        OMeLoclTemp.Add(new DataPoint(t, _opn.Hourly.Temperature2m[i]));
+        //OMeLoclFeel.Add(new DataPoint(t, _opn.Hourly.app));
+        //OMeLoclPrsr.Add(new DataPoint(t, _opn.Hourly.pressure - 1030));
+        OMeLoclGust.Add(new DataPoint(t, _opn.Hourly.WindGusts10m[i]));
+        OMeLoclPopr.Add(new DataPoint(t, _opn.Hourly.PrecipitationProbability[i]));
 
         var rad = Math.PI * _opn.Hourly.WindDirection10m[i] * 2 / 360;
         var dx = 0.10 * Math.Cos(rad);
@@ -204,16 +220,16 @@ public partial class PlotViewModel : ObservableValidator
       }
 
       //var day0 = _opn.daily.First();
-      //OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), -000));
-      //OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), +800));
-      //OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), +800));
-      //OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), -000));
+      //OMeLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), -000));
+      //OMeLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), +800));
+      //OMeLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), +800));
+      //OMeLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), -000));
       //_opn.daily.ToList().ForEach(x =>
       //{
-      //  OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), -000));
-      //  OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), +800));
-      //  OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), +800));
-      //  OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), -000));
+      //  OMeLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), -000));
+      //  OMeLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), +800));
+      //  OMeLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), +800));
+      //  OMeLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), -000));
       //});
 
       //DrawSunSinosoid(OpenWea.UnixToDt(day0.sunrise).ToOADate());
@@ -236,14 +252,59 @@ public partial class PlotViewModel : ObservableValidator
 
     // if (DateTime.Now != DateTime.Today) return;
 
-    _ = Task.Run<object>(async () => await _opnwea.GetIt__(_cfg["AppSecrets:MagicWeather"] ?? throw new ArgumentNullException(nameof(obj)), OpenWea.OpenWeatherCd.OneCallApi) ?? throw new ArgumentNullException(nameof(obj))).ContinueWith(async _ =>
+    _ = Task.Run<object>(async () => await _opnwea.GetIt__(_cfg["AppSecrets:MagicWeather"]!, OpenWea.OpenWeatherCd.OneCallApi) ?? throw new ArgumentNullException(nameof(obj))).ContinueWith(async _ =>
     {
       _oca = _.Result as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(_oca); // PHC107
 
-      if (_oca.current is not null)
+      if (_oca.current is null) // always null since became a paid service in 2024!!!!!
       {
-        //SmartAdd($"{(DateTime.Now-_startedAt).TotalSeconds,5:N1}  {_oca.current}";
-        Model.Title /*= CurrentConditions*/ = $"OWA {OpenWea.UnixToDt(_oca.current.dt):HH:mm} {_oca.current.temp,5:+##.#;-##.#;0}° {_oca.current.feels_like,4:+##;-##;0}° {_oca.current.wind_speed * _ms2kh / _wk,5:N1} k/h    {Model.Title}";
+        Model.Title /*= CurrentConditions*/ = $"{Model.Title}";
+        WindDirn = 0;
+        WindVeloKmHr = 0;
+        WindGustKmHr = 0;
+        CurTempReal = $"~~~";
+        CurTempFeel = $"~~~";
+        CurWindKmHr = $"~~~";
+        OpnWeaIcom = $"~~~";
+
+        //_oca.hourly.ToList().ForEach(x =>
+        //{
+        //  OwaLoclTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.temp));
+        //  OwaLoclFeel.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.feels_like));
+        //  OwaLoclPrsr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pressure - 1030));
+        //  OwaLoclGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_gust * _ms2kh));
+        //  OwaLoclPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 100));
+
+        //  var rad = Math.PI * x.wind_deg * 2 / 360;
+        //  var dx = 0.10 * Math.Cos(rad);
+        //  var dy = 10.0 * Math.Sin(rad);
+        //  var tx = .002 * Math.Cos(rad + 90);
+        //  var ty = 0.20 * Math.Sin(rad + 90);
+        //  var sx = .002 * Math.Cos(rad - 90);
+        //  var sy = 0.20 * Math.Sin(rad - 90);
+        //  ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + tx, ty + (x.wind_speed * _ms2kh)));
+        //  ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + dx, dy + (x.wind_speed * _ms2kh)));
+        //  ECaBtvlWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)) + sx, sy + (x.wind_speed * _ms2kh)));
+        //});
+
+        //var day0 = _oca.daily.First();
+        //OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), -000));
+        //OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), +800));
+        //OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), +800));
+        //OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), -000));
+        //_oca.daily.ToList().ForEach(x =>
+        //{
+        //  OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), -000));
+        //  OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), +800));
+        //  OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), +800));
+        //  OwaLoclSunT.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), -000));
+        //});
+
+        //DrawSunSinosoid(OpenWea.UnixToDt(day0.sunrise).ToOADate());
+      }
+      else // JIC ever paid
+      {
+        Model.Title = $"OWA {OpenWea.UnixToDt(_oca.current.dt):HH:mm} {_oca.current.temp,5:+##.#;-##.#;0}° {_oca.current.feels_like,4:+##;-##;0}° {_oca.current.wind_speed * _ms2kh / _wk,5:N1} k/h    {Model.Title}";
         WindDirn = _oca.current.wind_deg;
         WindVeloKmHr = _oca.current.wind_speed * _ms2kh / _wk;
         WindGustKmHr = _oca.current.wind_gust * _ms2kh / _wk;
@@ -310,7 +371,7 @@ public partial class PlotViewModel : ObservableValidator
       */
 
 
-      var d53 = await _opnwea.GetIt__(_cfg["AppSecrets:MagicWeather"] ?? throw new ArgumentNullException(nameof(obj)), OpenWea.OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; //ArgumentNullException.ThrowIfNull(d53); // PHC107
+      var d53 = await _opnwea.GetIt__(_cfg["AppSecrets:MagicWeather"]!, OpenWea.OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; // FREE
       if (d53 != null)
       {
         DrawD53(d53);
@@ -320,7 +381,8 @@ public partial class PlotViewModel : ObservableValidator
 
       await GetDays(8);
 
-      Model.InvalidatePlot(true); SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  OWA  \n");
+      Model.InvalidatePlot(true);
+      SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  OWA  \n");
 
       await DelayedStoreToDbIf();
 
@@ -565,16 +627,26 @@ public partial class PlotViewModel : ObservableValidator
       Model.Series.Add(new LineSeries { ItemsSource = ECaTIslTemp, Color = _d00, StrokeThickness = 1.0, Title = "ec TI T", LineStyle = LineStyle.Dot });
       Model.Series.Add(new LineSeries { ItemsSource = ECaVghnTemp, Color = _Vgn, StrokeThickness = 3.0, Title = "ec VA T", LineStyle = LineStyle.Dash });
       Model.Series.Add(new LineSeries { ItemsSource = ECaMrkhTemp, Color = _Vgn, StrokeThickness = 2.0, Title = "ec MA T", LineStyle = LineStyle.Dash, InterpolationAlgorithm = IA });
-      Model.Series.Add(new AreaSeries { ItemsSource = ECaBtvlWind, Color = _wnd, StrokeThickness = 0.5, Title = "ec Wind Btv", YAxisKey = "yAxisR", Fill = _wnD });
+      Model.Series.Add(new LineSeries { ItemsSource = ECaBtvlWind, Color = _wnd, StrokeThickness = 0.5, Title = "ec Wind Btv", YAxisKey = "yAxisR"/*, Fill = _wnD*/ });
       Model.Series.Add(new LineSeries { ItemsSource = ECaPearWind, Color = _wnd, StrokeThickness = 0.5, Title = "ec Wind Pea", YAxisKey = "yAxisR" });
       Model.Series.Add(new LineSeries { ItemsSource = SunSinusoid, Color = _cc0, StrokeThickness = 0.5, Title = "SunRS Sin", YAxisKey = "yAxisL" });
-      Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclSunT, Color = _330, StrokeThickness = 0.0, Title = "SunRS Sqr", YAxisKey = "yAxisR" });
+
+      Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclSunT, Color = _330, StrokeThickness = 0.0, Title = "owa SunRS Sqr", YAxisKey = "yAxisR" });
       Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclPopr, Color = _PoP, StrokeThickness = 0.0, Title = "owa PoPr", InterpolationAlgorithm = IA, YAxisKey = "yAxisR" });
       Model.Series.Add(new LineSeries { ItemsSource = OwaTempExtr, Color = _80f, StrokeThickness = 1.0, Title = "owa Extr", LineStyle = LineStyle.LongDashDotDot });
       Model.Series.Add(new LineSeries { ItemsSource = OwaLoclTemp, Color = _Phc, StrokeThickness = 1.5, Title = "owa Temp", InterpolationAlgorithm = IA });
       Model.Series.Add(new LineSeries { ItemsSource = OwaLoclFeel, Color = _Phc, StrokeThickness = 0.5, Title = "owa Feel", InterpolationAlgorithm = IA });
       Model.Series.Add(new LineSeries { ItemsSource = OwaLoclPrsr, Color = _Prs, StrokeThickness = 1.0, Title = "owa Prsr", InterpolationAlgorithm = IA, LineStyle = LineStyle.LongDashDotDot });
       Model.Series.Add(new LineSeries { ItemsSource = OwaLoclGust, Color = _wnd, StrokeThickness = 0.5, Title = "owa Gust", InterpolationAlgorithm = IA, YAxisKey = "yAxisR" });
+
+      Model.Series.Add(new AreaSeries { ItemsSource = OMeLoclSunT, Color = _33m, StrokeThickness = 0.0, Title = "ome SunRS Sqr", YAxisKey = "yAxisR" });
+      Model.Series.Add(new AreaSeries { ItemsSource = OMeLoclPopr, Color = _Pom, StrokeThickness = 0.0, Title = "ome PoPr", InterpolationAlgorithm = IA, YAxisKey = "yAxisR" });
+      Model.Series.Add(new LineSeries { ItemsSource = OMeTempExtr, Color = _80m, StrokeThickness = 1.0, Title = "ome Extr", LineStyle = LineStyle.LongDashDotDot });
+      Model.Series.Add(new LineSeries { ItemsSource = OMeLoclTemp, Color = _Phm, StrokeThickness = 1.5, Title = "ome Temp", InterpolationAlgorithm = IA });
+      Model.Series.Add(new LineSeries { ItemsSource = OMeLoclFeel, Color = _Phm, StrokeThickness = 0.5, Title = "ome Feel", InterpolationAlgorithm = IA });
+      Model.Series.Add(new LineSeries { ItemsSource = OMeLoclPrsr, Color = _Prm, StrokeThickness = 1.0, Title = "ome Prsr", InterpolationAlgorithm = IA, LineStyle = LineStyle.LongDashDotDot });
+      Model.Series.Add(new LineSeries { ItemsSource = OMeLoclGust, Color = _wnm, StrokeThickness = 0.5, Title = "ome Gust", InterpolationAlgorithm = IA, YAxisKey = "yAxisR" });
+
       Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFVgn, MarkerFill = OxyColors.Transparent, Title = "ECa _Vgn", MarkerType = MarkerType.Circle, MarkerStroke = _Vgn });
       Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFMis, MarkerFill = OxyColors.Transparent, Title = "ECa _Mis", MarkerType = MarkerType.Circle, MarkerStroke = _Mis });
       Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFPhc, MarkerFill = OxyColors.Transparent, Title = "OWA _Phc", MarkerType = MarkerType.Circle, MarkerStroke = _Phc, TrackerFormatString = "{}{0}&#xA;Time:   {2:HH:mm} &#xA;Temp:  {4:0.0}° " });

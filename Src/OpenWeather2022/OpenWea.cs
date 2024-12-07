@@ -156,15 +156,15 @@ public class OpenWea
   public static DateTime UnixToDt(double unixTimeStamp) => new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(unixTimeStamp).ToLocalTime();  // Unix timestamp is seconds past epoch
   public static double DateTimeToUnixTimestamp(DateTime dateTime) => (TimeZoneInfo.ConvertTimeToUtc(dateTime) - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
 
-  public enum OpenWeatherCd
+  public enum OpenWeatherCd // https://openweathermap.org/price
   {
-    Forecast16, // openweathermap.org/api/one-call-api   5 days back only.           
+    Forecast16, // openweathermap.org/api/one-call-api               5 days back only.           
     CurrentWea, // openweathermap.org/forecast16          
-    TimeMachin, // openweathermap.org/current        
-    WeathrMaps, //                                   <== needs $ subs-n it seemes.
-    Forecast30, // openweathermap.org/api/forecast30 <== needs $ subs-n it seemes.   
+    TimeMachin, // openweathermap.org/current               FREE
+    WeathrMaps, //                                          FREE? 
+    Forecast30, // openweathermap.org/api/forecast30 
     OneCallApi, // openweathermap.org/api/one-call-api
-    Frc5Day3Hr  // openweathermap.org/forecast5
+    Frc5Day3Hr  // openweathermap.org/forecast5             FREE
   }
 
   readonly int[] _sunrizes = new int[] {
