@@ -61,7 +61,7 @@ public class OpenWea
         //OpenWeatherCd.TimeMachin => $"{url_}lat={lat}&lon={lon}&units=metric&dt={time}&appid={code}",
         //OpenWeatherCd.Forecast16 => $"{url_}q={city}&units=metric&mode={frmt}{xtra}&appid={code}",
         //OpenWeatherCd.CurrentWea => $"{url_}q={city}&units=metric&mode={frmt}&appid={code}",
-        OpenWeatherCd.WeathrMaps => $"{url_}?date={time}&opacity=0.9&fill_bound=true&appid={code}",
+        OpenWeatherCd.WeatherMap => $"{url_}?date={time}&opacity=0.9&fill_bound=true&appid={code}",
         OpenWeatherCd.Forecast30 => $"{url_}q={city}&units=metric&appid={code}",
         OpenWeatherCd.OneCallApi => $"{url_}appid={code}&units=metric&lat={lat}&lon={lon}&{excl}",
         OpenWeatherCd.Frc5Day3Hr => $"{url_}appid={code}&units=metric&q={city}",
@@ -161,7 +161,7 @@ public class OpenWea
     Forecast16, // openweathermap.org/api/one-call-api               5 days back only.           
     CurrentWea, // openweathermap.org/forecast16          
     TimeMachin, // openweathermap.org/current               FREE
-    WeathrMaps, //                                          FREE? 
+    WeatherMap, //                                          FREE? 
     Forecast30, // openweathermap.org/api/forecast30 
     OneCallApi, // openweathermap.org/api/one-call-api
     Frc5Day3Hr  // openweathermap.org/forecast5             FREE

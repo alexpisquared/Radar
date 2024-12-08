@@ -289,20 +289,20 @@
     <TextBlock Text="{Binding SubHeader}" HorizontalAlignment="Left" Foreground="#888" Margin="70 15" VerticalAlignment="Bottom" Grid.RowSpan="3" Grid.ColumnSpan="3" d:Text="SubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeader" />
 
     <Menu Margin="0,0,8,0" FontStyle="Oblique" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent" Foreground="#dd0" Grid.Column="0" Grid.ColumnSpan="3">
+      <Button    Content="Populate All" IsDefault="True" Click="OnPoplte" />
       <MenuItem   Header="_..."        ToolTip="Clear Data" Height="33" Foreground="#880" >
+        <MenuItem   Header="_Populate All"      Command="{Binding PopulateAllCommand}"          ToolTip="Populate ALL"  />
+        <Separator />
         <MenuItem   Header="C_lear Data"        Command="{Binding ClearDataCommand}"            ToolTip="Clear Data" Height="33" />
         <MenuItem   Header="F_rom Web"          Command="{Binding PopulateScatModelCommand}"    ToolTip="Populate from Scat Model"  />
         <MenuItem   Header="_From DB"           Command="{Binding PrevForecastFromDbCommand}"   ToolTip="Populate from DB"  />
-        <MenuItem   Header="_Populate All"      Command="{Binding PopulateAllCommand}"          ToolTip="Populate ALL"  />
-        <Separator />
         <MenuItem   Header="Refresh _Mdl"       Command="{Binding CreateMdlCommand}"  CommandParameter="Cmnd"  ToolTip="Updates all data sources since set to true"  />
         <MenuItem   Header="Invalidate"         Command="{Binding InvalidateCommand}" CommandParameter="true"  ToolTip="Updates all data sources since set to true"  />
         <Separator />
-        <Button    Content="Populate" IsDefault="True" Click="OnPoplte" />
       </MenuItem>
       <MenuItem   Header="  _A 2  " Command="{Binding GetDaysCommand}" CommandParameter="2" InputGestureText="F2" ToolTip="Check DB for changes"  />
       <MenuItem   Header="  _B 3  " Command="{Binding GetDaysCommand}" CommandParameter="3" InputGestureText="F3" ToolTip="Check DB for changes"  />
-      <MenuItem   Header="  _C 8  " Command="{Binding GetDaysCommand}" CommandParameter="8" InputGestureText="F8" ToolTip="Check DB for changes"  />
+      <MenuItem   Header="  _C 7  " Command="{Binding GetDaysCommand}" CommandParameter="7" InputGestureText="F7" ToolTip="Check DB for changes"  />
       <Separator />
       <!--
         <MenuItem   Header="Days: _1 " Command="{Binding GetDaysCommand}" CommandParameter="1" InputGestureText="F1" ToolTip="Check DB for changes"  />
