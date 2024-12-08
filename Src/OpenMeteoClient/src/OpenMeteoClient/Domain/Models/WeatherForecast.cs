@@ -116,6 +116,8 @@ public class DailyUnits
 public class DailyData
 {
   public List<DateTime> Time { get; set; }
+  public List<DateTime> Sunrise { get; set; }
+  public List<DateTime> Sunset { get; set; }
 
   [JsonProperty("temperature_2m")]
   public List<double> Temperature2m { get; set; }
