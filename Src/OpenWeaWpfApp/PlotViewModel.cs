@@ -178,18 +178,21 @@ public partial class PlotViewModel : ObservableValidator
 
     _ = Task.Run(async () => await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24YYZ)).ContinueWith(_ => { DrawPast24hrEC(Cnst.pearson, _.Result); _pastPea = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
     _ = Task.Run(async () => await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24OKN)).ContinueWith(_ => { DrawPast24hrEC(Cnst.batnvil, _.Result); _pastBvl = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
-    _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._mississ)).ContinueWith(_ => { DrawFore24hrEC(Cnst._mississ, _.Result); _foreMis = _.Result; Model.Title = $"Miss {(_foreMis?.currentConditions)?.dateTime[1].hour.Value}:{(_foreMis?.currentConditions)?.dateTime[1].minute} {float.Parse(_foreMis?.currentConditions?.temperature?.Value ?? "-999F"),5:+##.#;-##.#;0}° {float.Parse(_foreMis?.currentConditions?.windChill?.Value ?? _foreMis?.currentConditions?.temperature?.Value ?? "-999"),4:+##;-##;0}° {_foreMis?.currentConditions?.wind?.speed?.Value,4} {(_foreMis?.currentConditions?.wind)?.speed.units}   \t   {Model?.Title} \t "; }, TaskScheduler.FromCurrentSynchronizationContext());
-    _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._richmhl)).ContinueWith(_ => { DrawFore24hrEC(Cnst._richmhl, _.Result); _foreVgn = _.Result; Model.Title = $"Vaug {(_foreVgn?.currentConditions)?.dateTime[1].hour.Value}:{(_foreVgn?.currentConditions)?.dateTime[1].minute} {float.Parse(_foreVgn?.currentConditions?.temperature?.Value ?? "-999F"),5:+##.#;-##.#;0}° {float.Parse(_foreVgn?.currentConditions?.windChill?.Value ?? _foreVgn?.currentConditions?.temperature?.Value ?? "-999"),4:+##;-##;0}° {_foreVgn?.currentConditions?.wind?.speed?.Value,4} {(_foreVgn?.currentConditions?.wind)?.speed.units}   \t   {Model?.Title} \t "; }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._mississ)).ContinueWith(_ => { DrawFore24hrEC(Cnst._mississ, _.Result); _foreMis = _.Result; Model.Title = $"\t\t   Miss {(_foreMis?.currentConditions)?.dateTime[1].hour.Value}:{(_foreMis?.currentConditions)?.dateTime[1].minute} {float.Parse(_foreMis?.currentConditions?.temperature?.Value ?? "-999F"),5:+##.#;-##.#;0}° {float.Parse(_foreMis?.currentConditions?.windChill?.Value ?? _foreMis?.currentConditions?.temperature?.Value ?? "-999"),4:+##;-##;0}° {_foreMis?.currentConditions?.wind?.speed?.Value,4} {(_foreMis?.currentConditions?.wind)?.speed.units}   \t   {Model?.Title} \t "; }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._richmhl)).ContinueWith(_ => { DrawFore24hrEC(Cnst._richmhl, _.Result); _foreVgn = _.Result; Model.Title = $"\t\t   Vaug {(_foreVgn?.currentConditions)?.dateTime[1].hour.Value}:{(_foreVgn?.currentConditions)?.dateTime[1].minute} {float.Parse(_foreVgn?.currentConditions?.temperature?.Value ?? "-999F"),5:+##.#;-##.#;0}° {float.Parse(_foreVgn?.currentConditions?.windChill?.Value ?? _foreVgn?.currentConditions?.temperature?.Value ?? "-999"),4:+##;-##;0}° {_foreVgn?.currentConditions?.wind?.speed?.Value,4} {(_foreVgn?.currentConditions?.wind)?.speed.units}   \t   {Model?.Title} \t "; }, TaskScheduler.FromCurrentSynchronizationContext());
     _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._toronto)).ContinueWith(_ => { DrawFore24hrEC(Cnst._toronto, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
     _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._torIsld)).ContinueWith(_ => { DrawFore24hrEC(Cnst._torIsld, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
     _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._markham)).ContinueWith(_ => { DrawFore24hrEC(Cnst._markham, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
 
-    _ = Task.Run<object>(async () => await _openMeteoSvc.GetForecastAsync(43.83, -79.5) ?? throw new ArgumentNullException(nameof(obj))).ContinueWith(async _ =>
+    //_ = Task.Run<object>(async () => await _openMeteoSvc.GetForecastAsync(43.83, -79.5) ?? throw new ArgumentNullException(nameof(obj))).ContinueWith(async _ =>
     {
-      _openMeteo = _.Result as WeatherForecast;
+      //_openMeteo = _.Result as WeatherForecast;
+
+      _openMeteo = await _openMeteoSvc.GetForecastAsync(43.83, -79.5);
+
       ArgumentNullException.ThrowIfNull(_openMeteo);
 
-      Model.Title = $"OMe {(_openMeteo.Current.Time):HH:mm} {_openMeteo.Current.Temperature2m,5:+##.#;-##.#;0}° {_openMeteo.Current.ApparentTemperature,4:+##;-##;0}° {_openMeteo.Current.WindSpeed10m * _ms2kh / _wk,4:N0} k/h       {Model.Title}";
+      Model.Title = $"\t\t   OMe {(_openMeteo.Current.Time):HH:mm} {_openMeteo.Current.Temperature2m,5:+##.#;-##.#;0}° {_openMeteo.Current.ApparentTemperature,4:+##;-##;0}° {_openMeteo.Current.WindSpeed10m * _ms2kh / _wk,4:N0} k/h       {Model.Title}";
       WindDirn = _openMeteo.Current.WindDirection10m;
       WindVeloKmHr = (float)(_openMeteo.Current.WindSpeed10m); //  * _ms2kh / _wk;
       WindGustKmHr = _openMeteo.Current.WindGusts10m; //  * _ms2kh / _wk;
@@ -238,11 +241,11 @@ public partial class PlotViewModel : ObservableValidator
 
       //await DelayedStoreToDbIf(); // ERR: A second operation was started on this context instance before a previous operation completed. 
 
-    }, TaskScheduler.FromCurrentSynchronizationContext());
+    }//, TaskScheduler.FromCurrentSynchronizationContext());
 
-    _ = Task.Run<object>(async () => await _opnwea.GetIt__(_cfg["AppSecrets:MagicWeather"]!, OpenWea.OpenWeatherCd.OneCallApi) ?? throw new ArgumentNullException(nameof(obj))).ContinueWith(async _ =>
+    //_ = Task.Run<object>(async () => await _opnwea.GetIt__(_cfg["AppSecrets:MagicWeather"]!, OpenWea.OpenWeatherCd.OneCallApi) ?? throw new ArgumentNullException(nameof(obj))).ContinueWith(async _ =>
     {
-      _openWeather = _.Result as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(_openWeather); // PHC107
+      _openWeather = await _opnwea.GetIt__(_cfg["AppSecrets:MagicWeather"]!, OpenWea.OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; //_.Result as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(_openWeather); // PHC107
 
       if (_openWeather.current is null) // always null since became a paid service in 2024!!!!!
       {
@@ -303,7 +306,7 @@ public partial class PlotViewModel : ObservableValidator
       await GetDays(7);
       Model.InvalidatePlot(true);
       SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  OWA  \n");
-    }, TaskScheduler.FromCurrentSynchronizationContext());
+    }//, TaskScheduler.FromCurrentSynchronizationContext());
 
     await DelayedStoreToDbIf();
   }
