@@ -2,12 +2,6 @@
                     xmlns:local0="clr-namespace:OpenWeaWpfApp" 
                     xmlns:local1="clr-namespace:OpenWeaWpfApp.Views"
                     >
-  <!--<DataTemplate DataType="{x:Type local:MainPlotOldVM}">
-    <local:MainPlotOldWindow/>
-  </DataTemplate>
-  <DataTemplate DataType="{x:Type local:MainPlotOldVM}">
-    <local:PocBin/>
-  </DataTemplate>-->
   <DataTemplate DataType="{x:Type local0:PlotViewModel}">
     <local1:MainPlotViewUsrCtrl/>
   </DataTemplate>

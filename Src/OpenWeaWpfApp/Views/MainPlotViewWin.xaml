@@ -321,8 +321,9 @@
         <!--<MenuItem   Header="° ° °"  Visibility="{Binding IsDevDbgViz}" >
           <MenuItem Header="Dmp" Command="{Binding SaveExcelTsvCommand}"  ToolTip="Dump tsv"  />
           <MenuItem Header="Tgl _DevDbgViz" IsCheckable="True" IsChecked="{Binding IsDevDbg}" />
-        </MenuItem>-->
+        </MenuItem>
         <MenuItem   Header="_POC" ToolTip="No action" FontStyle="Oblique" Click="OnShowPocBin" />
+        -->
         <Separator />
         <MenuItem   Header="  _X  " ToolTip="Close" Click="OnClose" />
       </Menu>

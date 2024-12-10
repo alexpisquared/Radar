@@ -23,7 +23,6 @@ public partial class MainPlotViewUsrCtrl
         catch (Exception ex) { ex.Pop(); }
     }
     void OnPoplte(object sender, RoutedEventArgs e) => ((PlotViewModel)DataContext).PopulateAll(null);  // only lines chart is drawn.
-    void OnPocBin(object sender, RoutedEventArgs e) => new PocBin().Show();
     void OnDragMove(object s, MouseButtonEventArgs e)
     {
         if (e.LeftButton != MouseButtonState.Pressed) return;
