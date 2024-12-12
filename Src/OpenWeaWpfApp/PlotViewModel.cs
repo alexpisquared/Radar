@@ -53,7 +53,7 @@ public partial class PlotViewModel : ObservableValidator
   readonly ObservableCollection<DataPoint> ECaMissTemp = [];
   readonly ObservableCollection<DataPoint> ECaTIslTemp = [];
 
-  [Browsable(false)][ObservableProperty] PlotModel model = new() { TextColor = OxyColors.GreenYellow }; //void OnModelChanged() => PropertiesChanged();  void PropertiesChanged() => Model = ModelClearAdd("Prop Chgd");
+  [Browsable(false)][ObservableProperty] PlotModel model = new() { TextColor = OxyColors.Lavender}; // Title on the top of the plot.
   [ObservableProperty] double timeMin = DateTime.Today.ToOADate() - 1; partial void OnTimeMinChanged(double value) => ReCreateAxises("T min");
   [ObservableProperty] double timeMax = DateTime.Today.ToOADate() + 2; partial void OnTimeMaxChanged(double value) => ReCreateAxises("T max");
   [ObservableProperty] string plotTitle = "";
@@ -527,20 +527,20 @@ public partial class PlotViewModel : ObservableValidator
       Model.Series.Add(new LineSeries { ItemsSource = ECaMrkhTemp, Color = _Vgn, StrokeThickness = 2.0, Title = "ec MA T", LineStyle = LineStyle.Dash, InterpolationAlgorithm = IA });
       Model.Series.Add(new LineSeries { ItemsSource = ECaPearWind, Color = _wnd, StrokeThickness = 0.5, Title = "ec Wind Pea", YAxisKey = "yAxisR" });
 
-      Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclPopr, Color = OxyColor.FromArgb(0x80, 0x00, 0x20, 0x70), StrokeThickness = 0.0, Title = "owa PoPr", InterpolationAlgorithm = IA, YAxisKey = "yAxisR", Fill = OxyColor.FromArgb(0x80, 0x00, 0x20, 0x70) });
-      Model.Series.Add(new LineSeries { ItemsSource = OwaTempExtr, Color = OxyColor.FromArgb(0x80, 0x40, 0x00, 0xa0), StrokeThickness = 1.0, Title = "owa Extr", LineStyle = LineStyle.LongDashDotDot });
-      Model.Series.Add(new LineSeries { ItemsSource = OwaLoclTemp, Color = OxyColor.FromArgb(0x80, 0xe0, 0x00, 0xe0), StrokeThickness = 1.5, Title = "owa Temp", InterpolationAlgorithm = IA });
-      Model.Series.Add(new LineSeries { ItemsSource = OwaLoclFeel, Color = OxyColor.FromArgb(0x80, 0xe0, 0x00, 0xe0), StrokeThickness = 0.5, Title = "owa Feel", InterpolationAlgorithm = IA });
-      Model.Series.Add(new LineSeries { ItemsSource = OwaLoclPrsr, Color = OxyColor.FromArgb(0x80, 0x60, 0x60, 0x00), StrokeThickness = 1.0, Title = "owa Prsr", InterpolationAlgorithm = IA, LineStyle = LineStyle.LongDashDotDot });
+      Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclPopr, Color = OxyColor.FromRgb(0x40, 0x50, 0xe0), StrokeThickness = 1.0, Title = "OWa PoPr", InterpolationAlgorithm = IA, YAxisKey = "yAxisR", Fill = OxyColor.FromArgb(0x60, 0x20, 0x20, 0xC0) });
+      Model.Series.Add(new LineSeries { ItemsSource = OwaTempExtr, Color = OxyColor.FromRgb(0x40, 0x00, 0xa0), StrokeThickness = 1.0, Title = "OWa Extr", LineStyle = LineStyle.LongDashDotDot });
+      Model.Series.Add(new LineSeries { ItemsSource = OwaLoclTemp, Color = OxyColor.FromRgb(0xe0, 0x00, 0xe0), StrokeThickness = 1.5, Title = "OWa Temp", InterpolationAlgorithm = IA });
+      Model.Series.Add(new LineSeries { ItemsSource = OwaLoclFeel, Color = OxyColor.FromRgb(0xe0, 0x00, 0xe0), StrokeThickness = 0.5, Title = "OWa Feel", InterpolationAlgorithm = IA });
+      Model.Series.Add(new LineSeries { ItemsSource = OwaLoclPrsr, Color = OxyColor.FromRgb(0x60, 0x60, 0x00), StrokeThickness = 1.0, Title = "OWa Prsr", InterpolationAlgorithm = IA, LineStyle = LineStyle.LongDashDotDot });
       //tmi: Model.Series.Add(new LineSeries { ItemsSource = OwaLoclGust, Color = _wnd, StrokeThickness = 0.5, Title = "owa Gust", InterpolationAlgorithm = IA, YAxisKey = "yAxisR" });
 
-      Model.Series.Add(new AreaSeries { ItemsSource = OMeLoclPopr, Color = OxyColor.FromRgb(0x00, 0x00, 0xf0), StrokeThickness = 0.0, Title = "ome PoPr", InterpolationAlgorithm = IA, YAxisKey = "yAxisR", Fill = OxyColor.FromArgb(0x80, 0x00, 0x00, 0xf0) });
-      //Model.Series.Add(new LineSeries { ItemsSource = OMeTempExtr, Color = OxyColor.FromRgb(0x80, 0x00, 0xf0), StrokeThickness = 1.0, Title = "ome Extr", LineStyle = LineStyle.LongDashDotDot });
-      Model.Series.Add(new LineSeries { ItemsSource = OMeLoclTemp, Color = OxyColor.FromRgb(0xcc, 0xcc, 0x00), StrokeThickness = 1.5, Title = "ome Temp", InterpolationAlgorithm = IA });
-      //Model.Series.Add(new LineSeries { ItemsSource = OMeLoclFeel, Color = OxyColor.FromRgb(0xcc, 0xcc, 0x00), StrokeThickness = 0.5, Title = "ome Feel", InterpolationAlgorithm = IA });
-      //Model.Series.Add(new LineSeries { ItemsSource = OMeLoclPrsr, Color = OxyColor.FromRgb(0xb0, 0xb0, 0x00), StrokeThickness = 1.0, Title = "ome Prsr", InterpolationAlgorithm = IA, LineStyle = LineStyle.LongDashDotDot });
-      Model.Series.Add(new LineSeries { ItemsSource = OMeLoclWind, Color = _wnd, StrokeThickness = 0.5, Title = "ome Wind", YAxisKey = "yAxisR"/*, Fill = OxyColor.FromArgb(0x20, 0x00, 0xff, 0x80)*/ });
-      Model.Series.Add(new LineSeries { ItemsSource = OMeLoclGust, Color = _wnd, StrokeThickness = 0.5, Title = "ome Gust", InterpolationAlgorithm = IA, YAxisKey = "yAxisR" });
+      Model.Series.Add(new AreaSeries { ItemsSource = OMeLoclPopr, Color = OxyColor.FromRgb(0x00, 0x50, 0xf0), StrokeThickness = 1.0, Title = "oMe PoPr", InterpolationAlgorithm = IA, YAxisKey = "yAxisR", Fill = OxyColor.FromArgb(0xA0, 0x00, 0x00, 0xff) });
+      //Model.Series.Add(new LineSeries { ItemsSource = OMeTempExtr, Color = OxyColor.FromRgb(0x80, 0x00, 0xf0), StrokeThickness = 1.0, Title = "oMe Extr", LineStyle = LineStyle.LongDashDotDot });
+      Model.Series.Add(new LineSeries { ItemsSource = OMeLoclTemp, Color = OxyColor.FromRgb(0xcc, 0xcc, 0x00), StrokeThickness = 1.5, Title = "oMe Temp", InterpolationAlgorithm = IA });
+      //Model.Series.Add(new LineSeries { ItemsSource = OMeLoclFeel, Color = OxyColor.FromRgb(0xcc, 0xcc, 0x00), StrokeThickness = 0.5, Title = "oMe Feel", InterpolationAlgorithm = IA });
+      //Model.Series.Add(new LineSeries { ItemsSource = OMeLoclPrsr, Color = OxyColor.FromRgb(0xb0, 0xb0, 0x00), StrokeThickness = 1.0, Title = "oMe Prsr", InterpolationAlgorithm = IA, LineStyle = LineStyle.LongDashDotDot });
+      Model.Series.Add(new LineSeries { ItemsSource = OMeLoclWind, Color = _wnd, StrokeThickness = 0.5, Title = "oMe Wind", YAxisKey = "yAxisR"/*, Fill = OxyColor.FromArgb(0x20, 0x00, 0xff, 0x80)*/ });
+      Model.Series.Add(new LineSeries { ItemsSource = OMeLoclGust, Color = _wnd, StrokeThickness = 0.5, Title = "oMe Gust", InterpolationAlgorithm = IA, YAxisKey = "yAxisR" });
 
       Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFVgn, MarkerFill = OxyColors.Transparent, Title = "ECa _Vgn", MarkerType = MarkerType.Circle, MarkerStroke = _Vgn });
       Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFMis, MarkerFill = OxyColors.Transparent, Title = "ECa _Mis", MarkerType = MarkerType.Circle, MarkerStroke = _Mis });
