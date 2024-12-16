@@ -53,7 +53,7 @@ public partial class PlotViewModel : ObservableValidator
   readonly ObservableCollection<DataPoint> ECaMissTemp = [];
   readonly ObservableCollection<DataPoint> ECaTIslTemp = [];
 
-  [Browsable(false)][ObservableProperty] PlotModel model = new() { TextColor = OxyColors.Lavender}; // Title on the top of the plot.
+  [Browsable(false)][ObservableProperty] PlotModel model = new() { TextColor = OxyColors.Lavender }; // Title on the top of the plot.
   [ObservableProperty] double timeMin = DateTime.Today.ToOADate() - 1; partial void OnTimeMinChanged(double value) => ReCreateAxises("T min");
   [ObservableProperty] double timeMax = DateTime.Today.ToOADate() + 2; partial void OnTimeMaxChanged(double value) => ReCreateAxises("T max");
   [ObservableProperty] string plotTitle = "";
@@ -507,12 +507,12 @@ public partial class PlotViewModel : ObservableValidator
     try
     {
       Model.Legends.Clear();
-      Model.Legends.Add(new Legend { LegendTextColor = OxyColors.LightGray, LegendPosition = LegendPosition.LeftMiddle, LegendMargin = 10, LegendBackground = OxyColor.FromRgb(0x10, 0x10, 0x10) });
+      Model.Legends.Add(new Legend { LegendTextColor = OxyColors.LightYellow, LegendPosition = LegendPosition.LeftMiddle, LegendMargin = 10, LegendBackground = OxyColor.FromArgb(0x30, 0, 10, 0) });
 
       ReCreateAxises(note); // throws without
 
-      OxyColor           
-        _wnd = OxyColor.FromArgb(0x80, 0x77, 0x77, 0xaa),            
+      OxyColor
+        _wnd = OxyColor.FromArgb(0x80, 0x77, 0x77, 0xaa),
         _Vgn = OxyColor.FromRgb(0x00, 0x80, 0xff),
         _Mis = OxyColor.FromRgb(0x00, 0x80, 0x00);
 
