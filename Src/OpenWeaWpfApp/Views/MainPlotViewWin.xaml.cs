@@ -36,7 +36,7 @@ public partial class MainPlotViewWin // : WindowBase
   {
     try
     {
-      ((PlotViewModel)DataContext).PopulateAll("Silent");  // only lines chart is drawn.
+      await ((PlotViewModel)DataContext).PopulateAll("Silent");  // only lines chart is drawn.
       await Task.Delay(1);
     }
     catch (Exception ex)
@@ -45,7 +45,7 @@ public partial class MainPlotViewWin // : WindowBase
     }
   }
   void OnClose(object sender, RoutedEventArgs e) => Close();
-  void OnPoplte(object sender, RoutedEventArgs e) => ((PlotViewModel)DataContext).PopulateAll(null);  // only lines chart is drawn.
+  async void OnPoplte(object sender, RoutedEventArgs e) => await((PlotViewModel)DataContext).PopulateAll(null);  // only lines chart is drawn.
   void OnActivated(object sender, EventArgs e) => radar1.IsPlaying = true;  /*_syn.SpeakFAF("Activated", volumePercent: 5);*/
   void OnDeActivtd(object sender, EventArgs e) => radar1.IsPlaying = false; /*_syn.SpeakFAF("Deactivated", volumePercent: 5);*/
 }

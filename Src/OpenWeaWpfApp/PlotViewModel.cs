@@ -105,7 +105,7 @@ public partial class PlotViewModel : ObservableValidator
 
   [ObservableProperty] string lastBuild = VersionHelper.CurVerStr;
   [RelayCommand]
-  public void PopulateAll(object? obj)
+  public async Task PopulateAll(object? obj)
   {
     if (obj is null) bpr.Start();
 
@@ -113,7 +113,7 @@ public partial class PlotViewModel : ObservableValidator
     {
       //SmartAdd($"*** {_dbx.Database.GetConnectionString()} ***\n"); // 480ms
       PrevForecastFromDb(obj);
-      PopulateScatModel(obj);
+      await PopulateScatModel(obj);
 
       if (obj is null) bpr.Finish();
     }
@@ -219,7 +219,7 @@ public partial class PlotViewModel : ObservableValidator
     {
       _openWeather = await _opnwea.GetIt__(_cfg["AppSecrets:MagicWeather"]!, OpenWea.OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; //_.Result as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(_openWeather); // PHC107
 
-      if (_openWeather.current is null) // always null since became a paid service in 2024!!!!!
+      if (_openWeather?.current is null) // always null since became a paid service in 2024!!!!!
       {
         //Model.Title = $"_openWeather.current is null ■ {Model.Title}";
         //WindDirn = 0;

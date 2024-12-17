@@ -326,7 +326,7 @@
       <TextBlock Text="Loading..." Foreground="#5555" />
     </Viewbox>
 
-    <TextBlock Text="{Binding LastBuild, StringFormat='{}{0:yyyy-MM-dd}'}" Foreground="#08f" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="1" Margin="32"/>
+    <TextBlock Text="{Binding LastBuild}" Foreground="#08f" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="1" Margin="232 0" d:Text="1231231" />
 
   </Grid>
 </UserControl>
