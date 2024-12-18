@@ -20,7 +20,7 @@ public partial class MainPlotViewWin // : WindowBase
         case Key.C: _bpr.Error(); ((PlotViewModel)DataContext).ClearPlot(); break;
         case Key.I: _bpr.Error(); plotBR.InvalidatePlot(true); break;
         case Key.J: _bpr.Error(); plotBR.InvalidatePlot(false); break;
-        case Key.R: _bpr.Error(); ((PlotViewModel)DataContext).PopulateAll(null); goto case Key.I;
+        case Key.R: _bpr.Error(); await ((PlotViewModel)DataContext).PopulateAll(null); goto case Key.I;
         default: await Task.Delay(333); break;
       }
     };

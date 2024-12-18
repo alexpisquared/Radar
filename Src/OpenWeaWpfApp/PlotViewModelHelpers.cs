@@ -94,9 +94,9 @@ internal static class PlotViewModelHelpers
         ArgumentNullException.ThrowIfNull(siteData, $"@ Open Meteo Data{nameof(siteData)}");
         var now = DateTime.Now;
 
-        var forecastedAt = (siteData.Current.Time);
+        var forecastedAt = (siteData.Current?.Time) ?? DateTime.Today;
 
-        for (int h = 0; h < siteData.Hourly.Time.Count; h++)
+        for (int h = 0; h < siteData.Hourly?.Time.Count; h++)
         {
           var forecastedFor = siteData.Hourly.Time[h];
 

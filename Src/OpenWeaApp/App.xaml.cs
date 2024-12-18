@@ -1,32 +1,20 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using System.Windows;
-using System.Windows.Controls;
-using AmbienceLib;
-using DB.WeatherX.PwrTls.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using AmbienceLib;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using OpenWeather2022;
+using OpenMeteoClient.Infrastructure;
 using OpenWeaWpfApp;
-using OpenWeaWpfApp.Helpers;
 using StandardContractsLib;
 using StandardLib.Helpers;
-
-
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using OpenMeteoClient.Application.Interfaces;
-using OpenMeteoClient.Infrastructure;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace OpenWeaApp;
 public partial class App : Application
 {
   string _audit = "Default!!";
-  readonly IServiceProvider _serviceProvider; public IServiceProvider ServiceProvider => _serviceProvider;
+
+  public IServiceProvider ServiceProvider { get; }
 
   public App()
   {
@@ -43,9 +31,9 @@ public partial class App : Application
 
     AppStartHelper.InitOpenWeaServices(services);
 
-    services.AddOpenMeteoClient();
+    _ = services.AddOpenMeteoClient();
 
-    _serviceProvider = services.BuildServiceProvider(); // LibInit.InitLib(services, _serviceProvider);
+    ServiceProvider = services.BuildServiceProvider(); // LibInit.InitLib(services, _serviceProvider);
   }
 
   protected override void OnStartup(StartupEventArgs e)
@@ -54,11 +42,11 @@ public partial class App : Application
     EventManager.RegisterClassHandler(typeof(TextBox), TextBox.GotFocusEvent, new RoutedEventHandler((s, re) => { (s as TextBox ?? new TextBox()).SelectAll(); }));
     ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
 
-    _audit = VersionHelper.DevDbgAudit(_serviceProvider.GetRequiredService<IConfigurationRoot>(), "Hello");
+    _audit = VersionHelper.DevDbgAudit(ServiceProvider.GetRequiredService<IConfigurationRoot>(), "Hello");
 
-    _serviceProvider.GetRequiredService<ILogger>().LogInformation($"OnStrt  {_audit}");
+    ServiceProvider.GetRequiredService<ILogger>().LogInformation($"OnStrt  {_audit}");
 
-    MainWindow = _serviceProvider.GetRequiredService<MainWeaWindow>();
+    MainWindow = ServiceProvider.GetRequiredService<MainWeaWindow>();
     //use ServiceProvider instead: MainWindow.DataContext = _serviceProvider.GetRequiredService<PlotViewModel>();
     MainWindow.Show();
 

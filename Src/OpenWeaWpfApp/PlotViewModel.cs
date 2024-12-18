@@ -163,6 +163,8 @@ public partial class PlotViewModel : ObservableValidator
       _openMeteo = await _openMeteoSvc.GetForecastAsync(43.83, -79.5);
 
       ArgumentNullException.ThrowIfNull(_openMeteo);
+      ArgumentNullException.ThrowIfNull(_openMeteo.Current);
+      ArgumentNullException.ThrowIfNull(_openMeteo.Daily);
 
       Model.Title = $"     OMe {(_openMeteo.Current.Time):HH:mm} {_openMeteo.Current.Temperature2m,5:+##.#;-##.#;0}° {_openMeteo.Current.ApparentTemperature,4:+##;-##;0}° {_openMeteo.Current.WindSpeed10m * _ms2kh / _wk,4:N0} k/h       {Model.Title}";
       WindDirn = _openMeteo.Current.WindDirection10m;
@@ -172,7 +174,7 @@ public partial class PlotViewModel : ObservableValidator
       CurTempFeel = $"{_openMeteo.Current.ApparentTemperature:+#;-#;0}°";
       CurWindKmHr = $"{WindVeloKmHr:N1}";
 
-      for (int i = 0; i < _openMeteo.Hourly.Time.Count; i++)
+      for (int i = 0; i < _openMeteo.Hourly?.Time.Count; i++)
       {
         var t = _openMeteo.Hourly.Time[i].ToOADate();
 
@@ -194,7 +196,7 @@ public partial class PlotViewModel : ObservableValidator
         OMeLoclWind.Add(new DataPoint(t + sx, sy + (_openMeteo.Hourly.WindSpeed10m[i] * _wk)));
       }
 
-      for (int i = 0; i < _openMeteo.Daily.Sunrise.Count; i++)
+      for (int i = 0; i < _openMeteo.Daily?.Sunrise.Count; i++)
       {
         var sunR = _openMeteo.Daily.Sunrise[i].ToOADate();
         var sunS = _openMeteo.Daily.Sunset[i].ToOADate();
@@ -204,6 +206,7 @@ public partial class PlotViewModel : ObservableValidator
         Sunrise_Set.Add(new DataPoint(sunS, -000));
       }
 
+      ArgumentNullException.ThrowIfNull(_openMeteo.Daily);
       DrawSunSinusoid(_openMeteo.Daily.Sunrise.First().ToOADate()); // DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 7.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 6.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 5.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 4.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 3.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);       DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 2.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 1.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 0.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 1.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 2.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 3.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 4.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 5.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 6.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 7.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        */      }
 
       await GetDays(7); // 8 is too much: last day is empty of data (2024-12)
@@ -321,7 +324,7 @@ public partial class PlotViewModel : ObservableValidator
     var almanacAll = ((climatedata?)new XmlSerializer(typeof(climatedata)).Deserialize(fileStream));
     Clipboard.SetText(JsonStringSerializer.Save(almanacAll)); // paste to ClimatedataStore.Json
 #else
-    var almanacAll = JsonStringSerializer.Load<climatedata>(ClimatedataStore.Json);
+    var almanacAll = JsonStringSerializer.Load<ClimateData>(ClimatedataStore.Json ?? "");
 #endif
 
     var almanac = almanacAll?.month[DateTime.Today.Month - 1].day[DateTime.Today.Day - 1]; // ~50 ms
@@ -449,7 +452,7 @@ public partial class PlotViewModel : ObservableValidator
       h3++;
     });
   }
-  void DrawMainMeteoMeasurementLines(RootobjectOneCallApi openWeather, RootobjectFrc5Day3Hr forecast5day3hr)
+  void DrawMainMeteoMeasurementLines(RootobjectOneCallApi? openWeather, RootobjectFrc5Day3Hr forecast5day3hr)
   {
     forecast5day3hr.list.ToList().ForEach(x =>
       {
@@ -469,7 +472,7 @@ public partial class PlotViewModel : ObservableValidator
         //OMeLoclWind.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind.speed * _ms2kh));
       });
 
-    if (openWeather.daily is not null) // extended forecast
+    if (openWeather?.daily is not null) // extended forecast
       openWeather.daily.Where(d => d.dt > forecast5day3hr.list.Max(d => d.dt)).ToList().ForEach(x =>
       {
         OwaLoclTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt + _m)), x.temp.morn));

@@ -21,11 +21,11 @@ namespace OpenMeteoClient.Application.Services
             _logger = logger;
         }
 
-        public async Task<WeatherForecast> GetForecastAsync(double latitude, double longitude)
+        public async Task<WeatherForecast?> GetForecastAsync(double latitude, double longitude)
         {
             var cacheKey = $"forecast_{latitude}_{longitude}";
 
-            if (_cache.TryGetValue(cacheKey, out WeatherForecast cachedForecast))
+            if (_cache.TryGetValue(cacheKey, out WeatherForecast? cachedForecast))
             {
                 _logger.LogInformation($"Returning cached forecast for coordinates: {latitude}, {longitude}");
                 return cachedForecast;
