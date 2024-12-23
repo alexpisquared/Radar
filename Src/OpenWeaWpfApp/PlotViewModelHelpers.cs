@@ -85,6 +85,7 @@ internal static class PlotViewModelHelpers
     return EnvtCaDate(siteFore.dateTime[^1]); // looks like the [1] is the local time, and [0] is the UTC time.
   }
 
+  [Obsolete]
   internal static async Task AddForecastToDB_OpnWea(WeatherxContext _dbx, string siteId, RootobjectOneCallApi? siteData, string srcId = "owa", string measureId = "tar")
   {
     for (var i = 0; i < 10; i++)

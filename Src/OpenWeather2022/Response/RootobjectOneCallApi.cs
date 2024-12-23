@@ -6,6 +6,7 @@ public partial record RootobjectOneCallApi
   public float lon { get; set; }
   public string timezone { get; set; } = default!;
   public int timezone_offset { get; set; }
+  [Obsolete("Always NUL")]
   public Current current { get; set; } = default!;
   public Minutely[] minutely { get; set; } = default!;
   public Hourly[] hourly { get; set; } = default!;
