@@ -26,8 +26,9 @@ public partial class PlotViewModel : ObservableValidator
   const float _wk = 10f;
   const float _ms2kh = 3.6f * _wk;
   readonly ObservableCollection<ScatterPoint> SctrPtTPFVgn = [];
-  readonly ObservableCollection<ScatterPoint> SctrPtTPFPhc = [];
   readonly ObservableCollection<ScatterPoint> SctrPtTPFMis = [];
+  readonly ObservableCollection<ScatterPoint> SctrPtTPFOMe = [];
+  //readonly ObservableCollection<ScatterPoint> SctrPtTPFPhc = []; //nogo: any more: based on siteData.current which is NUL since gone NONEFREE!!!
 
   readonly ObservableCollection<DataPoint> OwaLoclTemp = [];
   readonly ObservableCollection<DataPoint> OwaLoclFeel = [];
@@ -123,20 +124,21 @@ public partial class PlotViewModel : ObservableValidator
     }
   }
   [RelayCommand]
-  void PrevForecastFromDb(object? obj)
+  async Task PrevForecastFromDb(object? obj)
   {
     if (obj is null) bpr.Click();
     if (!_store) return;
     try
     {
-      _ = Task.Run(GetPastForecastFromDB).ContinueWith(_ =>
-      {
-        _.Result.a.ForEach(r => SctrPtTPFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
-        _.Result.b.ForEach(r => SctrPtTPFVgn.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
-        _.Result.c.ForEach(r => SctrPtTPFMis.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
-        Model.InvalidatePlot(true); SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  Populated: From DB \t\t\t\t\t   \n");
-        bpr.Tick();
-      }, TaskScheduler.FromCurrentSynchronizationContext());
+      var (phc, vgn, mis, ome) = await GetPastForecastFromDB();
+
+      //phc.ForEach(r => SctrPtTPFPhc.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
+      vgn.ForEach(r => SctrPtTPFVgn.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
+      mis.ForEach(r => SctrPtTPFMis.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
+      ome.ForEach(r => SctrPtTPFOMe.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
+      
+      Model.InvalidatePlot(true); SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  Populated: From DB \t\t\t\t\t   \n");
+      bpr.Tick();
     }
     catch (Exception ex)
     {
@@ -286,7 +288,7 @@ public partial class PlotViewModel : ObservableValidator
     await DelayedStoreToDbIf();
   }
 
-  async Task<(List<PointFore> a, List<PointFore> b, List<PointFore> c)> GetPastForecastFromDB()
+  async Task<(List<PointFore> phc, List<PointFore> vgn, List<PointFore> mis, List<PointFore> ome)> GetPastForecastFromDB()
   {
     while (_isDbBusy)
     {
@@ -304,11 +306,12 @@ public partial class PlotViewModel : ObservableValidator
       //if (Environment.UserDomainName != "RAZER1") try { _dbx.EnsureCreated22(); } catch (Exception ex) { _lgr.Log(LogLevel.Trace, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
       //_lgr.Log(LogLevel.Trace, $"■97 {dbx.Database.GetConnectionString()}"); // 480ms
 
-      var phc = await dbx.PointFore.Where(r => r.SiteId == Cnst._phc && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
-      var vgn = await dbx.PointFore.Where(r => r.SiteId == Cnst._vgn && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
-      var mis = await dbx.PointFore.Where(r => r.SiteId == Cnst._mis && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
+      var vgn = await dbx.PointFore.Where(r => r.SrcId == "eca" && r.SiteId == Cnst._vgn && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
+      var mis = await dbx.PointFore.Where(r => r.SrcId == "eca" && r.SiteId == Cnst._mis && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
+      var ome = await dbx.PointFore.Where(r => r.SrcId == "omt" && r.SiteId == Cnst._phc && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
+      var phc = await dbx.PointFore.Where(r => r.SrcId == "owa" && r.SiteId == Cnst._phc && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
 
-      return (phc, vgn, mis);
+      return (phc, vgn, mis, ome);
     }
     catch (Exception ex)
     {
@@ -364,6 +367,7 @@ public partial class PlotViewModel : ObservableValidator
       return false;
 
     await Task.Delay(120_000);
+    await Task.Delay(010_000);
 
     var timeSinceLastDbStor2 = await PlotViewModelHelpers.LastTimeStoredToDb(_lgr, _dbh.WeatherxContext);
     var timeSinceLastDbStore = DateTimeOffset.Now - timeSinceLastDbStor2;
@@ -377,11 +381,11 @@ public partial class PlotViewModel : ObservableValidator
     {
       await PlotViewModelHelpers.AddPast24hrToDB_EnvtCa(_dbh.WeatherxContext, Cnst.pearson, _pastPea);
       await PlotViewModelHelpers.AddPast24hrToDB_EnvtCa(_dbh.WeatherxContext, Cnst.batnvil, _pastBvl);
+
       await PlotViewModelHelpers.AddForecastToDB_EnvtCa(_lgr, _dbh.WeatherxContext, Cnst._mis, _foreMis);
       await PlotViewModelHelpers.AddForecastToDB_EnvtCa(_lgr, _dbh.WeatherxContext, Cnst._vgn, _foreVgn);
-      //todo:
-      //await PlotViewModelHelpers.AddForecastToDB_OpnWea(_dbh.WeatherxContext, Cnst._phc, _openWeather);
       await PlotViewModelHelpers.AddForecastToDB_OpnMto(_dbh.WeatherxContext, Cnst._phc, _openMeteo);
+      //nogo: any more: based on siteData.current which is NUL since gone NONEFREE!!! await PlotViewModelHelpers.AddForecastToDB_OpnWea(_dbh.WeatherxContext, Cnst._phc, _openWeather);      //todo: ??
 
       //tmi: _synth.SpeakFAF("All stored to DB.", volumePercent: 10);
 
@@ -517,7 +521,8 @@ public partial class PlotViewModel : ObservableValidator
       OxyColor
         _wnd = OxyColor.FromArgb(0x80, 0x77, 0x77, 0xaa),
         _Vgn = OxyColor.FromRgb(0x00, 0x80, 0xff),
-        _Mis = OxyColor.FromRgb(0x00, 0x80, 0x00);
+        _Mis = OxyColor.FromRgb(0x00, 0x80, 0x00),
+        _OMe = OxyColor.FromRgb(0xcc, 0xcc, 0x00);
 
       Model.Series.Clear();
       Model.Series.Add(new AreaSeries { ItemsSource = SunSinusoid, Color = OxyColor.FromArgb(0x80, 0xff, 0xff, 0x00), StrokeThickness = 0.5, Title = "SunRS Sin", YAxisKey = "yAxisL", Fill = OxyColor.FromArgb(0x08, 0xff, 0xff, 0x00) });
@@ -547,6 +552,7 @@ public partial class PlotViewModel : ObservableValidator
 
       Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFVgn, MarkerFill = OxyColors.Transparent, Title = "ECa _Vgn", MarkerType = MarkerType.Circle, MarkerStroke = _Vgn });
       Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFMis, MarkerFill = OxyColors.Transparent, Title = "ECa _Mis", MarkerType = MarkerType.Circle, MarkerStroke = _Mis });
+      Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFOMe, MarkerFill = OxyColors.Transparent, Title = "OpnMeteo", MarkerType = MarkerType.Circle, MarkerStroke = _OMe });
       // crashes the model silently: Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFPhc, MarkerFill = OxyColors.Transparent, Title = "OWA OxyColor.FromArgb(0x80, 0xe0, 0x00, 0xe0)", MarkerType = MarkerType.Circle, MarkerStroke = OxyColor.FromArgb(0x80, 0xe0, 0x00, 0xe0), TrackerFormatString = "{}{0}&#xA;Time:   {2:HH:mm} &#xA;Temp:  {4:0.0}° " });
     }
     catch (Exception ex)
@@ -600,8 +606,9 @@ public partial class PlotViewModel : ObservableValidator
     OpnWeaIcom = "http://openweathermap.org/img/wn/01n@2x.png";
 
     SctrPtTPFVgn.Clear();
-    SctrPtTPFPhc.Clear();
     SctrPtTPFMis.Clear();
+    SctrPtTPFOMe.Clear();
+    //SctrPtTPFPhc.Clear();
     OwaLoclTemp.Clear();
     OwaLoclFeel.Clear();
     OwaLoclPrsr.Clear();
