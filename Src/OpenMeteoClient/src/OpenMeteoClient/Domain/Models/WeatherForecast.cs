@@ -88,6 +88,7 @@ public class HourlyData
   [JsonProperty("wind_speed_10m")] public List<double> WindSpeed10m { get; set; } = [];
   [JsonProperty("wind_direction_10m")] public List<int> WindDirection10m { get; set; } = [];
   [JsonProperty("wind_gusts_10m")] public List<double> WindGusts10m { get; set; } = [];
+  [JsonProperty("surface_pressure")] public List<double> Pressure { get; set; } = [];
 }
 public class DailyUnits
 {
