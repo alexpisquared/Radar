@@ -110,11 +110,8 @@ public partial class PlotViewModel : ObservableValidator
 
     try
     {
-      //SmartAdd($"*** {_dbx.Database.GetConnectionString()} ***\n"); // 480ms
-      PrevForecastFromDb(obj);
       await PopulateScatModel(obj);
-
-      if (obj is null) bpr.Finish();
+      await PrevForecastFromDb(obj);
     }
     catch (Exception ex)
     {
@@ -130,11 +127,12 @@ public partial class PlotViewModel : ObservableValidator
     {
       var (vgn, mis, omt) = await GetPastForecastFromDB();
 
-      vgn.ForEach(r => SctrPtTPFVgn.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
-      mis.ForEach(r => SctrPtTPFMis.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
-      omt.ForEach(r => SctrPtTPFOMt.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
+      //tmi: mis.ForEach(r => SctrPtTPFMis.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
+      vgn.ForEach(r => SctrPtTPFVgn.Add(CreateScatterPoint(r, "vgn")));
+      omt.ForEach(r => SctrPtTPFOMt.Add(CreateScatterPoint(r, "omt")));
 
-      Model.InvalidatePlot(true); SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  Populated: From DB \t\t\t\t\t   \n");
+      Model.InvalidatePlot(true);
+      SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  Populated: From DB \t\t\t\t\t   \n");
       bpr.Tick();
     }
     catch (Exception ex)
@@ -142,6 +140,13 @@ public partial class PlotViewModel : ObservableValidator
       ex.Pop(_lgr); //_lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
     }
   }
+
+  static ScatterPoint CreateScatterPoint(PointFore r, string v)
+  {
+    WriteLine($"   {v}:    {r.ForecastedFor.DateTime} \t {DateTimeAxis.ToDouble(r.ForecastedFor.DateTime):N2} \t size: {3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours),4:N1} \t y: {r.MeasureValue,4:N1} \t {(r.ForecastedFor - r.ForecastedAt).TotalHours,5:N1}h ");
+    return new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h");
+  }
+
   [RelayCommand]
   async Task PopulateScatModel(object? obj)
   {
@@ -302,9 +307,15 @@ public partial class PlotViewModel : ObservableValidator
       //if (Environment.UserDomainName != "RAZER1") try { _dbx.EnsureCreated22(); } catch (Exception ex) { _lgr.Log(LogLevel.Trace, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
       //_lgr.Log(LogLevel.Trace, $"■97 {dbx.Database.GetConnectionString()}"); // 480ms
 
-      var vgn = await dbx.PointFore.Where(r => r.SrcId == "eca" && r.SiteId == Cnst._vgn && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
-      var mis = await dbx.PointFore.Where(r => r.SrcId == "eca" && r.SiteId == Cnst._mis && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
-      var omt = await dbx.PointFore.Where(r => r.SrcId == "omt" && r.SiteId == Cnst._phc && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).ToListAsync();
+      var vgn = await dbx.PointFore.Where(r => r.SrcId == "eca" && r.SiteId == Cnst._vgn && r.ForecastedAt < r.ForecastedFor && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).OrderBy(r => r.ForecastedFor).ToListAsync();
+      var mis = await dbx.PointFore.Where(r => r.SrcId == "eca" && r.SiteId == Cnst._mis && r.ForecastedAt < r.ForecastedFor && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).OrderBy(r => r.ForecastedFor).ToListAsync();
+      var omt = await dbx.PointFore.Where(r => r.SrcId == "omt" && r.SiteId == Cnst._phc && r.ForecastedAt < r.ForecastedFor && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).OrderBy(r => r.ForecastedFor).ToListAsync();
+
+      if (Debugger.IsAttached)
+      {
+        var sql = dbx.PointFore.Where(r => r.SrcId == "eca" && r.SiteId == Cnst._vgn && r.ForecastedAt < r.ForecastedFor && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).OrderBy(r => r.ForecastedFor);
+        WriteLine(((Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable<DB.WeatherX.PwrTls.Models.PointFore>)sql).DebugView.Query);
+      }
 
       return (vgn, mis, omt);
     }
@@ -363,11 +374,10 @@ public partial class PlotViewModel : ObservableValidator
       return false;
 
     await Task.Delay(120_000);
-    await Task.Delay(010_000);
 
     var timeSinceLastDbStor2 = await PlotViewModelHelpers.LastTimeStoredToDb(_lgr, _dbh.WeatherxContext);
     var timeSinceLastDbStore = DateTimeOffset.Now - timeSinceLastDbStor2;
-    if (timeSinceLastDbStore.TotalHours < 9)
+    if (timeSinceLastDbStore.TotalHours < 6)
     {
       //tmi: _synth.SpeakFreeFAF($"Too soon to store to DB: only {timeSinceLastDbStore.TotalHours:N1} hours passed.", volumePercent: 10); // _synth.SpeakFAF($"Too soon to store to DB: less than 6 hours passed.", volumePercent: 10);
       return false;
@@ -522,14 +532,14 @@ public partial class PlotViewModel : ObservableValidator
         owp = OxyColor.FromRgb(0x40, 0x50, 0xe0),
         owx = OxyColor.FromRgb(0x40, 0x00, 0xa0),
         prs = OxyColor.FromRgb(0x60, 0x60, 0x60),
-        omr = OxyColor.FromRgb(0x00, 0x50, 0xf0),
+        omr = OxyColor.FromRgb(0x60, 0x60, 0xff),
         omt = OxyColor.FromRgb(0xcc, 0xcc, 0x00);
 
       Model.Series.Clear();
       Model.Series.Add(new AreaSeries { ItemsSource = SunSinusoid, Color = OxyColor.FromArgb(0x80, 0xff, 0xff, 0x00), StrokeThickness = 0.5, Title = "SunRS Sin", YAxisKey = "yAxisL", Fill = OxyColor.FromArgb(0x08, 0xff, 0xff, 0x00) });
       //Model.Series.Add(new AreaSeries { ItemsSource = Sunrise_Set, Color = OxyColor.FromRgb(0x11, 0x11, 0x11), StrokeThickness = 0.0, Title = "SunRS Sqr", YAxisKey = "yAxisR" });
 
-      Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclPopr, Color = owp, StrokeThickness = 1.0, Title = "owa PoPr", InterpolationAlgorithm = IA, YAxisKey = "yAxisR", Fill = OxyColor.FromArgb(0x60, 0x00, 0x00, 0xff) });
+      Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclPopr, Color = owp, StrokeThickness = 0.0, Title = "owa PoPr", InterpolationAlgorithm = IA, YAxisKey = "yAxisR", Fill = OxyColor.FromArgb(0x80, 0x00, 0x00, 0x90) });
       Model.Series.Add(new LineSeries { ItemsSource = OwaTempExtr, Color = owx, StrokeThickness = 1.0, Title = "owa Extr", LineStyle = LineStyle.LongDashDotDot });
       Model.Series.Add(new LineSeries { ItemsSource = OwaLoclTemp, Color = owa, StrokeThickness = 1.5, Title = "owa Temp", InterpolationAlgorithm = IA });
       Model.Series.Add(new LineSeries { ItemsSource = OwaLoclFeel, Color = owa, StrokeThickness = 0.5, Title = "owa Feel", InterpolationAlgorithm = IA });
@@ -537,7 +547,7 @@ public partial class PlotViewModel : ObservableValidator
 
       Model.Series.Add(new AreaSeries { ItemsSource = OMtLoclGust, Color = wnd, StrokeThickness = 0.0, Title = "omt Gust", InterpolationAlgorithm = IA, YAxisKey = "yAxisR", Fill = OxyColor.FromArgb(0x20, 0x00, 0x60, 0x00) });
       Model.Series.Add(new LineSeries { ItemsSource = OMtLoclWind, Color = wnd, StrokeThickness = 1.5, Title = "omt Wind", /*                        */ YAxisKey = "yAxisR" });
-      Model.Series.Add(new AreaSeries { ItemsSource = OMtLoclPopr, Color = omr, StrokeThickness = 1.0, Title = "omt PoPr", InterpolationAlgorithm = IA, YAxisKey = "yAxisR", Fill = OxyColor.FromArgb(0x90, 0x00, 0x00, 0xff) });
+      Model.Series.Add(new AreaSeries { ItemsSource = OMtLoclPopr, Color = omr, StrokeThickness = 1.0, Title = "omt PoPr", InterpolationAlgorithm = IA, YAxisKey = "yAxisR", Fill = OxyColor.FromArgb(0x80, 0x00, 0x00, 0xb0) });
       Model.Series.Add(new LineSeries { ItemsSource = OMtLoclTemp, Color = omt, StrokeThickness = 1.5, Title = "omt Temp", InterpolationAlgorithm = IA });
       Model.Series.Add(new LineSeries { ItemsSource = OMtLoclPrsr, Color = prs, StrokeThickness = 1.0, Title = "omt Prsr", InterpolationAlgorithm = IA, LineStyle = LineStyle.Dot });
       ////Model.Series.Add(new LineSeries { ItemsSource = OMtTempExtr, Color = OxyColor.FromRgb(0x80, 0x00, 0xf0), StrokeThickness = 1.0, Title = "omt Extr", LineStyle = LineStyle.LongDashDotDot });
@@ -549,9 +559,9 @@ public partial class PlotViewModel : ObservableValidator
       Model.Series.Add(new LineSeries { ItemsSource = ECaMissTemp, Color = mis, StrokeThickness = 3.0, Title = "ec Mi T", LineStyle = LineStyle.LongDashDotDot });
       Model.Series.Add(new LineSeries { ItemsSource = ECaVghnTemp, Color = vgn, StrokeThickness = 3.0, Title = "ec VA T", LineStyle = LineStyle.Dash });
 
-      if (SctrPtTPFVgn.Count > 0) Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFVgn, MarkerFill = OxyColors.Transparent, Title = "ECa vgn", MarkerType = MarkerType.Circle, MarkerStroke = vgn });
-      if (SctrPtTPFMis.Count > 0) Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFMis, MarkerFill = OxyColors.Transparent, Title = "ECa mis", MarkerType = MarkerType.Circle, MarkerStroke = mis });
-      if (SctrPtTPFOMt.Count > 0) Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFOMt, MarkerFill = OxyColors.Transparent, Title = "OpMeteo", MarkerType = MarkerType.Circle, MarkerStroke = omt });
+      if (SctrPtTPFVgn.Count >= 0) Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFVgn, MarkerFill = OxyColors.Transparent, Title = "ECa vgn", MarkerType = MarkerType.Circle, MarkerStroke = vgn });
+      if (SctrPtTPFMis.Count >= 0) Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFMis, MarkerFill = OxyColors.Transparent, Title = "ECa mis", MarkerType = MarkerType.Circle, MarkerStroke = mis });
+      if (SctrPtTPFOMt.Count >= 0) Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFOMt, MarkerFill = OxyColors.Transparent, Title = "OpMeteo", MarkerType = MarkerType.Circle, MarkerStroke = omt });
     }
     catch (Exception ex)
     {
