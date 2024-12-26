@@ -385,12 +385,12 @@ public partial class PlotViewModel : ObservableValidator
 
     try
     {
-      await PlotViewModelHelpers.AddPast24hrToDB_EnvtCa(_dbh.WeatherxContext, Cnst.pearson, _pastPea);
-      await PlotViewModelHelpers.AddPast24hrToDB_EnvtCa(_dbh.WeatherxContext, Cnst.kingCty, _pastKng);
+      await PlotViewModelHelpers.AddPast24hrToDB_EnvtCa(_lgr, _dbh.WeatherxContext, Cnst.pearson, _pastPea);
+      await PlotViewModelHelpers.AddPast24hrToDB_EnvtCa(_lgr, _dbh.WeatherxContext, Cnst.kingCty, _pastKng);
 
       await PlotViewModelHelpers.AddForecastToDB_EnvtCa(_lgr, _dbh.WeatherxContext, Cnst._mis, _foreMis);
       await PlotViewModelHelpers.AddForecastToDB_EnvtCa(_lgr, _dbh.WeatherxContext, Cnst._vgn, _foreVgn);
-      await PlotViewModelHelpers.AddForecastToDB_OpnMto(_dbh.WeatherxContext, Cnst._phc, _openMeteo);
+      await PlotViewModelHelpers.AddForecastToDB_OpnMto(_lgr, _dbh.WeatherxContext, Cnst._phc, _openMeteo);
       //nogo: any more: based on siteData.current which is NUL since gone NONEFREE!!! await PlotViewModelHelpers.AddForecastToDB_OpnWea(_dbh.WeatherxContext, Cnst._phc, _openWeather);      //todo: ??
 
       //tmi: _synth.SpeakFAF("All stored to DB.", volumePercent: 10);
@@ -524,44 +524,45 @@ public partial class PlotViewModel : ObservableValidator
       OxyColor
         ow5 = OxyColor.FromArgb(0x80, 0xe0, 0x00, 0xe0),
         owa = OxyColor.FromRgb(0xe0, 0x00, 0xe0),
+        wng = OxyColor.FromRgb(0x10, 0x60, 0x10),
         wnd = OxyColor.FromRgb(0x00, 0x99, 0x00),
         vgn = OxyColor.FromRgb(0x00, 0x80, 0xff),
         mis = OxyColor.FromRgb(0x00, 0x80, 0x00),
         tot = OxyColor.FromRgb(0xb0, 0x80, 0x00),
         tit = OxyColor.FromRgb(0xd0, 0x00, 0x00),
-        owp = OxyColor.FromRgb(0x40, 0x50, 0xe0),
-        owx = OxyColor.FromRgb(0x40, 0x00, 0xa0),
+        owx = OxyColor.FromRgb(0x70, 0x00, 0xf0),
+        owp = OxyColor.FromRgb(0x00, 0x00, 0xff),
+        omp = OxyColor.FromRgb(0x00, 0x00, 0xff),
         prs = OxyColor.FromRgb(0x60, 0x60, 0x60),
-        omr = OxyColor.FromRgb(0x60, 0x60, 0xff),
         omt = OxyColor.FromRgb(0xcc, 0xcc, 0x00);
 
       Model.Series.Clear();
       Model.Series.Add(new AreaSeries { ItemsSource = SunSinusoid, Color = OxyColor.FromArgb(0x80, 0xff, 0xff, 0x00), StrokeThickness = 0.5, Title = "SunRS Sin", YAxisKey = "yAxisL", Fill = OxyColor.FromArgb(0x08, 0xff, 0xff, 0x00) });
       //Model.Series.Add(new AreaSeries { ItemsSource = Sunrise_Set, Color = OxyColor.FromRgb(0x11, 0x11, 0x11), StrokeThickness = 0.0, Title = "SunRS Sqr", YAxisKey = "yAxisR" });
 
-      Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclPopr, Color = owp, StrokeThickness = 0.0, Title = "owa PoPr", InterpolationAlgorithm = IA, YAxisKey = "yAxisR", Fill = OxyColor.FromArgb(0x80, 0x00, 0x00, 0x90) });
+      Model.Series.Add(new AreaSeries { ItemsSource = OwaLoclPopr, Color = owp, StrokeThickness = 0.5, Title = "owa PoPr", InterpolationAlgorithm = IA, YAxisKey = "yAxisR", Fill = OxyColor.FromArgb(0x80, 0x00, 0x00, 0x90) });
       Model.Series.Add(new LineSeries { ItemsSource = OwaTempExtr, Color = owx, StrokeThickness = 1.0, Title = "owa Extr", LineStyle = LineStyle.LongDashDotDot });
       Model.Series.Add(new LineSeries { ItemsSource = OwaLoclTemp, Color = owa, StrokeThickness = 1.5, Title = "owa Temp", InterpolationAlgorithm = IA });
       Model.Series.Add(new LineSeries { ItemsSource = OwaLoclFeel, Color = owa, StrokeThickness = 0.5, Title = "owa Feel", InterpolationAlgorithm = IA });
-      ////l.Series.Add(new LineSeries { ItemsSource = OwaLoclGust, Color = wnd, StrokeThickness = 0.5, Title = "owa Gust", InterpolationAlgorithm = IA, YAxisKey = "yAxisR" });
+      //l.Series.Add(new LineSeries { ItemsSource = OwaLoclGust, Color = wnd, StrokeThickness = 0.5, Title = "owa Gust", InterpolationAlgorithm = IA, YAxisKey = "yAxisR" });
 
-      Model.Series.Add(new AreaSeries { ItemsSource = OMtLoclGust, Color = wnd, StrokeThickness = 0.0, Title = "omt Gust", InterpolationAlgorithm = IA, YAxisKey = "yAxisR", Fill = OxyColor.FromArgb(0x20, 0x00, 0x60, 0x00) });
+      Model.Series.Add(new AreaSeries { ItemsSource = OMtLoclGust, Color = wng, StrokeThickness = 0.5, Title = "omt Gust", InterpolationAlgorithm = IA, YAxisKey = "yAxisR", Fill = OxyColor.FromArgb(0x20, 0x00, 0x60, 0x00) });
+      Model.Series.Add(new AreaSeries { ItemsSource = OMtLoclPopr, Color = omp, StrokeThickness = 1.0, Title = "omt PoPr", InterpolationAlgorithm = IA, YAxisKey = "yAxisR", Fill = OxyColor.FromArgb(0x80, 0x00, 0x00, 0xb0) });
       Model.Series.Add(new LineSeries { ItemsSource = OMtLoclWind, Color = wnd, StrokeThickness = 1.5, Title = "omt Wind", /*                        */ YAxisKey = "yAxisR" });
-      Model.Series.Add(new AreaSeries { ItemsSource = OMtLoclPopr, Color = omr, StrokeThickness = 1.0, Title = "omt PoPr", InterpolationAlgorithm = IA, YAxisKey = "yAxisR", Fill = OxyColor.FromArgb(0x80, 0x00, 0x00, 0xb0) });
       Model.Series.Add(new LineSeries { ItemsSource = OMtLoclTemp, Color = omt, StrokeThickness = 1.5, Title = "omt Temp", InterpolationAlgorithm = IA });
       Model.Series.Add(new LineSeries { ItemsSource = OMtLoclPrsr, Color = prs, StrokeThickness = 1.0, Title = "omt Prsr", InterpolationAlgorithm = IA, LineStyle = LineStyle.Dot });
-      ////Model.Series.Add(new LineSeries { ItemsSource = OMtTempExtr, Color = OxyColor.FromRgb(0x80, 0x00, 0xf0), StrokeThickness = 1.0, Title = "omt Extr", LineStyle = LineStyle.LongDashDotDot });
-      ////Model.Series.Add(new LineSeries { ItemsSource = OMtLoclFeel, Color = omt, StrokeThickness = 0.5, Title = "omt Feel", InterpolationAlgorithm = IA });
+      //Model.Series.Add(new LineSeries { ItemsSource = OMtTempExtr, Color = OxyColor.FromRgb(0x80, 0x00, 0xf0), StrokeThickness = 1.0, Title = "omt Extr", LineStyle = LineStyle.LongDashDotDot });
+      //Model.Series.Add(new LineSeries { ItemsSource = OMtLoclFeel, Color = omt, StrokeThickness = 0.5, Title = "omt Feel", InterpolationAlgorithm = IA });
 
-      ////Model.Series.Add(new LineSeries { ItemsSource = ECaToroTemp, Color = tot, StrokeThickness = 5.0, Title = "ec TO T", LineStyle = LineStyle.LongDash });
-      ////Model.Series.Add(new LineSeries { ItemsSource = ECaTIslTemp, Color = tit, StrokeThickness = 1.0, Title = "ec TI T", LineStyle = LineStyle.Dot });
-      ////same as VA: Model.Series.Add(new LineSeries { ItemsSource = ECaMrkhTemp, Color = vgn, StrokeThickness = 2.0, Title = "ec MA T", LineStyle = LineStyle.Dash, InterpolationAlgorithm = IA });
+      //Model.Series.Add(new LineSeries { ItemsSource = ECaToroTemp, Color = tot, StrokeThickness = 5.0, Title = "ec TO T", LineStyle = LineStyle.LongDash });
+      //Model.Series.Add(new LineSeries { ItemsSource = ECaTIslTemp, Color = tit, StrokeThickness = 1.0, Title = "ec TI T", LineStyle = LineStyle.Dot });
+      //same as VA: Model.Series.Add(new LineSeries { ItemsSource = ECaMrkhTemp, Color = vgn, StrokeThickness = 2.0, Title = "ec MA T", LineStyle = LineStyle.Dash, InterpolationAlgorithm = IA });
       Model.Series.Add(new LineSeries { ItemsSource = ECaMissTemp, Color = mis, StrokeThickness = 3.0, Title = "ec Mi T", LineStyle = LineStyle.LongDashDotDot });
       Model.Series.Add(new LineSeries { ItemsSource = ECaVghnTemp, Color = vgn, StrokeThickness = 3.0, Title = "ec VA T", LineStyle = LineStyle.Dash });
 
-      if (SctrPtTPFVgn.Count >= 0) Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFVgn, MarkerFill = OxyColors.Transparent, Title = "ECa vgn", MarkerType = MarkerType.Circle, MarkerStroke = vgn });
-      if (SctrPtTPFMis.Count >= 0) Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFMis, MarkerFill = OxyColors.Transparent, Title = "ECa mis", MarkerType = MarkerType.Circle, MarkerStroke = mis });
-      if (SctrPtTPFOMt.Count >= 0) Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFOMt, MarkerFill = OxyColors.Transparent, Title = "OpMeteo", MarkerType = MarkerType.Circle, MarkerStroke = omt });
+      if (SctrPtTPFVgn.Count >= 0) Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFVgn, Title = "ECa vgn", MarkerStroke = vgn, MarkerFill = OxyColors.Transparent, MarkerType = MarkerType.Circle });
+      if (SctrPtTPFMis.Count >= 0) Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFMis, Title = "ECa mis", MarkerStroke = mis, MarkerFill = OxyColors.Transparent, MarkerType = MarkerType.Circle });
+      if (SctrPtTPFOMt.Count >= 0) Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFOMt, Title = "OpMeteo", MarkerStroke = omt, MarkerFill = OxyColors.Transparent, MarkerType = MarkerType.Circle });
     }
     catch (Exception ex)
     {

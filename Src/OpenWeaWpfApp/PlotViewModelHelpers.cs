@@ -86,7 +86,7 @@ internal static class PlotViewModelHelpers
   }
 
   [Obsolete]
-  internal static async Task AddForecastToDB_OpnWea(WeatherxContext _dbx, string siteId, RootobjectOneCallApi? siteData, string srcId = "owa", string measureId = "tar")
+  internal static async Task AddForecastToDB_OpnWea(ILogger _lgr, WeatherxContext _dbx, string siteId, RootobjectOneCallApi? siteData, string srcId = "owa", string measureId = "tar")
   {
     for (var i = 0; i < 10; i++)
     {
@@ -130,10 +130,10 @@ internal static class PlotViewModelHelpers
         return;
       }
       catch (InvalidOperationException ex) { WriteLine($"WARN: O{i,3} {ex.Message}"); await Task.Delay(1000); bpr.Warn(); }
-      catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = System.Windows.MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, System.Windows.MessageBoxOptions.ServiceNotification); throw; }
+      catch (Exception ex) { ex.Pop(_lgr); }
     }
   }
-  internal static async Task AddForecastToDB_OpnMto(WeatherxContext _dbx, string siteId, WeatherForecast? siteData, string srcId = "omt", string measureId = "tar")
+  internal static async Task AddForecastToDB_OpnMto(ILogger _lgr, WeatherxContext _dbx, string siteId, WeatherForecast? siteData, string srcId = "omt", string measureId = "tar")
   {
     for (var i = 0; i < 10; i++)
     {
@@ -142,11 +142,22 @@ internal static class PlotViewModelHelpers
         ArgumentNullException.ThrowIfNull(siteData, $"@ Open Meteo Data{nameof(siteData)}");
         var now = DateTime.Now;
 
-        var forecastedAt = (siteData.Current?.Time) ?? DateTime.Today;
+        var forecastedAt = (siteData.Current?.Time) ?? DateTime.Now;
 
         for (int h = 0; h < siteData.Hourly?.Time.Count; h++)
         {
           var forecastedFor = siteData.Hourly.Time[h];
+
+          if (forecastedFor < forecastedAt) continue; // exclude points of past data.
+          /*
+          On 2024-12-25 was this: it should not grow any more because of the previous line.
+          
+          SELECT     COUNT(*) AS Expr1, SrcId, SiteId FROM        PointFore WHERE     (ForecastedFor < ForecastedAt) GROUP BY SrcId, SiteId
+
+                70	omt	ome
+              2264	omt	phc
+              2029	owa	phc
+          */
 
           if (await _dbx.PointFore.AnyAsync(d =>
               d.SrcId == srcId &&
@@ -171,12 +182,12 @@ internal static class PlotViewModelHelpers
 
         WriteLine($"■■ {await _dbx.SaveChangesAsync()} rows saved ■■");
         return;
-      }
-      catch (InvalidOperationException ex) { WriteLine($"WARN: O{i,3} {ex.Message}"); await Task.Delay(1000); bpr.Warn(); }
-      catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = System.Windows.MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, System.Windows.MessageBoxOptions.ServiceNotification); throw; }
+      }      
+      catch (InvalidOperationException ex) { ex.Pop(_lgr); }
+      catch (Exception ex) { ex.Pop(_lgr); }
     }
   }
-  internal static async Task AddPast24hrToDB_EnvtCa(WeatherxContext _dbx, string siteId, List<MeteoDataMy>? sitePast, string srcId = "eca", string measureId = "tar")
+  internal static async Task AddPast24hrToDB_EnvtCa(ILogger _lgr, WeatherxContext _dbx, string siteId, List<MeteoDataMy>? sitePast, string srcId = "eca", string measureId = "tar")
   {
     ArgumentNullException.ThrowIfNull(sitePast, $"@@@@@@@@@ {nameof(sitePast)}");
 
@@ -216,7 +227,7 @@ internal static class PlotViewModelHelpers
         return;
       }
       catch (InvalidOperationException ex) { WriteLine($"WARN: P{i,3} {ex.Message}"); await Task.Delay(1000); bpr.Warn(); }
-      catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = System.Windows.MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, System.Windows.MessageBoxOptions.ServiceNotification); throw; }
+      catch (Exception ex) { ex.Pop(_lgr); }
     }
   }
 
