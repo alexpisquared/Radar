@@ -125,14 +125,14 @@ public partial class PlotViewModel : ObservableValidator
     if (!_store) return;
     try
     {
-      var (vgn, mis, omt) = await GetPastForecastFromDB();
+      var (vgn, mis, omt, timeTook) = await GetPastForecastFromDB();
 
       //tmi: mis.ForEach(r => SctrPtTPFMis.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
       vgn.ForEach(r => SctrPtTPFVgn.Add(CreateScatterPoint(r, "vgn")));
       omt.ForEach(r => SctrPtTPFOMt.Add(CreateScatterPoint(r, "omt")));
 
       Model.InvalidatePlot(true);
-      SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  Populated: From DB \t\t\t\t\t   \n");
+      SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  Populated: From DB \ttook {timeTook.TotalSeconds:N1} s   \n");
       bpr.Tick();
     }
     catch (Exception ex)
@@ -289,8 +289,9 @@ public partial class PlotViewModel : ObservableValidator
     await DelayedStoreToDbIf();
   }
 
-  async Task<(List<PointFore> vgn, List<PointFore> mis, List<PointFore> omt)> GetPastForecastFromDB()
+  async Task<(List<PointFore> vgn, List<PointFore> mis, List<PointFore> omt, TimeSpan timeTook)> GetPastForecastFromDB()
   {
+    var startedAt = Stopwatch.GetTimestamp();
     while (_isDbBusy)
     {
       await bpr.WarnAsync(); // not quite a full solution
@@ -317,13 +318,13 @@ public partial class PlotViewModel : ObservableValidator
         WriteLine(((Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable<DB.WeatherX.PwrTls.Models.PointFore>)sql).DebugView.Query);
       }
 
-      return (vgn, mis, omt);
+      return (vgn, mis, omt, Stopwatch.GetElapsedTime(startedAt));
     }
     catch (Exception ex)
     {
       ex.Pop(_lgr); //_lgr.Log(LogLevel.Error, $"■88 {ex.Message}"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
 
-      return (new List<PointFore>(), new List<PointFore>(), new List<PointFore>()); // ..or throw;
+      return (new List<PointFore>(), new List<PointFore>(), new List<PointFore>(), Stopwatch.GetElapsedTime(startedAt)); // ..or throw;
     }
     finally { _isDbBusy = false; }
   }
@@ -371,7 +372,10 @@ public partial class PlotViewModel : ObservableValidator
   async Task<bool> DelayedStoreToDbIf()
   {
     if (!_store || VersionHelper.IsDbg)
+    {
+      SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  Store to DB not supported in Debug mode ...or on this PC \n");
       return false;
+    }
 
     await Task.Delay(120_000);
 
@@ -380,6 +384,7 @@ public partial class PlotViewModel : ObservableValidator
     if (timeSinceLastDbStore.TotalHours < 6)
     {
       //tmi: _synth.SpeakFreeFAF($"Too soon to store to DB: only {timeSinceLastDbStore.TotalHours:N1} hours passed.", volumePercent: 10); // _synth.SpeakFAF($"Too soon to store to DB: less than 6 hours passed.", volumePercent: 10);
+      SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  Store to DB postponed to after {(6 - timeSinceLastDbStore.TotalHours):N1} hr. \n");
       return false;
     }
 
@@ -395,7 +400,7 @@ public partial class PlotViewModel : ObservableValidator
 
       //tmi: _synth.SpeakFAF("All stored to DB.", volumePercent: 10);
 
-      SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  All stored to DB! \n");
+      SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  All stored to DB after {timeSinceLastDbStore.TotalHours:N1} hr \n");
 
       return true;
     }
@@ -590,10 +595,10 @@ public partial class PlotViewModel : ObservableValidator
   void SmartAdd(string note)
   {
     SubHeader += note;
-    var max = 800;
+    var max = 1800;
     var len = SubHeader.Length;
     if (len > max)
-      SubHeader = $"   {_startedAt:ddd HH:mm}\t{SubHeader.Substring(len - max, max)}"; // cut off the excess from the beginning.
+      SubHeader = $"   {_startedAt:ddd HH:mm}\t\n{SubHeader.Substring(len - max, max)}"; // cut off the excess from the beginning.
   }
   internal void ClearPlot()
   {
