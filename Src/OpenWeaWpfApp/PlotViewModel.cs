@@ -1,7 +1,6 @@
 ﻿#define ObsCol // Go figure: ObsCol works, while array NOT! Just an interesting factoid.
 using OpenMeteoClient.Application.Interfaces;
 using OpenMeteoClient.Domain.Models;
-using OpenWeather2022.Response;
 
 namespace OpenWeaWpfApp;
 public partial class PlotViewModel : ObservableValidator
@@ -27,7 +26,7 @@ public partial class PlotViewModel : ObservableValidator
   const float _wk = 10f;
   const float _ms2kh = 3.6f * _wk;
   readonly ObservableCollection<ScatterPoint> SctrPtTPFVgn = [];
-  readonly ObservableCollection<ScatterPoint> SctrPtTPFMis = [];
+  //readonly ObservableCollection<ScatterPoint> SctrPtTPFMis = [];
   readonly ObservableCollection<ScatterPoint> SctrPtTPFOMt = [];
 
   readonly ObservableCollection<DataPoint> OwaLoclTemp = [];
@@ -148,6 +147,7 @@ public partial class PlotViewModel : ObservableValidator
   }
 
   [RelayCommand]
+  [Obsolete]
   async Task PopulateScatModel(object? obj)
   {
     if (obj is null) bpr.Click();
@@ -170,15 +170,15 @@ public partial class PlotViewModel : ObservableValidator
       ArgumentNullException.ThrowIfNull(_openMeteo.Current);
       ArgumentNullException.ThrowIfNull(_openMeteo.Daily);
 
-      Model.Title = $"     OMt {(_openMeteo.Current.Time):HH:mm} {_openMeteo.Current.Temperature2m,5:+##.#;-##.#;0}° {_openMeteo.Current.ApparentTemperature,4:+##;-##;0}° {_openMeteo.Current.WindSpeed10m * _ms2kh / _wk,4:N0} k/h       {Model.Title}";
+      Model.Title = $"     OMt {_openMeteo.Current.Time:HH:mm} {_openMeteo.Current.Temperature2m,5:+##.#;-##.#;0}° {_openMeteo.Current.ApparentTemperature,4:+##;-##;0}° {_openMeteo.Current.WindSpeed10m * _ms2kh / _wk,4:N0} k/h       {Model.Title}";
       WindDirn = _openMeteo.Current.WindDirection10m;
-      WindVeloKmHr = (float)(_openMeteo.Current.WindSpeed10m); //  * _ms2kh / _wk;
+      WindVeloKmHr = (float)_openMeteo.Current.WindSpeed10m; //  * _ms2kh / _wk;
       WindGustKmHr = _openMeteo.Current.WindGusts10m; //  * _ms2kh / _wk;
       CurTempReal = $"{_openMeteo.Current.Temperature2m:+#.#;-#.#;0}°";
       CurTempFeel = $"{_openMeteo.Current.ApparentTemperature:+#;-#;0}°";
       CurWindKmHr = $"{WindVeloKmHr:N1}";
 
-      for (int i = 0; i < _openMeteo.Hourly?.Time.Count; i++)
+      for (var i = 0; i < _openMeteo.Hourly?.Time.Count; i++)
       {
         var t = _openMeteo.Hourly.Time[i].ToOADate();
 
@@ -200,7 +200,7 @@ public partial class PlotViewModel : ObservableValidator
         OMtLoclWind.Add(new DataPoint(t + sx, sy + (_openMeteo.Hourly.WindSpeed10m[i] * _wk)));
       }
 
-      for (int i = 0; i < _openMeteo.Daily?.Sunrise.Count; i++)
+      for (var i = 0; i < _openMeteo.Daily?.Sunrise.Count; i++)
       {
         var sunR = _openMeteo.Daily.Sunrise[i].ToOADate();
         var sunS = _openMeteo.Daily.Sunset[i].ToOADate();
@@ -286,7 +286,7 @@ public partial class PlotViewModel : ObservableValidator
       SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  OWA  \n");
     }//, TaskScheduler.FromCurrentSynchronizationContext());
 
-    await DelayedStoreToDbIf();
+    _ = await DelayedStoreToDbIf();
   }
 
   async Task<(List<PointFore> vgn, List<PointFore> mis, List<PointFore> omt, TimeSpan timeTook)> GetPastForecastFromDB()
@@ -404,7 +404,7 @@ public partial class PlotViewModel : ObservableValidator
     }
     catch (Exception ex)
     {
-      ex.Pop(_lgr); 
+      ex.Pop(_lgr);
       return false;
     }
   }
@@ -532,7 +532,7 @@ public partial class PlotViewModel : ObservableValidator
         mis = OxyColor.FromRgb(0x00, 0x80, 0x00),
         tot = OxyColor.FromRgb(0xb0, 0x80, 0x00),
         tit = OxyColor.FromRgb(0xd0, 0x00, 0x00),
-        owx = OxyColor.FromRgb(0x70, 0x00, 0xf0),
+        owx = OxyColor.FromRgb(0xff, 0x80, 0x00),
         owp = OxyColor.FromRgb(0x00, 0x00, 0xff),
         omp = OxyColor.FromRgb(0x00, 0x00, 0xff),
         prs = OxyColor.FromRgb(0x60, 0x60, 0x60),
@@ -563,7 +563,7 @@ public partial class PlotViewModel : ObservableValidator
       Model.Series.Add(new LineSeries { ItemsSource = ECaVghnTemp, Color = vgn, StrokeThickness = 3.0, Title = "ec VA T", LineStyle = LineStyle.Dash });
 
       if (SctrPtTPFVgn.Count >= 0) Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFVgn, Title = "ECa vgn", MarkerStroke = vgn, MarkerFill = OxyColors.Transparent, MarkerType = MarkerType.Circle });
-      if (SctrPtTPFMis.Count >= 0) Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFMis, Title = "ECa mis", MarkerStroke = mis, MarkerFill = OxyColors.Transparent, MarkerType = MarkerType.Circle });
+      //if (SctrPtTPFMis.Count >= 0) Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFMis, Title = "ECa mis", MarkerStroke = mis, MarkerFill = OxyColors.Transparent, MarkerType = MarkerType.Circle });
       if (SctrPtTPFOMt.Count >= 0) Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFOMt, Title = "OpMeteo", MarkerStroke = omt, MarkerFill = OxyColors.Transparent, MarkerType = MarkerType.Circle });
     }
     catch (Exception ex)
@@ -617,7 +617,7 @@ public partial class PlotViewModel : ObservableValidator
     OpnWeaIcom = "http://openweathermap.org/img/wn/01n@2x.png";
 
     SctrPtTPFVgn.Clear();
-    SctrPtTPFMis.Clear();
+    //SctrPtTPFMis.Clear();
     SctrPtTPFOMt.Clear();
     OwaLoclTemp.Clear();
     OwaLoclFeel.Clear();
