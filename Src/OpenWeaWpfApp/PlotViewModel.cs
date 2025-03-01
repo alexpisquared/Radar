@@ -379,12 +379,13 @@ public partial class PlotViewModel : ObservableValidator
 
     await Task.Delay(120_000);
 
-    var timeSinceLastDbStor2 = await PlotViewModelHelpers.LastTimeStoredToDb(_lgr, _dbh.WeatherxContext);
-    var timeSinceLastDbStore = DateTimeOffset.Now - timeSinceLastDbStor2;
-    if (timeSinceLastDbStore.TotalHours < 6)
+    var minimumTimeToStoreInHr = 6;
+
+    var lastDbStoreTime = await PlotViewModelHelpers.LastTimeStoredToDb(_lgr, _dbh.WeatherxContext);
+    var timeSinceLastDbStore = DateTimeOffset.Now - lastDbStoreTime;
+    if (timeSinceLastDbStore.TotalHours < minimumTimeToStoreInHr)
     {
-      //tmi: _synth.SpeakFreeFAF($"Too soon to store to DB: only {timeSinceLastDbStore.TotalHours:N1} hours passed.", volumePercent: 10); // _synth.SpeakFAF($"Too soon to store to DB: less than 6 hours passed.", volumePercent: 10);
-      SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  Store to DB postponed to after {(6 - timeSinceLastDbStore.TotalHours):N1} hr. \n");
+      SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  Store to DB postponed till after {lastDbStoreTime.AddHours(minimumTimeToStoreInHr):H:mm}. \n");
       return false;
     }
 
@@ -396,9 +397,6 @@ public partial class PlotViewModel : ObservableValidator
       await PlotViewModelHelpers.AddForecastToDB_EnvtCa(_lgr, _dbh.WeatherxContext, Cnst._mis, _foreMis);
       await PlotViewModelHelpers.AddForecastToDB_EnvtCa(_lgr, _dbh.WeatherxContext, Cnst._vgn, _foreVgn);
       await PlotViewModelHelpers.AddForecastToDB_OpnMto(_lgr, _dbh.WeatherxContext, Cnst._phc, _openMeteo);
-      //nogo: any more: based on siteData.current which is NUL since gone NONEFREE!!! await PlotViewModelHelpers.AddForecastToDB_OpnWea(_dbh.WeatherxContext, Cnst._phc, _openWeather);      //todo: ??
-
-      //tmi: _synth.SpeakFAF("All stored to DB.", volumePercent: 10);
 
       SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  All stored to DB after {timeSinceLastDbStore.TotalHours:N1} hr \n");
 
@@ -406,8 +404,8 @@ public partial class PlotViewModel : ObservableValidator
     }
     catch (Exception ex)
     {
-      ex.Pop(_lgr); //_lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
-      throw;
+      ex.Pop(_lgr); 
+      return false;
     }
   }
   void DrawPast24hrEC(string site, List<MeteoDataMy> lst)
@@ -418,7 +416,6 @@ public partial class PlotViewModel : ObservableValidator
       {
         //tmi: case Cnst.pearson: 
         case Cnst.kingCty: ECaVghnTemp.Clear(); lst.OrderBy(x => x.TakenAt).ToList().ForEach(x => ECaVghnTemp.Add(new DataPoint(DateTimeAxis.ToDouble(x.TakenAt), x.TempAir))); break;
-
         default: break;
       }
 

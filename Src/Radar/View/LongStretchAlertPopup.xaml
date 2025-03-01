@@ -30,7 +30,9 @@
       </Style>
 
       <Style TargetType="{x:Type AccessText}">
-        <Setter Property="Foreground" Value="#888" />
+        <!--  //tu: _ This applies to all the Label + Button with '_'           (INFO: Label without '_' acquires the style from the TextBlock; to overcome, use AccessText; in case Label's Target functionality needed, use:       <AccessText Text="_AccessText:" AccessKeyManager.AccessKeyPressed="onAccessKeyPressed_focusT2" /> ) 
+          //tu: Solution: do not set the next line:
+    <Setter Property="Foreground"               Value="{StaticResource LablForegroundBrush}" />    -->
       </Style>
 
       <Style TargetType="{x:Type Button}">
