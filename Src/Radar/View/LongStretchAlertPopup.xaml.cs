@@ -39,7 +39,7 @@ namespace Radar.View
 
       dailyChart1.ClearDrawAllSegmentsForSinglePC(Environment.MachineName, "Red");
 
-      _synth.SpeakFree(_rainAndUptimeMsg); //redundant: await ChimerAlt.BeepFD(6000, .2);
+      _synth.SpeakFAF(_rainAndUptimeMsg); //redundant: await ChimerAlt.BeepFD(6000, .2);
     }
 
     public static readonly DependencyProperty StandingTimeProperty = DependencyProperty.Register("StandingTime", typeof(TimeSpan), typeof(LongStretchAlertPopup), new PropertyMetadata()); public TimeSpan StandingTime { get => (TimeSpan)GetValue(StandingTimeProperty); set => SetValue(StandingTimeProperty, value); }
@@ -53,10 +53,27 @@ namespace Radar.View
         Visibility = Visibility.Collapsed;
         await Task.Delay(min * 60 * 1000);
         Visibility = Visibility.Visible;
-        _synth.SpeakFree($"Hm. {min} minute extension has passed.");
+        _synth.SpeakFAF($"Hm. {min} minute extension has passed.");
       }
     }
 
     void onShowRadar(object sender, RoutedEventArgs e) => new RadarAnimation(Settings.AlarmThreshold).Show();
+
+    const int _gracePeriodSec = 3;
+    readonly DateTime _prevChange = DateTime.Now;
+    async void OnMouseEnter(object sender, MouseEventArgs e)
+    {
+      var dt = DateTime.Now - _prevChange;
+      if (dt.TotalSeconds < _gracePeriodSec) // check/restart Outlook every ~15 minutes <== should be sufficient for never missing a meeting.
+      {
+        WinAPI.Beep(8_000, 80);
+        return;
+      }
+
+      Opacity = 0.5;
+      WinAPI.Beep(6000, 64);
+      await Task.Delay(32);
+      Application.Current.Shutdown();
+    }
   }
 }

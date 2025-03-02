@@ -26,7 +26,7 @@
 
 
       <Style TargetType="{x:Type TextBlock}">
-        <Setter Property="Foreground" Value="#d40" />
+        <Setter Property="Foreground" Value="#a50" />
       </Style>
 
       <Style TargetType="{x:Type AccessText}">
@@ -76,7 +76,7 @@
       <UpTimeChart:DailyChart Grid.Row="1" HorizontalAlignment="Stretch" Height="36" Margin="5" VerticalAlignment="Stretch" x:Name="dailyChart1" Opacity=".75"/>
 
       <Viewbox    Grid.Row="2">
-        <Button Background="#2000" BorderThickness="0" Margin="2" ToolTip="Close the popup dialog."   IsCancel="True"   >
+        <Button Background="#2f80" BorderThickness="0" Margin="2" ToolTip="Close the popup dialog."   IsCancel="True"  MouseEnter="OnMouseEnter" Opacity=".5" >
           <StackPanel Orientation="Horizontal">
             <TextBlock Text="{Binding StandingTime, FallbackValue=2:12, StringFormat=\{0:h\\:mm\}}" FontSize="36" />
             <TextBlock Text="{Binding StandingTime, FallbackValue=:12,  StringFormat=\{0:\\:ss\}}"  FontSize="16" VerticalAlignment="Top" Margin="1 0 0 2"/>
