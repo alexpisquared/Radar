@@ -110,12 +110,12 @@ public partial class App : Application
       }
     }
     catch (Exception ex) { System.Diagnostics.Trace.WriteLine(ex.Message, System.Reflection.MethodInfo.GetCurrentMethod()?.Name); if (System.Diagnostics.Debugger.IsAttached) System.Diagnostics.Debugger.Break(); throw; }
-    finally
+    finally // show LSA all the time (2025-03):
     {
-      if ((args.Length > 1 && args[1].Equals("ShowLsaPopup")) || IsDue(uptime))
-        showLongStretchAlertPopup(uptime, rainAndUptimeMsg);
-      else if (rainAndUptimeMsg.Length > 0)
-        Synth.SpeakFree(rainAndUptimeMsg);
+      //if ((args.Length > 1 && args[1].Equals("ShowLsaPopup")) || IsDue(uptime))
+      showLongStretchAlertPopup(uptime, rainAndUptimeMsg);
+      //else if (rainAndUptimeMsg.Length > 0)
+      //  Synth.SpeakFree(rainAndUptimeMsg);
     }
 
     return true; // show anyway in case of issues.

@@ -7,6 +7,7 @@
 	  <LangVersion>latest</LangVersion>
 	  <UseWPF>true</UseWPF>
     <ApplicationIcon>C:\g\Radar\Src\UpTimeMonitor\Clock4.ico</ApplicationIcon>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
