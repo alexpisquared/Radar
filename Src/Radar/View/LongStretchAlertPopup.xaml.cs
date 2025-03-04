@@ -11,13 +11,11 @@ namespace Radar.View
   public partial class LongStretchAlertPopup //: AAV.WPF.Base.WindowBase
   {
     readonly TimeSpan _uptime;
-    readonly string _rainAndUptimeMsg;
     readonly SpeechSynth _synth;
 
-    public LongStretchAlertPopup(TimeSpan uptime, string rainAndUptimeMsg, SpeechSynth Synth)
+    public LongStretchAlertPopup(TimeSpan uptime, SpeechSynth Synth)
     {
       _uptime = uptime;
-      _rainAndUptimeMsg = rainAndUptimeMsg;
       _synth = Synth;
       InitializeComponent();
       PreviewTouchDown += (s, e) => CaptureTouch(e.TouchDevice);
@@ -38,8 +36,6 @@ namespace Radar.View
       WindowState = WindowState.Normal;
 
       dailyChart1.ClearDrawAllSegmentsForSinglePC(Environment.MachineName, "Red");
-
-      _synth.SpeakFAF(_rainAndUptimeMsg); //redundant: await ChimerAlt.BeepFD(6000, .2);
     }
 
     public static readonly DependencyProperty StandingTimeProperty = DependencyProperty.Register("StandingTime", typeof(TimeSpan), typeof(LongStretchAlertPopup), new PropertyMetadata()); public TimeSpan StandingTime { get => (TimeSpan)GetValue(StandingTimeProperty); set => SetValue(StandingTimeProperty, value); }

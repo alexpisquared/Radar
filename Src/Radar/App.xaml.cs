@@ -15,7 +15,6 @@ public partial class App : Application
     sayUpTimeNoUI = "sayUpTimeNoUI",
     sayUpTimeShow = "sayUpTimeShow",
     showIfRainCmn = "ShowIfOnOrComingSoon";
-  //static SpeechSynthesizer? _synth = null; public static SpeechSynthesizer Synth { get { if (_synth == null) { _synth = new SpeechSynthesizer(); _synth.SpeakAsyncCancelAll(); _synth.Rate = 6; _synth.Volume = 25; /*_synth.SelectVoiceByHints(gender: VoiceGender.Female); */ } return _synth; } }
   static SpeechSynth? _synth = null; public static SpeechSynth Synth => _synth ??= new(new ConfigurationBuilder().AddUserSecrets<App>().Build()["AppSecrets:MagicSpeech"] ?? throw new ArgumentNullException("###################"), true, CC.EnusAriaNeural.Voice);
   protected override async void OnStartup(StartupEventArgs e)
   {
@@ -29,7 +28,7 @@ public partial class App : Application
 #endif
     //Bpr.BeepBgn2();
 
-    Current.DispatcherUnhandledException += UnhandledExceptionHndlrUI.OnCurrentDispatcherUnhandledException;     //new SpeechSynthesizer().Speak("Testing");			new SpeechSynthesizer().SpeakAsync("Testing");
+    Current.DispatcherUnhandledException += UnhandledExceptionHndlrUI.OnCurrentDispatcherUnhandledException;     
 
     //todo: use serilog:
     AAV.Sys.Helpers.Tracer.SetupTracingOptions("Radar", new TraceSwitch("OnlyUsedWhenInConfig", "This is the trace for all               messages... but who cares?") { Level = TraceLevel.Error });
@@ -110,12 +109,12 @@ public partial class App : Application
       }
     }
     catch (Exception ex) { System.Diagnostics.Trace.WriteLine(ex.Message, System.Reflection.MethodInfo.GetCurrentMethod()?.Name); if (System.Diagnostics.Debugger.IsAttached) System.Diagnostics.Debugger.Break(); throw; }
-    finally // show LSA all the time (2025-03):
+    finally 
     {
-      //if ((args.Length > 1 && args[1].Equals("ShowLsaPopup")) || IsDue(uptime))
-      showLongStretchAlertPopup(uptime, rainAndUptimeMsg);
-      //else if (rainAndUptimeMsg.Length > 0)
-      //  Synth.SpeakFree(rainAndUptimeMsg);
+      if (IsDue(uptime))      //(args.Length > 1 && args[1].Equals("ShowLsaPopup")) ||    // show LSA all the time (2025-03):
+        showLongStretchAlertPopup(uptime, rainAndUptimeMsg);
+      else if (rainAndUptimeMsg.Length > 0)
+        Synth.SpeakFree(rainAndUptimeMsg);
     }
 
     return true; // show anyway in case of issues.
@@ -147,8 +146,8 @@ public partial class App : Application
 
   void showLongStretchAlertPopup(TimeSpan uptime, string rainAndUptimeMsg)
   {
-    //too annoying: Synth.SpeakFree($"Showing");
-    _ = new View.LongStretchAlertPopup(uptime, rainAndUptimeMsg, Synth).ShowDialog();
+    Synth.SpeakFAF(rainAndUptimeMsg);
+    _ = new View.LongStretchAlertPopup(uptime, Synth).ShowDialog();
   }
 
   static string upTimeMsg(TimeSpan uptime, string src)
