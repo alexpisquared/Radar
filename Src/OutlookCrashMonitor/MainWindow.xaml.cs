@@ -13,6 +13,8 @@ public partial class MainWindow : Window
     await Task.Delay(_gracePeriodSec * 1_000);
     Opacity = 1;
 
+    CheckBothGetReport(ref _crashCount_O, ref _crashCount_E);
+
     while (true)
     {
       var dt = DateTime.Now - _prevChange;

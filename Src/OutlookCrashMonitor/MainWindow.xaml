@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OutlookCrashMonitor"
         mc:Ignorable="d"
-        Title="MainWindow" Height="100" Width="1060" Background="#3fff" AllowsTransparency="True" WindowStyle="None"
+        Title="MainWindow" Height="70" Width="1060" Background="#3fff" AllowsTransparency="True" WindowStyle="None"
         WindowStartupLocation="Manual" Left="10" Top="10" Loaded="OnLoaded">
   <Grid>
-    <TextBlock x:Name="tbkWatch1" Text="123123 lkdfjsldj" FontSize="20" VerticalAlignment="Top"    />
-    <TextBlock x:Name="tbkReport" Text="123123 lkdfjsldj" FontSize="20" VerticalAlignment="Bottom" />
-    <Button Content="X" IsCancel="True" Click="OnClose" Margin="10" Opacity=".2" Height="32" MouseEnter="OnMouseEnter" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+    <TextBlock x:Name="tbkWatch1" Text="12.3" FontSize="26" Margin="16 0" VerticalAlignment="Top"  HorizontalAlignment="Right" Foreground="#0d0" />
+    <TextBlock x:Name="tbkReport" Text="Rprt" FontSize="20" Margin="10 5" VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="#0c0" />
+    <Button Content=" " IsCancel="True" Click="OnClose" Margin="0" Opacity=".2" Height="32" MouseEnter="OnMouseEnter" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" />
   </Grid>
 </Window>
