@@ -20,12 +20,12 @@ check if Outlook crashed:
 
 public class ProcessExplorer
 {
-  static string
-      _outlookProcessPath = @$"C:\Users\{Environment.UserName}\AppData\Local\Microsoft\WindowsApps\olk.exe";
   const string
       _outlookProcessName = "olk",
       _explorerProcessName = "explorer",
       _explorerProcessPath = @"C:\Windows\explorer.exe";
+  static string
+      _outlookProcessPath = @$"C:\Users\{Environment.UserName}\AppData\Local\Microsoft\WindowsApps\olk.exe";
 
   public static bool IsRunningCheckAndRestartIfFalse_Outlook() => IsRunningCheckAndRestartIfFalse(_outlookProcessName, _outlookProcessPath);
   public static bool IsRunningCheckAndRestartIfFalse_Explorer() => IsRunningCheckAndRestartIfFalse(_explorerProcessName, _explorerProcessPath);
