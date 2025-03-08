@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OutlookCrashMonitor"
         mc:Ignorable="d"
-        Title="Outlook Crash Monitor" Left="0" Top="0" Height="50" Width="1920" Background="#3fff" 
+        Title="Outlook Crash Monitor" Left="0" Top="0" Height="50" Width="1536" Background="#3f50" 
         AllowsTransparency="True" WindowStyle="None" Topmost="True" 
         WindowStartupLocation="Manual" Loaded="OnLoaded" MouseEnter="OnMouseEnter">
   <Grid>
@@ -15,10 +15,3 @@
     <Button Content="" IsCancel="True" Click="OnClose" Margin="0" Opacity=".1" VerticalAlignment="Top" HorizontalAlignment="Right" />
   </Grid>
 </Window>
-<!--{
-  "EmailClient": "",
-  "ChatClient": "",
-  "Explorer": "",
-  "PeriodInMin": "9",
-  "WhereAmI": "OoutlookCrashMonitor - user secrets"
-}-->
