@@ -5,10 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OutlookCrashMonitor"
         mc:Ignorable="d"
-        Title="MainWindow" Height="250" Width="800" Background="#3fff" AllowsTransparency="True" WindowStyle="None">
+        Title="MainWindow" Height="100" Width="1060" Background="#3fff" AllowsTransparency="True" WindowStyle="None"
+        WindowStartupLocation="Manual" Left="10" Top="10" Loaded="OnLoaded">
   <Grid>
-    <TextBlock x:Name="tbkWatch1" d:Text="123123 lkdfjsldj" />
-    <TextBlock x:Name="tbkReport" d:Text="123123 lkdfjsldj" />
-    <Button Content="X" IsCancel="True" Click="OnClose" Margin="32" Opacity=".2" Height="32" MouseEnter="OnMouseEnter" />
+    <TextBlock x:Name="tbkWatch1" Text="123123 lkdfjsldj" FontSize="20" VerticalAlignment="Top"    />
+    <TextBlock x:Name="tbkReport" Text="123123 lkdfjsldj" FontSize="20" VerticalAlignment="Bottom" />
+    <Button Content="X" IsCancel="True" Click="OnClose" Margin="10" Opacity=".2" Height="32" MouseEnter="OnMouseEnter" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
   </Grid>
 </Window>
