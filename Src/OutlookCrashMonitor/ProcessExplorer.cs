@@ -1,7 +1,5 @@
 ﻿using System.Diagnostics;
-
 namespace OutlookCrashMonitor;
-
 /*
 Auth, roles, etc.
 https://youtu.be/Nw4AZs1kLAs?t=14335
@@ -10,10 +8,6 @@ Net9.0:
 https://github.com/gefrank/Mango-Microservices/tree/master
 
 Mail Send: TrainCloud.Microservices.Email/TrainCloud.Microservices.Email/Services/Email/EmailService.cs at master · traincloud-net/TrainCloud.Microservices.Email
-
-Me at Intuit:
-alex_pigida@intuit.com
-apigida@corp.intuit.net
 
 check if Outlook crashed:
 */

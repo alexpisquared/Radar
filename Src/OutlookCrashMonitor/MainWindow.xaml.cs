@@ -1,11 +1,23 @@
-﻿using System.Windows;
+﻿using Microsoft.Extensions.Configuration;
+using System.Windows;
 
 namespace OutlookCrashMonitor;
 public partial class MainWindow : Window
 {
   int _crashCount_O = 0, _crashCount_E = 0, f = 0;
+  double _periodInMin;
 
-  public MainWindow() { InitializeComponent(); MouseLeftButtonDown += (s, e) => DragMove(); }
+  public MainWindow()
+  {
+    InitializeComponent();
+    MouseLeftButtonDown += (s, e) => DragMove();
+
+    var builder = new ConfigurationBuilder()
+        .AddUserSecrets<MainWindow>();
+
+    var configuration = builder.Build();
+    _periodInMin = double.Parse(configuration["PeriodInMin"] ?? "9");
+  }
 
   async void OnLoaded(object sender, RoutedEventArgs e)
   {
@@ -13,17 +25,20 @@ public partial class MainWindow : Window
     await Task.Delay(_gracePeriodSec * 1_000);
     Opacity = 1;
 
-    CheckBothGetReport(ref _crashCount_O, ref _crashCount_E);
+    tbkReportL.Text = $"{_periodInMin:N1}" ;
+    tbkReportR.Text = CheckBothGetReport(ref _crashCount_O, ref _crashCount_E);
 
     while (true)
     {
       var dt = DateTime.Now - _prevChange;
-      tbkWatch1.Text = $"{dt.TotalMinutes + 4:N1}";
+      tbkReportC.Text = $"{dt.TotalMinutes + 4:N1}";
 
-      if (dt.TotalMinutes is (> 14 and < 15) or
-                             (> 28 and < 29)) // check/restart Outlook every ~15 minutes <== should be sufficient for never missing a meeting.
+      if (dt.TotalMinutes > (_periodInMin * 1) && dt.TotalMinutes < (_periodInMin * 1 + 1) ||
+          dt.TotalMinutes > (_periodInMin * 2) && dt.TotalMinutes < (_periodInMin * 2 + 1) ||
+          dt.TotalMinutes > (_periodInMin * 3) && dt.TotalMinutes < (_periodInMin * 3 + 1) ||
+          dt.TotalMinutes > (_periodInMin * 4) && dt.TotalMinutes < (_periodInMin * 4 + 1)) // check/restart Outlook every ~15 minutes <== should be sufficient for never missing a meeting.
       {
-        CheckBothGetReport(ref _crashCount_O, ref _crashCount_E);
+        tbkReportR.Text = CheckBothGetReport(ref _crashCount_O, ref _crashCount_E);
         WinAPI.Beep1st(200 + 800 * (f % 4), 240 / (1 + (f++ % 4)));
       }
 
@@ -31,15 +46,11 @@ public partial class MainWindow : Window
     }
   }
 
-  void CheckBothGetReport(ref int crashCount_O, ref int crashCount_E)
+  string CheckBothGetReport(ref int crashCount_O, ref int crashCount_E)
   {
-    tbkReport.Text = !ProcessExplorer.IsRunningCheckAndRestartIfFalse_Explorer()
-        ? $"Explorer restarted {++crashCount_E} times!"
-        : $"Explorer is running OK (but restarted {crashCount_O} times)";
-
-    tbkReport.Text += !ProcessExplorer.IsRunningCheckAndRestartIfFalse_Outlook()
-        ? $"Outlook restarted {++crashCount_O} times!"
-        : $"Outlook is running OK (but restarted {crashCount_O} times)";
+    return
+      //(!ProcessExplorer.IsRunningCheckAndRestartIfFalse_Explorer() ? $"Explorer restarted {++crashCount_E} times!" : $"Explorer is running OK (but restarted {crashCount_E} times)") +
+      (!ProcessExplorer.IsRunningCheckAndRestartIfFalse_Outlook() ? $"Outlook restarted {++crashCount_O} times!" : $"Outlook is running OK (but restarted {crashCount_O} times)");
   }
 
   void OnBeep(object sender, RoutedEventArgs e) { WinAPI.Beep1st(400, 80); ; }
