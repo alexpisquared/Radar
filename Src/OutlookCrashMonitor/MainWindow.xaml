@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OutlookCrashMonitor"
         mc:Ignorable="d"
-        Title="Outlook Crash Monitor" Left="0" Top="0" Height="50" Width="1536" Background="#3f50" 
+        Title="Outlook Crash Monitor" Left="0" Top="0" Height="50" Width="1536" Background="#620" 
         AllowsTransparency="True" WindowStyle="None" Topmost="True" 
         WindowStartupLocation="Manual" Loaded="OnLoaded" MouseEnter="OnMouseEnter">
   <Grid>
-    <TextBlock x:Name="tbkReportL" Text="9.0"  FontSize="26" FontWeight="Medium" Margin="10 5" VerticalAlignment="Center" HorizontalAlignment="Left"   Foreground="#0c0" />
-    <TextBlock x:Name="tbkReportR" Text="Rprt" FontSize="19" FontWeight="Normal" Margin="10 5" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#0c0" />
-    <TextBlock x:Name="tbkReportC" Text="2.6"  FontSize="26" FontWeight="Medium" Margin="16 0" VerticalAlignment="Center" HorizontalAlignment="Right"  Foreground="#0d0" />
+    <TextBlock x:Name="tbkReportL" Text="9.0"  FontSize="26" FontWeight="Medium" Margin="26 5" VerticalAlignment="Center" HorizontalAlignment="Left"   Foreground="#fc0" />
+    <TextBlock x:Name="tbkReportR" Text="Rprt" FontSize="19" FontWeight="Normal" Margin="26 5" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#fc0" />
+    <TextBlock x:Name="tbkReportC" Text="2.6"  FontSize="26" FontWeight="Medium" Margin="26 0" VerticalAlignment="Center" HorizontalAlignment="Right"  Foreground="#fd0" />
     <Button Content="" IsCancel="True" Click="OnClose" Margin="0" Opacity=".1" VerticalAlignment="Top" HorizontalAlignment="Right" />
   </Grid>
 </Window>
