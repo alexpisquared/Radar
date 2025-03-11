@@ -50,7 +50,7 @@ public partial class MainWindow : Window
   {
     return
       //(!ProcessExplorer.IsRunningCheckAndRestartIfFalse_Explorer() ? $"Explorer restarted {++crashCount_E} times!" : $"Explorer is running OK (but restarted {crashCount_E} times)") +
-      (!ProcessExplorer.IsRunningCheckAndRestartIfFalse_Outlook() ? $"Outlook restarted {++crashCount_O} times!" : $"Outlook is running OK (but restarted {crashCount_O} times)");
+      (!ProcessExplorer.IsRunningCheckAndRestartIfFalse_Outlook() ? $"Outlook restarted {++crashCount_O} times!" : $"Outlook crashed {crashCount_O}  ..  Restarted {crashCount_O} times");
   }
 
   void OnBeep(object sender, RoutedEventArgs e) { WinAPI.Beep1st(400, 80); ; }
