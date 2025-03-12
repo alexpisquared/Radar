@@ -22,7 +22,7 @@ public partial class MainWindow : Window
   async void OnLoaded(object sender, RoutedEventArgs e)
   {
     Opacity = 0.5;
-    await Task.Delay(_gracePeriodSec * 1_000);
+    await Task.Delay(_gracePeriodSec * 333);
     Opacity = 1;
 
     tbkReportL.Text = $"{_periodInMin:N1}" ;

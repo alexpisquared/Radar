@@ -9,7 +9,7 @@ public partial class App : Application
   protected override void OnStartup(StartupEventArgs e)
   {
     base.OnStartup(e);
-    System.IO.File.AppendAllText(@"C:\temp\temp.txt", $"{DateTime.Now:ddd HH:mm:ss}  {Stopwatch.GetElapsedTime(started):mmss.fff}  {Environment.GetCommandLineArgs().First()}  ...  ");
+    System.IO.File.AppendAllText(@"C:\temp\temp.txt", $"{DateTime.Now:ddd HH:mm:ss}  {Stopwatch.GetElapsedTime(started):mmss\\.fff}  {Environment.GetCommandLineArgs().First()}  ...  ");
   }
   protected override void OnExit(ExitEventArgs e)
   {

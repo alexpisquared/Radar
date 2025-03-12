@@ -1,17 +1,13 @@
-﻿<Window x:Class="OutlookCrashMonitor.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:OutlookCrashMonitor"
-        mc:Ignorable="d"
-        Title="Outlook Crash Monitor" Left="0" Top="0" Height="50" Width="1536" Background="#620" 
-        AllowsTransparency="True" WindowStyle="None" Topmost="True" 
-        WindowStartupLocation="Manual" Loaded="OnLoaded" MouseEnter="OnMouseEnter">
-  <Grid>
-    <TextBlock x:Name="tbkReportL" Text="9.0"  FontSize="26" FontWeight="Medium" Margin="26 5" VerticalAlignment="Center" HorizontalAlignment="Left"   Foreground="#fc0" />
-    <TextBlock x:Name="tbkReportR" Text="Rprt" FontSize="19" FontWeight="Normal" Margin="26 5" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#fc0" />
-    <TextBlock x:Name="tbkReportC" Text="2.6"  FontSize="26" FontWeight="Medium" Margin="26 0" VerticalAlignment="Center" HorizontalAlignment="Right"  Foreground="#fd0" />
-    <Button Content="" IsCancel="True" Click="OnClose" Margin="0" Opacity=".1" VerticalAlignment="Top" HorizontalAlignment="Right" />
-  </Grid>
+﻿<Window x:Class="OutlookCrashMonitor.MainWindow"       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"       mc:Ignorable="d"
+        xmlns:local="clr-namespace:OutlookCrashMonitor" WindowState="Maximized"
+        Title="Outlook Crash Monitor" Left="0" Top="0" Topmost="True" Loaded="OnLoaded" MouseEnter="OnMouseEnter"
+        AllowsTransparency="True" WindowStyle="None" Background="#a000" >
+  <Viewbox>
+    <Grid VerticalAlignment="Stretch" Height="1080" Width="1920" >
+      <TextBlock x:Name="tbkReportL" Text="9.0"  FontSize="180" FontWeight="Medium" Margin="86"    VerticalAlignment="Bottom" HorizontalAlignment="Left"   Foreground="#5a0" />
+      <TextBlock x:Name="tbkReportR" Text="Rprt" FontSize="120" FontWeight="Normal" Margin="99"    VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#5a0" d:Text="asdfasdfsd fasd asd fasdf as" />
+      <TextBlock x:Name="tbkReportC" Text="2.6"  FontSize="250" FontWeight="Medium" Margin="86 26" VerticalAlignment="Top"    HorizontalAlignment="Right"  Foreground="#5a0" />
+      <Button Content="" IsCancel="True" Click="OnClose" Margin="0" Opacity=".1" VerticalAlignment="Top" HorizontalAlignment="Right" />
+    </Grid>
+  </Viewbox>
 </Window>
