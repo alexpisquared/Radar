@@ -8,7 +8,7 @@ public partial class App : Application
   protected override void OnExit(ExitEventArgs e)
   {
     base.OnExit(e);
-    System.IO.File.AppendAllText(@"C:\temp\temp.txt", $"{DateTime.Now:HH:mm:ss}  {Stopwatch.GetElapsedTime(started):mmss} ■\n");
+    System.IO.File.AppendAllText(@"C:\temp\temp.txt", $"{DateTime.Now:ddd HH:mm:ss}  {Stopwatch.GetElapsedTime(started):mmss}  {Environment.GetCommandLineArgs().Last()}  ■\n");
   }
 }
 

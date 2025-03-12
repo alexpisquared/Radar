@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "OutlookCrashMonitor": {
+      "commandName": "Project",
+      "commandLineArgs": "VS2022"
+    }
+  }
+}
