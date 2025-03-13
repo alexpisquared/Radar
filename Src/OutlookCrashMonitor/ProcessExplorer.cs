@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 namespace OutlookCrashMonitor;
 /*
 Auth, roles, etc.
@@ -21,13 +22,13 @@ public class ProcessExplorer
   static string
       _outlookProcessPath = @$"C:\Users\{Environment.UserName}\AppData\Local\Microsoft\WindowsApps\olk.exe";
 
-  public static bool IsRunningCheckAndRestartIfFalse_Outlook() => IsRunningCheckAndRestartIfFalse(_outlookProcessName, _outlookProcessPath);
-  public static bool IsRunningCheckAndRestartIfFalse_Explorer() => IsRunningCheckAndRestartIfFalse(_explorerProcessName, _explorerProcessPath);
-  static bool IsRunningCheckAndRestartIfFalse(string processName, string processPath)
+  public static bool IsRunningCheckAndRestartIfFalse_Outlook(string processPathName) => IsRunningCheckAndRestartIfFalse(processPathName);
+  public static bool IsRunningCheckAndRestartIfFalse_Explorer(string processPathName) => IsRunningCheckAndRestartIfFalse(processPathName);
+  public static bool IsRunningCheckAndRestartIfFalse(string processPath)
   {
     try
     {
-      if (IsRunning(processName))
+      if (IsRunning(Path.GetFileNameWithoutExtension(processPath)))
       {
         return true;
       }
@@ -38,8 +39,6 @@ public class ProcessExplorer
 
     return false;
   }
-
-  public static bool OutlookIsRunning => IsRunning(_outlookProcessName);
   public static bool IsRunning(string processName)
   {
     foreach (var process in Process.GetProcessesByName(processName)) Trace.WriteLine($"+ {process.ProcessName,-32}  {process.Id,6}  {process.HandleCount,6}  {process.MainWindowHandle,6}  {process.MainWindowTitle}");
