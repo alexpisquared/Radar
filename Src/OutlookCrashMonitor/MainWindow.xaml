@@ -5,7 +5,7 @@
   <Viewbox>
     <Grid VerticalAlignment="Stretch" Height="1080" Width="1920" >
       <TextBlock x:Name="tbkReportL" Text="9.0"  FontSize="180" FontWeight="Medium" Margin="86"    VerticalAlignment="Bottom" HorizontalAlignment="Left"   Foreground="#5a0" />
-      <TextBlock x:Name="tbkReportR" Text="Rprt" FontSize="120" FontWeight="Normal" Margin="99"    VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#5a0" d:Text="asdfasdfsd fasd asd fasdf as" />
+      <TextBlock x:Name="tbkReportR" Text="Rprt" FontSize="100" FontWeight="Normal" Margin="99"    VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#5a0" d:Text="asdfasdfsd fasd asd fasdf as" />
       <TextBlock x:Name="tbkReportC" Text="2.6"  FontSize="250" FontWeight="Medium" Margin="86 26" VerticalAlignment="Top"    HorizontalAlignment="Right"  Foreground="#5a0" />
       <Button Content="" IsCancel="True" Click="OnClose" Margin="0" Opacity=".1" VerticalAlignment="Top" HorizontalAlignment="Right" />
     </Grid>
