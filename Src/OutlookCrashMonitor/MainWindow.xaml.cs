@@ -6,6 +6,7 @@ public partial class MainWindow : Window
 {
   int _crashCount_O = 0, _crashCount_E = 0, f = 0;
   double _periodInMin;
+  const int _gracePeriodSec = 3;
 
   public MainWindow()
   {
@@ -21,11 +22,11 @@ public partial class MainWindow : Window
 
   async void OnLoaded(object sender, RoutedEventArgs e)
   {
-    Opacity = 0.5;
-    await Task.Delay(_gracePeriodSec * 333);
+    Opacity = 0.3;
+    await Task.Delay(TimeSpan.FromSeconds(_gracePeriodSec));
     Opacity = 1;
 
-    tbkReportL.Text = $"{_periodInMin:N1}" ;
+    tbkReportL.Text = $"{(_periodInMin + 4):N1}";
     tbkReportR.Text = CheckBothGetReport(ref _crashCount_O, ref _crashCount_E);
 
     while (true)
@@ -57,7 +58,6 @@ public partial class MainWindow : Window
   void OnEnter(object sender, RoutedEventArgs e) { WinAPI.Beep1st(400, 80); CheckBothGetReport(ref _crashCount_O, ref _crashCount_E); }
   void OnClose(object sender, RoutedEventArgs e) { WinAPI.Beep1st(300, 80); Close(); }
 
-  const int _gracePeriodSec = 3;
   readonly DateTime _prevChange = DateTime.Now;
   async void OnMouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
   {
@@ -68,9 +68,9 @@ public partial class MainWindow : Window
       return;
     }
 
-    Opacity = 0.5;
+    Opacity = 0.3;
     WinAPI.Beep(180, 200);
-    await Task.Delay(360);
+    await Task.Delay(200);
     Application.Current.Shutdown();
   }
 }
