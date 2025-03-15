@@ -1,0 +1,78 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Org Net4.8/">
+    <Project Path="../../../C/Lgc/Scraping/Radar/Radar.csproj">
+      <Platform Solution="*|x86" Project="x86" />
+    </Project>
+    <Project Path="../../../C/Lgc/Scraping/RadarPicCollect/RadarPicCollect.csproj">
+      <Platform Solution="*|x86" Project="x86" />
+    </Project>
+    <Project Path="../../../C/Lgc/Scraping/RadarTpl/RadarTpl.csproj">
+      <Platform Solution="*|x86" Project="x86" />
+    </Project>
+    <Project Path="../../../C/Lgc/Scraping/WebScrap/WebScrap.csproj">
+      <Platform Solution="*|x86" Project="x86" />
+    </Project>
+    <Project Path="../../../C/Lgc/ScrSvrs/ScreenTimeUsrCtrlLib/ScreenTimeUsrCtrlLib.csproj">
+      <Platform Solution="*|x86" Project="x86" />
+    </Project>
+    <Project Path="../../../C/Lgc/WpfChart/RadarLib/RadarLib.csproj">
+      <Platform Solution="*|x86" Project="x86" />
+    </Project>
+  </Folder>
+  <Project Path="../../AAV.Shared/Src/NetLts/Ambience/AmbienceLib.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="../../AAV.Shared/Src/NetLts/LibraryImportLib/LibraryImportLib.csproj">
+    <Platform Solution="Release|x64" Project="x64" />
+  </Project>
+  <Project Path="../../AAV.Shared/Src/NetLts/PhoneAreaCoder/PhoneAreaCoder.csproj">
+    <Platform Solution="Release|x64" Project="x64" />
+  </Project>
+  <Project Path="../../AAV.Shared/Src/NetLts/StandardContractsLib/StandardContractsLib.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="../../AAV.Shared/Src/NetLts/StandardLib/StandardLib.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="../../AAV.Shared/Src/NetLts/WpfUserControlLib/WpfUserControlLib.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="../../ScSv/Src/AlexPi.Scr/WebScrap/WebScrap.csproj">
+    <Platform Solution="Release|x64" Project="x64" />
+  </Project>
+  <Project Path="../../TimeTracking/N50/TimeTracking50/Db.EventLog/Db.EventLog.csproj">
+    <Platform Solution="Release|x64" Project="x64" />
+  </Project>
+  <Project Path="../../Util/Src/OpenVsOnTheCulpritLine/OpenVsOnTheCulpritLine.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="EventLogLib/EventLogLib.csproj">
+    <Platform Solution="Release|x64" Project="x64" />
+  </Project>
+  <Project Path="OpenWeather2022/OpenWeaSvc.csproj">
+    <Platform Solution="Release|x64" Project="x64" />
+  </Project>
+  <Project Path="OutlookCrashMonitor/OutlookCrashMonitor.csproj">
+    <Platform Solution="Release|x64" Project="x64" />
+  </Project>
+  <Project Path="PixelMeasure/PixelMeasure.csproj">
+    <Platform Solution="Release|x64" Project="x64" />
+  </Project>
+  <Project Path="Radar/Radar.csproj">
+    <Platform Solution="Release|x64" Project="x64" />
+  </Project>
+  <Project Path="Radar22.Lib/Radar22.Lib.csproj">
+    <Platform Solution="Release|x64" Project="x64" />
+  </Project>
+  <Project Path="Radar22/Radar22.csproj">
+    <Platform Solution="Release|x64" Project="x64" />
+  </Project>
+  <Project Path="UpTimeMonitor/UpTimeMonitor.csproj">
+    <Platform Solution="Release|x64" Project="x64" />
+  </Project>
+</Solution>
