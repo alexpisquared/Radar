@@ -5,22 +5,22 @@
     <Platform Name="x86" />
   </Configurations>
   <Folder Name="/Org Net4.8/">
-    <Project Path="../../../C/Lgc/Scraping/Radar/Radar.csproj">
+    <Project Path="../../../C/Lgc/Scraping/Radar/Radar.csproj" Id="dec79942-b2a1-42c7-a1d1-d6799493af0e">
       <Platform Solution="*|x86" Project="x86" />
     </Project>
-    <Project Path="../../../C/Lgc/Scraping/RadarPicCollect/RadarPicCollect.csproj">
+    <Project Path="../../../C/Lgc/Scraping/RadarPicCollect/RadarPicCollect.csproj" Id="61a2dbc2-53fd-4ad7-93e2-697a42b2c485">
       <Platform Solution="*|x86" Project="x86" />
     </Project>
-    <Project Path="../../../C/Lgc/Scraping/RadarTpl/RadarTpl.csproj">
+    <Project Path="../../../C/Lgc/Scraping/RadarTpl/RadarTpl.csproj" Id="0d5ef46c-5604-4f63-aede-aac34bb5da16">
       <Platform Solution="*|x86" Project="x86" />
     </Project>
-    <Project Path="../../../C/Lgc/Scraping/WebScrap/WebScrap.csproj">
+    <Project Path="../../../C/Lgc/Scraping/WebScrap/WebScrap.csproj" Id="80c1edc5-ecc1-4178-8a83-dfb40d766ab4">
       <Platform Solution="*|x86" Project="x86" />
     </Project>
-    <Project Path="../../../C/Lgc/ScrSvrs/ScreenTimeUsrCtrlLib/ScreenTimeUsrCtrlLib.csproj">
+    <Project Path="../../../C/Lgc/ScrSvrs/ScreenTimeUsrCtrlLib/ScreenTimeUsrCtrlLib.csproj" Id="9e5021aa-a768-447b-a731-3c81375bd5a9">
       <Platform Solution="*|x86" Project="x86" />
     </Project>
-    <Project Path="../../../C/Lgc/WpfChart/RadarLib/RadarLib.csproj">
+    <Project Path="../../../C/Lgc/WpfChart/RadarLib/RadarLib.csproj" Id="d7aa0309-ff83-4ab0-8cf9-5cda4f6ee65f">
       <Platform Solution="*|x86" Project="x86" />
     </Project>
   </Folder>
