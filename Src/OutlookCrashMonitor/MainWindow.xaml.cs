@@ -61,7 +61,7 @@ public partial class MainWindow : Window
 
   string CheckBothGetReport(ref int crashCount_O, ref int crashCount_E) =>
       //(!ProcessExplorer.IsRunningCheckAndRestartIfFalse_Explorer() ? $"Explorer restarted {++crashCount_E} times!" : $"Explorer is running OK (but restarted {crashCount_E} times)") +
-      !ProcessExplorer.IsRunningCheckAndRestartIfFalse_Outlook(_outlookProcessPath) ? $"Outlook crashed/restarted {++crashCount_O} times!" : $"Outlook crashed {crashCount_O}  ..  Restarted {crashCount_O} times";
+      !ProcessExplorer.IsRunningCheckAndRestartIfFalse_Outlook(_outlookProcessPath) ? $"Outlook crashed/restarted {++crashCount_O} times!" : $"Outlook crashed {crashCount_O}     Restarted {crashCount_O} times";
 
   void OnBeep(object sender, RoutedEventArgs e) { WinAPI.Beep1st(400, 80); ; }
   void OnEnter(object sender, RoutedEventArgs e) { WinAPI.Beep1st(400, 80); _ = CheckBothGetReport(ref _crashCount_O, ref _crashCount_E); }
