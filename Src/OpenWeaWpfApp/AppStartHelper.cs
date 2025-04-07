@@ -22,5 +22,17 @@ public static class AppStartHelper
       }
       catch (Exception ex) { ex.Pop(); }
     });
+
+    ////from C:\g\PowerShellLog\Src\PowerShellLog\App.xaml.cs
+    //_ = services.AddDbContext<A0DbContext>(optionsBuilder => //tu: dbcontext connstr https://youtu.be/7OBMhoKieqk?t=505 + https://codedocu.com/details?d=2653&a=9&f=425&d=0  :Project\Manage Connected Svcs !!! 2021-12
+    //{
+    //  var lgr = _serviceProvider?.GetRequiredService<ILogger<Window>>();
+    //  var cfg = _serviceProvider?.GetRequiredService<IConfigurationRoot>();
+
+    //  lgr?.LogInformation($"*** WhereAmI: {cfg?["WhereAmI"]}");
+
+    //  optionsBuilder.UseSqlServer(cfg.GetConnectionString("LclDb") ?? throw new ArgumentNullException(".GetConnectionString('LclDb')"));
+    //});
+
   }
 }
