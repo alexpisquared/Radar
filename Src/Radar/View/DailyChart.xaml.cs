@@ -119,7 +119,7 @@ namespace UpTimeChart
         var timeB = trgDate.AddDays(.9999999);
         var isHere = Environment.MachineName.Equals(pc, StringComparison.OrdinalIgnoreCase);
 
-        SortedList<DateTime, int> eois; 
+        SortedList<DateTime, int> eois = new(); 
         if (isHere)
         {
 #if LocalDB_is_in_use
@@ -127,7 +127,7 @@ namespace UpTimeChart
           var dbaseEvLog = DbLogHelper.GetAllEventsOfInterest(timeA, timeB, pc);
           eois = localEvLog.Count > dbaseEvLog.Count ? localEvLog : dbaseEvLog; // Jan 2020: whoever has more events wins!
 #else
-          eois = EvLogHelper.GetAllEventsOfInterest(timeA, timeB);
+          //eois = EvLogHelper.GetAllEventsOfInterest(timeA, timeB);
 #endif
         }
         else
@@ -135,8 +135,8 @@ namespace UpTimeChart
           eois = DbLogHelper.GetAllEventsOfInterest(timeA, timeB, pc);
         }
 
-        if (trgDate == DateTime.Today && isHere)
-          eois.Add(DateTime.Now, 2); // == ((int)EvOfIntFlag.ScreenSaverrUp)
+        //if (trgDate == DateTime.Today && isHere)
+        //  eois.Add(DateTime.Now, 2); // == ((int)EvOfIntFlag.ScreenSaverrUp)
 
         if (eois.Count < 1)
           tbSummary.Text = $"{trgDate,16:ddd, MMM dd yyyy}  no activities logged on this date.";
