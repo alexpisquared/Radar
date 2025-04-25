@@ -13,12 +13,11 @@ public static class AppStartHelper
     {
       try
       {
-        IConfigurationRoot cfg = //(Application.Current as dynamic).ServiceProvider.GetService(typeof(IConfigurationRoot)); 
-                                                                    serviceProvider.GetRequiredService<IConfigurationRoot>(); // a better way (May 2024)
+        IConfigurationRoot cfg =  serviceProvider.GetRequiredService<IConfigurationRoot>(); // a better way (May 2024) than //(Application.Current as dynamic).ServiceProvider.GetService(typeof(IConfigurationRoot));   
 
-        var scs = cfg.GetConnectionString("Exprs") ?? throw new ArgumentNullException(nameof(services), $"cfg.GetConnectionString('Exprs')\n\nCheck the app settings!!!\n\n{cfg["WhereAmI"]}\n\n");
+        var connectionString = cfg.GetConnectionString("Exprs") ?? throw new ArgumentNullException(nameof(services), $"cfg.GetConnectionString('Exprs')\n\nCheck the app settings!!!\n\n{cfg["WhereAmI"]}\n\n");
 
-        _ = optionsBuilder.UseSqlServer(scs);
+        _ = optionsBuilder.UseSqlServer(connectionString);
       }
       catch (Exception ex) { ex.Pop(); }
     });
@@ -33,6 +32,5 @@ public static class AppStartHelper
 
     //  optionsBuilder.UseSqlServer(cfg.GetConnectionString("LclDb") ?? throw new ArgumentNullException(".GetConnectionString('LclDb')"));
     //});
-
   }
 }

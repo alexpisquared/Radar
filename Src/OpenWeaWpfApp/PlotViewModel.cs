@@ -11,12 +11,10 @@ public partial class PlotViewModel : ObservableValidator
   readonly int _m = -06 * 3600, _d = +00 * 3600, _e = +06 * 3600, _n = +11 * 3600;
   readonly IConfigurationRoot _cfg;
 
-  //readonly WeatherxContext _dbx;
   readonly OpenWea _opnwea;
-  private readonly IWeatherForecastService _openMeteoSvc;
+  readonly IWeatherForecastService _openMeteoSvc;
   readonly DbxHelper _dbh;
   readonly ILogger _lgr;
-  readonly SpeechSynth _synth;
   readonly bool _store;
   const int _maxIcons = 50;
   double _extrMax = +35, _extrMin = +05;
@@ -73,12 +71,11 @@ public partial class PlotViewModel : ObservableValidator
 #endif
   #endregion
 
-  public PlotViewModel(OpenWea openWea, IWeatherForecastService openMeteo, DbxHelper dbh, ILogger lgr, SpeechSynth synth, IConfigurationRoot cfg)
+  public PlotViewModel(OpenWea openWea, IWeatherForecastService openMeteo, DbxHelper dbh, ILogger lgr, IConfigurationRoot cfg)
   {
     _cfg = cfg; // _cfg = new ConfigurationBuilder().AddUserSecrets<App>().Build(); //tu: adhoc usersecrets 
     _dbh = dbh;
     _lgr = lgr;
-    _synth = synth;
     _opnwea = openWea;
     _openMeteoSvc = openMeteo;
     _store = _cfg["StoreDataToDB"] == "Yes";

@@ -6,6 +6,7 @@ using OpenMeteoClient.Infrastructure;
 using OpenWeaWpfApp;
 using StandardContractsLib;
 using StandardLib.Helpers;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
