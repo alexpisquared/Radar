@@ -16,7 +16,7 @@ namespace DB.WeatherX.PwrTls.Models
         public DateTimeOffset ForecastedAt { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset? UpdatedAt { get; set; }
-        public string? Note64 { get; set; }
+//see ext:        public string? Note64 { get; set; }
         public string? FreeNtext { get; set; }
     }
 }
