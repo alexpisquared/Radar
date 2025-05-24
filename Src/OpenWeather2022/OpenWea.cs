@@ -72,7 +72,7 @@ public class OpenWea
       var response = await client.GetAsync(url).ConfigureAwait(false);
       if (response == null || response.StatusCode != System.Net.HttpStatusCode.OK)
       {
-        WriteLine($"▄▀▄▀▄▀ {response.StatusCode}  {what}  for  {url}  ■─■─■");
+        WriteLine($"▄▀▄▀▄▀ {response?.StatusCode}  {what}  for  {url}  ■─■─■");
         return new RootobjectOneCallApi(); // throw new UnauthorizedAccessException("@"); //
       }
 
