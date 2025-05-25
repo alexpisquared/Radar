@@ -72,9 +72,11 @@ public class OpenWea
       var response = await client.GetAsync(url).ConfigureAwait(false);
       if (response == null || response.StatusCode != System.Net.HttpStatusCode.OK)
       {
-        WriteLine($"▄▀▄▀▄▀ {response?.StatusCode}  {what}  for  {url}  ■─■─■");
+        WriteLine($"▄▀▄▄▀ {response?.StatusCode,13}  {what}  for  {url}  ■─■─■");
         return new RootobjectOneCallApi(); // throw new UnauthorizedAccessException("@"); //
       }
+      else
+        WriteLine($"▄▀▀▄▀ {response?.StatusCode,13}  {what}  for  {url}  ■─■─■");
 
 #if NotSaveToFile
       var json = await response.Content.ReadAsStringAsync();
@@ -94,7 +96,7 @@ public class OpenWea
 
       return oca;
     }
-    catch (ArgumentNullException ex) { WriteLine($"▄▀▄▀▄▀ Keys are missing??? {ex.Message} \n\t {ex} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); throw; }
+    catch (ArgumentNullException ex) { WriteLine($"▄▀▄▀▄▀▄▀▄▀▄▀ Keys are missing??? {ex.Message} \n\t {ex} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); throw; }
     catch (Exception ex) { WriteLine($"■─■─■ {ex.Message} \n\t {ex} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); throw; }
     //finally { WriteLine($"{DateTime.Now:yy-MM-dd HH:mm:ss.f} {what}  {url}  {sw.ElapsedMilliseconds}ms "); }
   }

@@ -20,7 +20,7 @@ public partial class MainWindow
 
     if (Debugger.IsAttached)
     {
-      Topmost = true;
+      //Topmost = true;
       if (Environment.UserDomainName != "RAZER1")
       {
         //WindowState = WindowState.Normal;

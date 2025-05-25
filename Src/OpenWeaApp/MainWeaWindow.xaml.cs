@@ -31,7 +31,7 @@ public partial class MainWeaWindow
       }
     };
 
-    Topmost = Debugger.IsAttached;
+    //Topmost = Debugger.IsAttached;
 
     KeepOpenReason = null; // nothing to hold on to.
 

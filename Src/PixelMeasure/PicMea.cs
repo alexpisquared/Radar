@@ -123,8 +123,7 @@ public static class PicMea // 2023: the latest!!!
 
       var rv = ttlMPH * .1 / ttlArea;
 
-      //77 
-      Debug.WriteLine($":> mea @    {sw.Elapsed.TotalMilliseconds,5:N1} ms for  {_radiusInPixelsX}x{_radiusInPixelsY} radiusInPixels X*Y   => {ttlArea} area in pixels  ===> {rv:N5} mm/h/km²      {cases.Count} new cases");
+      //77       Debug.WriteLine($":> mea @    {sw.Elapsed.TotalMilliseconds,5:N1} ms for  {_radiusInPixelsX}x{_radiusInPixelsY} radiusInPixels X*Y   => {ttlArea} area in pixels  ===> {rv:N5} mm/h/km²      {cases.Count} new cases");
 
       foreach (var c in cases) Debug.WriteLine($"      {c.Key}   {c.Value,5}");
 
