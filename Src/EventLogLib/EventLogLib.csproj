@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Diagnostics.EventLog" Version="9.0.2" />
+    <PackageReference Include="System.Diagnostics.EventLog" Version="9.0.5" />
   </ItemGroup>
 
 </Project>

@@ -4,7 +4,7 @@
                 xmlns:UpTimeChart="clr-namespace:UpTimeChart" 
                 x:Class="Radar.View.LongStretchAlertPopup" mc:Ignorable="d"
                 Title="Long Stretch Alert Popup" Background="#0a000000" 
-                Height="600" Width="1200" ShowInTaskbar="False" Topmost="False" WindowState="Minimized"                
+                Height="600" Width="1200" ShowInTaskbar="True" Topmost="False" WindowState="Minimized"                
                 
                 WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResize" >
   <!-- //todo:  Style="{StaticResource WindowStyle_Aav0}"   causes runtime error -->
