@@ -1,0 +1,34 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Lib/">
+    <Project Path="DB.WeatherX.PwrTls/DB.WeatherX.PwrTls.csproj" />
+    <Project Path="OpenMeteoClient/src/OpenMeteoClient/OpenMeteoClient.csproj" />
+    <Project Path="OpenWeather2022/OpenWeaSvc.csproj" />
+    <Project Path="OpenWeaWpfApp/OpenWeaLib.csproj" />
+    <Project Path="PixelMeasure/PixelMeasure.csproj" />
+    <Project Path="Radar22.Lib/Radar22.Lib.csproj" />
+  </Folder>
+  <Folder Name="/Shareds/">
+    <Project Path="../../AAV.Shared/Src/NetLts/Ambience/AmbienceLib.csproj">
+      <Platform Solution="*|x64" Project="x64" />
+    </Project>
+    <Project Path="../../AAV.Shared/Src/NetLts/StandardContractsLib/StandardContractsLib.csproj">
+      <Platform Solution="*|x64" Project="x64" />
+    </Project>
+    <Project Path="../../AAV.Shared/Src/NetLts/StandardLib/StandardLib.csproj">
+      <Platform Solution="*|x64" Project="x64" />
+    </Project>
+    <Project Path="../../AAV.Shared/Src/NetLts/WpfUserControlLib/WpfUserControlLib.csproj">
+      <Platform Solution="*|x64" Project="x64" />
+    </Project>
+    <Project Path="../../Util/Src/OpenVsOnTheCulpritLine/OpenVsOnTheCulpritLine.csproj" />
+  </Folder>
+  <Project Path="OpenWeaApp/OpenWeaApp.csproj" />
+  <Project Path="OpenWeaConsoleApp/OpenWeaConsoleApp.csproj" />
+  <Project Path="PixelMeasureApp/PixelMeasureApp.csproj" />
+  <Project Path="Radar22/Radar22.csproj" />
+</Solution>

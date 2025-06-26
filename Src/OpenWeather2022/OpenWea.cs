@@ -7,11 +7,24 @@ namespace OpenWeather2022;
 // Toronto,ON ::: 43.7181557, -79.5181414
 public class OpenWea
 {
-  public static async Task<siteData?> GetEnvtCa(string site = "s0000458"/*toronto pearson*/) //   "s0000785_e"/*toronto island*/        }; //         "s0000773_e",/*richmond hill*/   };       // May 2020: localized to the most informative (with extremums). ... https://dd.weather.gc.ca/citypage_weather/xml/siteList.xml
+  public static async Task<siteData?> GetEnvtCa(string site = "s0000458"/*toronto pearson*/) //   "s0000785_e"/*toronto island*/        }; //         "s0000773_e",/*richmond hill*/   };       // May 2020: localized to the most informative (with extremums). ... https://dd.weather.gc.ca/citypage_weather/xml/siteList.xml  
   {
     siteData? oca = default!;
     var sw = Stopwatch.StartNew();
     var url = $"https://dd.weather.gc.ca/citypage_weather/xml/ON/{site}_e.xml";
+
+    if (Debugger.IsAttached) //2025-06-26: not hourly data at this seemingly future proofed URL:
+    {
+      ///2025-06-26: ../xml/.. is gone, but this does not mention that: https://eccc-msc.github.io/open-data/msc-data/citypage-weather/readme_citypageweather-datamart_en/
+      ///Where do I take the hourly from? As this is promicing: "...Please note that the content of the files will not be modified, only the file names.  Documentation<https://eccc-msc.github.io/open-data/msc-data/metnotes/readme_metnotes-datamart_en/>will of course be adjusted accordingly...."  :https://comm.collab.science.gc.ca/mailman3/hyperkitty/list/dd_info@comm.collab.science.gc.ca/thread/UIDSODWT2Z7SYWZTZLGAUNAWC767VKRL/
+      ///todo: rework this to use the new URL format, as the old one is not working anymore:
+      ///todo: for the new URL, use SiteDataEnvCa2026, as it has the new format, and the old one is not working anymore.
+      /// old: $"https://dd.weather.gc.ca/citypage_weather/xml/ON/{site}_e.xml";
+      /// new: $"https://dd.weather.gc.ca/citypage_weather/ON/15/20250626T150146.979Z_MSC_CitypageWeather_{site}_en.xml"; 
+      /// 
+      url = $"https://dd.weather.gc.ca/citypage_weather/ON/15/20250626T150146.979Z_MSC_CitypageWeather_{site}_en.xml"; // https://dd.weather.gc.ca/citypage_weather/ON/15/20250626T150146.979Z_MSC_CitypageWeather_s0000458_en.xml
+    }
+
     try
     {
       using var client = new HttpClient();
