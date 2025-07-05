@@ -64,7 +64,8 @@ internal static class PlotViewModelHelpers
               CreatedAt = now
             });
           }
-        };
+        }
+        ;
 
 #if DEBUG
         WriteLine($"■■  await _dbx.SaveChangesAsync()  suspended in DEBUG ■■");
@@ -80,9 +81,16 @@ internal static class PlotViewModelHelpers
 
   static DateTimeOffset GetDateSafe(ILogger _lgr, siteData siteFore)
   {
-    try { for (var i = 0; i < siteFore.dateTime.Length; i++) WriteLine($"■■: [{i}] {EnvtCaDate(siteFore.dateTime[i]):yyyy-MM-dd HH:mm:ss.fff}  <==  {siteFore.dateTime[1]} "); } catch (Exception ex) { _lgr.LogWarning($"■■ {ex.Message} ■■"); }
+    try
+    {
+      for (var i = 0; i < siteFore.dateTime.Length; i++)
+        _lgr.LogInformation($"■■: GetDateSafe [{i} / {siteFore.dateTime.Length + 1}] {EnvtCaDate(siteFore.dateTime[i]):yyyy-MM-dd HH:mm:ss.fff}  <==  {siteFore.dateTime[1]} ");
 
-    return EnvtCaDate(siteFore.dateTime[^1]); // looks like the [1] is the local time, and [0] is the UTC time.
+      return EnvtCaDate(siteFore.dateTime[^1]); // looks like the [1] is the local time, and [0] is the UTC time.
+    }
+    catch (Exception ex) { _lgr.LogWarning($"■■ siteFore: {siteFore}   {ex.Message} ■■"); }
+
+    return EnvtCaDate(siteFore.dateTime[0]); // looks like the [1] is the local time, and [0] is the UTC time.
   }
 
   [Obsolete]
@@ -124,7 +132,8 @@ internal static class PlotViewModelHelpers
               CreatedAt = now
             });
           }
-        };
+        }
+        ;
 
         WriteLine($"■■ {await _dbx.SaveChangesAsync()} rows saved ■■");
         return;
@@ -178,11 +187,12 @@ internal static class PlotViewModelHelpers
               CreatedAt = now
             });
           }
-        };
+        }
+        ;
 
         WriteLine($"■■ {await _dbx.SaveChangesAsync()} rows saved ■■");
         return;
-      }      
+      }
       catch (InvalidOperationException ex) { ex.Pop(_lgr); }
       catch (Exception ex) { ex.Pop(_lgr); }
     }
@@ -221,7 +231,8 @@ internal static class PlotViewModelHelpers
               CreatedAt = now
             });
           }
-        };
+        }
+        ;
 
         WriteLine($"■■ {await _dbx.SaveChangesAsync()} rows saved ■■");
         return;
