@@ -27,11 +27,14 @@ internal static class PlotViewModelHelpers
 
   internal static async Task AddForecastToDB_EnvtCa(ILogger _lgr, WeatherxContext _dbx, string siteId, siteData? siteFore, string srcId = "eca", string measureId = "tar")
   {
-    for (var i = 0; i < 10; i++)
+    //for (var i = 0; i < 10; i++)
     {
       try
       {
         ArgumentNullException.ThrowIfNull(siteFore, $"e846 {nameof(siteFore)}");
+        ArgumentNullException.ThrowIfNull(siteFore.hourlyForecastGroup, $"e846 {nameof(siteFore.hourlyForecastGroup)}");
+        ArgumentNullException.ThrowIfNull(siteFore.hourlyForecastGroup.hourlyForecast, $"e846 {nameof(siteFore.hourlyForecastGroup.hourlyForecast)}");
+       
         var now = DateTime.Now;
 
         //var connectionString = _cfg.GetConnectionString("Exprs");
@@ -74,7 +77,7 @@ internal static class PlotViewModelHelpers
 #endif
         return;
       }
-      catch (InvalidOperationException ex) { _lgr.LogWarning($"F{i,3} {ex.Message}"); await Task.Delay(1000); bpr.Warn(); }
+      catch (InvalidOperationException ex) { _lgr.LogError(ex, "@31212"); await Task.Delay(1000); bpr.Warn(); }
       catch (Exception ex) { ex.Pop(_lgr); }
     }
   }
@@ -90,7 +93,7 @@ internal static class PlotViewModelHelpers
     }
     catch (Exception ex) { _lgr.LogWarning($"■■ siteFore: {siteFore}   {ex.Message} ■■"); }
 
-    return EnvtCaDate(siteFore.dateTime[0]); // looks like the [1] is the local time, and [0] is the UTC time.
+    return (siteFore.dateTime is null || siteFore.dateTime.Length == 0) ? DateTimeOffset.Now : EnvtCaDate(siteFore.dateTime[0]); // fallback to the first date, which is the UTC time.
   }
 
   [Obsolete]
