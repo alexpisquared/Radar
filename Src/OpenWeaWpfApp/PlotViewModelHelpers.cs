@@ -34,25 +34,25 @@ internal static class PlotViewModelHelpers
         ArgumentNullException.ThrowIfNull(siteFore, $"e846 {nameof(siteFore)}");
         ArgumentNullException.ThrowIfNull(siteFore.hourlyForecastGroup, $"e846 {nameof(siteFore.hourlyForecastGroup)}");
         ArgumentNullException.ThrowIfNull(siteFore.hourlyForecastGroup.hourlyForecast, $"e846 {nameof(siteFore.hourlyForecastGroup.hourlyForecast)}");
-       
-        var now = DateTime.Now;
+
+        DateTime now = DateTime.Now;
 
         //var connectionString = _cfg.GetConnectionString("Exprs");
         //WeatherxContextFactory dbf = new(connectionString);
         //using WeatherxContext _dbx = dbf.CreateDbContext();
 
-        var forecastedAt = GetDateSafe(_lgr, siteFore);
+        DateTimeOffset forecastedAt = GetDateSafe(_lgr, siteFore);
 
-        foreach (var f in siteFore.hourlyForecastGroup.hourlyForecast.ToList()) //siteFore.hourlyForecastGroup.hourlyForecast.ToList().ForEach(async f =>
+        foreach (hourlyForecastTypeFull? hourlyForecast in siteFore.hourlyForecastGroup.hourlyForecast.ToList()) //siteFore.hourlyForecastGroup.hourlyForecast.ToList().ForEach(async hourlyForecast =>
         {
-          var forecastedFor = EnvtCaDate(f.dateTimeUTC);
-          var val = double.Parse(f.temperature.Value);
+          DateTimeOffset forecastedFor = EnvtCaDate(hourlyForecast.dateTimeUTC);
+          var forecastTemp = double.Parse(hourlyForecast.temperature.Value);
 
           if (await _dbx.PointFore.AnyAsync(d =>
               d.SrcId == srcId &&
               d.SiteId == siteId &&
               d.MeasureId == measureId &&
-              d.MeasureValue == val && // _store only changes in recalculation results
+              d.MeasureValue == forecastTemp && // _store only changes in recalculation results
               d.ForecastedFor == forecastedFor) == false)
           {
             _ = _dbx.PointFore.Add(new PointFore
@@ -60,7 +60,7 @@ internal static class PlotViewModelHelpers
               SrcId = srcId,
               SiteId = siteId,
               MeasureId = measureId,
-              MeasureValue = val,
+              MeasureValue = forecastTemp,
               ForecastedFor = forecastedFor,
               ForecastedAt = forecastedAt,
               Note64 = "[early runs]",
@@ -68,7 +68,6 @@ internal static class PlotViewModelHelpers
             });
           }
         }
-        ;
 
 #if DEBUG
         WriteLine($"■■  await _dbx.SaveChangesAsync()  suspended in DEBUG ■■");
@@ -104,17 +103,17 @@ internal static class PlotViewModelHelpers
       try
       {
         ArgumentNullException.ThrowIfNull(siteData, $"@@@@@@@@@ {nameof(siteData)}");
-        var now = DateTime.Now;
+        DateTime now = DateTime.Now;
 
         //var connectionString = _cfg.GetConnectionString("Exprs");
         //WeatherxContextFactory dbf = new(connectionString);
         //using WeatherxContext _dbx = dbf.CreateDbContext();
 
-        var forecastedAt = OpenWea.UnixToDt(siteData.current.dt); //nogo: any more: based on siteData.current which is NUL since gone NONEFREE!!!
+        DateTime forecastedAt = OpenWea.UnixToDt(siteData.current.dt); //nogo: any more: based on siteData.current which is NUL since gone NONEFREE!!!
 
-        foreach (var f in siteData.hourly.ToList()) //siteFore.hourlyForecastGroup.hourlyForecast.ToList().ForEach(async f =>
+        foreach (Hourly? f in siteData.hourly.ToList()) //siteFore.hourlyForecastGroup.hourlyForecast.ToList().ForEach(async hourlyForecast =>
         {
-          var forecastedFor = OpenWea.UnixToDt(f.dt);
+          DateTime forecastedFor = OpenWea.UnixToDt(f.dt);
 
           if (await _dbx.PointFore.AnyAsync(d =>
               d.SrcId == srcId &&
@@ -136,6 +135,7 @@ internal static class PlotViewModelHelpers
             });
           }
         }
+
         ;
 
         WriteLine($"■■ {await _dbx.SaveChangesAsync()} rows saved ■■");
@@ -152,13 +152,13 @@ internal static class PlotViewModelHelpers
       try
       {
         ArgumentNullException.ThrowIfNull(siteData, $"@ Open Meteo Data{nameof(siteData)}");
-        var now = DateTime.Now;
+        DateTime now = DateTime.Now;
 
-        var forecastedAt = (siteData.Current?.Time) ?? DateTime.Now;
+        DateTime forecastedAt = (siteData.Current?.Time) ?? DateTime.Now;
 
-        for (int h = 0; h < siteData.Hourly?.Time.Count; h++)
+        for (var h = 0; h < siteData.Hourly?.Time.Count; h++)
         {
-          var forecastedFor = siteData.Hourly.Time[h];
+          DateTime forecastedFor = siteData.Hourly.Time[h];
 
           if (forecastedFor < forecastedAt) continue; // exclude points of past data.
           /*
@@ -191,6 +191,7 @@ internal static class PlotViewModelHelpers
             });
           }
         }
+
         ;
 
         WriteLine($"■■ {await _dbx.SaveChangesAsync()} rows saved ■■");
@@ -209,13 +210,13 @@ internal static class PlotViewModelHelpers
       try
       {
         ArgumentNullException.ThrowIfNull(sitePast, $"@@@@@@@@@ {nameof(sitePast)}");
-        var now = DateTime.Now;
+        DateTime now = DateTime.Now;
 
         //var connectionString = _cfg.GetConnectionString("Exprs");
         //WeatherxContextFactory dbf = new(connectionString);
         //using WeatherxContext _dbx = dbf.CreateDbContext();
 
-        foreach (var f in sitePast) //sitePast.hourlyPastcastGroup.hourlyPastcast.ToList().ForEach(async f =>
+        foreach (MeteoDataMy f in sitePast) //sitePast.hourlyPastcastGroup.hourlyPastcast.ToList().ForEach(async hourlyForecast =>
         {
           if (await _dbx.PointReal.AnyAsync(d =>
               d.SrcId == srcId &&
@@ -235,6 +236,7 @@ internal static class PlotViewModelHelpers
             });
           }
         }
+
         ;
 
         WriteLine($"■■ {await _dbx.SaveChangesAsync()} rows saved ■■");
@@ -247,18 +249,15 @@ internal static class PlotViewModelHelpers
 
   internal static DateTimeOffset EnvtCaDate(string yyyyMMddHHmm)
   {
-    if (!DateTime.TryParseExact(yyyyMMddHHmm, new string[] { "yyyyMMddHHmm", "yyyyMMddHHmmss" }, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out var utc)) //var lcl = DateTime.ParseExact(yyyyMMddHHmm, "yyyyMMddHHmm", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal).ToLocalTime(); //tu: UTC to Local time.
+    if (!DateTime.TryParseExact(yyyyMMddHHmm, new string[] { "yyyyMMddHHmm", "yyyyMMddHHmmss" }, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime utc)) //var lcl = DateTime.ParseExact(yyyyMMddHHmm, "yyyyMMddHHmm", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal).ToLocalTime(); //tu: UTC to Local time.
       throw new ArgumentOutOfRangeException(nameof(yyyyMMddHHmm), yyyyMMddHHmm, "■─■─■ Can you imagine?!?!?!");
 
     return utc.ToLocalTime(); //tu: UTC to Local time.
   }
 
-  internal static DateTimeOffset EnvtCaDate(dateStampType dateStampType)
-  {
-    return !DateTimeOffset.TryParseExact($"{dateStampType.year}-{dateStampType.month.Value}-{dateStampType.day.Value} {dateStampType.hour.Value}:{dateStampType.minute}", "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var dt)
+  internal static DateTimeOffset EnvtCaDate(dateStampType dateStampType) => !DateTimeOffset.TryParseExact($"{dateStampType.year}-{dateStampType.month.Value}-{dateStampType.day.Value} {dateStampType.hour.Value}:{dateStampType.minute}", "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out DateTimeOffset dt)
       ? throw new ArgumentException(nameof(dateStampNameType))
       : dt;
-  }
 
   internal static void RefillForeEnvtCa(ObservableCollection<DataPoint> points, siteData? siteDt)
   {
@@ -270,14 +269,14 @@ internal static class PlotViewModelHelpers
   internal static async Task<(List<MeteoDataMy> bvl, List<MeteoDataMy> pea)> GetPast24hrFromEC()
   {
     Past24hrHAP p24 = new();
-    var pea = await p24.GetIt(Cnst._Past24YYZ);
-    var bvl = await p24.GetIt(Cnst._Past24OKN);
+    List<MeteoDataMy> pea = await p24.GetIt(Cnst._Past24YYZ);
+    List<MeteoDataMy> bvl = await p24.GetIt(Cnst._Past24OKN);
     return (bvl, pea);
   }
   internal static async Task<(siteData? sitedataMiss, siteData? sitedataVghn)> GetFore24hrFromEC()
   {
-    var sitedataMiss = await OpenWea.GetEnvtCa(Cnst._mississ);
-    var sitedataVghn = await OpenWea.GetEnvtCa(Cnst._kingcty);
+    siteData? sitedataMiss = await OpenWea.GetEnvtCa(Cnst._mississ);
+    siteData? sitedataVghn = await OpenWea.GetEnvtCa(Cnst._kingcty);
 
     return (sitedataMiss, sitedataVghn);
   }
