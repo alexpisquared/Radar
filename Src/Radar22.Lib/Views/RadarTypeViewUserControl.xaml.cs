@@ -65,7 +65,7 @@ public partial class RadarTypeViewUserControl : UserControl
       else
       {
         chkIsPlaying.Content = $"_{UrlSuffix}   ▄▀▄▀▄▀  NO RADAR IMAGES?!?!?!?  ▄▀▄▀▄▀ ";
-        ScaleFactor = AutoScale ? (loader.CalulateAvgSize(radarImageInfoList) - 10) * .15 : 1; // 13÷-35 => .3÷2.5
+        ScaleFactor = 1; // 13÷-35 => .3÷2.5
       }
     }
     catch (Exception ex) { bpr.Error(); if (Debugger.IsAttached) Debugger.Break(); else throw; }
