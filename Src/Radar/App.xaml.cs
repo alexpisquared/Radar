@@ -92,7 +92,7 @@ public partial class App : Application
       var rpc = new RadarPicCollector();
       _ = rpc.DownloadRadarPics_MostRecent_RAIN_only(maxPicsToGet, 10);
       if (rpc.Pics.Count < maxPicsToGet)
-        rainAndUptimeMsg += ($"Not enough radar pictures have been acquired: {rpc.Pics.Count}, while {maxPicsToGet} is needed.");
+        ; // rainAndUptimeMsg += ""; // $"Not enough radar pictures have been acquired: {rpc.Pics.Count}, while {maxPicsToGet} is needed.";
       else
       {
         if (rpc.Pics[0].Measure > minRainPace)
