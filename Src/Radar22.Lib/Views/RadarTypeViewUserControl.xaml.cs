@@ -57,10 +57,14 @@ public partial class RadarTypeViewUserControl : UserControl
         });
       }
 
-      if (radarImageInfoList.Count > 1)
+      if (radarImageInfoList.Count > 0)
       {
         chkIsPlaying.Content = $"_{UrlSuffix}   {riis0.Count} imgs   {radarImageInfoList.First().ImgTime:ddd HH:mm}÷{radarImageInfoList.Last().ImgTime:HH:mm}   {Stopwatch.GetElapsedTime(sw).TotalSeconds:N1}s   {loader.CalulateSlope(radarImageInfoList):N2}↕";
-
+        ScaleFactor = AutoScale ? (loader.CalulateAvgSize(radarImageInfoList) - 10) * .15 : 1; // 13÷-35 => .3÷2.5
+      }
+      else
+      {
+        chkIsPlaying.Content = $"_{UrlSuffix}   ▄▀▄▀▄▀  NO RADAR IMAGES?!?!?!?  ▄▀▄▀▄▀ ";
         ScaleFactor = AutoScale ? (loader.CalulateAvgSize(radarImageInfoList) - 10) * .15 : 1; // 13÷-35 => .3÷2.5
       }
     }
