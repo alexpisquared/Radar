@@ -31,9 +31,14 @@ internal static class PlotViewModelHelpers
     {
       try
       {
-        ArgumentNullException.ThrowIfNull(siteFore, $"e846 {nameof(siteFore)}");
-        ArgumentNullException.ThrowIfNull(siteFore.hourlyForecastGroup, $"e846 {nameof(siteFore.hourlyForecastGroup)}");
-        ArgumentNullException.ThrowIfNull(siteFore.hourlyForecastGroup.hourlyForecast, $"e846 {nameof(siteFore.hourlyForecastGroup.hourlyForecast)}");
+        ArgumentNullException.ThrowIfNull(siteFore, $"■ e846 {nameof(siteFore)}");
+        if (siteFore.hourlyForecastGroup is null)
+        {
+          _lgr.LogWarning("■ e846 {Prop} is null. Aborting AddForecastToDB_EnvtCa.", nameof(siteFore.hourlyForecastGroup));
+          return;
+        }
+        //ArgumentNullException.ThrowIfNull(siteFore.hourlyForecastGroup, $"■ e846 {nameof(siteFore.hourlyForecastGroup)}");
+        ArgumentNullException.ThrowIfNull(siteFore.hourlyForecastGroup.hourlyForecast, $"■ e846 {nameof(siteFore.hourlyForecastGroup.hourlyForecast)}");
 
         DateTime now = DateTime.Now;
 
