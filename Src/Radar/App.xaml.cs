@@ -32,8 +32,6 @@ public partial class App : Application
     //Bpr.BeepBgn2();
 
     Current.DispatcherUnhandledException += UnhandledExceptionHndlrUI.OnCurrentDispatcherUnhandledException;     
-        
-    var logger = SerilogHelperLib.SeriLogHelper.CreateLogger<App>();
 
     try
     {
