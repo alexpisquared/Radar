@@ -15,7 +15,10 @@ public partial class App : Application
     sayUpTimeNoUI = "sayUpTimeNoUI",
     sayUpTimeShow = "sayUpTimeShow",
     showIfRainCmn = "ShowIfOnOrComingSoon";
-  static SpeechSynth? _synth = null; public static SpeechSynth Synth => _synth ??= new(new ConfigurationBuilder().AddUserSecrets<App>().Build()["AppSecrets:MagicSpeech"] ?? throw new ArgumentNullException("###################"), true, CC.EnusAriaNeural.Voice);
+
+  static Microsoft.Extensions.Logging.ILogger Logger => field ??= SerilogHelperLib.SeriLogHelper.CreateLogger<App>();
+  public static SpeechSynth Synth => field ??= new(new ConfigurationBuilder().AddUserSecrets<App>().Build()["AppSecrets:MagicSpeech"] ?? throw new ArgumentNullException("###################"), true, CC.EnusAriaNeural.Voice, lgr: Logger);
+
   protected override async void OnStartup(StartupEventArgs e)
   {
     base.OnStartup(e);
@@ -29,11 +32,8 @@ public partial class App : Application
     //Bpr.BeepBgn2();
 
     Current.DispatcherUnhandledException += UnhandledExceptionHndlrUI.OnCurrentDispatcherUnhandledException;     
-
-    //todo: use serilog:
-    AAV.Sys.Helpers.Tracer.SetupTracingOptions("Radar", new TraceSwitch("OnlyUsedWhenInConfig", "This is the trace for all               messages... but who cares?") { Level = TraceLevel.Error });
-    //tmi: WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.f} App.OnStartup() -- e.Args.Length:{e.Args.Length}, e.Args[0]:{e.Args.FirstOrDefault()}, {Environment.CommandLine}");
-
+        
+    var logger = SerilogHelperLib.SeriLogHelper.CreateLogger<App>();
 
     try
     {
@@ -114,7 +114,7 @@ public partial class App : Application
       if (IsDue(uptime))      //(args.Length > 1 && args[1].Equals("ShowLsaPopup")) ||    // show LSA all the time (2025-03):
         showLongStretchAlertPopup(uptime, rainAndUptimeMsg);
       else if (rainAndUptimeMsg.Length > 0)
-        Synth.SpeakFree(rainAndUptimeMsg, volumePercent: 26);
+        Synth.SpeakFree(rainAndUptimeMsg, volumePercent: 6);
     }
 
     return true; // show anyway in case of issues.
@@ -146,7 +146,7 @@ public partial class App : Application
 
   void showLongStretchAlertPopup(TimeSpan uptime, string rainAndUptimeMsg)
   {
-    Synth.SpeakFAF(rainAndUptimeMsg, volumePercent: 26);
+    Synth.SpeakFAF(rainAndUptimeMsg, volumePercent: 6);
     _ = new View.LongStretchAlertPopup(uptime, Synth).ShowDialog();
   }
 

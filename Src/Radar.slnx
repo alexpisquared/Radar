@@ -36,6 +36,7 @@
   <Project Path="../../AAV.Shared/Src/NetLts/PhoneAreaCoder/PhoneAreaCoder.csproj">
     <Platform Solution="Release|x64" Project="x64" />
   </Project>
+  <Project Path="../../AAV.Shared/Src/NetLts/SerilogHelperLib/SerilogHelperLib.csproj" Id="83b0af6d-dfbe-41ee-a14c-e4f90140f0c9" />
   <Project Path="../../AAV.Shared/Src/NetLts/StandardContractsLib/StandardContractsLib.csproj">
     <Platform Solution="*|x64" Project="x64" />
   </Project>

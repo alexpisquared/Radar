@@ -5,7 +5,7 @@
     <TargetFramework>net9.0-windows8.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>preview</LangVersion>
     <ApplicationIcon>RadarCircles.ico</ApplicationIcon>
     <UserSecretsId>3a4ac29a-a76b-46fd-97ab-381104015728</UserSecretsId>
     <Platforms>AnyCPU;x64</Platforms>
@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\Ambience\AmbienceLib.csproj" />
+    <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\SerilogHelperLib\SerilogHelperLib.csproj" />
     <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\StandardLib\StandardLib.csproj" />
     <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\WpfUserControlLib\WpfUserControlLib.csproj" />
     <ProjectReference Include="..\..\..\AAV.ScrSvr\Src\AlexPi.Scr\WebScrap\WebScrap.csproj" />
