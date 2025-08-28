@@ -112,7 +112,7 @@ public partial class App : Application
       if (IsDue(uptime))      //(args.Length > 1 && args[1].Equals("ShowLsaPopup")) ||    // show LSA all the time (2025-03):
         showLongStretchAlertPopup(uptime, rainAndUptimeMsg);
       else if (rainAndUptimeMsg.Length > 0)
-        Synth.SpeakFree(rainAndUptimeMsg, volumePercent: 6);
+        Synth.SpeakFAF(rainAndUptimeMsg, volumePercent: 16);
     }
 
     return true; // show anyway in case of issues.
@@ -144,7 +144,7 @@ public partial class App : Application
 
   void showLongStretchAlertPopup(TimeSpan uptime, string rainAndUptimeMsg)
   {
-    Synth.SpeakFAF(rainAndUptimeMsg, volumePercent: 6);
+    Synth.SpeakFAF(rainAndUptimeMsg, volumePercent: 16);
     _ = new View.LongStretchAlertPopup(uptime, Synth).ShowDialog();
   }
 
