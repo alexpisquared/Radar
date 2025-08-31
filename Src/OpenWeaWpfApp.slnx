@@ -27,6 +27,7 @@
     </Project>
     <Project Path="../../Util/Src/OpenVsOnTheCulpritLine/OpenVsOnTheCulpritLine.csproj" />
   </Folder>
+  <Project Path="../../AAV.Shared/Src/NetLts/SerilogHelperLib/SerilogHelperLib.csproj" />
   <Project Path="OpenWeaApp/OpenWeaApp.csproj" />
   <Project Path="OpenWeaConsoleApp/OpenWeaConsoleApp.csproj" />
   <Project Path="PixelMeasureApp/PixelMeasureApp.csproj" />

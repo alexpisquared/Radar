@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\SerilogHelperLib\SerilogHelperLib.csproj" />
     <ProjectReference Include="..\OpenMeteoClient\src\OpenMeteoClient\OpenMeteoClient.csproj" />
     <ProjectReference Include="..\OpenWeaWpfApp\OpenWeaLib.csproj" />
   </ItemGroup>
