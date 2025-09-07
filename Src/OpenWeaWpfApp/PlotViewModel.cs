@@ -122,7 +122,7 @@ public partial class PlotViewModel : ObservableValidator
 
       Model.InvalidatePlot(true);
       SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  Populated: From DB \ttook {timeTook.TotalSeconds:N1} s   \n");
-      bpr.Tick();
+      //bpr.Tick();
     }
     catch (Exception ex)
     {
