@@ -28,9 +28,9 @@
 
     <oxy:PlotView Model="{Binding Model}" Background="#111" x:Name="plotBR" Grid.RowSpan="2" Grid.ColumnSpan="3" d:IsHidden="True" />
 
-    <Grid Width="222" Height="222" Margin="90,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="2">
-      <Ellipse   Width="222" Height="222" StrokeThickness="2" Stroke="#555" Fill="#c002" HorizontalAlignment="Center"/>
-      <Grid Width="111" Height="111" RenderTransformOrigin="0.5,0.5">
+    <Grid      Width="222" Height="222" Margin="90,2,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="2">
+      <Ellipse Width="222" Height="222" StrokeThickness="1" Stroke="#00e" Fill="#6004" HorizontalAlignment="Center"/>
+      <Grid    Width="111" Height="111" RenderTransformOrigin="0.5,0.5">
         <Grid.RenderTransform>
           <TransformGroup>
             <RotateTransform Angle="{Binding WindDirn}" d:Angle="44"/>
