@@ -3,7 +3,7 @@
 public partial class RadarTypeViewUserControl : UserControl
 {
   readonly Bpr bpr = new();
-  const string _urlRoot = "https://dd.meteo.gc.ca/radar/";
+  const string _urlRoot = "https://dd.meteo.gc.ca/today/radar/";
   const double _periodMs = 32; // below 20 - no faster; 32 is OK.
   const int _pauseFrames = 50, _maxFrames = 25_000; // prevent from running forever 
   CancellationTokenSource? _cts;
