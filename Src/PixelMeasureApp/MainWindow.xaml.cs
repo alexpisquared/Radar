@@ -9,7 +9,7 @@ using PixelMeasure;
 namespace PixelMeasureApp;
 public partial class MainWindow : Window
 {
-  readonly string url = "https://dd.meteo.gc.ca/radar/DPQPE/GIF/CASKR/20230823T0854Z_MSC_Radar-DPQPE_CASKR_Rain.gif";
+  readonly string url = "https://dd.meteo.gc.ca/today/radar/DPQPE/GIF/CASKR/20251013T0000Z_MSC_Radar-DPQPE_CASKR_Rain-Contingency.gif";
   public MainWindow() => InitializeComponent();
 
   async void Image_MouseUp(object sender, MouseButtonEventArgs e)

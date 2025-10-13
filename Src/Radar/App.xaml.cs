@@ -24,7 +24,7 @@ public partial class App : Application
     base.OnStartup(e);
 
 #if DEBUG_
-    var url = "https://dd.meteo.gc.ca/radar/PRECIPET/GIF/WKR/";    //var files = System.IO.Directory.GetFiles(@"\\dd.meteo.gc.ca\radar\PRECIPET\GIF\WKR");
+    var url = "https://dd.meteo.gc.ca/today/radar/PRECIPET/GIF/WKR/";    //var files = System.IO.Directory.GetFiles(@"\\dd.meteo.gc.ca\radar\PRECIPET\GIF\WKR");
     await (new WebDirectoryLoader()).UseRegex(url);
 
     Shutdown();

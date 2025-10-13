@@ -14,7 +14,7 @@
     <!--
     <Views:RadarTypeViewUserControl UrlSuffix="PRECIPET/GIF/ONT" PreciTp="SNOW_WT.gif" StartPlaying="1" AutoScale="False" Grid.ColumnSpan="2" Grid.Column="1" VerticalAlignment="Bottom" Margin="2"/>
     <Views:RadarTypeViewUserControl UrlSuffix="PRECIPET/GIF/WKR" PreciTp="SNOW.gif"    StartPlaying="0" Grid.Column="2" HorizontalAlignment="Left" IsEnabled="False" />
-    https://dd.meteo.gc.ca/radar/PRECIPET/GIF/ONT/202202180150_ONT_PRECIPET_SNOW_WT.gif   573c300-->
+    https://dd.meteo.gc.ca/today/radar/PRECIPET/GIF/ONT/202202180150_ONT_PRECIPET_SNOW_WT.gif   573c300-->
     <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" FocusVisualStyle="{x:Null}" Background="Transparent"/>
     <Button Grid.Column="2" Content=" X " FontSize="112" VerticalAlignment="Top" HorizontalAlignment="Stretch" Click="OnClose" BorderThickness="0" Background="Transparent" Foreground="#d00"/>
   </Grid>
