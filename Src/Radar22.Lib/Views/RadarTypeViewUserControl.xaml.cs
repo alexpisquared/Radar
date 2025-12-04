@@ -87,7 +87,7 @@ public partial class RadarTypeViewUserControl : UserControl
     }
 
     lblTL.Text = rp;
-    bpr.AppStart(); // Console.Beep(200, 200);
+    bpr.AppStart(); // on scrsvr startup is an appropriate time to sound that everything is drawn and ready (2025-12-03)
   }
 
   async Task RunTimer(PeriodicTimer timer)
