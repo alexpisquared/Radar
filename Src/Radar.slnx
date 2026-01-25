@@ -24,6 +24,9 @@
       <Platform Solution="*|x86" Project="x86" />
     </Project>
   </Folder>
+  <Project Path="../../AAV.ScrSvr/Src/AlexPi.Scr/Db.EventLog/Db.EventLog.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
   <Project Path="../../AAV.ScrSvr/Src/AlexPi.Scr/WebScrap/WebScrap.csproj">
     <Platform Solution="*|x64" Project="x64" />
   </Project>
@@ -45,9 +48,6 @@
   </Project>
   <Project Path="../../AAV.Shared/Src/NetLts/WpfUserControlLib/WpfUserControlLib.csproj">
     <Platform Solution="*|x64" Project="x64" />
-  </Project>
-  <Project Path="../../TimeTracking/N50/TimeTracking50/Db.EventLog/Db.EventLog.csproj">
-    <Platform Solution="Release|x64" Project="x64" />
   </Project>
   <Project Path="../../Util/Src/OpenVsOnTheCulpritLine/OpenVsOnTheCulpritLine.csproj">
     <Platform Solution="*|x64" Project="x64" />

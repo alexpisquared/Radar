@@ -2,6 +2,8 @@
 using Db.EventLog;
 using Db.EventLog.DbModel;
 using Db.EventLog.Main;
+using EventLogLib;
+
 
 //using Microsoft.Expression.Shapes;
 using Microsoft.Win32;

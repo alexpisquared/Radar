@@ -25,12 +25,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\AAV.ScrSvr\Src\AlexPi.Scr\Db.EventLog\Db.EventLog.csproj" />
     <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\Ambience\AmbienceLib.csproj" />
     <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\SerilogHelperLib\SerilogHelperLib.csproj" />
     <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\StandardLib\StandardLib.csproj" />
     <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\WpfUserControlLib\WpfUserControlLib.csproj" />
     <ProjectReference Include="..\..\..\AAV.ScrSvr\Src\AlexPi.Scr\WebScrap\WebScrap.csproj" />
-    <ProjectReference Include="..\..\..\TimeTracking\N50\TimeTracking50\Db.EventLog\Db.EventLog.csproj" />
+    <ProjectReference Include="..\EventLogLib\EventLogLib.csproj" />
     <ProjectReference Include="..\PixelMeasure\PixelMeasure.csproj" />
   </ItemGroup>
 
