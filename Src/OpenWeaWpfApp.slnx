@@ -16,6 +16,7 @@
     <Project Path="../../AAV.Shared/Src/NetLts/Ambience/AmbienceLib.csproj">
       <Platform Solution="*|x64" Project="x64" />
     </Project>
+    <Project Path="../../AAV.Shared/Src/NetLts/ArcLib/ArcLib.csproj" />
     <Project Path="../../AAV.Shared/Src/NetLts/StandardContractsLib/StandardContractsLib.csproj">
       <Platform Solution="*|x64" Project="x64" />
     </Project>
