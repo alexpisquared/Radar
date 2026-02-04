@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows8.0</TargetFramework>
@@ -9,31 +8,27 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>Android-Weather.ico</ApplicationIcon>
   </PropertyGroup>
-
   <ItemGroup>
     <None Remove="NoDataIndicator.png" />
     <None Remove="Views\NoDataIndicator.bmp" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="Android-Weather.ico" />
   </ItemGroup>
-
   <ItemGroup>
     <!--
     //tu: OxyPlot - do not use latest ver 2.1.0 : it does not even compile!!!
     -->
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.0" />
-    <PackageReference Include="OxyPlot.Contrib" Version="2.1.0" />
-    <PackageReference Include="OxyPlot.Contrib.Wpf" Version="2.1.0" />
-    <PackageReference Include="OxyPlot.Core" Version="2.1.0" />
-    <PackageReference Include="OxyPlot.Wpf" Version="2.1.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.2" />
+    <PackageReference Include="OxyPlot.Contrib" Version="2.1.2" />
+    <PackageReference Include="OxyPlot.Contrib.Wpf" Version="2.1.2" />
+    <PackageReference Include="OxyPlot.Core" Version="2014.1.546" />
+    <PackageReference Include="OxyPlot.Wpf" Version="2014.1.546" />
     <PackageReference Include="System.Windows.Forms.DataVisualization" Version="1.0.0-prerelease.20110.1" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.2" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\StandardLib\StandardLib.csproj" />
     <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\StandardLib\StandardLib.csproj" />
@@ -41,14 +36,11 @@
     <ProjectReference Include="..\OpenWeather2022\OpenWeather2022.csproj" />
     <ProjectReference Include="..\Radar22.Lib\Radar22.Lib.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="bin\Logs\" />
   </ItemGroup>
-
   <ItemGroup>
     <Resource Include="Assets\NoDataIndicator.png" />
     <Resource Include="Views\NoDataIndicator.bmp" />
   </ItemGroup>
-
 </Project>
