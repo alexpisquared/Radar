@@ -1,4 +1,5 @@
 ﻿using OpenMeteoClient.Domain.Models;
+using OpenWeaSvc;
 
 internal static class Cnst
 {

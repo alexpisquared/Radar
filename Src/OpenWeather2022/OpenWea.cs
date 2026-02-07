@@ -1,5 +1,5 @@
 ﻿#define SaveToFile_
-namespace OpenWeather2022;
+namespace OpenWeaSvc;
 
 // PHC107         43.8374229, -79.4961442
 // Vaughan,ON ::: 43.8370636, -79.6359808
@@ -7,6 +7,12 @@ namespace OpenWeather2022;
 // Toronto,ON ::: 43.7181557, -79.5181414
 public class OpenWea
 {
+  /// <summary>
+  /// 2026-02-07 - Does not work any more. See:     https://eccc-msc.github.io/open-data/msc-data/citypage-weather/readme_citypageweather-datamart_en/
+  /// </summary>
+  /// <param name="site"></param>
+  /// <returns></returns>
+  /// <exception cref="ArgumentNullException"></exception>
   public static async Task<siteData?> GetEnvtCa(string site = "s0000458"/*toronto pearson*/) //   "s0000785_e"/*toronto island*/        }; //         "s0000773_e",/*richmond hill*/   };       // May 2020: localized to the most informative (with extremums). ... https://dd.weather.gc.ca/citypage_weather/xml/siteList.xml  
   {
     siteData? oca = default!;
@@ -23,13 +29,42 @@ public class OpenWea
       /// new: $"https://dd.weather.gc.ca/citypage_weather/ON/15/20250626T150146.979Z_MSC_CitypageWeather_{site}_en.xml"; 
       /// 
       url = $"https://dd.weather.gc.ca/citypage_weather/ON/15/20250626T150146.979Z_MSC_CitypageWeather_{site}_en.xml"; // https://dd.weather.gc.ca/citypage_weather/ON/15/20250626T150146.979Z_MSC_CitypageWeather_s0000458_en.xml
+
+      // 2026-02-07 
+      url = $"https://dd.weather.gc.ca/today/citypage_weather/ON/20/20260207T200504.872Z_MSC_CitypageWeather_{site}_en.xml"; /* works   ==> navigate to:
+      1.      https://dd.weather.gc.ca/today/citypage_weather/ON and find the latest hour in HH format.
+      2.      https://dd.weather.gc.ca/today/citypage_weather/ON/HH and find the latest file with the site code in it, like {site}_en.xml, and use that URL.
+
+      https://dd.weather.gc.ca/today/citypage_weather/ON/21/
+      ▲ === ▼
+      https://dd.weather.gc.ca/20260207/WXO-DD/citypage_weather/ON/21/
+      */
     }
 
     try
     {
       using var client = new HttpClient();
-      var response = await client.GetAsync(url).ConfigureAwait(false);
-      if (response == null || response.StatusCode == System.Net.HttpStatusCode.NotFound) return new siteData();
+
+      // navigate to:                    2026-02-07 
+      //1.      https://dd.weather.gc.ca/today/citypage_weather/ON and find the latest hour in HH format.
+      var urlBase2026 = "https://dd.weather.gc.ca/today/citypage_weather/ON";
+      HttpResponseMessage response = await client.GetAsync(urlBase2026).ConfigureAwait(false); if (response == null || response.StatusCode == System.Net.HttpStatusCode.NotFound) return new siteData();
+      var html = await response.Content.ReadAsStringAsync() ?? throw new ArgumentNullException(nameof(site));
+      var doc = new HtmlAgilityPack.HtmlDocument(); doc.LoadHtml(html);
+      var hourMatches = System.Text.RegularExpressions.Regex.Matches(doc.DocumentNode.InnerText, @"(\d{2})/");
+      string HH = hourMatches.Count > 0 ? hourMatches[^1].Groups[1].Value : "00";
+
+      //2.      https://dd.weather.gc.ca/today/citypage_weather/ON/HH and find the latest file with the site code in it, like {site}_en.xml (for example: https://dd.weather.gc.ca/today/citypage_weather/ON/21/20260207T213515.925Z_MSC_CitypageWeather_s0000458_en.xml), and use that URL
+      var urlHourDir = $"{urlBase2026}/{HH}/";
+      response = await client.GetAsync(urlHourDir).ConfigureAwait(false); if (response == null || response.StatusCode == System.Net.HttpStatusCode.NotFound) return new siteData();
+      html = await response.Content.ReadAsStringAsync() ?? throw new ArgumentNullException(nameof(site));
+      doc.LoadHtml(html);
+      var fileMatches = System.Text.RegularExpressions.Regex.Matches(doc.DocumentNode.InnerText, $@"(\S+_CitypageWeather_{site}_en\.xml)");
+      if (fileMatches.Count == 0) return new siteData();
+      string siteUrl = $"{urlHourDir}{fileMatches[^1].Groups[1].Value}";
+
+      response = await client.GetAsync(siteUrl).ConfigureAwait(false); if (response == null || response.StatusCode == System.Net.HttpStatusCode.NotFound) return new siteData();
+
       var xml = await response.Content.ReadAsStringAsync() ?? throw new ArgumentNullException(nameof(site));
 
 #if SaveToFile
@@ -38,7 +73,14 @@ public class OpenWea
 
       oca = (siteData?)new XmlSerializer(typeof(siteData)).Deserialize(new StringReader(xml));
     }
-    catch (Exception ex) { WriteLine($"■─■═■  {sw.Elapsed.TotalSeconds:N1}s  {url}  {ex.Message}  ■═■─■"); if (Debugger.IsAttached) Debugger.Break(); else { /*System.Windows.Clipboard.SetText(url);*/ throw; } }
+    catch (Exception ex)
+    {
+      WriteLine($"■─■═■  {sw.Elapsed.TotalSeconds:N1}s  {url}  {ex.Message}  ■═■─■"); if (Debugger.IsAttached) Debugger.Break();
+      else
+      { /*System.Windows.Clipboard.SetText(url);*/
+        throw;
+      }
+    }
     finally         /**/ { WriteLine($"+++++  {sw.Elapsed.TotalSeconds:N1}s  {url}  Success."); }
 
     return oca;
@@ -82,7 +124,7 @@ public class OpenWea
       };
 
       using var client = new HttpClient();
-      var response = await client.GetAsync(url).ConfigureAwait(false);
+      HttpResponseMessage? response = await client.GetAsync(url).ConfigureAwait(false);
       if (response == null || response.StatusCode != System.Net.HttpStatusCode.OK)
       {
         WriteLine($"--▄▄ {response?.StatusCode,13}  {what}  for  {url}  ■─■─■");
@@ -99,11 +141,11 @@ public class OpenWea
 #endif
       switch (what) //todo: https://docs.microsoft.com/en-us/aspnet/core/web-api/route-to-code?view=aspnetcore-6.; break ;
       {
-        case OpenWeatherCd.Forecast16: var f16 = await response.Content.ReadFromJsonAsync<RootobjectForecast16>(); f16?.list.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.sunrise)}  {UnixToDt(x.sunset)}  {x}")); break;
-        case OpenWeatherCd.CurrentWea: var pr5 = await response.Content.ReadFromJsonAsync<RootobjectCurrentWea>(); pr5?.weather.ToList().ForEach(x => WriteLine($":> {x}")); break;
+        case OpenWeatherCd.Forecast16: RootobjectForecast16? f16 = await response.Content.ReadFromJsonAsync<RootobjectForecast16>(); f16?.list.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.sunrise)}  {UnixToDt(x.sunset)}  {x}")); break;
+        case OpenWeatherCd.CurrentWea: RootobjectCurrentWea? pr5 = await response.Content.ReadFromJsonAsync<RootobjectCurrentWea>(); pr5?.weather.ToList().ForEach(x => WriteLine($":> {x}")); break;
         case OpenWeatherCd.TimeMachin: oca = await response.Content.ReadFromJsonAsync<RootobjectOneCallApi>(); break;          //WriteLine($":> {UnixToDt(oca.current.sunrise)}  {UnixToDt(oca.current.sunset)}  {oca}");          oca?.hourly.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.dt):ddd HH}  {x.temp,6:N1}  {x.feels_like,6:N1}  {x.wind_speed,5:N0}  {x}"));
         case OpenWeatherCd.OneCallApi: oca = await response.Content.ReadFromJsonAsync<RootobjectOneCallApi>(); break;          //oca?.hourly.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.dt):ddd HH}  {x.temp,6:N1}  {x.feels_like,6:N1}  {x.wind_speed,5:N0}  {x}")); oca?.minutely.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.dt):ddd HH:mm}  {x.precipitation,5:N0}  {x}"));
-        case OpenWeatherCd.Frc5Day3Hr: var d5h3 = await response.Content.ReadFromJsonAsync<RootobjectFrc5Day3Hr>(); return d5h3;          //WriteLine($":> {d5h3}");          d5h3?.list.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.dt):ddd HH}  {x.main.temp,6:N1}  {x.main.feels_like,6:N1}  {x.wind.speed,5:N0}  {x.weather[0].main,-22}  {x}"));
+        case OpenWeatherCd.Frc5Day3Hr: RootobjectFrc5Day3Hr? d5h3 = await response.Content.ReadFromJsonAsync<RootobjectFrc5Day3Hr>(); return d5h3;          //WriteLine($":> {d5h3}");          d5h3?.list.ToList().ForEach(x => WriteLine($":> {UnixToDt(x.dt):ddd HH}  {x.main.temp,6:N1}  {x.main.feels_like,6:N1}  {x.wind.speed,5:N0}  {x.weather[0].main,-22}  {x}"));
         default: throw new NotImplementedException("@@@@@@@@@@@@#############$$$$$$$$$$$$$");
       }
 
@@ -207,7 +249,6 @@ public class OpenWea
   1642423622, // 2022-01-17 07:47:02  -34 
   1642509986, // 2022-01-18 07:46:26  -36 
   1642596348, // 2022-01-19 07:45:48  -38 
-
 
     1640868706, // 2021-12-30 07:51:46  1640868706 
     1640955112, // 2021-12-31 07:51:52  86406 

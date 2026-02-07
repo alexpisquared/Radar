@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using OpenWeather2022;
+using OpenWeaSvc;
 using Pastel; //tu: https://www.nuget.org/packages/Pastel
 using StandardLib.Helpers;
 using XSD.CLS;

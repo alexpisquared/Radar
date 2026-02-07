@@ -1,4 +1,5 @@
 ﻿using OpenMeteoClient.Infrastructure;
+using OpenWeaSvc;
 namespace OpenWeaWpfApp;
 public static class AppStartHelper
 {
