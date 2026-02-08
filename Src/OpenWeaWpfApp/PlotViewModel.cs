@@ -171,7 +171,7 @@ public partial class PlotViewModel : ObservableValidator
         ArgumentNullException.ThrowIfNull(_openMeteo.Current);
         ArgumentNullException.ThrowIfNull(_openMeteo.Daily);
 
-        TitleO = $"OMt {_openMeteo.Current.Time:HH:mm}: {_openMeteo.Current.Temperature2m:+##.#;-##.#;0}°  +  {_openMeteo.Current.WindSpeed10m * _ms2kh / _wk:N0} k/h  =  {_openMeteo.Current.ApparentTemperature:+##;-##;0}°";
+        TitleO = $"OMt {_openMeteo.Current.Time:HH:mm}: {_openMeteo.Current.Temperature2m:+##.#;-##.#;0}°  +  {_openMeteo.Current.WindSpeed10m /** _ms2kh / _wk*/:N0} k/h  =  {_openMeteo.Current.ApparentTemperature:+##;-##;0}°";
         WindDirn = _openMeteo.Current.WindDirection10m;
         WindVeloKmHr = (float)_openMeteo.Current.WindSpeed10m; //  * _ms2kh / _wk;
         WindGustKmHr = _openMeteo.Current.WindGusts10m; //  * _ms2kh / _wk;
