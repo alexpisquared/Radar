@@ -4,6 +4,7 @@ using OpenMeteoClient.Domain.Models;
 using OpenWeaSvc;
 
 namespace OpenWeaWpfApp;
+
 public partial class PlotViewModel : ObservableValidator
 {
   #region fields
@@ -100,12 +101,17 @@ public partial class PlotViewModel : ObservableValidator
   }
 
   [ObservableProperty] string lastBuild = VersionHelper.CurVerStr;
+  [ObservableProperty] string titleM = "";
+  [ObservableProperty] string titleV = "";
+  [ObservableProperty] string titleO = "";
+
   [RelayCommand]
   public async Task PopulateAll(object? obj)
   {
     if (obj is null) bpr.Start();
 
     try { await PopulateScatModel(obj); } catch (Exception ex) { ex.Pop(_lgr); }
+
     try { await PrevForecastFromDb(obj); } catch (Exception ex) { ex.Pop(_lgr); }      //_lgr.Log(LogLevel.Error, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
   }
   [RelayCommand]
@@ -115,7 +121,7 @@ public partial class PlotViewModel : ObservableValidator
     if (!_store) return;
     try
     {
-      var (vgn, mis, omt, timeTook) = await GetPastForecastFromDB();
+      (List<PointFore>? vgn, List<PointFore>? mis, List<PointFore>? omt, TimeSpan timeTook) = await GetPastForecastFromDB();
 
       //tmi: mis.ForEach(r => SctrPtTPFMis.Add(new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h")));
       vgn.ForEach(r => SctrPtTPFVgn.Add(CreateScatterPoint(r, "vgn")));
@@ -138,7 +144,6 @@ public partial class PlotViewModel : ObservableValidator
   }
 
   [RelayCommand]
-  [Obsolete]
   async Task PopulateScatModel(object? obj)
   {
     if (obj is null) bpr.Click();
@@ -146,12 +151,13 @@ public partial class PlotViewModel : ObservableValidator
     _ = Task.Run(async () => await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24YYZ)).ContinueWith(_ => { DrawPast24hrEC(Cnst.pearson, _.Result); _pastPea = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
     _ = Task.Run(async () => await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24OKN)).ContinueWith(_ => { DrawPast24hrEC(Cnst.kingCty, _.Result); _pastKng = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
 
-    //todo: fix
-    _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._mississ)).ContinueWith(_ => { DrawFore24hrEC(Cnst._mississ, _.Result); _foreMis = _.Result; Model.Title = $"     Miss {(_foreMis?.currentConditions)?.dateTime[1].hour.Value}:{(_foreMis?.currentConditions)?.dateTime[1].minute} {float.Parse(_foreMis?.currentConditions?.temperature?.Value ?? "-999"),5:+##.#;-##.#;0}° {float.Parse(_foreMis?.currentConditions?.windChill?.Value ?? _foreMis?.currentConditions?.temperature?.Value ?? "-999"),4:+##;-##;0}° {_foreMis?.currentConditions?.wind?.speed?.Value,4} {(_foreMis?.currentConditions?.wind)?.speed.units}      {Model?.Title}  "; }, TaskScheduler.FromCurrentSynchronizationContext());
-    //_ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._richmhl)).ContinueWith(_ => { DrawFore24hrEC(Cnst._richmhl, _.Result); _foreVgn = _.Result; Model.Title = $"     Vaug {(_foreVgn?.currentConditions)?.dateTime[1].hour.Value}:{(_foreVgn?.currentConditions)?.dateTime[1].minute} {float.Parse(_foreVgn?.currentConditions?.temperature?.Value ?? "-999"),5:+##.#;-##.#;0}° {float.Parse(_foreVgn?.currentConditions?.windChill?.Value ?? _foreVgn?.currentConditions?.temperature?.Value ?? "-999"),4:+##;-##;0}° {_foreVgn?.currentConditions?.wind?.speed?.Value,4} {(_foreVgn?.currentConditions?.wind)?.speed.units}      {Model?.Title}  "; }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._mississ)).ContinueWith(_ => { DrawFore24hrEC(Cnst._mississ, _.Result); _foreMis = _.Result; TitleM = SetSiteCurrentConditions(_.Result?.currentConditions, _.Result?.currentConditions?.dateTime, "Miss"); }, TaskScheduler.FromCurrentSynchronizationContext());
+    _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._richmhl)).ContinueWith(_ => { DrawFore24hrEC(Cnst._richmhl, _.Result); _foreVgn = _.Result; TitleV = SetSiteCurrentConditions(_.Result?.currentConditions, _.Result?.currentConditions?.dateTime, "Vaug"); }, TaskScheduler.FromCurrentSynchronizationContext());
     //_ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._toronto)).ContinueWith(_ => { DrawFore24hrEC(Cnst._toronto, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
     //_ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._torIsld)).ContinueWith(_ => { DrawFore24hrEC(Cnst._torIsld, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
     //_ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._markham)).ContinueWith(_ => { DrawFore24hrEC(Cnst._markham, _.Result); }, TaskScheduler.FromCurrentSynchronizationContext());
+
+    //Model.Title = "°C";
 
     //_ = Task.Run<object>(async () => await _openMeteoSvc.GetForecastAsync(43.83, -79.5) ?? throw new ArgumentNullException(nameof(obj))).ContinueWith(async _ =>
     {
@@ -165,7 +171,7 @@ public partial class PlotViewModel : ObservableValidator
         ArgumentNullException.ThrowIfNull(_openMeteo.Current);
         ArgumentNullException.ThrowIfNull(_openMeteo.Daily);
 
-        Model.Title = $"     OMt {_openMeteo.Current.Time:HH:mm} {_openMeteo.Current.Temperature2m,5:+##.#;-##.#;0}° {_openMeteo.Current.ApparentTemperature,4:+##;-##;0}° {_openMeteo.Current.WindSpeed10m * _ms2kh / _wk,4:N0} k/h       {Model.Title}";
+        TitleO = $"OMt {_openMeteo.Current.Time:HH:mm}: {_openMeteo.Current.Temperature2m:+##.#;-##.#;0}°  +  {_openMeteo.Current.WindSpeed10m * _ms2kh / _wk:N0} k/h  =  {_openMeteo.Current.ApparentTemperature:+##;-##;0}°";
         WindDirn = _openMeteo.Current.WindDirection10m;
         WindVeloKmHr = (float)_openMeteo.Current.WindSpeed10m; //  * _ms2kh / _wk;
         WindGustKmHr = _openMeteo.Current.WindGusts10m; //  * _ms2kh / _wk;
@@ -225,7 +231,7 @@ public partial class PlotViewModel : ObservableValidator
 
       if (_openWeather?.current is null) // always null since became a paid service in 2024!!!!!
       {
-        //Model.Title = $"_openWeather.current is null ■ {Model.Title}";
+        //Model.Title = $"_openWeather.current is null ■ ";
         //WindDirn = 0;
         //WindVeloKmHr = 0;
         //WindGustKmHr = 0;
@@ -236,7 +242,7 @@ public partial class PlotViewModel : ObservableValidator
       }
       else //todo: replace assignments with alternative sources:
       {
-        Model.Title = $"OWA {OpenWea.UnixToDt(_openWeather.current.dt):HH:mm} {_openWeather.current.temp,5:+##.#;-##.#;0}° {_openWeather.current.feels_like,4:+##;-##;0}° {_openWeather.current.wind_speed * _ms2kh / _wk,5:N1} k/h   \t {Model.Title}";
+        Model.Title = $"OWA {OpenWea.UnixToDt(_openWeather.current.dt):HH:mm} {_openWeather.current.temp,5:+##.#;-##.#;0}° {_openWeather.current.feels_like,4:+##;-##;0}° {_openWeather.current.wind_speed * _ms2kh / _wk,5:N1} k/h   \t ";
         WindDirn = _openWeather.current.wind_deg;
         WindVeloKmHr = _openWeather.current.wind_speed * _ms2kh / _wk;
         WindGustKmHr = _openWeather.current.wind_gust * _ms2kh / _wk;
@@ -255,7 +261,7 @@ public partial class PlotViewModel : ObservableValidator
           OwaLoclPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 100));
         });
 
-        var day0 = _openWeather.daily.First();
+        Daily day0 = _openWeather.daily.First();
         Sunrise_Set.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), -000));
         Sunrise_Set.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), +800));
         Sunrise_Set.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), +800));
@@ -286,6 +292,10 @@ public partial class PlotViewModel : ObservableValidator
     _ = await DelayedStoreToDbIf();
   }
 
+  string SetSiteCurrentConditions(currentConditionsType? cc, dateStampType[]? dt, string siteNick) =>
+        dt is { Length: > 1 } ?
+          $"{siteNick} {dt[1].hour.Value}:{dt[1].minute}:  {float.Parse(cc?.temperature?.Value ?? "-999"):+##.#;-##.#;0}°  +  {cc?.wind?.speed?.Value} {cc?.wind?.speed.units}  =  {float.Parse(cc?.windChill?.Value ?? cc?.temperature?.Value ?? "-999"):+##;-##;0}°" :
+          $"{siteNick} .. is NUL";
   async Task<(List<PointFore> vgn, List<PointFore> mis, List<PointFore> omt, TimeSpan timeTook)> GetPastForecastFromDB()
   {
     var startedAt = Stopwatch.GetTimestamp();
@@ -297,21 +307,21 @@ public partial class PlotViewModel : ObservableValidator
     _isDbBusy = true;
     try
     {
-      var now = DateTime.Now;
-      var ytd = now.AddHours(-24);
-      var dby = now.AddHours(-48); // forecast for the past 24 hours is was done in the past 48 hours ... kind of.
-      var dbx = _dbh.WeatherxContext;
+      DateTime now = DateTime.Now;
+      DateTime ytd = now.AddHours(-24);
+      DateTime dby = now.AddHours(-48); // forecast for the past 24 hours is was done in the past 48 hours ... kind of.
+      WeatherxContext dbx = _dbh.WeatherxContext;
 
       //if (Environment.UserDomainName != "RAZER1") try { _dbx.EnsureCreated22(); } catch (Exception ex) { _lgr.Log(LogLevel.Trace, $"■─■─■ {ex.Message} ■─■─■"); if (Debugger.IsAttached) Debugger.Break(); else _ = MessageBox.Show($"{ex} ■ ■ ■", $"■ ■ ■ {ex.Message}", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.ServiceNotification); }
       //_lgr.Log(LogLevel.Trace, $"■97 {dbx.Database.GetConnectionString()}"); // 480ms
 
-      var vgn = await dbx.PointFore.Where(r => r.SrcId == "eca" && r.SiteId == Cnst._vgn && r.ForecastedAt < r.ForecastedFor && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).OrderBy(r => r.ForecastedFor).ToListAsync();
-      var mis = await dbx.PointFore.Where(r => r.SrcId == "eca" && r.SiteId == Cnst._mis && r.ForecastedAt < r.ForecastedFor && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).OrderBy(r => r.ForecastedFor).ToListAsync();
-      var omt = await dbx.PointFore.Where(r => r.SrcId == "omt" && r.SiteId == Cnst._phc && r.ForecastedAt < r.ForecastedFor && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).OrderBy(r => r.ForecastedFor).ToListAsync();
+      List<PointFore> vgn = await dbx.PointFore.Where(r => r.SrcId == "eca" && r.SiteId == Cnst._vgn && r.ForecastedAt < r.ForecastedFor && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).OrderBy(r => r.ForecastedFor).ToListAsync();
+      List<PointFore> mis = await dbx.PointFore.Where(r => r.SrcId == "eca" && r.SiteId == Cnst._mis && r.ForecastedAt < r.ForecastedFor && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).OrderBy(r => r.ForecastedFor).ToListAsync();
+      List<PointFore> omt = await dbx.PointFore.Where(r => r.SrcId == "omt" && r.SiteId == Cnst._phc && r.ForecastedAt < r.ForecastedFor && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).OrderBy(r => r.ForecastedFor).ToListAsync();
 
       if (Debugger.IsAttached)
       {
-        var sql = dbx.PointFore.Where(r => r.SrcId == "eca" && r.SiteId == Cnst._vgn && r.ForecastedAt < r.ForecastedFor && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).OrderBy(r => r.ForecastedFor);
+        IOrderedQueryable<PointFore> sql = dbx.PointFore.Where(r => r.SrcId == "eca" && r.SiteId == Cnst._vgn && r.ForecastedAt < r.ForecastedFor && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).OrderBy(r => r.ForecastedFor);
         WriteLine(((Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable<DB.WeatherX.PwrTls.Models.PointFore>)sql).DebugView.Query);
       }
 
@@ -332,10 +342,10 @@ public partial class PlotViewModel : ObservableValidator
     var almanacAll = ((climatedata?)new XmlSerializer(typeof(climatedata)).Deserialize(fileStream));
     Clipboard.SetText(JsonStringSerializer.Save(almanacAll)); // paste to ClimatedataStore.Json
 #else
-    var almanacAll = JsonStringSerializer.Load<ClimateData>(ClimatedataStore.Json ?? "");
+    ClimateData? almanacAll = JsonStringSerializer.Load<ClimateData>(ClimatedataStore.Json ?? "");
 #endif
 
-    var almanac = almanacAll?.month[DateTime.Today.Month - 1].day[DateTime.Today.Day - 1]; // ~50 ms
+    climatedataMonthDay? almanac = almanacAll?.month[DateTime.Today.Month - 1].day[DateTime.Today.Day - 1]; // ~50 ms
 
     ArgumentNullException.ThrowIfNull(almanac, $"@1232 {nameof(sitedata)}");
 
@@ -351,7 +361,7 @@ public partial class PlotViewModel : ObservableValidator
     YAxsRMin = -10 * pad;
     YAxsRMax = (YAxisMax - YAxisMin - pad) * 10;
 
-    var now = DateTime.Now;
+    DateTime now = DateTime.Now;
     OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(-2)), _extrMax));
     OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(+8)), _extrMax));
     OwaTempExtr.Add(new DataPoint(DateTimeAxis.ToDouble(now.AddDays(+8)), NormTMax));
@@ -378,8 +388,8 @@ public partial class PlotViewModel : ObservableValidator
 
     var minimumTimeToStoreInHr = 6;
 
-    var lastDbStoreTime = await PlotViewModelHelpers.LastTimeStoredToDb(_lgr, _dbh.WeatherxContext);
-    var timeSinceLastDbStore = DateTimeOffset.Now - lastDbStoreTime;
+    DateTimeOffset lastDbStoreTime = await PlotViewModelHelpers.LastTimeStoredToDb(_lgr, _dbh.WeatherxContext);
+    TimeSpan timeSinceLastDbStore = DateTimeOffset.Now - lastDbStoreTime;
     if (timeSinceLastDbStore.TotalHours < minimumTimeToStoreInHr)
     {
       SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  Store to DB postponed till after {lastDbStoreTime.AddHours(minimumTimeToStoreInHr):H:mm}. \n");

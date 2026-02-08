@@ -3,7 +3,7 @@
              xmlns:vms="clr-namespace:OpenWeaWpfApp" d:DataContext="{d:DesignInstance Type={x:Type vms:PlotViewModel}}"
              xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
              Loaded="OnLoaded" MouseLeftButtonDown="OnDragMove" 
-             d:DesignHeight="450" d:DesignWidth="1800">
+             d:DesignHeight="450" d:DesignWidth="1800" Background="#000" >
   <Grid>
     <Grid.Resources>
       <Color x:Key="Vgn">#08f</Color>
@@ -26,9 +26,9 @@
       <RowDefinition Height="1*"/>
     </Grid.RowDefinitions>
 
-    <oxy:PlotView Model="{Binding Model}" Background="#111" x:Name="plotBR" Grid.RowSpan="2" Grid.ColumnSpan="3" d:IsHidden="True" />
+    <oxy:PlotView Model="{Binding Model}" Background="#000" x:Name="plotBR" Grid.RowSpan="2" Grid.ColumnSpan="3" d:IsHidden="True" Margin="0 42 0 0" />
 
-    <Grid      Width="222" Height="222" Margin="90,2,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="2">
+    <Grid      Width="222" Height="222" Margin="90,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="2">
       <Ellipse Width="222" Height="222" StrokeThickness="1" Stroke="#00e" Fill="#6004" HorizontalAlignment="Center"/>
       <Grid    Width="111" Height="111" RenderTransformOrigin="0.5,0.5">
         <Grid.RenderTransform>
@@ -286,7 +286,7 @@
         <Image Grid.Column="41" Source="{Binding OpnWeaIco3[39]}" d:Source="http://openweathermap.org/img/wn/02d@2x.png" />
       </Grid>-->
 
-    <TextBlock Text="{Binding SubHeader}" HorizontalAlignment="Left" Foreground="#888" Margin="70 15" VerticalAlignment="Bottom" Grid.RowSpan="3" Grid.ColumnSpan="3" d:Text="SubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeader" />
+    <TextBlock Text="{Binding SubHeader}" HorizontalAlignment="Left" Foreground="#888" Margin="70 15" VerticalAlignment="Bottom" Grid.RowSpan="3" Grid.ColumnSpan="3" d:Text="■ ■ ■ ■ SubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeaderSubHeader" />
 
     <Menu Margin="0,0,8,0" FontStyle="Oblique" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent" Foreground="#dd0" Grid.Column="0" Grid.ColumnSpan="3">
       <Button    Content="Populate All" IsDefault="True" Click="OnPoplte" />
@@ -327,6 +327,12 @@
     </Viewbox>
 
     <TextBlock Text="{Binding LastBuild}" Foreground="#08f" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="1" Margin="232 0" d:Text="1231231" />
+
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="0" >
+      <TextBlock Text="{Binding TitleV}" Foreground="#08f" d:Text="1231231" Margin="15 5" FontSize="22" />
+      <TextBlock Text="{Binding TitleM}" Foreground="#0a0" d:Text="1231231" Margin="15 5" FontSize="22" />
+      <TextBlock Text="{Binding TitleO}" Foreground="#cc0" d:Text="1231231" Margin="15 5" FontSize="22" />
+    </StackPanel>
 
   </Grid>
 </UserControl>
