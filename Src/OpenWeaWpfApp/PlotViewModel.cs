@@ -156,9 +156,9 @@ public partial class PlotViewModel : ObservableValidator
     var hh = dt[1].hour.Value;
     var mm = dt[1].minute;
 
-    return FormatCurrentConditions(siteNick, hh, mm);
+    return FormatCurrentConditions(siteNick, hh, mm, CurTempReal, CurTempFeel, CurWindKmHr);
   }
-  string FormatCurrentConditions(string siteNick, string hh, string mm) => $"{siteNick} {hh}:{mm}:  {CurTempReal}  +  {CurWindKmHr}  =  {CurTempFeel}"; [RelayCommand]
+  static string FormatCurrentConditions(string siteNick, string hh, string mm, string CurTempReal, string CurTempFeel, string CurWindKmHr) => $"{siteNick} {hh}:{mm}:  {CurTempReal}  +  {CurWindKmHr}  =  {CurTempFeel}"; [RelayCommand]
   async Task PopulateScatModel(object? obj)
   {
     _ = Task.Run(async () => await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24YYZ)).ContinueWith(_ => { DrawPast24hrEC(Cnst.pearson, _.Result); _pastPea = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
@@ -174,15 +174,7 @@ public partial class PlotViewModel : ObservableValidator
       ArgumentNullException.ThrowIfNull(_openMeteo.Current);
       ArgumentNullException.ThrowIfNull(_openMeteo.Daily);
 
-      TitleO = $"OMt {_openMeteo.Current.Time:HH:mm}: {_openMeteo.Current.Temperature2m:+##.#;-##.#;0}°  +  {_openMeteo.Current.WindSpeed10m /** _ms2kh / _wk*/:N0} k/h  =  {_openMeteo.Current.ApparentTemperature:+##;-##;0}°";
-
-      //await Task.Delay(2_500); 
-
-      CurTempReal = $"{_openMeteo.Current.Temperature2m:+##.#;-##.#;0}°";
-      CurTempFeel = $"{_openMeteo.Current.ApparentTemperature:+##;-##;0}°";
-      CurWindKmHr = $"{_openMeteo.Current.WindSpeed10m:N0} k/h ";
-      CurSrcColor = "#cc0";
-      TitleO = FormatCurrentConditions("oMet", _openMeteo.Current.Time.Hour.ToString(), _openMeteo.Current.Time.Minute.ToString("0#"));
+      TitleO = FormatCurrentConditions("oMet", _openMeteo.Current.Time.Hour.ToString(), _openMeteo.Current.Time.Minute.ToString("0#"), $"{_openMeteo.Current.Temperature2m:+##.#;-##.#;0}°", $"{_openMeteo.Current.ApparentTemperature:+##;-##;0}°", $"{_openMeteo.Current.WindSpeed10m:N0} k/h ");
 
       WindDirn = _openMeteo.Current.WindDirection10m;
       WindVeloKmHr = _openMeteo.Current.WindSpeed10m; //  * _ms2kh / _wk;
