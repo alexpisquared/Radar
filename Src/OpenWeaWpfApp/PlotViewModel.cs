@@ -2,6 +2,7 @@
 using OpenMeteoClient.Application.Interfaces;
 using OpenMeteoClient.Domain.Models;
 using OpenWeaSvc;
+using static AmbienceLib.SpeechSynth;
 
 namespace OpenWeaWpfApp;
 
@@ -150,9 +151,14 @@ public partial class PlotViewModel : ObservableValidator
     CurWindKmHr = $"{cc?.wind?.speed?.Value} {cc?.wind?.speed.units}";
     CurSrcColor = siteNick switch { "Miss" => "#080", "Vaug" => "#08f", _ => "#dd0" };
 
-    return dt is { Length: > 1 } ? $"{siteNick} {dt[1].hour.Value}:{dt[1].minute}:  {CurTempReal}  +  {CurWindKmHr}  =  {CurTempFeel}" : $"{siteNick} .. is NUL";
+    if (dt is null || dt.Length < 2) return $"{siteNick} .. is NUL";
+
+    var hh = dt[1].hour.Value;
+    var mm = dt[1].minute;
+
+    return FormatCurrentConditions(siteNick, hh, mm);
   }
-  [RelayCommand]
+  string FormatCurrentConditions(string siteNick, string hh, string mm) => $"{siteNick} {hh}:{mm}:  {CurTempReal}  +  {CurWindKmHr}  =  {CurTempFeel}"; [RelayCommand]
   async Task PopulateScatModel(object? obj)
   {
     _ = Task.Run(async () => await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24YYZ)).ContinueWith(_ => { DrawPast24hrEC(Cnst.pearson, _.Result); _pastPea = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
@@ -169,12 +175,18 @@ public partial class PlotViewModel : ObservableValidator
       ArgumentNullException.ThrowIfNull(_openMeteo.Daily);
 
       TitleO = $"OMt {_openMeteo.Current.Time:HH:mm}: {_openMeteo.Current.Temperature2m:+##.#;-##.#;0}°  +  {_openMeteo.Current.WindSpeed10m /** _ms2kh / _wk*/:N0} k/h  =  {_openMeteo.Current.ApparentTemperature:+##;-##;0}°";
+
+      //await Task.Delay(2_500); 
+
+      CurTempReal = $"{_openMeteo.Current.Temperature2m:+##.#;-##.#;0}°";
+      CurTempFeel = $"{_openMeteo.Current.ApparentTemperature:+##;-##;0}°";
+      CurWindKmHr = $"{_openMeteo.Current.WindSpeed10m:N0} k/h ";
+      CurSrcColor = "#cc0";
+      TitleO = FormatCurrentConditions("oMet", _openMeteo.Current.Time.Hour.ToString(), _openMeteo.Current.Time.Minute.ToString("0#"));
+
       WindDirn = _openMeteo.Current.WindDirection10m;
       WindVeloKmHr = _openMeteo.Current.WindSpeed10m; //  * _ms2kh / _wk;
       WindGustKmHr = _openMeteo.Current.WindGusts10m; //  * _ms2kh / _wk;
-                                                      //CurTempReal = $"{_openMeteo.Current.Temperature2m:+#.#;-#.#;0}°";
-                                                      //CurTempFeel = $"{_openMeteo.Current.ApparentTemperature:+#;-#;0}°";
-                                                      //CurWindKmHr = $"{WindVeloKmHr:N1}";
 
       for (var i = 0; i < _openMeteo.Hourly?.Time.Count; i++)
       {
@@ -219,6 +231,60 @@ public partial class PlotViewModel : ObservableValidator
     SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  OMt  \n");
 
     //await DelayedStoreToDbIf(); // ERR: A second operation was started on this context instance before a previous operation completed. 
+
+
+    //_ = Task.Run<object>(async () => await _opnwea.GetIt__(_cfg["AppSecrets:MagicWeather"]!, OpenWea.OpenWeatherCd.OneCallApi) ?? throw new ArgumentNullException(nameof(obj))).ContinueWith(async _ =>
+    {
+#if PaidForSrcForOWA // left for demo only
+      _openWeather = await _opnwea.GetIt__(_cfg["AppSecrets:MagicWeather"]!, OpenWea.OpenWeatherCd.OneCallApi) as RootobjectOneCallApi; //_.Result as RootobjectOneCallApi; ArgumentNullException.ThrowIfNull(_openWeather); // PHC107
+      if (_openWeather?.current is not null) // always null since became a paid service in 2024!!!!!
+      {
+        Model.Title = $"OWA {OpenWea.UnixToDt(_openWeather.current.dt):HH:mm} {_openWeather.current.temp,5:+##.#;-##.#;0}° {_openWeather.current.feels_like,4:+##;-##;0}° {_openWeather.current.wind_speed * _ms2kh / _wk,5:N1} k/h   \t ";
+        WindDirn = _openWeather.current.wind_deg;
+        WindVeloKmHr = _openWeather.current.wind_speed * _ms2kh / _wk;
+        WindGustKmHr = _openWeather.current.wind_gust * _ms2kh / _wk;
+        CurTempReal = $"{_openWeather.current.temp:+#.#;-#.#;0}°";
+        CurTempFeel = $"{_openWeather.current.feels_like:+#;-#;0}°";
+        CurWindKmHr = $"{WindVeloKmHr:N1}";
+        OpnWeaIcom = $"http://openweathermap.org/img/wn/{_openWeather.current.weather.First().icon}@2x.png";
+
+        for (var i = 0; i < _openWeather.daily.Length; i++) OpnWeaIcoA.Add($"http://openweathermap.org/img/wn/{_openWeather.daily[i].weather[0].icon}@2x.png");
+
+        _openWeather.hourly.ToList().ForEach(x =>
+        {
+          OwaLoclTemp.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.temp));
+          OwaLoclFeel.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.feels_like));
+          OwaLoclGust.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.wind_gust * _ms2kh));
+          OwaLoclPopr.Add(new DataPoint(DateTimeAxis.ToDouble(OpenWea.UnixToDt(x.dt)), x.pop * 100));
+        });
+
+        Daily day0 = _openWeather.daily.First();
+        Sunrise_Set.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), -000));
+        Sunrise_Set.Add(new DataPoint(OpenWea.UnixToDt(day0.sunrise).AddDays(-1).ToOADate(), +800));
+        Sunrise_Set.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), +800));
+        Sunrise_Set.Add(new DataPoint(OpenWea.UnixToDt(day0.sunset).AddDays(-1).ToOADate(), -000));
+        _openWeather.daily.ToList().ForEach(x =>
+        {
+          Sunrise_Set.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), -000));
+          Sunrise_Set.Add(new DataPoint(OpenWea.UnixToDt(x.sunrise).ToOADate(), +800));
+          Sunrise_Set.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), +800));
+          Sunrise_Set.Add(new DataPoint(OpenWea.UnixToDt(x.sunset).ToOADate(), -000));
+        });
+
+        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate());        /*        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 7.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 6.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 5.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 4.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 3.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);       DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 2.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() - 1.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 0.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 1.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 2.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 3.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 4.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 5.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 6.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        DrawSunSinusoid(OpenWea.UnixToDt(day0.sunrise).ToOADate() + 7.0 / 24);    await Task.Delay(2_00); Model.InvalidatePlot(true); await Task.Delay(2_00); Model.InvalidatePlot(true);        */
+      }
+#endif
+      var forecast5day3hr = await _opnwea.GetIt__(_cfg["AppSecrets:MagicWeather"]!, OpenWea.OpenWeatherCd.Frc5Day3Hr) as RootobjectFrc5Day3Hr; // FREE
+      if (forecast5day3hr != null)
+      {
+        DrawWeatherIcons(forecast5day3hr);
+        DrawMainMeteoMeasurementLines(_openWeather, forecast5day3hr);
+      }
+
+      await GetDays(7);
+      Model.InvalidatePlot(true);
+      SmartAdd($"{(DateTime.Now - _startedAt).TotalSeconds,6:N1}\t  OWA  \n");
+    }//, TaskScheduler.FromCurrentSynchronizationContext());
 
     _ = await DelayedStoreToDbIf();
   }
@@ -495,8 +561,8 @@ public partial class PlotViewModel : ObservableValidator
       //Model.Series.Add(new LineSeries { ItemsSource = ECaToroTemp, Color = tot, StrokeThickness = 5.0, Title = "ec TO T", LineStyle = LineStyle.LongDash });
       //Model.Series.Add(new LineSeries { ItemsSource = ECaTIslTemp, Color = tit, StrokeThickness = 1.0, Title = "ec TI T", LineStyle = LineStyle.Dot });
       //same as VA: Model.Series.Add(new LineSeries { ItemsSource = ECaMrkhTemp, Color = vgn, StrokeThickness = 2.0, Title = "ec MA T", LineStyle = LineStyle.Dash, InterpolationAlgorithm = IA });
-      Model.Series.Add(new LineSeries { ItemsSource = ECaMissTemp, Color = mis, StrokeThickness = 3.0, Title = "ec Mi T", LineStyle = LineStyle.LongDashDotDot });
-      Model.Series.Add(new LineSeries { ItemsSource = ECaVghnTemp, Color = vgn, StrokeThickness = 3.0, Title = "ec VA T", LineStyle = LineStyle.Dash });
+      Model.Series.Add(new LineSeries { ItemsSource = ECaVghnTemp, Color = vgn, StrokeThickness = 4.0, Title = "ec VA T", LineStyle = LineStyle.Dash });
+      Model.Series.Add(new LineSeries { ItemsSource = ECaMissTemp, Color = mis, StrokeThickness = 2.0, Title = "ec Mi T", LineStyle = LineStyle.Dash });
 
       if (SctrPtTPFVgn.Count >= 0) Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFVgn, Title = "ECa vgn", MarkerStroke = vgn, MarkerFill = OxyColors.Transparent, MarkerType = MarkerType.Circle });
       //if (SctrPtTPFMis.Count >= 0) Model.Series.Add(new ScatterSeries { ItemsSource = SctrPtTPFMis, Title = "ECa mis", MarkerStroke = mis, MarkerFill = OxyColors.Transparent, MarkerType = MarkerType.Circle });
