@@ -134,11 +134,11 @@ public class OpenWea
       HttpResponseMessage? response = await client.GetAsync(url).ConfigureAwait(false);
       if (response == null || response.StatusCode != System.Net.HttpStatusCode.OK)
       {
-        WriteLine($"--▄▄ {response?.StatusCode,13}  {what}  for  {url}  ■─■─■");
+        WriteLine($"--▄▄ {response.StatusCode,13}  {what}  for  {url}  ■─■─■");
         return new RootobjectOneCallApi(); // throw new UnauthorizedAccessException("@"); //
       }
       else
-        WriteLine($"++▀▀ {response?.StatusCode,13}  {what}  for  {url}  ■─■─■");
+        WriteLine($"++▀▀ {response.StatusCode,13}  {what}  for  {url}  ■─■─■");
 
 #if NotSaveToFile
       var json = await response.Content.ReadAsStringAsync();
