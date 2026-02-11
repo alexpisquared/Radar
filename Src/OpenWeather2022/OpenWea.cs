@@ -53,14 +53,21 @@ public class OpenWea
       var doc = new HtmlAgilityPack.HtmlDocument(); doc.LoadHtml(html);
       var hourMatches = System.Text.RegularExpressions.Regex.Matches(doc.DocumentNode.InnerText, @"(\d{2})/");
       string HH = hourMatches.Count > 0 ? hourMatches[^1].Groups[1].Value : "00";
+      int kk = 2;
 
       //2.      https://dd.weather.gc.ca/today/citypage_weather/ON/HH and find the latest file with the site code in it, like {site}_en.xml (for example: https://dd.weather.gc.ca/today/citypage_weather/ON/21/20260207T213515.925Z_MSC_CitypageWeather_s0000458_en.xml), and use that URL
       var urlHourDir = $"{urlBase2026}/{HH}/";
+    again:
       response = await client.GetAsync(urlHourDir).ConfigureAwait(false); if (response == null || response.StatusCode == System.Net.HttpStatusCode.NotFound) return new siteData();
       html = await response.Content.ReadAsStringAsync() ?? throw new ArgumentNullException(nameof(site));
       doc.LoadHtml(html);
       var fileMatches = System.Text.RegularExpressions.Regex.Matches(doc.DocumentNode.InnerText, $@"(\S+_CitypageWeather_{site}_en\.xml)");
-      if (fileMatches.Count == 0) return new siteData();
+      if (fileMatches.Count == 0)
+        if (hourMatches.Count > kk - 1)
+        { urlHourDir = $"{urlBase2026}/{hourMatches[^kk++].Groups[1].Value}/"; goto again; }
+        else
+          return new siteData();
+
       string siteUrl = $"{urlHourDir}{fileMatches[^1].Groups[1].Value}";
 
       response = await client.GetAsync(siteUrl).ConfigureAwait(false); if (response == null || response.StatusCode == System.Net.HttpStatusCode.NotFound) return new siteData();

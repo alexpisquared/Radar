@@ -178,8 +178,7 @@ public partial class PlotViewModel : ObservableValidator
       ArgumentNullException.ThrowIfNull(_openMeteo.Daily);
 
       TitleO = FormatCurrentConditions("oMet", _openMeteo.Current.Time.Hour.ToString(), _openMeteo.Current.Time.Minute.ToString("0#"), $"{_openMeteo.Current.Temperature2m:+##.#;-##.#;0}°", $"{_openMeteo.Current.ApparentTemperature:+##;-##;0}°", $"{_openMeteo.Current.WindSpeed10m:N0} k/h ");
-      if(TitleV.Contains(__isNul) &&         TitleM.Contains(__isNul)
-        )
+      if (TitleV.Contains(__isNul) && TitleM.Contains(__isNul))
       {
         CurTempReal = $"{_openMeteo.Current.Temperature2m:+##.#;-##.#;0}°";
         CurTempFeel = $"{_openMeteo.Current.ApparentTemperature:+##;-##;0}°";
