@@ -106,6 +106,7 @@ public partial class PlotViewModel : ObservableValidator
   [ObservableProperty] string titleM = "";
   [ObservableProperty] string titleV = "";
   [ObservableProperty] string titleO = "";
+  [ObservableProperty] string tOMeas = $"{DateTime.Now:ddd HH:mm}";
 
   [RelayCommand]
   public async Task PopulateAll(object? obj)
@@ -144,6 +145,7 @@ public partial class PlotViewModel : ObservableValidator
     WriteLine($"   {v}:    {r.ForecastedFor.DateTime} \t {DateTimeAxis.ToDouble(r.ForecastedFor.DateTime):N2} \t size: {3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours),4:N1} \t y: {r.MeasureValue,4:N1} \t {(r.ForecastedFor - r.ForecastedAt).TotalHours,5:N1}h ");
     return new ScatterPoint(DateTimeAxis.ToDouble(r.ForecastedFor.DateTime), size: 3 + (.25 * (r.ForecastedFor - r.ForecastedAt).TotalHours), y: r.MeasureValue, tag: $"\r\npre:{(r.ForecastedFor - r.ForecastedAt).TotalHours:N1}h");
   }
+  string __isNul = ".. is null";
   string SetSiteCurrentConditions(currentConditionsType? cc, dateStampType[]? dt, string siteNick)
   {
     CurTempReal = $"{float.Parse(cc?.temperature?.Value ?? "-888"):+##.#;-##.#;0}°";
@@ -151,7 +153,7 @@ public partial class PlotViewModel : ObservableValidator
     CurWindKmHr = $"{cc?.wind?.speed?.Value} {cc?.wind?.speed.units}";
     CurSrcColor = siteNick switch { "Miss" => "#080", "Vaug" => "#08f", _ => "#dd0" };
 
-    if (dt is null || dt.Length < 2) return $"{siteNick} .. is NUL";
+    if (dt is null || dt.Length < 2) return $"{siteNick} {__isNul}";
 
     var hh = dt[1].hour.Value;
     var mm = dt[1].minute;
@@ -161,6 +163,7 @@ public partial class PlotViewModel : ObservableValidator
   static string FormatCurrentConditions(string siteNick, string hh, string mm, string CurTempReal, string CurTempFeel, string CurWindKmHr) => $"{siteNick} {hh}:{mm}:  {CurTempReal}  +  {CurWindKmHr}  =  {CurTempFeel}"; [RelayCommand]
   async Task PopulateScatModel(object? obj)
   {
+    TOMeas = $"{DateTime.Now:ddd HH:mm}:";
     _ = Task.Run(async () => await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24YYZ)).ContinueWith(_ => { DrawPast24hrEC(Cnst.pearson, _.Result); _pastPea = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
     _ = Task.Run(async () => await PlotViewModelHelpers.GetPast24hrFromEC(Cnst._Past24OKN)).ContinueWith(_ => { DrawPast24hrEC(Cnst.kingCty, _.Result); _pastKng = _.Result; }, TaskScheduler.FromCurrentSynchronizationContext());
     _ = Task.Run(async () => await PlotViewModelHelpers.GetFore24hrFromEC(Cnst._mississ)).ContinueWith(_ => { DrawFore24hrEC(Cnst._mississ, _.Result); _foreMis = _.Result; TitleM = SetSiteCurrentConditions(_.Result?.currentConditions, _.Result?.currentConditions?.dateTime, "Miss"); }, TaskScheduler.FromCurrentSynchronizationContext());
@@ -175,6 +178,14 @@ public partial class PlotViewModel : ObservableValidator
       ArgumentNullException.ThrowIfNull(_openMeteo.Daily);
 
       TitleO = FormatCurrentConditions("oMet", _openMeteo.Current.Time.Hour.ToString(), _openMeteo.Current.Time.Minute.ToString("0#"), $"{_openMeteo.Current.Temperature2m:+##.#;-##.#;0}°", $"{_openMeteo.Current.ApparentTemperature:+##;-##;0}°", $"{_openMeteo.Current.WindSpeed10m:N0} k/h ");
+      if(TitleV.Contains(__isNul) &&         TitleM.Contains(__isNul)
+        )
+      {
+        CurTempReal = $"{_openMeteo.Current.Temperature2m:+##.#;-##.#;0}°";
+        CurTempFeel = $"{_openMeteo.Current.ApparentTemperature:+##;-##;0}°";
+        CurWindKmHr = $"{_openMeteo.Current.WindSpeed10m:N0}";
+        CurSrcColor = "#aa0";
+      }
 
       WindDirn = _openMeteo.Current.WindDirection10m;
       WindVeloKmHr = _openMeteo.Current.WindSpeed10m; //  * _ms2kh / _wk;
@@ -530,7 +541,7 @@ public partial class PlotViewModel : ObservableValidator
         owp = OxyColor.FromRgb(0x00, 0x00, 0xff),
         omp = OxyColor.FromRgb(0x00, 0x00, 0xff),
         prs = OxyColor.FromRgb(0xaa, 0xff, 0x00),
-        omt = OxyColor.FromRgb(0xcc, 0xcc, 0x00);
+        omt = OxyColor.FromRgb(0xaa, 0xaa, 0x00);
 
       Model.Series.Clear();
       Model.Series.Add(new AreaSeries { ItemsSource = SunSinusoid, Color = OxyColor.FromArgb(0x80, 0xff, 0xff, 0x00), StrokeThickness = 0.5, Title = "SunRS Sin", YAxisKey = "yAxisL", Fill = OxyColor.FromArgb(0x08, 0xff, 0xff, 0x00) });

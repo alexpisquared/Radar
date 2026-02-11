@@ -37,8 +37,8 @@
             <ScaleTransform ScaleX="2" ScaleY="2" />
           </TransformGroup>
         </Grid.RenderTransform>
-        <Rectangle Width="1.5" Height="{Binding WindGustKmHr}" d:Height="80" StrokeThickness="0" Fill="#cc0" VerticalAlignment="Bottom" Margin="1" />
-        <Rectangle Width="5"   Height="{Binding WindVeloKmHr}" d:Height="40" StrokeThickness="0" Fill="#cc0" VerticalAlignment="Bottom" Margin="1" />
+        <Rectangle Width="1.5" Height="{Binding WindGustKmHr}" d:Height="80" StrokeThickness="0" Fill="#aa0" VerticalAlignment="Bottom" Margin="1" />
+        <Rectangle Width="5"   Height="{Binding WindVeloKmHr}" d:Height="40" StrokeThickness="0" Fill="#aa0" VerticalAlignment="Bottom" Margin="1" />
         <!--<Ellipse   Width="024" Height="024" StrokeThickness="0" Stroke="#567" Fill="#f555" />-->
       </Grid>
       <StackPanel VerticalAlignment="Center">
@@ -329,9 +329,10 @@
     <TextBlock Text="{Binding LastBuild}" Foreground="#088" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="1" Margin="232 0" d:Text="1231231" />
 
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="0" >
+      <TextBlock Text="{Binding TOMeas}" Foreground="#888" d:Text="Fri 18:26:" Margin="15 5" FontSize="22" />
       <TextBlock Text="{Binding TitleV}" Foreground="#08f" d:Text="1231231" Margin="15 5" FontSize="22" />
       <TextBlock Text="{Binding TitleM}" Foreground="#080" d:Text="1231231" Margin="15 5" FontSize="22" />
-      <TextBlock Text="{Binding TitleO}" Foreground="#cc0" d:Text="1231231" Margin="15 5" FontSize="22" />
+      <TextBlock Text="{Binding TitleO}" Foreground="#aa0" d:Text="1231231" Margin="15 5" FontSize="22" />
     </StackPanel>
 
   </Grid>
