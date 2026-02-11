@@ -280,7 +280,7 @@ public partial class PlotViewModel : ObservableValidator
       if (forecast5day3hr != null)
       {
         DrawWeatherIcons(forecast5day3hr);
-        DrawMainMeteoMeasurementLines(_openWeather, forecast5day3hr);
+        //DrawMainMeteoMeasurementLines(_openWeather, forecast5day3hr);
       }
 
       await GetDays(7);
@@ -317,7 +317,7 @@ public partial class PlotViewModel : ObservableValidator
       if (Debugger.IsAttached)
       {
         IOrderedQueryable<PointFore> sql = dbx.PointFore.Where(r => r.SrcId == "eca" && r.SiteId == Cnst._vgn && r.ForecastedAt < r.ForecastedFor && dby < r.ForecastedAt && ytd < r.ForecastedFor && r.ForecastedFor < now).OrderBy(r => r.ForecastedFor);
-        WriteLine(((Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable<DB.WeatherX.PwrTls.Models.PointFore>)sql).DebugView.Query);
+        //WriteLine(((Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable<DB.WeatherX.PwrTls.Models.PointFore>)sql).DebugView.Query);
       }
 
       return (vgn, mis, omt, Stopwatch.GetElapsedTime(startedAt));
@@ -722,7 +722,7 @@ public partial class PlotViewModel : ObservableValidator
   [ObservableProperty] double windGustKmHr;
   [ObservableProperty] IInterpolationAlgorithm iA = InterpolationAlgorithms.CatmullRomSpline; // the least vertical jumping beyond y value.
 
-  RootobjectOneCallApi? _openWeather;
+  //RootobjectOneCallApi? _openWeather;
   WeatherForecast? _openMeteo;
   siteData? _foreVgn, _foreMis;
   List<MeteoDataMy>? _pastPea, _pastKng;

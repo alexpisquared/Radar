@@ -18,7 +18,7 @@ public class RadarImageInfo
     return utc.ToLocalTime(); //tu: UTC to Local time.
   }
 
-  bool _letGet;
+  //bool _letGet;
 
 
   public int Index { get; internal set; }

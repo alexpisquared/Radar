@@ -68,7 +68,7 @@ public partial class RadarTypeViewUserControl : UserControl
         ScaleFactor = 1; // 13÷-35 => .3÷2.5
       }
     }
-    catch (Exception ex) { bpr.Error(); if (Debugger.IsAttached) Debugger.Break(); else throw; }
+    catch (Exception) { bpr.Error(); if (Debugger.IsAttached) Debugger.Break(); else throw; }
 
     return radarImageInfoList;
   }
