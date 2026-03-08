@@ -317,6 +317,7 @@
       <MenuItem   Header="_POC" ToolTip="No action" FontStyle="Oblique" Click="OnShowPocBin" />
       -->
       <Separator />
+      <Button    Content="  X  " IsCancel="True" Click="OnClose" Foreground="#f00" Background="Transparent" FontStyle="Normal"/>
     </Menu>
 
     <GridSplitter Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" FocusVisualStyle="{x:Null}"/>
