@@ -31,7 +31,7 @@
 
       <Style TargetType="{x:Type AccessText}">
         <!--  //tu: _ This applies to all the Label + Button with '_'           (INFO: Label without '_' acquires the style from the TextBlock; to overcome, use AccessText; in case Label's Target functionality needed, use:       <AccessText Text="_AccessText:" AccessKeyManager.AccessKeyPressed="onAccessKeyPressed_focusT2" /> ) 
-          //tu: Solution: do not set the next line:
+          //tu: Solution: do not set the next line:                2026 missing underscored accelerator key functionality for buttons, labels, etc. 2026 OP
     <Setter Property="Foreground"               Value="{StaticResource LablForegroundBrush}" />    -->
       </Style>
 
