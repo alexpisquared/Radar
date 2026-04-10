@@ -31,5 +31,5 @@ public partial class MainPlotViewUsrCtrl
     e.Handled = true;
   }
 
-  private void OnClose(object sender, RoutedEventArgs e) => this.FindParentWindow().Close();
+  void OnClose(object sender, RoutedEventArgs e) => this.FindParentWindow().Close();
 }
