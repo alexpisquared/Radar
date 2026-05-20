@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31612.314
+# Visual Studio Version 18
+VisualStudioVersion = 18.7.11811.120 insiders
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Radar", "Radar\Radar.csproj", "{7F4A4275-21D4-4098-8257-2DB243B35EE4}"
 EndProject
@@ -20,8 +20,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScreenTimeUsrCtrlLib", "..\..\..\C\Lgc\ScrSvrs\ScreenTimeUsrCtrlLib\ScreenTimeUsrCtrlLib.csproj", "{9E5021AA-A768-447B-A731-3C81375BD5A9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebScrap", "..\..\..\C\Lgc\Scraping\WebScrap\WebScrap.csproj", "{80C1EDC5-ECC1-4178-8A83-DFB40D766AB4}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebScrap", "..\..\ScSv\Src\AlexPi.Scr\WebScrap\WebScrap.csproj", "{AB4E4F2F-8C20-424A-8966-7DD4AE0613B7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpTimeMonitor", "UpTimeMonitor\UpTimeMonitor.csproj", "{DD1AFCA5-4D7B-4F5C-8C3E-90A9663BC092}"
 EndProject
@@ -50,6 +48,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandardContractsLib", "..\..\AAV.Shared\Src\NetLts\StandardContractsLib\StandardContractsLib.csproj", "{9C90482E-D722-9C6D-326F-57DDDBDC26D2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVsOnTheCulpritLine", "..\..\Util\Src\OpenVsOnTheCulpritLine\OpenVsOnTheCulpritLine.csproj", "{DAC5B2EA-7450-FB5C-52DD-96ECFA7FB06F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebScrap", "..\..\AAV.ScrSvr\Src\AlexPi.Scr\WebScrap\WebScrap.csproj", "{8AFEF359-7265-9F77-B163-E3AC2E8F157E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -157,18 +157,6 @@ Global
 		{80C1EDC5-ECC1-4178-8A83-DFB40D766AB4}.Release|x64.Build.0 = Release|Any CPU
 		{80C1EDC5-ECC1-4178-8A83-DFB40D766AB4}.Release|x86.ActiveCfg = Release|x86
 		{80C1EDC5-ECC1-4178-8A83-DFB40D766AB4}.Release|x86.Build.0 = Release|x86
-		{AB4E4F2F-8C20-424A-8966-7DD4AE0613B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB4E4F2F-8C20-424A-8966-7DD4AE0613B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AB4E4F2F-8C20-424A-8966-7DD4AE0613B7}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{AB4E4F2F-8C20-424A-8966-7DD4AE0613B7}.Debug|x64.Build.0 = Debug|Any CPU
-		{AB4E4F2F-8C20-424A-8966-7DD4AE0613B7}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{AB4E4F2F-8C20-424A-8966-7DD4AE0613B7}.Debug|x86.Build.0 = Debug|Any CPU
-		{AB4E4F2F-8C20-424A-8966-7DD4AE0613B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AB4E4F2F-8C20-424A-8966-7DD4AE0613B7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AB4E4F2F-8C20-424A-8966-7DD4AE0613B7}.Release|x64.ActiveCfg = Release|x64
-		{AB4E4F2F-8C20-424A-8966-7DD4AE0613B7}.Release|x64.Build.0 = Release|x64
-		{AB4E4F2F-8C20-424A-8966-7DD4AE0613B7}.Release|x86.ActiveCfg = Release|Any CPU
-		{AB4E4F2F-8C20-424A-8966-7DD4AE0613B7}.Release|x86.Build.0 = Release|Any CPU
 		{DD1AFCA5-4D7B-4F5C-8C3E-90A9663BC092}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DD1AFCA5-4D7B-4F5C-8C3E-90A9663BC092}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD1AFCA5-4D7B-4F5C-8C3E-90A9663BC092}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -337,6 +325,18 @@ Global
 		{DAC5B2EA-7450-FB5C-52DD-96ECFA7FB06F}.Release|x64.Build.0 = Release|x64
 		{DAC5B2EA-7450-FB5C-52DD-96ECFA7FB06F}.Release|x86.ActiveCfg = Release|Any CPU
 		{DAC5B2EA-7450-FB5C-52DD-96ECFA7FB06F}.Release|x86.Build.0 = Release|Any CPU
+		{8AFEF359-7265-9F77-B163-E3AC2E8F157E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AFEF359-7265-9F77-B163-E3AC2E8F157E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AFEF359-7265-9F77-B163-E3AC2E8F157E}.Debug|x64.ActiveCfg = Debug|x64
+		{8AFEF359-7265-9F77-B163-E3AC2E8F157E}.Debug|x64.Build.0 = Debug|x64
+		{8AFEF359-7265-9F77-B163-E3AC2E8F157E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8AFEF359-7265-9F77-B163-E3AC2E8F157E}.Debug|x86.Build.0 = Debug|Any CPU
+		{8AFEF359-7265-9F77-B163-E3AC2E8F157E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AFEF359-7265-9F77-B163-E3AC2E8F157E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AFEF359-7265-9F77-B163-E3AC2E8F157E}.Release|x64.ActiveCfg = Release|x64
+		{8AFEF359-7265-9F77-B163-E3AC2E8F157E}.Release|x64.Build.0 = Release|x64
+		{8AFEF359-7265-9F77-B163-E3AC2E8F157E}.Release|x86.ActiveCfg = Release|Any CPU
+		{8AFEF359-7265-9F77-B163-E3AC2E8F157E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
