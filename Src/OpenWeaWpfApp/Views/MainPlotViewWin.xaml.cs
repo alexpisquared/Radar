@@ -17,6 +17,7 @@ public partial class MainPlotViewWin // : WindowBase
     {
       switch (e.Key)
       {
+        case Key.Escape: base.OnKeyUp(e); e.Handled = true; Close(); break;
         case Key.C: _bpr.Error(); ((PlotViewModel)DataContext).ClearPlot(); break;
         case Key.I: _bpr.Error(); plotBR.InvalidatePlot(true); break;
         case Key.J: _bpr.Error(); plotBR.InvalidatePlot(false); break;
