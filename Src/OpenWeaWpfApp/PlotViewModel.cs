@@ -102,7 +102,7 @@ public partial class PlotViewModel : ObservableValidator
     //if (VersionHelper.IsDbg) _synth.SpeakFAF("Done!");
   }
 
-  [ObservableProperty] string lastBuild = VersionHelper.CurVerStr;
+  [ObservableProperty] string lastBuild = VersionHelper.TimedVerString202606("y.M.d");
   [ObservableProperty] string titleM = "";
   [ObservableProperty] string titleV = "";
   [ObservableProperty] string titleO = "";
