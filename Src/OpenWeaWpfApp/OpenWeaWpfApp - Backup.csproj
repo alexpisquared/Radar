@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net11.0-windows8.0</TargetFramework>
@@ -19,15 +19,15 @@
     <!--
     //tu: OxyPlot - do not use latest ver 2.1.0 : it does not even compile!!!
     -->
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.14" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.14" />
-    <PackageReference Include="OxyPlot.Contrib" Version="2.1.2" />
-    <PackageReference Include="OxyPlot.Contrib.Wpf" Version="2.1.2" />
-    <PackageReference Include="OxyPlot.Core" Version="2014.1.546" />
-    <PackageReference Include="OxyPlot.Wpf" Version="2014.1.546" />
-    <PackageReference Include="System.Windows.Forms.DataVisualization" Version="1.0.0-prerelease.20110.1" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.14" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
+    <PackageReference Include="OxyPlot.Contrib" />
+    <PackageReference Include="OxyPlot.Contrib.Wpf" />
+    <PackageReference Include="OxyPlot.Core" />
+    <PackageReference Include="OxyPlot.Wpf" />
+    <PackageReference Include="System.Windows.Forms.DataVisualization" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\AAV.Shared\Src\NetLts\StandardLib\StandardLib.csproj" />

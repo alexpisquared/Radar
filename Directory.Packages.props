@@ -1,0 +1,34 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="Azure.Identity" Version="1.21.0" />
+    <PackageVersion Include="Colorful.Console" Version="1.2.15" />
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageVersion Include="coverlet.collector" Version="10.1.0" />
+    <PackageVersion Include="HtmlAgilityPack" Version="1.13.1" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+    <PackageVersion Include="Moq" Version="4.21.0" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageVersion Include="OxyPlot.Contrib" Version="2.1.2" />
+    <PackageVersion Include="OxyPlot.Contrib.Wpf" Version="2.1.2" />
+    <PackageVersion Include="OxyPlot.Core" Version="2014.1.546" />
+    <PackageVersion Include="OxyPlot.Wpf" Version="2014.1.546" />
+    <PackageVersion Include="Pastel" Version="8.0.0" />
+    <PackageVersion Include="System.Diagnostics.EventLog" Version="10.0.14" />
+    <PackageVersion Include="System.Windows.Forms.DataVisualization" Version="1.0.0-prerelease.20110.1" />
+    <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="4.0.1" />
+  </ItemGroup>
+</Project>
+
